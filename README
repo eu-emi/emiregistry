@@ -1,0 +1,32 @@
+EMI Registry 
+============
+The project is an implementation of the EMI Registry (part of the EMI project) specification to discover the services in a large-scale Distributed Computing Infrastructure (DCI).
+
+It is a multi-module maven 2 project, containing dsr and gsr as sub-modules for the Domain Service Registry and Global Service Registry respectively.
+
+Pre-requisites
+--------------
+ * JDK 1.6
+ * Maven 2
+ * Eclipse
+ * Git
+
+Building source
+---------------
+In order to compile and build the project's source code, execute the following maven command
+
+$ mvn package
+
+Working with Eclipse
+--------------------
+If you choose eclipse as developement environment, type
+
+$ mvn eclipse:eclipse
+
+and then import as eclipse project, otherwise use m2eclipse plugin for Eclipse.
+
+VCS
+---
+ * Refer help.github.com in order to make source commits, clone or fork
+ * It is recommended (optional) to use the EGit plugin for eclipse to view the latest changes, history and execute all the    
+   other git functions
