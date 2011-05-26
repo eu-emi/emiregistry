@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.core;
+package eu.emi.dsr.core;
 
 import static org.junit.Assert.assertEquals;
 
