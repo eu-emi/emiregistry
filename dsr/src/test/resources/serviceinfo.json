@@ -1,5 +1,5 @@
 {
-    "type":"job.management"
-    "url":"http://localhost/someservice"
+    "servicetype":"job.management"
+    "serviceurl":"http://localhost/someservice"
              
 }
