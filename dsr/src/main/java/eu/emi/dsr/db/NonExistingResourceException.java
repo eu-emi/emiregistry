@@ -1,4 +1,4 @@
-package eu.emi.dsr.core.db;
+package eu.emi.dsr.db;
 
 public class NonExistingResourceException extends Exception {
 
