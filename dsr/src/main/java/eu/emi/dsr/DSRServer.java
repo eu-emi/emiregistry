@@ -3,8 +3,16 @@
  */
 package eu.emi.dsr;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.LogManager;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
@@ -13,6 +21,8 @@ import org.restlet.service.ConverterService;
 
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerProperties;
+import eu.emi.dsr.jetty.JettyServer;
+import eu.emi.dsr.util.Log;
 
 /**
  * The main class for starting the server
@@ -25,6 +35,8 @@ public class DSRServer {
 	private Component comp;
 	private boolean started;
 	private Configuration conf;
+	private JettyServer jettyServer;
+	private Logger logger = Log.getLogger(Log.DSR, DSRServer.class);
 
 	/**
 	 * @param path
@@ -32,7 +44,6 @@ public class DSRServer {
 	 */
 	public DSRServer(String path) {
 		conf = new Configuration(path);
-		conf.bootstrapProperties();
 	}
 
 	/**
@@ -67,15 +78,15 @@ public class DSRServer {
 
 	}
 
+	// TODO remove this
 	public void start() {
 		if (!started) {
+			initLog4j();
+
 			// create Component (as ever for Restlet)
 			comp = new Component();
-			Server server = comp
-					.getServers()
-					.add(Protocol.HTTP,
-							Configuration
-									.getIntegerProperty(ServerProperties.REGISTRY_PORT));
+			Server server = comp.getServers().add(Protocol.HTTP,
+					conf.getIntegerProperty(ServerProperties.REGISTRY_PORT));
 
 			// create JAX-RS runtime environment
 			// JaxRsApplication application = new
@@ -90,7 +101,7 @@ public class DSRServer {
 			ConverterService cs = new ConverterService();
 			try {
 				cs.start();
-				
+
 				comp.getServices().add(cs);
 
 				comp.start();
@@ -98,13 +109,43 @@ public class DSRServer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			System.out.println("Server started on port " + server.getPort());
 			started = true;
 		}
 
-		
+	}
 
+	public void startJetty() {
+		if (!started) {
+			jettyServer = new JettyServer(DSRJaxRsApplication.class, conf);
+			jettyServer.start();
+		}
+		System.out.println("DSR server started");
+		logger.info("DSR server started");
+	}
+
+	public void stopJetty() {
+		jettyServer.stop();
+		started = false;
+		System.out.println("DSR server stopped");
+		logger.info("DSR server stopped");
+
+	}
+
+	private void initLog4j() {
+		String path = conf.getProperty(ServerProperties.LOGGER_CONF_PATH);
+		PropertyConfigurator.configure(path);
+		LogManager l = LogManager.getLogManager();
+		try {
+			l.readConfiguration(new FileInputStream(new File(path)));
+		} catch (SecurityException e) {
+			Log.logException("", e);
+		} catch (FileNotFoundException e) {
+			Log.logException("", e);
+		} catch (IOException e) {
+			Log.logException("", e);
+		}
 	}
 
 	private void addShutDownHook() {
@@ -119,6 +160,11 @@ public class DSRServer {
 		});
 	}
 
+	public Configuration getConfiguration() {
+		return conf;
+	}
+
+	// TODO remove this
 	public void shutdown() {
 		try {
 			this.comp.stop();
@@ -128,8 +174,6 @@ public class DSRServer {
 		started = false;
 		System.out.println("Server stopped");
 	}
-	
-	
 
 	public static void main(String[] args) {
 		DSRServer server = new DSRServer("src/main/conf/dsr.config");

@@ -5,7 +5,7 @@ public class NonExistingResourceException extends Exception {
 	/**
 	 *  The serial version UID expected at serializable classes
 	 */
-	private static final long serialVersionUID = 515931301821963410L;
+	private static final long serialVersionUID = 1L;
 
 	public NonExistingResourceException() {
 		super();

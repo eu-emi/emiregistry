@@ -5,7 +5,7 @@ public class QueryException extends Exception {
 	/**
 	 * The serial version UID expected at serializable classes
 	 */
-	private static final long serialVersionUID = 7506634169927409715L;
+	private static final long serialVersionUID = 1L;
 	private Object query;
 	
 	public QueryException(Object query) {

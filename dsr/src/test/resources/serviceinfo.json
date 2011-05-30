@@ -1,5 +1,5 @@
 {
     "servicetype":"job.management"
     "serviceurl":"http://localhost/someservice"
-             
+    "ownerdn":"CN=Duke, OU=JavaSoft, O=Sun Microsystems, C=US"         
 }
