@@ -30,11 +30,13 @@ public class ServerProperties {
 	public static String KEYSTORE_ALIAS = "keystore.alias";
 	public static String KEYSTORE_TYPE = "keystore.type";
 	public static String KEYSTORE_PASSWORD = "keystore.password";
+	
 
 	// trust store
 	public static String TRUSTSTORE_PATH = "truststore.path";
 	public static String TRUSTSTORE_PASSWORD = "truststore.password";
-
+	public static String TRUSTSTORE_TYPE = "truststore.type";
+	
 	// Jetty
 	public static String JETTY_MAXIDLETIME = "jetty.maxIdleTime";
 	public static String JETTY_LOW_RESOURCE_MAXIDLETIME = "jetty.lowResourceMaxIdleTime";
