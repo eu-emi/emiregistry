@@ -129,8 +129,8 @@ public class JettyServer {
 		SslSelectChannelConnector ssl_connector = null;
 		try {
 			ssl_connector = new SslSelectChannelConnector();
-			ssl_connector.setHost("localhost");
-			ssl_connector.setPort(9443);
+			ssl_connector.setHost(conf.getProperty(ServerProperties.REGISTRY_HOSTNAME));
+			ssl_connector.setPort(Integer.valueOf(conf.getProperty(ServerProperties.REGISTRY_PORT)));
 
 			SslContextFactory cf = ssl_connector.getSslContextFactory();
 

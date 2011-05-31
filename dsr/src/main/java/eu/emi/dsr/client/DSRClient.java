@@ -55,12 +55,10 @@ public class DSRClient {
 		params.add("keystorePassword", sProps.getKeystorePassword());
 		params.add("keystoreType", sProps.getKeystoreType());
 
-		// it is recommended to use keystore and key password same
+		// it is recommended to use the same password for the key store and key respectively
 		params.add("keyPassword", sProps.getKeystorePassword());
 
 		ctxFactory.init(ctx.getParameters());
-
-//		ctxFactory.init(ctx.getParameters());
 
 		cr = new ClientResource(ctx, url);
 	}
