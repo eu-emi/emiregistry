@@ -3,8 +3,9 @@
  */
 package eu.emi.dsr.util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 
 
 /**

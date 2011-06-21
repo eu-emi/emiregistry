@@ -13,11 +13,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.restlet.Component;
-import org.restlet.Server;
-import org.restlet.data.Protocol;
-import org.restlet.ext.jaxrs.JaxRsApplication;
-import org.restlet.service.ConverterService;
 
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerProperties;
@@ -32,7 +27,6 @@ import eu.emi.dsr.util.Log;
  * 
  */
 public class DSRServer {
-	private Component comp;
 	private boolean started;
 	private Configuration conf;
 	private JettyServer jettyServer;
@@ -61,64 +55,14 @@ public class DSRServer {
 		this.started = started;
 	}
 
-	public void asyncStart() {
-		Thread t = new Thread(new Runnable() {
+	
 
-			public void run() {
-				try {
-					start();
-				} catch (Exception e) {
-
-				}
-
-			}
-		});
-		t.run();
-		t.setName("DSRServer");
-
-	}
-
-	// TODO remove this
-	public void start() {
-		if (!started) {
-			initLog4j();
-
-			// create Component (as ever for Restlet)
-			comp = new Component();
-			Server server = comp.getServers().add(Protocol.HTTP,
-					conf.getIntegerProperty(ServerProperties.REGISTRY_PORT));
-
-			// create JAX-RS runtime environment
-			// JaxRsApplication application = new
-			// JaxRsApplication(comp.getContext());
-			JaxRsApplication application = new JaxRsApplication(
-					comp.getContext());
-			// attach Application
-			application.add(new DSRApplication());
-
-			// Attach the application to the component and start it
-			comp.getDefaultHost().attach(application);
-			ConverterService cs = new ConverterService();
-			try {
-				cs.start();
-
-				comp.getServices().add(cs);
-
-				comp.start();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			System.out.println("Server started on port " + server.getPort());
-			started = true;
-		}
-
-	}
+	
 
 	public void startJetty() {
+		initLog4j();
 		if (!started) {
-			jettyServer = new JettyServer(DSRJaxRsApplication.class, conf);
+			jettyServer = new JettyServer(DSRApplication.class, conf);
 			jettyServer.start();
 		}
 		System.out.println("DSR server started");
@@ -148,35 +92,16 @@ public class DSRServer {
 		}
 	}
 
-	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				try {
-					shutdown();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	public Configuration getConfiguration() {
 		return conf;
 	}
 
-	// TODO remove this
-	public void shutdown() {
-		try {
-			this.comp.stop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		started = false;
-		System.out.println("Server stopped");
-	}
+	
 
 	public static void main(String[] args) {
 		DSRServer server = new DSRServer("src/main/conf/dsr.config");
-		server.start();
+		server.startJetty();
 	}
 }

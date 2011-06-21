@@ -6,27 +6,21 @@ package eu.emi.dsr.boundry;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.util.Log;
-import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * Resource for the service providers (privileged) to manage their services
@@ -34,13 +28,15 @@ import eu.emi.dsr.util.ServiceUtil;
  * @author a.memon
  */
 @Path("/serviceadmin")
-public class ServiceAdminResource {
+public class ServiceAdminResource{
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
 
 	@GET
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
+		
+		
 		String value = getServiceUrlFromUri(infos);
 		JSONObject j = null;
 		logger.info(String.format("%s = %s", "serviceurl", value));
@@ -88,6 +84,7 @@ public class ServiceAdminResource {
 		return "https://hostname:port/serviceadmin/serviceid";
 	}
 
+	
 	@POST
 	public JSONObject registerService(String serviceInfo)
 			throws WebApplicationException {

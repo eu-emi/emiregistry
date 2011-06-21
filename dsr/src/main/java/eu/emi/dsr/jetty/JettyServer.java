@@ -18,11 +18,10 @@ import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.restlet.ext.jaxrs.JaxRsApplication;
-import org.restlet.ext.servlet.ServerServlet;
+
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import eu.emi.dsr.DSRApplication;
-import eu.emi.dsr.DSRJaxRsApplication;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerProperties;
@@ -37,7 +36,7 @@ public class JettyServer {
 
 	Server server;
 	boolean started = false;
-	private Class<? extends JaxRsApplication> appClass;
+	private Class appClass;
 	private String hostName;
 	private Integer portNumber;
 	private String scheme;
@@ -52,7 +51,7 @@ public class JettyServer {
 	 * @param class1
 	 * @param c
 	 */
-	public JettyServer(Class<DSRJaxRsApplication> clazz, Configuration c) {
+	public JettyServer(Class clazz, Configuration c) {
 		if (clazz == null) {
 			throw new IllegalArgumentException("Application ");
 		}
@@ -109,8 +108,8 @@ public class JettyServer {
 		}
 
 		// initialising the server
-		ServletHolder sh = new ServletHolder(ServerServlet.class);
-		sh.setInitParameter("org.restlet.application",
+		ServletHolder sh = new ServletHolder(ServletContainer.class);
+		sh.setInitParameter("javax.ws.rs.Application",
 				appClass.getCanonicalName());
 		server = new Server();
 
@@ -194,21 +193,8 @@ public class JettyServer {
 		}
 	}
 
-	public static void main(String[] args) throws InterruptedException,
-			MalformedURLException {
-		Properties p = new Properties();
-		p.put(ServerProperties.REGISTRY_HOSTNAME, "localhost");
-		p.put(ServerProperties.REGISTRY_PORT, "8443");
-		// p.put(ServerProperties.REGISTRY_SCHEME, "http");
-		p.put(ServerProperties.REGISTRY_SCHEME, "https");
-		p.put(ServerProperties.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
-		p.put(ServerProperties.JETTY_LOWTHREADS, "50");
-		p.put(ServerProperties.JETTY_MAXIDLETIME, "30000");
-		p.put(ServerProperties.JETTY_MAXTHREADS, "255");
-		Configuration c = new Configuration(p);
-		JettyServer s = new JettyServer(DSRJaxRsApplication.class, c);
-		s.start();
-
-	}
+	
+	
+	
 
 }

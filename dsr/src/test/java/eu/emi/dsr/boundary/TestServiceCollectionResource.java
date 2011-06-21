@@ -6,74 +6,80 @@ package eu.emi.dsr.boundary;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.json.JSONObject;
+import javax.ws.rs.core.MediaType;
+
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.restlet.resource.ClientResource;
 
 import eu.emi.dsr.TestRegistryBase;
+import eu.emi.dsr.client.DSRClient;
+
 /**
  * Integration test
+ * 
  * @author a.memon
- *
+ * 
  */
-public class TestServiceCollectionResource extends TestRegistryBase{
-	
-	
+public class TestServiceCollectionResource extends TestRegistryBase {
+
 	/**
-	 * @param ServiceManagerFactory 
+	 * @param ServiceManagerFactory
 	 * 
 	 */
-	
-	
+
 	@Test
-	public void testGetAllRefs(){
+	public void testGetAllRefs() {
 		System.out.println("/services/refs");
-		ClientResource cr = new ClientResource(BaseURI + "/services/refs");
-		JSONObject o = cr.get(JSONObject.class);
+		DSRClient cr = new DSRClient(BaseURI + "/services/refs");
+		JSONObject o = cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertNotNull(o);
 		System.out.println(o);
-		//assert that the server returns references array
+		// assert that the server returns references array
 		assertFalse(o.isNull("references"));
 	}
-	
+
 	@Test
-	public void testGetAllTypes(){
+	public void testGetAllTypes() {
 		System.out.println("/services/types");
-		ClientResource cr = new ClientResource(BaseURI + "/services/types");
-		JSONObject o = cr.get(JSONObject.class);
+		DSRClient cr = new DSRClient(BaseURI + "/services/types");
+		JSONObject o = cr.getClientResource()
+		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertNotNull(o);
 		System.out.println(o);
-		//assert that the server returns references array
+		// assert that the server returns references array
 		assertFalse(o.isNull("types"));
 	}
-	
+
 	@Test
-	public void testGetServiceByType(){
-		//test return all the service of certain types
+	public void testGetServiceByType() {
+		// test return all the service of certain types
 		System.out.println("/services/types/{servicetype}");
-		ClientResource cr = new ClientResource(BaseURI + "/services/types/jms");
-		JSONObject o = cr.get(JSONObject.class);
+		DSRClient cr = new DSRClient(BaseURI + "/services/types/jms");
+		JSONObject o = cr.getClientResource()
+		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertNotNull(o);
 		System.out.println(o);
-		//assert that the server returns references array
-//		assertFalse(o.isNull("types"));
+		// assert that the server returns references array
+		// assertFalse(o.isNull("types"));
 	}
-	
+
 	@Test
-	public void testQueryServiceCollection(){
-		System.out.println("/services/query?serviceurl=\"value\"&servicetype=\"jms\"");
-		ClientResource cr = new ClientResource(BaseURI + "/services/query?serviceurl=http://&servicetype=jms");
+	public void testQueryServiceCollection() {
+		System.out
+				.println("/services/query?serviceurl=\"value\"&servicetype=\"jms\"");
+		DSRClient cr = new DSRClient(BaseURI
+				+ "/services/query?serviceurl=http://&servicetype=jms");
 		@SuppressWarnings("unchecked")
-		JSONObject lst = cr.get(JSONObject.class);
+		JSONObject lst = cr.getClientResource()
+		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		System.out.println(lst);
 	}
-	
+
 	@Test
-	public void testFindServiceUsingJSON(){
-		//kind of html form
+	public void testFindServiceUsingJSON() {
+		// kind of html form
 		System.out.println("/services");
 	}
-	
-	
-	
+
 }

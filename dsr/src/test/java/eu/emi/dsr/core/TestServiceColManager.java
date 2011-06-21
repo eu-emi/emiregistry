@@ -6,8 +6,8 @@ package eu.emi.dsr.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

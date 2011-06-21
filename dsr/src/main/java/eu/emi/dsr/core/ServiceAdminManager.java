@@ -3,7 +3,8 @@
  */
 package eu.emi.dsr.core;
 
-import org.json.JSONObject;
+
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;

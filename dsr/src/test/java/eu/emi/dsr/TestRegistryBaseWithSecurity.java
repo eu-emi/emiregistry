@@ -21,7 +21,7 @@ public class TestRegistryBaseWithSecurity {
 
 	@BeforeClass
 	public static void startServer() {
-		System.setProperty("javax.net.debug", "all");
+//		System.setProperty("javax.net.debug", "all");
 		Properties p = new Properties();
 		setAuthenticationSettings(p);
 		setGeneralSettings(p);
@@ -32,6 +32,8 @@ public class TestRegistryBaseWithSecurity {
 		server.startJetty();
 	}
 
+	
+	
 	private static void setAuthenticationSettings(Properties p) {
 		p.put(ServerProperties.CLIENT_AUTHN, "true");
 		p.put(ServerProperties.KEYSTORE_PASSWORD, "emi");

@@ -8,5 +8,5 @@ package eu.emi.dsr.data;
  *
  */
 public enum QueryDialect {
-	STRING, JSON;
+	SQL, JSON; 
 }

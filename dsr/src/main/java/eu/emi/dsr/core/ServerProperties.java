@@ -12,6 +12,7 @@ public class ServerProperties {
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
+	public static String REGISTRY_SSL_ENABLED = "registry.ssl.enabled";
 
 	// Log4J
 	public static String LOGGER_CONF_PATH = "logger.conf.path";

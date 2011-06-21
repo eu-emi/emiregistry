@@ -3,10 +3,6 @@
  */
 package eu.emi.dsr.boundry;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,9 +14,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceColManager;
 import eu.emi.dsr.util.Log;

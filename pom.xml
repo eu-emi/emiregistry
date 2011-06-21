@@ -14,7 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>7.4.2.v20110526</jetty.version>
-		<restlet.version>2.0.7</restlet.version>
+		<jersey.version>1.7</jersey.version>
 	</properties>
 
 	<dependencies>
@@ -24,27 +24,23 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- restlet -->
+		<!-- Jersey -->
 		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.jaxrs</artifactId>
-			<version>${restlet.version}</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.json</artifactId>
-			<version>${restlet.version}</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.servlet</artifactId>
-			<version>${restlet.version}</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.restlet.jee</groupId>
-			<artifactId>org.restlet.ext.ssl</artifactId>
-			<version>${restlet.version}</version>
-		</dependency>
+		
 		<!-- jetty -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>

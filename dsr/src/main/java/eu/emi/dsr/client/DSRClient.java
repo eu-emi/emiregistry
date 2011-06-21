@@ -3,14 +3,31 @@
  */
 package eu.emi.dsr.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManagerFactory;
+
 import org.apache.log4j.Logger;
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Parameter;
-import org.restlet.data.Protocol;
-import org.restlet.ext.ssl.PkixSslContextFactory;
-import org.restlet.resource.ClientResource;
-import org.restlet.util.Series;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
 import eu.emi.dsr.util.Log;
 
@@ -24,47 +41,99 @@ public class DSRClient {
 	/**
 	 * 
 	 */
+	
+	private String url;
+	
 	private static Logger logger = Log
 			.getLogger(Log.DSRCLIENT, DSRClient.class);
-	ClientResource cr = null;
+	Client cr = null;
 	ClientSecurityProperties sProps = null;
 
 	public DSRClient(String url, ClientSecurityProperties sp) {
 		logger.debug("creating ssl client");
 		sProps = sp;
-		init(url);
+		this.url = url;
+		initSec();
 	}
 
 	public DSRClient(String url) {
 		logger.debug("creating default client");
-		cr = new ClientResource(url);
+		this.url = url;
+		cr = Client.create();
+		
 	}
 
-	private void init(String url) {
-		PkixSslContextFactory ctxFactory = new PkixSslContextFactory();
-		Context ctx = new Context();
-		Client client = new Client(ctx, Protocol.HTTPS);
-		Series<Parameter> params = ctx.getParameters();
-		String contextFactory = PkixSslContextFactory.class.getName();
-		params.add("sslContextFactory", contextFactory);
-		params.add("truststorePath", sProps.getTrustStorePath());
-		params.add("truststorePassword", sProps.getTruststorePassword());
-		params.add("truststoreType", sProps.getTruststoreType());
+	private void initSec() {
+		ClientConfig config = new DefaultClientConfig();
 
-		params.add("keystorePath", sProps.getKeystorePath());
-		params.add("keystorePassword", sProps.getKeystorePassword());
-		params.add("keystoreType", sProps.getKeystoreType());
+		SSLContext ctx;
+		try {
+			ctx = SSLContext.getInstance("SSL");
+			//setting keystore
+			KeyStore ks = KeyStore.getInstance(sProps.getKeystoreType());
+			FileInputStream fis = new FileInputStream(new File(
+					sProps.getKeystorePath()));
+			ks.load(fis, sProps.getKeystorePassword().toCharArray());
+			fis.close();
 
-		// it is recommended to use the same password for the key store and key respectively
-		params.add("keyPassword", sProps.getKeystorePassword());
+			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
+					.getDefaultAlgorithm());
+			kmf.init(ks, sProps.getKeystorePassword().toCharArray());
+			
+			
+			//setting truststore
+			KeyStore ts = KeyStore.getInstance(sProps.getTruststoreType());
+			FileInputStream fis1 = new FileInputStream(new File(
+					sProps.getTrustStorePath()));
+			ts.load(fis1, sProps.getTruststorePassword().toCharArray());
+			fis1.close();
+			TrustManagerFactory tmf = TrustManagerFactory
+					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			tmf.init(ts);
+			
+			SecureRandom se = new SecureRandom();
+			ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), se);
 
-		ctxFactory.init(ctx.getParameters());
+			HostnameVerifier hv = new HostnameVerifier() {
 
-		cr = new ClientResource(ctx, url);
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			};
+
+			config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
+					new HTTPSProperties(hv, ctx));
+
+			cr = Client.create(config);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
+	public WebResource getClientResource() {
+		return cr.resource(url);
+	}
 	
-	public ClientResource getClientResource(){
+	public Client getClient(){
 		return cr;
 	}
 }

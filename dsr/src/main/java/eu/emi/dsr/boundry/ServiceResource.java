@@ -3,8 +3,6 @@
  */
 package eu.emi.dsr.boundry;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,32 +17,34 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.jaxrs.internal.core.ResponseBuilderImpl;
-import org.restlet.ext.jaxrs.internal.provider.WebAppExcMapper;
+import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
 
+
 /**
+ * 
  * @author a.memon
  *
  */
 @Path("/service")
 public class ServiceResource{
+	Logger logger = Log.getLogger(Log.DSR, ServiceResource.class);
+	/** query method */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public JSONObject getServiceDescription(@PathParam("id") String id) throws WebApplicationException {
-		if ((id == null)||(id.isEmpty())) {
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-		}
-		System.out.println("getting service description");
-		System.out.println("given parameter: "+id);
+//		if ((id == null)||(id.isEmpty())) {
+//			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+//		}
+		logger.debug("getting service description");
+		logger.debug("given parameter: "+id);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", "1");
 		map.put("type", "job.datamangement");
@@ -59,8 +59,7 @@ public class ServiceResource{
 	@POST
 	public String insertServiceDescription(String serviceDesc) throws JSONException {
 		ServiceUtil.isValid(serviceDesc);
-		System.out.println("inserting service description");
-		System.out.println("inserting the service: "+serviceDesc);
+		logger.debug("inserting service description"+serviceDesc);
 		return Integer.toString(serviceDesc.hashCode());
 	}
 	
@@ -70,14 +69,11 @@ public class ServiceResource{
 	 * @throws JSONException 
 	 *  */
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/{id}")
-	public Response updateServiceDescription(String serviceDesc) throws JSONException {
-		ServiceUtil.isValid(serviceDesc);
-		System.out.println("inserting service description");
-		System.out.println("inserting the service: "+serviceDesc);
-		//TODO updating the service description
-		return Response.noContent().build();
+	
+	//@Path("{id}/")
+	public String updateServiceDescription(/*@PathParam("id") String id, String serviceDesc*/JSONObject serviceDesc) throws JSONException {
+		logger.debug("updating service description: "+serviceDesc);
+		return "id";
 	}
 
 	
@@ -88,7 +84,7 @@ public class ServiceResource{
 	 *  */
 	@DELETE
 	@Path("/{id}")
-	public Response deleteServiceDescription() {
+	public Response deleteServiceDescription(@PathParam("id") String id) {
 		System.out.println("deleting the service description");
 		//TODO deleting the service description
 		return Response.noContent().build();

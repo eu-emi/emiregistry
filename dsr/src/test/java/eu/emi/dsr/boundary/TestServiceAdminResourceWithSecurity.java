@@ -3,14 +3,11 @@
  */
 package eu.emi.dsr.boundary;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.json.JSONObject;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.resource.ClientProxy;
-import org.restlet.resource.ClientResource;
 
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.dsr.client.ClientSecurityProperties;
@@ -20,14 +17,14 @@ import eu.emi.dsr.client.DSRClient;
  * @author a.memon
  *
  */
-public class TestServiceCollectionResourseWithSecurity extends TestRegistryBaseWithSecurity{
+public class TestServiceAdminResourceWithSecurity extends TestRegistryBaseWithSecurity{
 	@Before
 	public void setup(){
 		System.out.println("base url: "+BaseURI);
 	}
 	@Test
 	public void testGetAllRefs(){
-		System.out.println("/services/refs");
+		System.out.println("/serviceadmin");
 		
 		ClientSecurityProperties csp = new ClientSecurityProperties();
 		csp.setKeystorePassword("emi");
@@ -39,11 +36,9 @@ public class TestServiceCollectionResourseWithSecurity extends TestRegistryBaseW
 		
 		
 		
-		DSRClient cr = new DSRClient(BaseURI + "/services/refs", csp);
+		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin?serviceurl=http://1", csp);
 		JSONObject o = cr.getClientResource().get(JSONObject.class);
 		assertNotNull(o);
 		System.out.println(o);
-		//assert that the server returns references array
-		assertFalse(o.isNull("references"));
 	}
 }
