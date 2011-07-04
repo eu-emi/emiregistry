@@ -16,7 +16,7 @@ import javax.naming.InitialContext;
  * @author a.memon
  * 
  */
-public class Configuration {
+public class Configuration implements Cloneable{
 	private String path;
 	private Properties props;
 	/**
@@ -64,6 +64,10 @@ public class Configuration {
 
 	public Integer getIntegerProperty(String key) {
 		return Integer.valueOf(props.getProperty(key));
+	}
+	
+	public Boolean getBooleanProperty(String key) {
+		return Boolean.valueOf(props.getProperty(key));
 	}
 
 	public Long getLongProperty(String key) {

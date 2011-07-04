@@ -33,7 +33,21 @@ public class ServiceUtil {
 	 */
 	public static void isValid(String serviceDesc) throws JSONException {
 		JSONObject jo = new JSONObject(serviceDesc);
-		jo.get("url");
-		jo.get("type");
+		jo.get("serviceurl");
+		jo.get("servicetype");
+	}
+	
+	/**
+	 * Checks if the description contains the minimal valid information i.e.
+	 * <b>url</b> and <b>type</b>
+	 * @param serviceDesc
+	 * @throws JSONException 
+	 */
+	public static boolean isValid(JSONObject jo) throws JSONException {
+	    if ((jo.get("serviceurl") == null) && (jo.get("servicetype") == null)) {
+	    	return false;
+		}
+	    return true;
+		
 	}
 }

@@ -3,9 +3,6 @@
  */
 package eu.emi.dsr.boundry;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,6 +17,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.core.ServiceManagerFactory;
+import eu.emi.dsr.core.ServiceAdminManager;
+import eu.emi.dsr.exception.InvalidServiceDescriptionException;
+import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -28,24 +29,27 @@ import eu.emi.dsr.util.Log;
  * @author a.memon
  */
 @Path("/serviceadmin")
-public class ServiceAdminResource{
+public class ServiceAdminResource {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
+
+	private static final ServiceAdminManager serviceAdmin = ServiceManagerFactory
+			.getServiceAdminManager();
 
 	@GET
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
-		
-		
-		String value = getServiceUrlFromUri(infos);
-		JSONObject j = null;
-		logger.info(String.format("%s = %s", "serviceurl", value));
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("serviceurl", "http://someurl");
-		map.put("servicetype", "sometype");
-		j = new JSONObject(map);
 
-		return j;
+		final JSONObject result;
+
+		try {
+			result = serviceAdmin.findServiceByUrl(getServiceUrlFromUri(infos));
+		} catch (UnknownServiceException e) {
+			throw new WebApplicationException(e);
+		}
+
+
+		return result;
 	}
 
 	private static String getServiceUrlFromUri(UriInfo infos) {
@@ -59,73 +63,50 @@ public class ServiceAdminResource{
 		return value;
 	}
 
-	/**
-	 * Probe the id/handle to the given service url. The request is reqpresented
-	 * as a url string e.g.
-	 * http(s)://hostname:port/serviceadmin/probeid?serviceurl=http://service1
-	 * 
-	 * @return the url of the service e.g.:
-	 *         http(s)://hostname:port/serviceadmin/serviceid
-	 * */
-	@GET
-	@Path("/probeid")
-	public String probeId(@Context UriInfo infos)
-			throws WebApplicationException {
-		MultivaluedMap<String, String> mm = infos.getQueryParameters();
-		String key = (mm.containsKey("serviceurl")) ? "serviceurl" : "unknown";
-		if (key == "unknown") {
-			throw new WebApplicationException(new IllegalArgumentException(
-					"invalid param"));
-		}
-		String value = mm.getFirst("serviceurl");
-
-		logger.info(String.format("%s = %s", key, value));
-
-		return "https://hostname:port/serviceadmin/serviceid";
-	}
-
 	
+
 	@POST
-	public JSONObject registerService(String serviceInfo)
+	public String registerService(JSONObject serviceInfo)
 			throws WebApplicationException {
-		// ServiceUtil.isValid(serviceInfo);
-		JSONObject j = new JSONObject();
-
+		String id = null;
 		try {
-			j.append("serviceurl", "http://");
-			logger.info("adding service with url: "
-					+ new JSONObject(serviceInfo).getString("serviceurl"));
+		
+			id = serviceAdmin.addService(serviceInfo);
+		} catch (InvalidServiceDescriptionException e) {
+			throw new WebApplicationException(e);
 		} catch (JSONException e) {
-			throw new WebApplicationException();
-		}
-		return j;
+			throw new WebApplicationException(e);
+		}		
+		return id;
 	}
-	
-	
-	@PUT	
-	public JSONObject updateService(String serviceDescription)
-			throws WebApplicationException {
-		// ServiceUtil.isValid(serviceInfo);
-		JSONObject j = new JSONObject();
 
+	@PUT	
+	public String updateService(JSONObject serviceInfo)
+			throws WebApplicationException {
+		String id = null;
 		try {
-			j.append("serviceurl", "http://");
-			logger.info("updating the service with url: "
-					+ new JSONObject(serviceDescription).getString("serviceurl"));
+			
+			id = serviceAdmin.updateService(serviceInfo);
+		} catch (InvalidServiceDescriptionException e) {
+			throw new WebApplicationException(e);
 		} catch (JSONException e) {
-			throw new WebApplicationException();
-		}
-		return j;
+			throw new WebApplicationException(e);
+		} catch (UnknownServiceException e) {
+			throw new WebApplicationException(e);
+		}		
+		return id;
 	}
 
 	/**
 	 * Deleting the service description
-	 * @param infos contains a ../serviceurl=http://serviceurl
+	 * 
+	 * @param infos
+	 *            contains a ../serviceurl=http://serviceurl
 	 * */
 	@DELETE
 	public void deleteService(@Context UriInfo infos) {
 		String serviceurl = getServiceUrlFromUri(infos);
-		logger.info("deleting the service with url: "+serviceurl);
+		logger.info("deleting the service with url: " + serviceurl);
 	}
 
 }

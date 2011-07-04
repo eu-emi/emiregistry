@@ -32,8 +32,8 @@ public class TestService extends TestRegistryBase {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", "1");
-		map.put("url", "http://jms");
-		map.put("type", "job management service");
+		map.put("serviceurl", "http://jms");
+		map.put("servicetype", "job management service");
 		JSONObject data = new JSONObject(map);
 		String id = cr.getClientResource().post(String.class,data);
 		assertEquals("1", map.get("id"));

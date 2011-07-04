@@ -1,5 +1,9 @@
 {
     "servicetype":"job.management"
     "serviceurl":"http://localhost/someservice"
-    "ownerdn":"CN=Duke, OU=JavaSoft, O=Sun Microsystems, C=US"         
+    "ownerdn":"CN=Duke, OU=JavaSoft, O=Sun Microsystems, C=US"
+    "entrycreated":"12-12-2012,12:12:12"
+    "lastupdated":"12-12-2012,12:12:12"
+    "state":"somestate"
+    "alive":"true"         
 }

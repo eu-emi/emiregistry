@@ -3,6 +3,9 @@
  */
 package eu.emi.dsr.boundary;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
@@ -31,13 +34,18 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	}
 
 	@Test
-	public void testAddService() throws JSONException {
+	public void testRegisterService() throws JSONException {
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
-		JSONObject jo = new JSONObject();
-		jo.append("serviceurl", "http://1");
-		JSONObject result = cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(JSONObject.class,jo);
-		assertNotNull(result.get("serviceurl"));
+		
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("servicetype", "jms");
+		map.put("serviceurl", "http://1");
+		JSONObject jo = new JSONObject(map);
+		String str = cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(String.class,jo);
+		assertNotNull(str);
+		System.out.println(str);
 	}
 
 	@Test
@@ -51,9 +59,11 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	public void testUpdateService() throws JSONException {
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
-		JSONObject jo = new JSONObject();
-		jo.append("serviceurl", "http://1");
-		JSONObject result = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).put(JSONObject.class,jo);
-		assertNotNull(result.get("serviceurl"));
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("servicetype", "jms");
+		map.put("serviceurl", "http://1");
+		JSONObject jo = new JSONObject(map);
+		String result = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).put(String.class,jo);
+		assertNotNull(result);
 	}
 }

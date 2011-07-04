@@ -5,6 +5,11 @@ package eu.emi.dsr.boundary;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
+
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,24 +26,27 @@ public class TestServiceAdminResourceWithSecurity extends TestRegistryBaseWithSe
 	@Before
 	public void setup(){
 		System.out.println("base url: "+BaseURI);
+		
 	}
 	@Test
-	public void testGetAllRefs(){
+	public void testGetServiceInfo(){
 		System.out.println("/serviceadmin");
 		
-		ClientSecurityProperties csp = new ClientSecurityProperties();
-		csp.setKeystorePassword("emi");
-		csp.setKeystorePath("src/main/certs/demo-user.p12");
-		csp.setKeystoreType("pkcs12");
-		csp.setTruststoreType("jks");
-		csp.setTruststorePassword("emi");
-		csp.setTruststorePath("src/main/certs/demo-user.jks");
-		
-		
-		
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin?serviceurl=http://1", csp);
+		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin?serviceurl=http://1", getSecurityProperties());
 		JSONObject o = cr.getClientResource().get(JSONObject.class);
 		assertNotNull(o);
 		System.out.println(o);
+	}
+	@Test
+	public void testRegisterService(){
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("servicetype", "jms");
+		map.put("serviceurl", "http://1");
+		JSONObject jo = new JSONObject(map);
+		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin?serviceurl=http://1", getSecurityProperties());
+		String str = cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(String.class,jo);
+		assertNotNull(str);
+		System.out.println(str);
 	}
 }

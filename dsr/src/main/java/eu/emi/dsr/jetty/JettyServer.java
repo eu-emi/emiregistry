@@ -3,10 +3,8 @@
  */
 package eu.emi.dsr.jetty;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.Properties;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
@@ -14,17 +12,16 @@ import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
+import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import eu.emi.dsr.DSRApplication;
-import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.authz.AuthorisationFilter;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.ServerProperties;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -89,15 +86,15 @@ public class JettyServer {
 
 	public void init() {
 
-		scheme = conf.getProperty(ServerProperties.REGISTRY_SCHEME);
-		hostName = conf.getProperty(ServerProperties.REGISTRY_HOSTNAME);
+		scheme = conf.getProperty(ServerConstants.REGISTRY_SCHEME);
+		hostName = conf.getProperty(ServerConstants.REGISTRY_HOSTNAME);
 		portNumber = Integer.valueOf(conf
-				.getProperty(ServerProperties.REGISTRY_PORT));
+				.getProperty(ServerConstants.REGISTRY_PORT));
 
 		if ((scheme.equals("http") || (scheme == null))) {
 			connector = createConnector();
 		} else if (scheme.equals("https")) {
-			connector = createSecureConnector();
+			connector = createSecureConnector();			
 		} else {
 			try {
 				throw new Exception();
@@ -109,16 +106,29 @@ public class JettyServer {
 
 		// initialising the server
 		ServletHolder sh = new ServletHolder(ServletContainer.class);
-		sh.setInitParameter("javax.ws.rs.Application",
-				appClass.getCanonicalName());
+		
+		setInitParams(sh);
+		
+		
 		server = new Server();
-
+		
 		ServletContextHandler context = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
-		context.addServlet(sh, "/*");
+		
+		context.addServlet(sh, "/*");		
 		server.addConnector(connector);
+	}
+
+	/**
+	 * @param sh
+	 */
+	private void setInitParams(ServletHolder sh) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("javax.ws.rs.Application", appClass.getCanonicalName());
+		map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, AuthorisationFilter.class.getName());
+		sh.setInitParameters(map);
 	}
 
 	/**
@@ -128,22 +138,22 @@ public class JettyServer {
 		SslSelectChannelConnector ssl_connector = null;
 		try {
 			ssl_connector = new SslSelectChannelConnector();
-			ssl_connector.setHost(conf.getProperty(ServerProperties.REGISTRY_HOSTNAME));
-			ssl_connector.setPort(Integer.valueOf(conf.getProperty(ServerProperties.REGISTRY_PORT)));
+			ssl_connector.setHost(conf.getProperty(ServerConstants.REGISTRY_HOSTNAME));
+			ssl_connector.setPort(Integer.valueOf(conf.getProperty(ServerConstants.REGISTRY_PORT)));
 
 			SslContextFactory cf = ssl_connector.getSslContextFactory();
 
-			cf.setKeyStore(conf.getProperty(ServerProperties.KEYSTORE_PATH));// "src/main/certs/demo-server.p12"
-			cf.setKeyStoreType(conf.getProperty(ServerProperties.KEYSTORE_TYPE));//"pkcs12";
-			cf.setKeyManagerPassword(conf.getProperty(ServerProperties.KEYSTORE_PASSWORD));//("emi");
-			cf.setKeyStorePassword(conf.getProperty(ServerProperties.KEYSTORE_PASSWORD));//("emi");
+			cf.setKeyStore(conf.getProperty(ServerConstants.KEYSTORE_PATH));// "src/main/certs/demo-server.p12"
+			cf.setKeyStoreType(conf.getProperty(ServerConstants.KEYSTORE_TYPE));//"pkcs12";
+			cf.setKeyManagerPassword(conf.getProperty(ServerConstants.KEYSTORE_PASSWORD));//("emi");
+			cf.setKeyStorePassword(conf.getProperty(ServerConstants.KEYSTORE_PASSWORD));//("emi");
 
-			cf.setTrustStore(conf.getProperty(ServerProperties.TRUSTSTORE_PATH));//("src/main/certs/demo-server.jks");
-			cf.setTrustStorePassword(conf.getProperty(ServerProperties.TRUSTSTORE_PASSWORD));//("emi");
-			cf.setTrustStoreType(conf.getProperty(ServerProperties.TRUSTSTORE_TYPE));//("jks");
+			cf.setTrustStore(conf.getProperty(ServerConstants.TRUSTSTORE_PATH));//("src/main/certs/demo-server.jks");
+			cf.setTrustStorePassword(conf.getProperty(ServerConstants.TRUSTSTORE_PASSWORD));//("emi");
+			cf.setTrustStoreType(conf.getProperty(ServerConstants.TRUSTSTORE_TYPE));//("jks");
 
-			cf.setWantClientAuth(Boolean.valueOf(conf.getProperty(ServerProperties.CLIENT_AUTHN))); //true
-			cf.setNeedClientAuth(Boolean.valueOf(conf.getProperty(ServerProperties.CLIENT_AUTHN)));
+			cf.setWantClientAuth(Boolean.valueOf(conf.getProperty(ServerConstants.CLIENT_AUTHN))); //true
+			cf.setNeedClientAuth(Boolean.valueOf(conf.getProperty(ServerConstants.CLIENT_AUTHN)));
 
 		} catch (Exception e) {
 			Log.logException("Error creating secure connectore", e, logger);
@@ -162,17 +172,17 @@ public class JettyServer {
 		plain_connector.setHost(hostName);
 		plain_connector.setPort(portNumber);
 		plain_connector.setThreadPool(new QueuedThreadPool(Integer.valueOf(conf
-				.getProperty(ServerProperties.JETTY_MAXTHREADS))));
+				.getProperty(ServerConstants.JETTY_MAXTHREADS))));
 		plain_connector.setMaxIdleTime(Integer.valueOf(conf
-				.getProperty(ServerProperties.JETTY_MAXIDLETIME)));
+				.getProperty(ServerConstants.JETTY_MAXIDLETIME)));
 		return plain_connector;
 	}
 
 	protected void configureConnector(AbstractConnector http) {
 		http.setMaxIdleTime(Integer.valueOf(conf
-				.getProperty(ServerProperties.JETTY_MAXIDLETIME)));
+				.getProperty(ServerConstants.JETTY_MAXIDLETIME)));
 		int soLinger = Integer.valueOf(conf
-				.getProperty(ServerProperties.JETTY_MAXIDLETIME));
+				.getProperty(ServerConstants.JETTY_MAXIDLETIME));
 		if (soLinger > 0)
 			http.setSoLingerTime(soLinger);
 	}

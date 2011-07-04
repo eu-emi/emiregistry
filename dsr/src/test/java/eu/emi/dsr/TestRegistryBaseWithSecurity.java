@@ -8,8 +8,9 @@ import java.util.Properties;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import eu.emi.dsr.client.ClientSecurityProperties;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.ServerProperties;
+import eu.emi.dsr.core.ServerConstants;
 
 /**
  * @author a.memon
@@ -23,7 +24,7 @@ public class TestRegistryBaseWithSecurity {
 	public static void startServer() {
 //		System.setProperty("javax.net.debug", "all");
 		Properties p = new Properties();
-		setAuthenticationSettings(p);
+		setSecuritySettings(p);
 		setGeneralSettings(p);
 		
 		
@@ -34,27 +35,41 @@ public class TestRegistryBaseWithSecurity {
 
 	
 	
-	private static void setAuthenticationSettings(Properties p) {
-		p.put(ServerProperties.CLIENT_AUTHN, "true");
-		p.put(ServerProperties.KEYSTORE_PASSWORD, "emi");
-		p.put(ServerProperties.KEYSTORE_TYPE, "pkcs12");
-		p.put(ServerProperties.KEYSTORE_PATH, "src/main/certs/demo-server.p12");		
-		p.put(ServerProperties.TRUSTSTORE_PASSWORD, "emi");
-		p.put(ServerProperties.TRUSTSTORE_PATH, "src/main/certs/demo-server.jks");
-		p.put(ServerProperties.TRUSTSTORE_TYPE, "jks");
+	private static void setSecuritySettings(Properties p) {
+		p.put(ServerConstants.CLIENT_AUTHN, "true");
+		p.put(ServerConstants.KEYSTORE_PASSWORD, "emi");
+		p.put(ServerConstants.KEYSTORE_TYPE, "pkcs12");
+		p.put(ServerConstants.KEYSTORE_PATH, "src/main/certs/demo-server.p12");		
+		p.put(ServerConstants.TRUSTSTORE_PASSWORD, "emi");
+		p.put(ServerConstants.TRUSTSTORE_PATH, "src/main/certs/demo-server.jks");
+		p.put(ServerConstants.TRUSTSTORE_TYPE, "jks");
+		p.put(ServerConstants.REGISTRY_ACCESSCONTROL, "true");
 	}
 
+	
+	
 	private static void setGeneralSettings(Properties p) {
-		p.put(ServerProperties.REGISTRY_HOSTNAME, "localhost");
-		p.put(ServerProperties.REGISTRY_PORT, "9443");
-		p.put(ServerProperties.REGISTRY_SCHEME, "https");
-		p.put(ServerProperties.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
-		p.put(ServerProperties.JETTY_LOWTHREADS, "50");
-		p.put(ServerProperties.JETTY_MAXIDLETIME, "30000");
-		p.put(ServerProperties.JETTY_MAXTHREADS, "255");
-		p.put(ServerProperties.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
+		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
+		p.put(ServerConstants.REGISTRY_PORT, "9443");
+		p.put(ServerConstants.REGISTRY_SCHEME, "https");
+		p.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
+		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
+		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
+		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
+		p.put(ServerConstants.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
 	}
 
+	public ClientSecurityProperties getSecurityProperties(){
+		ClientSecurityProperties csp = new ClientSecurityProperties();
+		csp.setKeystorePassword("emi");
+		csp.setKeystorePath("src/main/certs/demo-user.p12");
+		csp.setKeystoreType("pkcs12");
+		csp.setTruststoreType("jks");
+		csp.setTruststorePassword("emi");
+		csp.setTruststorePath("src/main/certs/demo-user.jks");
+		return csp;
+	}
+	
 	@AfterClass
 	public static void stopServer() {
 		if (server.isStarted()) {

@@ -37,7 +37,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database = connection.getDB("mydb");
 		serviceCollection = database.getCollection("serviceRegistry");
 	}
-
 	@Override
 	public Object insert(Object item) throws ExistingResourceException,
 			PersistentStoreFailureException {

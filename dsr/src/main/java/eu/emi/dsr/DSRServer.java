@@ -11,11 +11,9 @@ import java.util.logging.LogManager;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.ServerProperties;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.util.Log;
 
@@ -26,9 +24,9 @@ import eu.emi.dsr.util.Log;
  * 
  * 
  */
-public class DSRServer {
+public class DSRServer{
 	private boolean started;
-	private Configuration conf;
+	private static Configuration conf;
 	private JettyServer jettyServer;
 	private Logger logger = Log.getLogger(Log.DSR, DSRServer.class);
 
@@ -56,7 +54,7 @@ public class DSRServer {
 	}
 
 	
-
+	
 	
 
 	public void startJetty() {
@@ -78,7 +76,7 @@ public class DSRServer {
 	}
 
 	private void initLog4j() {
-		String path = conf.getProperty(ServerProperties.LOGGER_CONF_PATH);
+		String path = conf.getProperty(ServerConstants.LOGGER_CONF_PATH);
 		PropertyConfigurator.configure(path);
 		LogManager l = LogManager.getLogManager();
 		try {
@@ -94,10 +92,10 @@ public class DSRServer {
 
 	
 
-	public Configuration getConfiguration() {
+	public static Configuration getConfiguration() {
 		return conf;
 	}
-
+	
 	
 
 	public static void main(String[] args) {
