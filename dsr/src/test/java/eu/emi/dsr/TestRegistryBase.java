@@ -30,10 +30,14 @@ public class TestRegistryBase {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
-		p.put(ServerConstants.REGISTRY_PORT, "54321");
+		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
+		p.put(ServerConstants.MONGODB_PORT, "27017");
+		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services");
+		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();
+		System.out.println("server started");
 	}
 
 	@AfterClass

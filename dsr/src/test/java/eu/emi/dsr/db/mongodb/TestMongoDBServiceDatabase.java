@@ -1,14 +1,17 @@
 package eu.emi.dsr.db.mongodb;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.codehaus.jackson.map.util.JSONPObject;
+import org.junit.experimental.categories.Categories.ExcludeCategory;
+import org.junit.rules.ExpectedException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
@@ -16,122 +19,89 @@ import eu.emi.dsr.db.PersistentStoreFailureException;
 
 /**
  * @author martoni
- * 
+ * @author a.memon
  */
 public class TestMongoDBServiceDatabase {
+	public static MongoDBServiceDatabase db;
+
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+
+	@BeforeClass
+	public static void setUp() {
+		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
+				"services");
+	}
 
 	@Test
-	public void testInsertExistingServiceEntry() {
-		MongoDBServiceDatabase db = new MongoDBServiceDatabase();
-		boolean foundExistingElement = false;
+	public void testInsertServiceEntry() {
 
 		// Create information to be stored
 		JSONObject entry = new JSONObject();
 		try {
-			entry.put("id", "testEntry");
-			entry.put("content", "testData");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			entry.put(
+					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					"http://1");
+			entry.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"some_service");
+			ServiceObject s = new ServiceObject(entry);
+
+			db.insert(s);
+
+			assertEquals("http://1", db.getServiceByUrl("http://1").getUrl());
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		// Store information twice!
-		try {
-			db.insert(entry.toString());
-			db.insert(entry.toString());
-		} catch (ExistingResourceException e) {
-			foundExistingElement = true;
-		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 
-		// Delete inserted information
-		try {
-			db.delete("testEntry");
-		} catch (MultipleResourceException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (NonExistingResourceException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (PersistentStoreFailureException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		
-		if (foundExistingElement) {
-			assertTrue("Detecting already existing element", true);
-		} else {
-			fail("Not detecting already existing element.");
-		}
 	}
+
+	
+
+	@Test(expected=ExistingResourceException.class)
+	public void testRedundantServiceEntries() throws JSONException,
+			PersistentStoreFailureException, ExistingResourceException {
+		JSONObject entry = new JSONObject();
+		entry.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+				"http://1");
+		entry.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"some_service_1");
+		ServiceObject s1 = new ServiceObject(entry);
+		db.insert(s1);
+
+		JSONObject entry1 = new JSONObject();
+		entry1.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+				"http://1");
+		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"some_service_2");
+		ServiceObject s2 = new ServiceObject(entry1);
+		db.insert(s2);
+
+	}
+
 	
 	@Test
-	public void testInsertNewServiceEntry() {
-		MongoDBServiceDatabase db = new MongoDBServiceDatabase();
-		
-		// Create information to be stored
-		JSONObject entry = new JSONObject();
-		try {
-			entry.put("id", "testEntry");
-			entry.put("content", "testData");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Store information
-		try {
-			db.insert(entry.toString());
-		} catch (ExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Retrieve stored information
-		Object result = new Object();
-		try {
-			result = db.get("testEntry");
-		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Delete inserted information
-		try {
-			db.delete("testEntry");
-		} catch (MultipleResourceException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (NonExistingResourceException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (PersistentStoreFailureException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		
-		// Check resulted information
-		JSONObject resultObject = new JSONObject();
-		try {
-			resultObject = new JSONObject(result.toString());
-		} catch (JSONException e1) {
-			fail("Not well-formed JSON result retrieved from database.");
-		}
-		try {
-			assertEquals(resultObject.get("content"), "testData");
-		} catch (JSONException e) {
-			fail("Missing content from retrieved data.");
-		}
+	public void testDeleteServiceByUrl() throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException, ExistingResourceException{
+		JSONObject entry1 = new JSONObject();
+		entry1.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+				"http://2");
+		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"some_service_2");
+		ServiceObject so = new ServiceObject(entry1);
+		db.insert(so);
+		ServiceObject s = db.getServiceByUrl("http://2");
+		assertEquals("http://2",s.getUrl());
+		db.delete("http://2");
+		ServiceObject s1 = db.getServiceByUrl("http://2");
+		assertTrue(s1==null);
+	}
+	
+	
+	
+	@AfterClass
+	public static void cleanUp() throws JSONException{
+			db.deleteAll();
+			assertTrue(db.findAll().size() == 0);
 	}
 }

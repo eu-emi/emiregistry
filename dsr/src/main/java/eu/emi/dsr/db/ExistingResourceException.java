@@ -14,4 +14,10 @@ public class ExistingResourceException extends Exception {
 	public ExistingResourceException(String message) {
 		super(message);
 	}
+	public ExistingResourceException(String message, Throwable throwable){
+		super(message, throwable);
+	}
+	public ExistingResourceException(Throwable t){
+		super(t);
+	}
 }

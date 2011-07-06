@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.boundry;
+package eu.emi.dsr.resource;
 
 import java.util.HashMap;
 import java.util.Map;

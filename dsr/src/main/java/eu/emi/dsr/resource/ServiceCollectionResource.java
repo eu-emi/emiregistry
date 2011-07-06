@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.boundry;
+package eu.emi.dsr.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

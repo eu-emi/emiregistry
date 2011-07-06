@@ -54,4 +54,8 @@ public abstract class SecurityProperties implements Serializable{
 		this.keystorePath = keystorePath;
 	}
 	public abstract String getType();
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.boundary;
+package eu.emi.dsr.resource;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

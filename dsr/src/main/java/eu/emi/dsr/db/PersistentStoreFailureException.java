@@ -3,9 +3,13 @@ package eu.emi.dsr.db;
 public class PersistentStoreFailureException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 407747781736391198L;
+
+	/**
 	 * The serial version UID expected at serializable classes
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public PersistentStoreFailureException() {
 		super();
@@ -15,4 +19,7 @@ public class PersistentStoreFailureException extends Exception {
 		super(message);
 	}
 
+	public PersistentStoreFailureException(Throwable t) {
+		super(t);
+	}
 }

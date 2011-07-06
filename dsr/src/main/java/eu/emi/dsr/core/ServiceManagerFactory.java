@@ -12,23 +12,18 @@ import eu.emi.dsr.util.Log;
  * 
  */
 public class ServiceManagerFactory {
-	private static Logger logger = Log.getLogger(Log.DSR, ServiceManagerFactory.class);
+	private static Logger logger = Log.getLogger(Log.DSR,
+			ServiceManagerFactory.class);
 
 	private static ServiceAdminManager adminMgr = null;
 	private static ServiceColManager colMgr = null;
 
 	public static ServiceAdminManager getServiceAdminManager() {
-		if (adminMgr == null) {
-			adminMgr = new ServiceAdminManager();
-		}
-		return adminMgr;
+		return new ServiceAdminManager();
 	}
 
 	public static ServiceColManager getServiceColManager() {
-		if (colMgr == null) {
-			colMgr = new ServiceColManager();
-		}
-		return colMgr;
+			return  new ServiceColManager();
 	}
 
 }

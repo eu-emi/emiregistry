@@ -23,6 +23,11 @@ public class Log {
 	public static final String DSRCLIENT="emiregistry.dsr.client";
 	
 	/**
+	 * logger prefix for client stack
+	 */
+	public static final String DSRDB="emiregistry.dsr.db";
+	
+	/**
 	 * returns a logger name, using the given prefix and the simple name
 	 * of the given class
 	 * 
@@ -59,6 +64,8 @@ public class Log {
 		logException(message,cause,Logger.getLogger(DSR));
 	}
 	
+	
+	
 	/**
 	 * log an error message to the specified logger.
 	 * A human-friendly message is constructed and logged at "ERROR" level.
@@ -77,6 +84,11 @@ public class Log {
 				logger.error("To see the full error stack trace, set log4j.logger."+logger.getName()+"=DEBUG");
 			}
 		}
+	}
+	
+	
+	public static void logException(Throwable cause){
+		logException("", cause);
 	}
 	
 	/**

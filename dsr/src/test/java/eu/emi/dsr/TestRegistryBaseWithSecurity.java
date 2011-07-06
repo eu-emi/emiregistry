@@ -26,7 +26,7 @@ public class TestRegistryBaseWithSecurity {
 		Properties p = new Properties();
 		setSecuritySettings(p);
 		setGeneralSettings(p);
-		
+		setDatabaseProperties(p);
 		
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
@@ -58,6 +58,13 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
 	}
+	
+	private static void setDatabaseProperties(Properties p){
+		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
+		p.put(ServerConstants.MONGODB_PORT, "27017");
+		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services");
+		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
+	}
 
 	public ClientSecurityProperties getSecurityProperties(){
 		ClientSecurityProperties csp = new ClientSecurityProperties();
@@ -69,6 +76,9 @@ public class TestRegistryBaseWithSecurity {
 		csp.setTruststorePath("src/main/certs/demo-user.jks");
 		return csp;
 	}
+	
+	
+	
 	
 	@AfterClass
 	public static void stopServer() {

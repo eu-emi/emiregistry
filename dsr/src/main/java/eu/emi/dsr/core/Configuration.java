@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Properties;
-
-import javax.naming.InitialContext;
 
 /**
  * @author a.memon
@@ -50,10 +47,6 @@ public class Configuration implements Cloneable{
 		this.props = properties;		
 	}
 
-	
-
-	
-
 	public void setProperty(String key, String value) {
 		props.setProperty(key, value);
 	}
@@ -84,5 +77,13 @@ public class Configuration implements Cloneable{
 
 	public String getProperty(String key, String value) {
 		return props.getProperty(key);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Configuration clone() throws CloneNotSupportedException {
+		return (Configuration) super.clone();
 	}
 }

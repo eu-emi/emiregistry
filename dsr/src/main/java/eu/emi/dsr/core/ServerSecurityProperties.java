@@ -9,7 +9,7 @@ package eu.emi.dsr.core;
  * @author a.memon
  *
  */
-public class ServerSecurityProperties extends SecurityProperties{
+public class ServerSecurityProperties extends SecurityProperties implements Cloneable{
 	private static final long serialVersionUID = -3688956711635418420L;
 	
 	private Boolean clientAuthn;
@@ -75,6 +75,14 @@ public class ServerSecurityProperties extends SecurityProperties{
 	public String getType() {
 		// TODO Auto-generated method stub
 		return "server";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public ServerSecurityProperties clone() throws CloneNotSupportedException {
+		return (ServerSecurityProperties) super.clone();
 	}
 		
 	
