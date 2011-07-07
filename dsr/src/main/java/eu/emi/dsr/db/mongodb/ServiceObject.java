@@ -9,12 +9,15 @@ import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.util.DateCache;
+import org.eclipse.jetty.util.ajax.JSONDateConvertor;
 
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.Log;
+import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * Mongo flavor of EMIRegistry Service description
@@ -28,31 +31,27 @@ public class ServiceObject {
 	 * 
 	 */
 	private static final long serialVersionUID = -8819684158264382427L;
-	
-	
+
 	private final JSONObject jo;
-	
+
 	/**
-	 * @throws JSONException 
+	 * @throws JSONException
 	 * 
 	 */
 	public ServiceObject(String jsonString) throws JSONException {
 		this.jo = new JSONObject(jsonString);
 	}
-	
+
 	public ServiceObject(JSONObject jo) throws JSONException {
 		this.jo = jo;
 	}
-	
-	
-	private static SimpleDateFormat sf = new SimpleDateFormat(
-			"dd-mm-yyyy, HH:mm");
 
 	public String getServiceOwner() {
 		String owner = null;
 		try {
-			owner = jo.get(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName())
-					.toString();
+			owner = jo
+					.get(ServiceBasicAttributeNames.SERVICE_OWNER
+							.getAttributeName()).toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +61,8 @@ public class ServiceObject {
 	public String getUrl() {
 		String serviceUrl = null;
 		try {
-			serviceUrl = jo.get(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName())
+			serviceUrl = jo.get(
+					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName())
 					.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -74,9 +74,10 @@ public class ServiceObject {
 	public Date getCreationTime() {
 		Date d = null;
 		try {
-			d = sf.parse(jo.get(
-					ServiceBasicAttributeNames.SERVICE_CREATED_ON
-							.getAttributeName()).toString());
+
+			d = ServiceUtil.ServiceDateFormat.parse((String) jo
+					.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+							.getAttributeName()));
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
@@ -89,7 +90,7 @@ public class ServiceObject {
 	public Date getUpdateSince() {
 		Date d = null;
 		try {
-			d = sf.parse(jo.get(
+			d = ServiceUtil.ServiceDateFormat.parse(jo.get(
 					ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 							.getAttributeName()).toString());
 		} catch (ParseException e) {
@@ -104,9 +105,9 @@ public class ServiceObject {
 	public Date getExpireOn() {
 		Date d = null;
 		try {
-			d = sf.parse(jo.get(
-					ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-							.getAttributeName()).toString());
+			d = ServiceUtil.ServiceDateFormat.parse((String) jo
+					.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+							.getAttributeName()));
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
@@ -117,28 +118,42 @@ public class ServiceObject {
 	}
 
 	public JSONObject toJSON() {
-		if(jo == null)
+		if (jo == null)
 			return null;
 		return jo;
 	}
-	
+
 	public DBObject toDBObject() {
-		DBObject d = null; 
-		d = (DBObject) JSON.parse(toString()); 
+		DBObject d = null;
+		d = (DBObject) JSON.parse(toString());
+		// changing dates
+
+		// for the newly created service
+		if (d.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+				.getAttributeName()) != null)
+			d.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+					.getAttributeName(), getCreationTime());
+
+		if (d.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+				.getAttributeName()) != null)
+			d.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), getExpireOn());
+
+		if (d.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+				.getAttributeName()) != null)
+			d.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+					.getAttributeName(), getUpdateSince());
 		return d;
 	}
-	
-   
-    /**
-     * Returns a JSON serialization of this object
-     * @return JSON serialization
-     */    
-    @Override
-    public String toString(){
-        return jo.toString();
-    }
 
-    
-
+	/**
+	 * Returns a JSON serialization of this object
+	 * 
+	 * @return JSON serialization
+	 */
+	@Override
+	public String toString() {
+		return jo.toString();
+	}
 
 }

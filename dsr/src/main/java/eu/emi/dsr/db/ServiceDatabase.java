@@ -3,8 +3,9 @@
  */
 package eu.emi.dsr.db;
 
-import java.util.Collection;
 import java.util.List;
+
+import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.db.mongodb.ServiceObject;
 
@@ -41,9 +42,14 @@ public interface ServiceDatabase {
 	 * @throws PersistentStoreFailureException throws exception if persistent store level error occurs
 	 * TODO: support list of urls 
 	 */
-	public void delete(String url) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException;
+	public void deleteByUrl(String url) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException;
 	
 	public void deleteAll();
+	
+	/**
+	 * Query and delete the matching documents
+	 * */
+	public void findAndDelete(String query);
 //	/**
 //	 * Check whether any item specified by the identifier exists in the persistent store
 //	 * @param url service url
@@ -71,6 +77,7 @@ public interface ServiceDatabase {
 	 * @throws QueryException throws exception if the query contains any query specific error
 	 */
 	public List<ServiceObject> query(String query) throws QueryException, PersistentStoreFailureException;
+	public List<ServiceObject> findAll() throws JSONException;
 	
 	
 }

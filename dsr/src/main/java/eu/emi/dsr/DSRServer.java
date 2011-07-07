@@ -7,15 +7,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+
 import eu.emi.dsr.core.Configuration;
+import eu.emi.dsr.core.FileListener;
+import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServerSecurityProperties;
 import eu.emi.dsr.jetty.JettyServer;
+import eu.emi.dsr.lease.ServiceReaper;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -104,9 +111,21 @@ public class DSRServer{
 			jettyServer = new JettyServer(DSRApplication.class, conf);
 			jettyServer.start();
 		}
+		
+		startLog4jFileListener();
+		startServiceExpiryCheckcer();
 		System.out.println("DSR server started");
 		logger.info("DSR server started");
 	}
+
+	/**
+	 * Starts the servicereaper thread to purge the expired service entries
+	 */
+	private void startServiceExpiryCheckcer() {
+		RegistryThreadPool.getScheduledExecutorService().scheduleWithFixedDelay(new ServiceReaper(), 10, 5, TimeUnit.SECONDS);		
+	}
+
+
 
 	public void stopJetty() {
 		jettyServer.stop();
@@ -148,5 +167,34 @@ public class DSRServer{
 	public static void main(String[] args) {
 		DSRServer server = new DSRServer("src/main/conf/dsr.config");
 		server.startJetty();
+	}
+	
+	
+	/**
+	 * sets up a watchdog that checks for changes to the log4j configuration file,
+	 * and re-configures log4j if that file has changed
+	 */
+	private void startLog4jFileListener(){
+		final String log4jConfig=System.getProperty("log4j.configuration");
+		if(log4jConfig==null){
+			logger.debug("No logger configuration found.");
+			return;
+		}
+		try{
+			Runnable r=new Runnable(){
+				public void run(){
+					logger.info("Log4j Configuration modified, re-configuring.");
+					PropertyConfigurator.configure(log4jConfig);
+				}
+			};
+			File logProperties=log4jConfig.startsWith("file:")?new File(new URI(log4jConfig)):new File(log4jConfig);
+			FileListener fw=new FileListener(logProperties,r);
+			RegistryThreadPool.getScheduledExecutorService().scheduleWithFixedDelay(fw, 5, 5, TimeUnit.SECONDS);
+		}
+		catch(URISyntaxException use){
+			logger.warn("Location of log configuration is not an URI: <"+log4jConfig+">");
+		} catch (FileNotFoundException e) {
+			logger.warn("Invalid log location: <"+log4jConfig+">");
+		}
 	}
 }

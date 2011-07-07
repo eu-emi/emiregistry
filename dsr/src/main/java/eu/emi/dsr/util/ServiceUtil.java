@@ -3,6 +3,12 @@
  */
 package eu.emi.dsr.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.spi.TimeZoneNameProvider;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -25,6 +31,12 @@ public class ServiceUtil {
 	// return null;
 	// }
 
+	public static SimpleDateFormat ServiceDateFormat = new SimpleDateFormat(
+	"dd-mm-yyyy, HH:mm");
+	
+	public static SimpleDateFormat ISODateFormat = new SimpleDateFormat(
+	"yyyy-MM-dd'T'HH:mm:ssZ");
+	
 	/**
 	 * Checks if the description contains the minimal valid information i.e.
 	 * <b>url</b> and <b>type</b>
@@ -46,26 +58,30 @@ public class ServiceUtil {
 	 */
 	public static boolean isValidServiceInfo(JSONObject jo) throws JSONException {
 		
-//		if ((jo.get(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName()) == null)
-//				&& (jo.get(ServiceBasicAttributeNames.SERVICE_URL
-//						.getAttributeName()) == null)
-//				&& (jo.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-//						.getAttributeName()) == null)) {
-//			return false;
-//		}
+		if ((jo.get(ServiceBasicAttributeNames.SERVICE_URL
+						.getAttributeName()) == null)
+				&& (jo.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+						.getAttributeName()) == null)) {
+			return false;
+		}
 		
-		ServiceBasicAttributeNames[] s = ServiceBasicAttributeNames.values();
-		for (int i = 0; i < s.length; i++) {
-			if(jo.get(s[i].getAttributeName()) == null){
-				return false;
-			}
-			
-		}		
+//		ServiceBasicAttributeNames[] s = ServiceBasicAttributeNames.values();
+//		for (int i = 0; i < s.length; i++) {
+//			if(jo.get(s[i].getAttributeName()) == null){
+//				return false;
+//			}
+//			
+//		}		
 		return true;
 	}
 	
 	
-	public static void main(String[] args) {
-		
+	public static String toUTCFormat(Date d){
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+//			SimpleDateFormat formatter = new SimpleDateFormat();
+			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			String timestamp = formatter.format(d);
+			return timestamp;
 	}
 }

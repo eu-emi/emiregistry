@@ -92,7 +92,7 @@ public class TestMongoDBServiceDatabase {
 		db.insert(so);
 		ServiceObject s = db.getServiceByUrl("http://2");
 		assertEquals("http://2",s.getUrl());
-		db.delete("http://2");
+		db.deleteByUrl("http://2");
 		ServiceObject s1 = db.getServiceByUrl("http://2");
 		assertTrue(s1==null);
 	}
