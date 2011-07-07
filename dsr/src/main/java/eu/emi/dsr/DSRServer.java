@@ -164,8 +164,14 @@ public class DSRServer{
 	
 	
 
-	public static void main(String[] args) {
-		DSRServer server = new DSRServer("src/main/conf/dsr.config");
+	public static void main(String... args) {
+		DSRServer server = null;
+		if (args[0] != null) {
+			 server = new DSRServer(args[0]);
+		} else {
+			server = new DSRServer("conf/dsr.config");	
+		}
+		
 		server.startJetty();
 	}
 	

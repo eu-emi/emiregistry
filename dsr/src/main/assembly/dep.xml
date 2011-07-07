@@ -1,0 +1,67 @@
+<assembly>
+	<id>all</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>*.xml</include>
+				<include>*.conf</include>
+			</includes>
+		</fileSet>
+
+		<!-- <fileSet> <directory>doc</directory> </fileSet> -->
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory>lib</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/scripts</directory>
+			<outputDirectory>/bin</outputDirectory>
+			<fileMode>0744</fileMode>
+		</fileSet>
+		<fileSet>
+			<!-- <excludes> <exclude>registry_*</exclude> </excludes> -->
+			<directory>src/main/conf</directory>
+			<outputDirectory>/conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/certs</directory>
+			<outputDirectory>/certs</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>log4j.properties</include>
+			</includes>
+			<outputDirectory>/conf</outputDirectory>
+		</fileSet>
+		<!-- <fileSet> <directory>target/site</directory> <outputDirectory>doc</outputDirectory> 
+			</fileSet> -->
+		<!-- -->
+		<fileSet>
+			<excludes>
+				<exclude>README</exclude>
+			</excludes>
+			<directory>/logs</directory>
+			<outputDirectory>/logs</outputDirectory>
+		</fileSet>
+	</fileSets>
+	-->
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<excludes>
+				<!-- <exclude>groupid:artifactid</exclude> -->
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>
