@@ -1,0 +1,237 @@
+/**
+ * 
+ */
+package eu.emi.dsr.infrastructure;
+
+import static org.junit.Assert.*;
+
+import java.util.List;
+import java.util.Vector;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+/**
+ * @author szigeti
+ *
+ */
+public class TestInfrastructureManager {
+	public static InfrastructureManager manager;
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		manager = new InfrastructureManager();
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#InfrastructureManager()}.
+	 */
+	@Test
+	public void testInfrastructureManager() {
+		List<String> parents = manager.GetParentsRoute();
+		if (!parents.isEmpty()) fail("Can not clean the parents collection!");
+		
+		// Child collection check
+		List<String> childs = manager.GetChildServices();
+		if (!childs.isEmpty()) fail("Can not clean the childs collection!");
+		
+		assertEquals(parents.isEmpty(),childs.isEmpty());
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#SetParentsRoute(java.util.List)}.
+	 */
+	@Test
+	public void testSetParentsRoute() {
+        // NULL pointer test
+		try {
+			manager.SetParentsRoute(null);
+			// if the SetParentsRoute don't throw exception, then it is failure
+			fail("Don't throw NullPointerFailureException exception, because an input was a NULL pointer!");			
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("An input was a NULL pointer and not an empty collection!");			
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			//TODO true assert
+		}
+
+		List<String> inputParentsRoute = new Vector<String>();
+		// empty input test
+		try {
+			manager.SetParentsRoute(inputParentsRoute);
+			// if the SetParentsRoute don't throw exception, then it is failure
+			fail("Don't throw EmptyIdentifierFailureException exception, because an input list was empty!");			
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			// TODO true assert
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			fail("Input was a valid value and not NULL pointer!");			
+		}
+		
+		inputParentsRoute.add("test_parent");
+		try {
+			manager.SetParentsRoute(inputParentsRoute);
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("Input parents list was not empty!");
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			fail("Input parents list was not NULL pointer!");
+		}
+		
+		assertEquals(inputParentsRoute, manager.GetParentsRoute());
+	}
+
+	
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetParentsRoute()}.
+	 */
+	@Test
+	public void testGetParentsRoute() {
+		List<String> parents = new Vector<String>();
+		parents.add("test_paretn1");
+		parents.add("test_parent2");
+		parents.add("test_parent3");
+		try {
+			manager.SetParentsRoute(parents);
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("The parents list was not empty!");
+		} catch (NullPointerFailureException e) {
+			// TODO true assert
+			e.printStackTrace();
+		}
+		
+		assertEquals(parents, manager.GetParentsRoute());
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetChildServices()}.
+	 */
+	@Test
+	public void testGetChildServices() {
+		List<String> childs = new Vector<String>();
+		childs.add("test_child1");
+		childs.add("test_child2");
+		childs.add("test_child3");
+		
+		try {
+			manager.AddChildService("test_child1");
+			manager.AddChildService("test_child2");
+			manager.AddChildService("test_child3");
+		} catch (AlreadyExistFailureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EmptyIdentifierFailureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerFailureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(childs, manager.GetChildServices());
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#AddChildService(java.lang.String)}.
+	 */
+	@Test
+	public void testAddChildService() {
+		// NULL pointer test
+		try {
+			manager.AddChildService(null);
+		} catch (AlreadyExistFailureException e) {
+			e.printStackTrace();
+			fail("Input was a NULL pointer and we catch AlreadyExistFailureException exception.");
+		} catch (EmptyIdentifierFailureException e) {
+			// TODO add true test assert, because the test was good
+			e.printStackTrace();
+			fail("Input was a NULL pointer and we catch EmptyIdentifierFailureException exception.");
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			// TODO true assert
+		}
+		
+		// empty input test
+		try {
+			manager.AddChildService("");
+		} catch (AlreadyExistFailureException e) {
+			e.printStackTrace();
+			fail("Child collection was emtpy and we catch AlreadyExistFailureException exception.");
+		} catch (EmptyIdentifierFailureException e) {
+			// TODO add true test assert, because the test was good
+			e.printStackTrace();
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			fail("Child collection was emtpy and we catch NullPointerFailureException exception.");
+		}
+		
+		// AlreadyExistFailureException exception test
+		try {
+			manager.AddChildService("test_child1");
+			manager.AddChildService("test_child1");
+		} catch (AlreadyExistFailureException e) {
+			// TODO add true test assert, because the test was good
+			e.printStackTrace();
+            
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("The input identifier is not empty but we catch EmptyIdentifierFailureException exception.");
+		} catch (NullPointerFailureException e) {
+			e.printStackTrace();
+			fail("The input identifier is not empty but we catch NullPointerFailureException exception.");
+		}
+		assertEquals("test_child1", manager.GetChildServices().get(0));
+		
+		try {
+			manager.AddChildService("test_child2");
+			manager.AddChildService("test_child3");
+		} catch (AlreadyExistFailureException e) {
+			e.printStackTrace();
+			fail("Every input identifier was unique.");
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("Every input identifier was not empty.");
+		}catch (NullPointerFailureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TODO true assert
+		for (int i=0; i<manager.GetChildServices().size(); i++){
+			assertEquals("test_child"+(i+1), manager.GetChildServices().get(i));
+		}
+ 
+
+	}
+
+}
