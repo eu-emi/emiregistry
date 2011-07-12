@@ -167,7 +167,7 @@ public class DSRServer{
 	public static void main(String... args) {
 		DSRServer server = null;
 		if (args[0] != null) {
-			 server = new DSRServer(args[0]);
+			server = new DSRServer(args[0]);
 		} else {
 			server = new DSRServer("conf/dsr.config");	
 		}
@@ -203,4 +203,6 @@ public class DSRServer{
 			logger.warn("Invalid log location: <"+log4jConfig+">");
 		}
 	}
+	
+	
 }

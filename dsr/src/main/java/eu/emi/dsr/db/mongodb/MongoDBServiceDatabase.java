@@ -20,6 +20,9 @@ import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
+import eu.emi.dsr.event.Event;
+import eu.emi.dsr.event.EventManager;
+import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.util.Log;
 
 import com.mongodb.*;
@@ -107,6 +110,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			DBObject db = item.toDBObject();
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON.getAttributeName(), new Date());
 			WriteResult wr = serviceCollection.insert(db, WriteConcern.SAFE);
+			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,db));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "+item.getUrl()+" - already exists",e);
@@ -182,6 +186,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				sObj.getUrl());
 		
 		serviceCollection.update(query, dbObj);
+		//sending update event to the recievers
+		EventManager.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,dbObj));
 	}
 
 	@Override
@@ -244,7 +250,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public void findAndDelete(String query) {
 		DBObject db = (DBObject) JSON.parse(query);
 		logger.debug("delete by query: "+db.toString());
-		serviceCollection.remove(db);
+		serviceCollection.remove(db);		
 	}
 
 }

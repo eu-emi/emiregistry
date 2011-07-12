@@ -3,20 +3,12 @@
  */
 package eu.emi.dsr.core;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import com.mongodb.util.JSON;
 
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.MultipleResourceException;
@@ -41,7 +33,7 @@ public class ServiceAdminManager {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminManager.class);
 	private static ServiceDatabase serviceDB = null;
-
+	
 	/**
 	 * 
 	 */
@@ -121,7 +113,7 @@ public class ServiceAdminManager {
 					"The service description does not contain valid attributes: serviceurl and servicetype");
 		}
 
-		// removing reserved keys
+		// request should json should not update the creation time
 		if (jo.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 				.getAttributeName()) != null) {
 			jo.remove(ServiceBasicAttributeNames.SERVICE_CREATED_ON
