@@ -23,7 +23,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#SetParentsRoute(java.util.List)
 	 */
 	@Override
-	public void SetParentsRoute(List<String> identifiers) throws EmptyIdentifierFailureException, NullPointerFailureException{
+	public void setParentsRoute(List<String> identifiers) throws EmptyIdentifierFailureException, NullPointerFailureException{
 		if (identifiers == null) throw new NullPointerFailureException();
 		if (identifiers.isEmpty()) throw new EmptyIdentifierFailureException();
 		
@@ -35,7 +35,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#GetParentsRoute()
 	 */
 	@Override
-	public List<String> GetParentsRoute() {
+	public List<String> getParentsRoute() {
 		return parentsRoute;
 	}
 
@@ -43,7 +43,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#GetChildServices()
 	 */
 	@Override
-	public List<String> GetChildServices() {
+	public List<String> getChildServices() {
 		return childServices;
 	}
 
@@ -51,7 +51,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#AddChildService(java.util.String)
 	 */
 	@Override
-	public void AddChildService(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException {
+	public void addChildService(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException {
 		if (identifier == null) throw new NullPointerFailureException();
 		if (identifier.isEmpty()) throw new EmptyIdentifierFailureException();
 		

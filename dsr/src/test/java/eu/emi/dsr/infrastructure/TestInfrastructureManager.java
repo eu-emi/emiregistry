@@ -55,11 +55,11 @@ public class TestInfrastructureManager {
 	 */
 	@Test
 	public void testInfrastructureManager() {
-		List<String> parents = manager.GetParentsRoute();
+		List<String> parents = manager.getParentsRoute();
 		if (!parents.isEmpty()) fail("Can not clean the parents collection!");
 		
 		// Child collection check
-		List<String> childs = manager.GetChildServices();
+		List<String> childs = manager.getChildServices();
 		if (!childs.isEmpty()) fail("Can not clean the childs collection!");
 		
 		assertEquals(parents.isEmpty(),childs.isEmpty());
@@ -72,7 +72,7 @@ public class TestInfrastructureManager {
 	public void testSetParentsRoute() {
         // NULL pointer test
 		try {
-			manager.SetParentsRoute(null);
+			manager.setParentsRoute(null);
 			// if the SetParentsRoute don't throw exception, then it is failure
 			fail("Don't throw NullPointerFailureException exception, because an input was a NULL pointer!");			
 		} catch (EmptyIdentifierFailureException e) {
@@ -85,7 +85,7 @@ public class TestInfrastructureManager {
 		List<String> inputParentsRoute = new ArrayList<String>();
 		// empty input test
 		try {
-			manager.SetParentsRoute(inputParentsRoute);
+			manager.setParentsRoute(inputParentsRoute);
 			// if the SetParentsRoute don't throw exception, then it is failure
 			fail("Don't throw EmptyIdentifierFailureException exception, because an input list was empty!");			
 		} catch (EmptyIdentifierFailureException e) {
@@ -96,14 +96,14 @@ public class TestInfrastructureManager {
 		
 		inputParentsRoute.add("test_parent");
 		try {
-			manager.SetParentsRoute(inputParentsRoute);
+			manager.setParentsRoute(inputParentsRoute);
 		} catch (EmptyIdentifierFailureException e) {
 			fail("Input parents list was not empty!");
 		} catch (NullPointerFailureException e) {
 			fail("Input parents list was not NULL pointer!");
 		}
 		
-		assertEquals(inputParentsRoute, manager.GetParentsRoute());
+		assertEquals(inputParentsRoute, manager.getParentsRoute());
 	}
 
 	
@@ -117,14 +117,14 @@ public class TestInfrastructureManager {
 		parents.add("test_parent2");
 		parents.add("test_parent3");
 		try {
-			manager.SetParentsRoute(parents);
+			manager.setParentsRoute(parents);
 		} catch (EmptyIdentifierFailureException e) {
 			fail("The parents list was not empty!");
 		} catch (NullPointerFailureException e) {
 			fail("Detecting NullPointerFailureException exception, but the input is valid.");
 		}
 		
-		assertEquals(parents, manager.GetParentsRoute());
+		assertEquals(parents, manager.getParentsRoute());
 	}
 
 	/**
@@ -138,9 +138,9 @@ public class TestInfrastructureManager {
 		childs.add("test_child3");
 		
 		try {
-			manager.AddChildService("test_child1");
-			manager.AddChildService("test_child2");
-			manager.AddChildService("test_child3");
+			manager.addChildService("test_child1");
+			manager.addChildService("test_child2");
+			manager.addChildService("test_child3");
 		} catch (AlreadyExistFailureException e) {
 			fail("Detecting AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -149,7 +149,7 @@ public class TestInfrastructureManager {
 			fail("Detecting NullPointerFailureException exception.");
 		}
 		
-		assertEquals(childs, manager.GetChildServices());
+		assertEquals(childs, manager.getChildServices());
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class TestInfrastructureManager {
 	public void testAddChildService() {
 		// NULL pointer test
 		try {
-			manager.AddChildService(null);
+			manager.addChildService(null);
 		} catch (AlreadyExistFailureException e) {
 			fail("Input was a NULL pointer and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -170,7 +170,7 @@ public class TestInfrastructureManager {
 		
 		// empty input test
 		try {
-			manager.AddChildService("");
+			manager.addChildService("");
 		} catch (AlreadyExistFailureException e) {
 			fail("Child collection was emtpy and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -181,8 +181,8 @@ public class TestInfrastructureManager {
 		
 		// AlreadyExistFailureException exception test
 		try {
-			manager.AddChildService("test_child1");
-			manager.AddChildService("test_child1");
+			manager.addChildService("test_child1");
+			manager.addChildService("test_child1");
 		} catch (AlreadyExistFailureException e) {
 			assertTrue("Detecting AlreadyExistFailureException exception.",true);           
 		} catch (EmptyIdentifierFailureException e) {
@@ -190,11 +190,11 @@ public class TestInfrastructureManager {
 		} catch (NullPointerFailureException e) {
 			fail("The input identifier is not empty but we catch NullPointerFailureException exception.");
 		}
-		assertEquals("test_child1", manager.GetChildServices().get(0));
+		assertEquals("test_child1", manager.getChildServices().get(0));
 		
 		try {
-			manager.AddChildService("test_child2");
-			manager.AddChildService("test_child3");
+			manager.addChildService("test_child2");
+			manager.addChildService("test_child3");
 		} catch (AlreadyExistFailureException e) {
 			fail("Every input identifier was unique.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -203,8 +203,8 @@ public class TestInfrastructureManager {
 			fail("Detecting NullPointerFailureException exception.");
 		}
 		// Value checking
-		for (int i=0; i<manager.GetChildServices().size(); i++){
-			assertEquals("test_child"+(i+1), manager.GetChildServices().get(i));
+		for (int i=0; i<manager.getChildServices().size(); i++){
+			assertEquals("test_child"+(i+1), manager.getChildServices().get(i));
 		}
 	}
 

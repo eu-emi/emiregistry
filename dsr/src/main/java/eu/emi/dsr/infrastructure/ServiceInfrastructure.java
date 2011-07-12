@@ -21,21 +21,21 @@ public interface ServiceInfrastructure {
 	 * @throws NullPointerFailureException throws exception if identifiers is a NULL pointer
 	 * @return a collection of network entries from this component to the global peer to peer network
 	 */
-	public void SetParentsRoute(List<String> identifiers) throws EmptyIdentifierFailureException, NullPointerFailureException;
+	public void setParentsRoute(List<String> identifiers) throws EmptyIdentifierFailureException, NullPointerFailureException;
 
 	/**
 	 * Get parents route
 	 * @param None
 	 * @return a collection of network entries from this component to the global peer to peer network
 	 */
-	public List<String> GetParentsRoute();
+	public List<String> getParentsRoute();
 
 	/**
 	 * Get every child services
 	 * @param None
 	 * @return a collection of child entries, that registered directly for this service
 	 */
-	public List<String> GetChildServices();
+	public List<String> getChildServices();
 
 	/**
 	 * Add child service url
@@ -45,6 +45,6 @@ public interface ServiceInfrastructure {
 	 * @throws NullPointerFailureException throws exception if identifier is a NULL pointer
 	 * @return a collection of child entries, that registered directly for this service
 	 */
-	public void AddChildService(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException;
+	public void addChildService(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException;
 
 }
