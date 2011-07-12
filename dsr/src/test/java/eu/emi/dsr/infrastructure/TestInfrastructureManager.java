@@ -6,7 +6,7 @@ package eu.emi.dsr.infrastructure;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -82,7 +82,7 @@ public class TestInfrastructureManager {
 			assertTrue("Detecting NullPointerFailureException exception.",true);
 		}
 
-		List<String> inputParentsRoute = new Vector<String>();
+		List<String> inputParentsRoute = new ArrayList<String>();
 		// empty input test
 		try {
 			manager.SetParentsRoute(inputParentsRoute);
@@ -112,7 +112,7 @@ public class TestInfrastructureManager {
 	 */
 	@Test
 	public void testGetParentsRoute() {
-		List<String> parents = new Vector<String>();
+		List<String> parents = new ArrayList<String>();
 		parents.add("test_paretn1");
 		parents.add("test_parent2");
 		parents.add("test_parent3");
@@ -132,7 +132,7 @@ public class TestInfrastructureManager {
 	 */
 	@Test
 	public void testGetChildServices() {
-		List<String> childs = new Vector<String>();
+		List<String> childs = new ArrayList<String>();
 		childs.add("test_child1");
 		childs.add("test_child2");
 		childs.add("test_child3");

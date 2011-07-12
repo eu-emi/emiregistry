@@ -3,8 +3,8 @@
  */
 package eu.emi.dsr.infrastructure;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * @author szigeti
@@ -13,8 +13,8 @@ import java.util.Vector;
 public class InfrastructureManager implements ServiceInfrastructure {
 
 	public InfrastructureManager() {
-		parentsRoute = new Vector<String>();
-		childServices = new Vector<String>();
+		parentsRoute = new ArrayList<String>();
+		childServices = new ArrayList<String>();
 		//parentsRoute.clear();
 		//childServices.clear();
 	}
