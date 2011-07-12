@@ -155,6 +155,9 @@ public class DSRServer{
 	public static Configuration getConfiguration() {
 		Configuration c = null;
 		try {
+			if (conf == null) {
+				return null;
+			}
 			c = conf.clone();
 		} catch (CloneNotSupportedException e) {
 			Log.logException("error getting configuration", e);

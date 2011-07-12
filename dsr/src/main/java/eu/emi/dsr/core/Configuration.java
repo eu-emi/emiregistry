@@ -42,7 +42,7 @@ public class Configuration implements Cloneable{
 		}
 
 	}
-
+	
 	public Configuration(Properties properties) {
 		this.props = properties;		
 	}
@@ -75,8 +75,8 @@ public class Configuration implements Cloneable{
 		return Float.valueOf(props.getProperty(key));
 	}
 
-	public String getProperty(String key, String value) {
-		return props.getProperty(key);
+	public String getProperty(String key, String defaultValue) {
+		return props.getProperty(key, defaultValue);
 	}
 	
 	/* (non-Javadoc)
