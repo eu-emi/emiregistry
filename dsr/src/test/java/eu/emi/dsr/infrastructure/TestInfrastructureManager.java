@@ -79,8 +79,7 @@ public class TestInfrastructureManager {
 			e.printStackTrace();
 			fail("An input was a NULL pointer and not an empty collection!");			
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
-			//TODO true assert
+			assertTrue("Detecting NullPointerFailureException exception.",true);
 		}
 
 		List<String> inputParentsRoute = new Vector<String>();
@@ -90,10 +89,8 @@ public class TestInfrastructureManager {
 			// if the SetParentsRoute don't throw exception, then it is failure
 			fail("Don't throw EmptyIdentifierFailureException exception, because an input list was empty!");			
 		} catch (EmptyIdentifierFailureException e) {
-			e.printStackTrace();
-			// TODO true assert
+			assertTrue("Detecting EmptyIdentifierFailureException exception.",true);
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
 			fail("Input was a valid value and not NULL pointer!");			
 		}
 		
@@ -101,10 +98,8 @@ public class TestInfrastructureManager {
 		try {
 			manager.SetParentsRoute(inputParentsRoute);
 		} catch (EmptyIdentifierFailureException e) {
-			e.printStackTrace();
 			fail("Input parents list was not empty!");
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
 			fail("Input parents list was not NULL pointer!");
 		}
 		
@@ -124,11 +119,9 @@ public class TestInfrastructureManager {
 		try {
 			manager.SetParentsRoute(parents);
 		} catch (EmptyIdentifierFailureException e) {
-			e.printStackTrace();
 			fail("The parents list was not empty!");
 		} catch (NullPointerFailureException e) {
-			// TODO true assert
-			e.printStackTrace();
+			fail("Detecting NullPointerFailureException exception, but the input is valid.");
 		}
 		
 		assertEquals(parents, manager.GetParentsRoute());
@@ -149,14 +142,11 @@ public class TestInfrastructureManager {
 			manager.AddChildService("test_child2");
 			manager.AddChildService("test_child3");
 		} catch (AlreadyExistFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail("Detecting AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail("Detecting EmptyIdentifierFailureException exception.");
 		} catch (NullPointerFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail("Detecting NullPointerFailureException exception.");
 		}
 		
 		assertEquals(childs, manager.GetChildServices());
@@ -171,28 +161,21 @@ public class TestInfrastructureManager {
 		try {
 			manager.AddChildService(null);
 		} catch (AlreadyExistFailureException e) {
-			e.printStackTrace();
 			fail("Input was a NULL pointer and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
-			// TODO add true test assert, because the test was good
-			e.printStackTrace();
 			fail("Input was a NULL pointer and we catch EmptyIdentifierFailureException exception.");
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
-			// TODO true assert
+			assertTrue("Detecting NullPointerFailureException exception.",true);
 		}
 		
 		// empty input test
 		try {
 			manager.AddChildService("");
 		} catch (AlreadyExistFailureException e) {
-			e.printStackTrace();
 			fail("Child collection was emtpy and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
-			// TODO add true test assert, because the test was good
-			e.printStackTrace();
+			assertTrue("Detecting EmptyIdentifierFailureException exception.",true);
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
 			fail("Child collection was emtpy and we catch NullPointerFailureException exception.");
 		}
 		
@@ -201,14 +184,10 @@ public class TestInfrastructureManager {
 			manager.AddChildService("test_child1");
 			manager.AddChildService("test_child1");
 		} catch (AlreadyExistFailureException e) {
-			// TODO add true test assert, because the test was good
-			e.printStackTrace();
-            
+			assertTrue("Detecting AlreadyExistFailureException exception.",true);           
 		} catch (EmptyIdentifierFailureException e) {
-			e.printStackTrace();
 			fail("The input identifier is not empty but we catch EmptyIdentifierFailureException exception.");
 		} catch (NullPointerFailureException e) {
-			e.printStackTrace();
 			fail("The input identifier is not empty but we catch NullPointerFailureException exception.");
 		}
 		assertEquals("test_child1", manager.GetChildServices().get(0));
@@ -217,21 +196,16 @@ public class TestInfrastructureManager {
 			manager.AddChildService("test_child2");
 			manager.AddChildService("test_child3");
 		} catch (AlreadyExistFailureException e) {
-			e.printStackTrace();
 			fail("Every input identifier was unique.");
 		} catch (EmptyIdentifierFailureException e) {
-			e.printStackTrace();
 			fail("Every input identifier was not empty.");
 		}catch (NullPointerFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail("Detecting NullPointerFailureException exception.");
 		}
-		// TODO true assert
+		// Value checking
 		for (int i=0; i<manager.GetChildServices().size(); i++){
 			assertEquals("test_child"+(i+1), manager.GetChildServices().get(i));
 		}
- 
-
 	}
 
 }
