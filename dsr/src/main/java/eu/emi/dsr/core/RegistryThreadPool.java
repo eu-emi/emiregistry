@@ -3,6 +3,7 @@
  */
 package eu.emi.dsr.core;
 
+import java.util.Properties;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -111,6 +112,9 @@ public class RegistryThreadPool {
 	}
 
 	protected static void configureScheduler() {
+		if (DSRServer.getConfiguration() == null) {
+			DSRServer s = new DSRServer(new Configuration(new Properties()));
+		}
 		String corePoolSizeParam = DSRServer.getConfiguration().getProperty(
 				CORE_POOL_SIZE, "3");
 		int core = 3;

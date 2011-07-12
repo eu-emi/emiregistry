@@ -45,6 +45,10 @@ public class ServiceObject {
 	public ServiceObject(JSONObject jo) throws JSONException {
 		this.jo = jo;
 	}
+	
+	public ServiceObject(DBObject jo) throws JSONException {
+		this.jo = new JSONObject(JSON.serialize(jo));
+	}
 
 	public String getServiceOwner() {
 		String owner = null;

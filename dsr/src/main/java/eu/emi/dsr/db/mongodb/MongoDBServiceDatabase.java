@@ -1,17 +1,20 @@
 package eu.emi.dsr.db.mongodb;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
@@ -42,6 +45,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private DBCollection serviceCollection;
 
 	public MongoDBServiceDatabase() {
+		if (DSRServer.getConfiguration() == null) {
+			DSRServer s = new DSRServer(new Configuration(new Properties()));
+		}
 		String hostname = DSRServer.getConfiguration().getProperty(
 				ServerConstants.MONGODB_HOSTNAME, "localhost");
 		String port = DSRServer.getConfiguration().getProperty(
@@ -99,27 +105,26 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 	}
 
-	
-	
 	@Override
 	public void insert(ServiceObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
-			logger.info("inserting: "+item.toDBObject());
+			logger.info("inserting: " + item.toDBObject());
 			DBObject db = item.toDBObject();
-			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON.getAttributeName(), new Date());
+			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+					.getAttributeName(), new Date());
 			WriteResult wr = serviceCollection.insert(db, WriteConcern.SAFE);
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,db));
+			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, db));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
-				throw new ExistingResourceException("Service with URL: "+item.getUrl()+" - already exists",e);
+				throw new ExistingResourceException("Service with URL: "
+						+ item.getUrl() + " - already exists", e);
 			} else {
 				throw new PersistentStoreFailureException(e);
 			}
 		}
 
-	
 	}
 
 	@Override
@@ -156,60 +161,93 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		serviceCollection.findAndRemove(query);
 	}
 
-	// @Override
-	// public boolean contains(Object identifier)
-	// throws MultipleResourceException, PersistentStoreFailureException {
-	// BasicDBObject query = new BasicDBObject();
-	// query.put("id", identifier);
-	// DBCursor cur = serviceCollection.find(query);
-	// if (cur == null) {
-	// throw new PersistentStoreFailureException();
-	// }
-	// if (!cur.hasNext()) {
-	// return false;
-	// }
-	// cur.next();
-	// if (cur.hasNext()) {
-	// throw new MultipleResourceException();
-	// }
-	// return true;
-	// }
+	
 
 	@Override
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		DBObject dbObj = sObj.toDBObject();
-		//change the update date
-		dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE.getAttributeName(), new Date());
-		BasicDBObject query = new BasicDBObject();		
+		// change the update date
+		dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+				.getAttributeName(), new Date());
+		BasicDBObject query = new BasicDBObject();
 		query.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
 				sObj.getUrl());
-		
+
 		serviceCollection.update(query, dbObj);
-		//sending update event to the recievers
-		EventManager.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,dbObj));
+		// sending update event to the recievers
+		EventManager
+				.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE, dbObj));
 	}
 
 	@Override
 	public List<ServiceObject> query(String query) throws QueryException,
 			PersistentStoreFailureException {
+
 		
-		
-//		BasicDBObject queryObject = new BasicDBObject();
-//		BasicDBObject predicate = new BasicDBObject("$lte",new Date());
-//		queryObject.put("serviceExpireOn", predicate);
-//		DBCursor cur = serviceCollection.find(queryObject);
 		DBObject o = (DBObject) JSON.parse(query);
-//		System.out.println(o);
 		DBCursor cur = serviceCollection.find(o);
 		List<ServiceObject> resultCollection = new CopyOnWriteArrayList<ServiceObject>();
-		
+
 		try {
 			while (cur.hasNext()) {
-				
+
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Collections.unmodifiableList(resultCollection);
+	}
+
+	@Override
+	public List<ServiceObject> query(String query, Integer limit, Integer skip)
+			throws QueryException, PersistentStoreFailureException {
+
+		// BasicDBObject queryObject = new BasicDBObject();
+		// BasicDBObject predicate = new BasicDBObject("$lte",new Date());
+		// queryObject.put("serviceExpireOn", predicate);
+		// DBCursor cur = serviceCollection.find(queryObject);
+		DBObject o = (DBObject) JSON.parse(query);
+		// System.out.println(o);
+		//skip and limit  
+		DBCursor cur = serviceCollection.find(o).skip(skip).limit(limit);
+		if (logger.isDebugEnabled()) {
+			logger.debug("result size: " + cur.size());
+		}
+		List<ServiceObject> resultCollection = new ArrayList<ServiceObject>();
+		try {
+			while (cur.hasNext()) {
+				ServiceObject s = new ServiceObject(cur.next());
+				resultCollection.add(s);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Collections.unmodifiableList(resultCollection);
+	}
+
+	@Override
+	public List<ServiceObject> query(String query, Integer skip)
+			throws QueryException, PersistentStoreFailureException {
+
+		DBObject o = (DBObject) JSON.parse(query);
+		DBCursor cur = serviceCollection.find(o).skip(skip);
+
+		logger.debug(cur.getCursorId());
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result size: " + cur.size());
+		}
+		List<ServiceObject> resultCollection = new ArrayList<ServiceObject>();
+		int i = 0;
+		try {
+			while (cur.hasNext()) {
+				ServiceObject s = new ServiceObject(cur.next().toString());
+				resultCollection.add(s);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,14 +281,19 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		return Collections.unmodifiableList(lst);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see eu.emi.dsr.db.ServiceDatabase#findAndDelete(java.lang.String)
 	 */
 	@Override
 	public void findAndDelete(String query) {
 		DBObject db = (DBObject) JSON.parse(query);
-		logger.debug("delete by query: "+db.toString());
-		serviceCollection.remove(db);		
+		if (logger.isDebugEnabled()) {
+			logger.debug("delete by query: " + db.toString());
+		}
+
+		serviceCollection.remove(db);
 	}
 
 }

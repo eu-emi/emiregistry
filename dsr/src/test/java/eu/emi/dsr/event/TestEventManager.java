@@ -41,22 +41,7 @@ public class TestEventManager {
 		
 		EventManager.removeAll();
 		
-		// for asynchronous eventing
-		EventManager.add(new EventReciever() {
-
-			@Override
-			public void recieve(Event event) {
-				if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_ADD)) {
-					assertEquals("service_being_added_async", event.getData());
-				}
-
-			}
-		});
-
-		for (int i = 0; i < 100; i++) {
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
-			"service_being_added_async"));	
-		}
+		
 		
 
 	}

@@ -32,7 +32,7 @@ import eu.emi.dsr.util.ServiceUtil;
 public class ServiceAdminManager {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminManager.class);
-	private static ServiceDatabase serviceDB = null;
+	private ServiceDatabase serviceDB = null;
 	
 	/**
 	 * 

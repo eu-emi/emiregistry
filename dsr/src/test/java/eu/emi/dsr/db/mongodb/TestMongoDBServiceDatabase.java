@@ -2,11 +2,11 @@ package eu.emi.dsr.db.mongodb;
 
 import static org.junit.Assert.*;
 
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories.ExcludeCategory;
 import org.junit.rules.ExpectedException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

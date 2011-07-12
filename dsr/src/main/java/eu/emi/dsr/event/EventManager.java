@@ -26,16 +26,13 @@ public class EventManager {
 	}
 	
 	public static void notifyRecievers(final Event e){
-		System.out.println(Thread.currentThread().getName());
-		final ArrayBlockingQueue<EventReciever> arr = new ArrayBlockingQueue<EventReciever>(lstEvent.size(), true, lstEvent);
-		
 		RegistryThreadPool.getExecutorService().execute(new Runnable() {			
 			@Override
 			public void run() {
-				System.out.println(Thread.currentThread().getName());
-				for (Iterator iterator = arr.iterator(); iterator.hasNext();) {
+				for (Iterator iterator = lstEvent.iterator(); iterator.hasNext();) {
 					EventReciever eventReciever = (EventReciever) iterator
 							.next();
+					eventReciever.recieve(e);
 					
 				}			
 			}
