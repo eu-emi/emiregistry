@@ -33,7 +33,7 @@ public class ServiceAdminManager {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminManager.class);
 	private ServiceDatabase serviceDB = null;
-	
+
 	/**
 	 * 
 	 */
@@ -141,6 +141,8 @@ public class ServiceAdminManager {
 
 	}
 
+	
+
 	/**
 	 * Finding a service by its url
 	 * 
@@ -182,12 +184,15 @@ public class ServiceAdminManager {
 
 		JSONObject predicate = new JSONObject();
 		JSONObject query = new JSONObject();
-		//{ "serviceExpireOn" : { "$lte" : { "$date" : "2011-07-06T16:05:40Z"}}}
-		
+		// { "serviceExpireOn" : { "$lte" : { "$date" :
+		// "2011-07-06T16:05:40Z"}}}
+
 		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 		predicate.put("$lte", date);
-		query.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), predicate);
-		serviceDB.findAndDelete(query.toString());		
+		query.put(
+				ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
+				predicate);
+		serviceDB.findAndDelete(query.toString());
 		// j.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
 		// quer)
 

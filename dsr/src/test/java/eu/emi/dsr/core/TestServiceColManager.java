@@ -34,32 +34,7 @@ public class TestServiceColManager {
 		
 	}
 	
-	@Test
-	public void testGetAllServiceTypes() {
-		try {
-			JSONObject o = mgr.getAllServiceTypes();
-			assertNotNull(o);
-			System.out.println(o);
-		} catch (JSONException e) {
-			fail();
-			e.printStackTrace();
-		}
-		
-	}
 	
-	
-	@Test
-	public void testGetServiceByType() {
-		try {
-			JSONObject o = mgr.getServicesByType("tms");
-			assertNotNull(o);
-			System.out.println(o);
-		} catch (JSONException e) {
-			fail();
-			e.printStackTrace();
-		}
-		
-	}
 	
 	
 	@Test
