@@ -3,12 +3,10 @@
  */
 package eu.emi.dsr.resource;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -16,15 +14,9 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.dsr.client.DSRClient;
@@ -86,7 +78,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindByType() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query1?serviceType=jms");
+					+ "/services/query?serviceType=jms");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -104,7 +96,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindNone() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query1?serviceType=blah");
+					+ "/services/query?serviceType=blah");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -122,7 +114,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testLimit20() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query1?serviceType=jms&limit=20");
+					+ "/services/query?serviceType=jms&limit=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -140,7 +132,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindLast30() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query1?serviceType=jms&skip=20");
+					+ "/services/query?serviceType=jms&skip=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -157,7 +149,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindLastHalfOf40() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query1?serviceType=jms&skip=20&limit=20");
+					+ "/services/query?serviceType=jms&skip=20&limit=20");
 			JSONArray o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JSONArray.class);

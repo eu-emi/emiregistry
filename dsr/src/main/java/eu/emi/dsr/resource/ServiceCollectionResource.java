@@ -98,7 +98,7 @@ public class ServiceCollectionResource {
 	}
 
 	@GET
-	@Path("/query1")
+	@Path("/query")
 	public JSONArray query(@Context UriInfo ui) throws WebApplicationException {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
