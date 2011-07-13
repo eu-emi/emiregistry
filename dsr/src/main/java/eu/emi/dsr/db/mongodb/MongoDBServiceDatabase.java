@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.print.ServiceUI;
+
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
@@ -27,6 +32,7 @@ import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventManager;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.util.Log;
+import eu.emi.dsr.util.ServiceUtil;
 
 import com.mongodb.*;
 import com.mongodb.MongoException.DuplicateKey;
@@ -161,8 +167,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		serviceCollection.findAndRemove(query);
 	}
 
-	
-
 	@Override
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
@@ -184,7 +188,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public List<ServiceObject> query(String query) throws QueryException,
 			PersistentStoreFailureException {
 
-		
 		DBObject o = (DBObject) JSON.parse(query);
 		DBCursor cur = serviceCollection.find(o);
 		List<ServiceObject> resultCollection = new CopyOnWriteArrayList<ServiceObject>();
@@ -211,7 +214,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		// DBCursor cur = serviceCollection.find(queryObject);
 		DBObject o = (DBObject) JSON.parse(query);
 		// System.out.println(o);
-		//skip and limit  
+		// skip and limit
 		DBCursor cur = serviceCollection.find(o).skip(skip).limit(limit);
 		if (logger.isDebugEnabled()) {
 			logger.debug("result size: " + cur.size());
@@ -247,11 +250,140 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return Collections.unmodifiableList(resultCollection);
+	}
+
+	@Override
+	public JSONArray queryJSON(String query) throws QueryException,
+			PersistentStoreFailureException {
+		DBObject o = (DBObject) JSON.parse(query);
+		DBCursor cur = serviceCollection.find(o);
+		JSONArray arr = new JSONArray();
+		logger.info(cur.size());
+		while (cur.hasNext()) {
+			arr.put(JSON.serialize(cur.next()));
+		}
+
+		return arr;
+	}
+
+	@Override
+	public JSONArray queryJSON(String query, Integer limit, Integer skip)
+			throws QueryException, PersistentStoreFailureException {
+
+		// BasicDBObject queryObject = new BasicDBObject();
+		// BasicDBObject predicate = new BasicDBObject("$lte",new Date());
+		// queryObject.put("serviceExpireOn", predicate);
+		// DBCursor cur = serviceCollection.find(queryObject);
+		DBObject o = (DBObject) JSON.parse(query);
+		// System.out.println(o);
+		// skip and limit
+		DBCursor cur = serviceCollection.find(o).skip(skip).limit(limit);
+		if (logger.isDebugEnabled()) {
+			logger.debug("result size: " + cur.size());
+		}
+		JSONArray arr = new JSONArray();
+
+		try {
+			while (cur.hasNext()) {
+				arr.put(JSON.serialize(cur.next()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return arr;
+	}
+
+	@Override
+	public JSONArray queryJSON(String query, Integer skip)
+			throws QueryException, PersistentStoreFailureException {
+
+		DBObject o = (DBObject) JSON.parse(query);
+		DBCursor cur = serviceCollection.find(o).skip(skip);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result size: " + cur.size());
+		}
+		JSONArray arr = new JSONArray();
+		try {
+			while (cur.hasNext()) {
+				arr.put(JSON.serialize(cur.next()));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return arr;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.dsr.db.ServiceDatabase#queryJSONWithLimit(java.lang.String,
+	 * java.lang.Integer)
+	 */
+	@Override
+	public JSONArray queryJSONWithLimit(String s, Integer limit) {
+		DBObject o = (DBObject) JSON.parse(s);
+		DBCursor cur = serviceCollection.find(o).limit(limit);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result size: " + cur.size());
+		}
+		JSONArray arr = new JSONArray();
+		try {
+			while (cur.hasNext()) {
+				arr.put(JSON.serialize(cur.next()));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return arr;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.dsr.db.ServiceDatabase#queryDistinctJSON(java.lang.String)
+	 */
+	@Override
+	public JSONArray queryDistinctJSON(String attributeName) {
+		List<DBObject> lst = serviceCollection.distinct(attributeName);
+		JSONArray arr = new JSONArray(lst);
+		return arr;
+	}
+
+	
+	@Override
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id) {
+		DBObject queryObj = (DBObject) JSON.parse(query);
+		DBCursor cur = null;
+		BasicDBObject idOrderBy = new BasicDBObject("_id", 1);
+		if (id == null) {
+			cur = serviceCollection.find(queryObj).sort(idOrderBy).limit(pageSize);
+		} else {
+			//{ "_id" : { "$gt" : { "$oid" : "4e1da24b7b1a26e6dc6455b5"}},"serviceType":"jms"}
+			StringBuffer b = new StringBuffer();
+			b.append("{").append("\"_id\"").append(":").append("{").append("\"$gt\":").append("{").append("\"$oid\"").append(":\"").append(id).append("\"}").append("}}");
+			DBObject db = (DBObject) JSON.parse(b.toString());
+
+			if (queryObj.keySet().size() > 0) {
+				db.putAll(queryObj);	
+			}
+			cur = serviceCollection
+					.find(db)
+					.sort(idOrderBy).limit(pageSize);
+			
+		}
+		
+		List<DBObject> lst = cur.toArray();
+		JSONArray arr = new JSONArray(lst);
+		return arr;
 	}
 
 	/*
@@ -289,7 +421,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public void findAndDelete(String query) {
 		DBObject db = (DBObject) JSON.parse(query);
-		if (logger.isDebugEnabled()) {
+		if (logger.isTraceEnabled()) {
 			logger.debug("delete by query: " + db.toString());
 		}
 

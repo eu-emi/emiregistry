@@ -32,7 +32,7 @@ public class TestRegistryBase {
 		p.put(ServerConstants.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services");
+		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);

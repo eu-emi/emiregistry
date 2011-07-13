@@ -5,6 +5,7 @@ package eu.emi.dsr.db;
 
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.db.mongodb.ServiceObject;
@@ -142,5 +143,51 @@ public interface ServiceDatabase {
 			throws QueryException, PersistentStoreFailureException;
 
 	public List<ServiceObject> findAll() throws JSONException;
+
+	/**
+	 * @param query
+	 * @return
+	 * @throws QueryException
+	 * @throws PersistentStoreFailureException
+	 */
+	JSONArray queryJSON(String query) throws QueryException,
+			PersistentStoreFailureException;
+
+	/**
+	 * @param query
+	 * @param limit
+	 * @param skip
+	 * @return
+	 * @throws QueryException
+	 * @throws PersistentStoreFailureException
+	 */
+	JSONArray queryJSON(String query, Integer limit, Integer skip)
+			throws QueryException, PersistentStoreFailureException;
+
+	/**
+	 * @param query
+	 * @param skip
+	 * @return
+	 * @throws QueryException
+	 * @throws PersistentStoreFailureException
+	 */
+	JSONArray queryJSON(String query, Integer skip) throws QueryException,
+			PersistentStoreFailureException;
+
+	/**
+	 * @param s
+	 * @param limit
+	 * @return
+	 */
+	public JSONArray queryJSONWithLimit(String s, Integer limit);
+
+	/**
+	 * Get distinct values for a given attribute
+	 * @param attributeName
+	 * @return
+	 */
+	public JSONArray queryDistinctJSON(String attributeName);
+	
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id);
 
 }

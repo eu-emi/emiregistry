@@ -3,6 +3,11 @@
  */
 package eu.emi.dsr.resource;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -14,10 +19,13 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceColManager;
+import eu.emi.dsr.db.PersistentStoreFailureException;
+import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -39,7 +47,7 @@ public class ServiceCollectionResource {
 	/** query method */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/refs")
+	@Path("/urls")
 	public JSONObject getServiceReferences() throws WebApplicationException {
 		JSONObject o = null;
 		try {
@@ -55,11 +63,15 @@ public class ServiceCollectionResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/types")
-	public JSONObject getServiceTypes() throws WebApplicationException {
-		JSONObject o = null;
+	public JSONArray getServiceTypes() throws WebApplicationException {
+		JSONArray o = null;
 		try {
-			o = col.getAllServiceTypes();
+			o = col.getDistinctTypes();
 		} catch (JSONException e) {
+			throw new WebApplicationException(e);
+		} catch (QueryException e) {
+			throw new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		}
 
@@ -68,37 +80,67 @@ public class ServiceCollectionResource {
 
 	/** query method */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/types/{servicetype:.+}")
-	public JSONObject getServiceByType(@PathParam("servicetype") String type)
+	@Path("/type/{servicetype:.+}")
+	public JSONArray getServiceByType(@PathParam("servicetype") String type)
 			throws WebApplicationException {
-		JSONObject o = null;
+		JSONArray o = null;
 		try {
 			o = col.getServicesByType(type);
 		} catch (JSONException e) {
+			throw new WebApplicationException(e);
+		} catch (QueryException e) {
+			throw new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		}
 
 		return o;
 	}
 
-	/** query method 
-	 * @throws JSONException */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/query")	
-	public JSONObject queryServiceCollection(@Context UriInfo infos)
-			throws WebApplicationException {
-		MultivaluedMap<String, String> mm = infos.getQueryParameters();
-		
-		JSONObject jo = new JSONObject(mm);
-		JSONObject lst = null;
-		try {
-			lst =  col.queryServiceCollection(jo);
-			 
-		} catch (JSONException e) {
-			throw new WebApplicationException(e);
+	@Path("/query1")
+	public JSONArray query(@Context UriInfo ui) throws WebApplicationException {
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
 		}
-		return lst;
+
+		JSONArray jArr = null;
+
+		try {
+			jArr = col.query(m);
+		} catch (QueryException e) {
+			new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
+			new WebApplicationException(e);
+		}
+
+		return jArr;
+	}
+
+	@GET
+	@Path("/pagedquery")
+	public JSONObject pagedQuery(@Context UriInfo ui)
+			throws WebApplicationException {
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
+
+		JSONObject jArr = null;
+
+		try {
+			jArr = col.pagedQuery(m);
+		} catch (JSONException e) {
+			new WebApplicationException(e);
+		}
+
+		return jArr;
 	}
 }
