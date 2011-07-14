@@ -128,15 +128,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<configuration>
-						<descriptors>
-							<descriptor> src/main/assembly/dep.xml</descriptor>
-						</descriptors>
-					</configuration>
-				</plugin>
+				</plugin>				
 			</plugins>
 		</pluginManagement>
 	</build>

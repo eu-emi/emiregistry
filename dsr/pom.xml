@@ -61,5 +61,17 @@
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>	
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor> src/main/assembly/dep.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
