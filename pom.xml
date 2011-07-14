@@ -120,6 +120,11 @@
 					<configuration>
 						<source>1.6</source>
 						<target>1.6</target>
+						<specVersion>2.2</specVersion>
+						<removeOldOutput>true</removeOldOutput>
+						<bindingIncludes>
+							<include>src/main/conf/*.xjb</include>
+						</bindingIncludes>
 					</configuration>
 					<executions>
 						<execution>
@@ -128,7 +133,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>				
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
