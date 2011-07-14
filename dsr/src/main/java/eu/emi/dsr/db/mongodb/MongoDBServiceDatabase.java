@@ -164,7 +164,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		BasicDBObject query = new BasicDBObject();
 		query.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
 				url);
-		serviceCollection.findAndRemove(query);
+		DBObject d = serviceCollection.findAndRemove(query);
+		if (d == null) {
+			throw new NonExistingResourceException();
+		}
+
 	}
 
 	@Override
@@ -358,29 +362,30 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		return arr;
 	}
 
-	
 	@Override
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id) {
 		DBObject queryObj = (DBObject) JSON.parse(query);
 		DBCursor cur = null;
 		BasicDBObject idOrderBy = new BasicDBObject("_id", 1);
 		if (id == null) {
-			cur = serviceCollection.find(queryObj).sort(idOrderBy).limit(pageSize);
+			cur = serviceCollection.find(queryObj).sort(idOrderBy)
+					.limit(pageSize);
 		} else {
-			//{ "_id" : { "$gt" : { "$oid" : "4e1da24b7b1a26e6dc6455b5"}},"serviceType":"jms"}
+			// { "_id" : { "$gt" : { "$oid" :
+			// "4e1da24b7b1a26e6dc6455b5"}},"serviceType":"jms"}
 			StringBuffer b = new StringBuffer();
-			b.append("{").append("\"_id\"").append(":").append("{").append("\"$gt\":").append("{").append("\"$oid\"").append(":\"").append(id).append("\"}").append("}}");
+			b.append("{").append("\"_id\"").append(":").append("{")
+					.append("\"$gt\":").append("{").append("\"$oid\"")
+					.append(":\"").append(id).append("\"}").append("}}");
 			DBObject db = (DBObject) JSON.parse(b.toString());
 
 			if (queryObj.keySet().size() > 0) {
-				db.putAll(queryObj);	
+				db.putAll(queryObj);
 			}
-			cur = serviceCollection
-					.find(db)
-					.sort(idOrderBy).limit(pageSize);
-			
+			cur = serviceCollection.find(db).sort(idOrderBy).limit(pageSize);
+
 		}
-		
+
 		List<DBObject> lst = cur.toArray();
 		JSONArray arr = new JSONArray(lst);
 		return arr;

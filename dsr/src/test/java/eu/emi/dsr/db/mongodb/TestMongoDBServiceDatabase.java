@@ -58,6 +58,11 @@ public class TestMongoDBServiceDatabase {
 	}
 
 	
+	@Test(expected=NonExistingResourceException.class)
+    public void testDeleteNonExistingServiceByURL() throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException {
+                    db.deleteByUrl("http://NA");
+    }
+	
 
 	@Test(expected=ExistingResourceException.class)
 	public void testRedundantServiceEntries() throws JSONException,
