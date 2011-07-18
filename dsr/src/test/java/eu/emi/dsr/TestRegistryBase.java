@@ -1,4 +1,6 @@
 package eu.emi.dsr;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.junit.AfterClass;
@@ -18,12 +20,12 @@ import eu.emi.dsr.core.ServerConstants;
  */
 public class TestRegistryBase {
 	static DSRServer server = null;
-	public static String BaseURI = "http://localhost:54321";
+	protected static String BaseURI;
 	@BeforeClass
-	public static void startServer() {
+	public static void startServer() throws InterruptedException {
 		Properties p = new Properties();
 		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
-		p.put(ServerConstants.REGISTRY_PORT, "54321");
+		p.put(ServerConstants.REGISTRY_PORT, "0");
 		p.put(ServerConstants.REGISTRY_SCHEME, "http");
 		p.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
 		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
@@ -34,10 +36,13 @@ public class TestRegistryBase {
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
+		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();
 		System.out.println("server started");
+		BaseURI = "http://localhost:"+server.getServer().getConnectors()[0].getLocalPort();	
+		
 	}
 
 	@AfterClass

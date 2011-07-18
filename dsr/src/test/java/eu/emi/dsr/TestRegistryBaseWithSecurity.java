@@ -18,7 +18,7 @@ import eu.emi.dsr.core.ServerConstants;
  */
 public class TestRegistryBaseWithSecurity {
 	static DSRServer server = null;
-	public static String BaseURI = "https://localhost:9443";
+	public static String BaseURI;
 
 	@BeforeClass
 	public static void startServer() {
@@ -31,6 +31,7 @@ public class TestRegistryBaseWithSecurity {
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();
+		BaseURI = "https://localhost:"+server.getServer().getConnectors()[0].getLocalPort();	
 	}
 
 	
@@ -50,7 +51,7 @@ public class TestRegistryBaseWithSecurity {
 	
 	private static void setGeneralSettings(Properties p) {
 		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
-		p.put(ServerConstants.REGISTRY_PORT, "9443");
+		p.put(ServerConstants.REGISTRY_PORT, "0");
 		p.put(ServerConstants.REGISTRY_SCHEME, "https");
 		p.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
 		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
@@ -62,8 +63,9 @@ public class TestRegistryBaseWithSecurity {
 	private static void setDatabaseProperties(Properties p){
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services");
+		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
+		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
 	}
 
 	public ClientSecurityProperties getSecurityProperties(){

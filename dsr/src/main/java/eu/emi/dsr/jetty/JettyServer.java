@@ -203,7 +203,9 @@ public class JettyServer {
 		}
 	}
 
-	
+	public Server getServer(){
+		return server;
+	}
 	
 	
 

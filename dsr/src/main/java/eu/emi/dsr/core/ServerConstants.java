@@ -9,6 +9,7 @@ package eu.emi.dsr.core;
  */
 public class ServerConstants {
 	public static final String CLIENT_AUTHN = "registry.security.clientauthentication";
+	
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
@@ -27,6 +28,8 @@ public class ServerConstants {
 	public static String MONGODB_COLLECTION_NAME = "mongodb.colname";
 	public static String MONGODB_COLLECTION_USERNAME = "mongodb.username";
 	public static String MONGODB_COLLECTION_PASSWORD = "mongodb.password";
+	//create new on startup, drop the old one - type: boolean
+	public static final String MONGODB_COL_CREATE = "mongodb.create";
 
 	// Security Properties
 	// key store

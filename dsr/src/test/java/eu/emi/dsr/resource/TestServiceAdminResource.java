@@ -32,12 +32,25 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				"jms");
 		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
 				"12-12-2121,12:12");
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				"http://1");
 		JSONObject jo = new JSONObject(map);
 		return jo;
 	}
 	
+	
+
+	@Test
+	public void testRegisterService() throws JSONException {
+		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
+		cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(getDummyServiceDesc());
+		
+		DSRClient cr1 = new DSRClient(BaseURI
+				+ "/serviceadmin?serviceUrl=http://1");
+		JSONObject jo = cr1.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+		assertEquals("http://1",jo.get("serviceUrl"));
+	}
+
 	private static JSONObject getUpdatedServiceDesc(){
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
@@ -51,34 +64,14 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		JSONObject jo = new JSONObject(map);
 		return jo;
 	}
-
-	@Test
-	public void testRegisterService() throws JSONException {
-		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin?serviceUrl=http://1");
-		cr1.getClientResource().delete();
-		
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
-		cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(getDummyServiceDesc());
-	}
-
-	@Test
-	public void testGetServiceByUrl() throws JSONException {
-		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?serviceUrl=http://1");
-		JSONObject jo = cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-
-	}
-	
 	
 
 	@Test
 	public void testUpdateService() throws JSONException {
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("servicetype", "jms");
-		map.put("serviceurl", "http://1");
+		map.put("serviceType", "jms");
+		map.put("serviceUrl", "http://1");
 		JSONObject jo = new JSONObject(map);
 		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).put(getUpdatedServiceDesc());
 	}
