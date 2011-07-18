@@ -41,6 +41,7 @@ public class TestServiceAdminManager {
 		Configuration conf = new Configuration(p);
 		DSRServer s = new DSRServer(conf);
 		adminMgr = ServiceManagerFactory.getServiceAdminManager();
+		adminMgr.removeAll();
 		
 	}
 
@@ -49,7 +50,7 @@ public class TestServiceAdminManager {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
 				"http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011, 13:25");
+		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011,13:25");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"someservice-type");
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
@@ -60,7 +61,6 @@ public class TestServiceAdminManager {
 		map.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 				.getAttributeName(), "http://1");
 		JSONObject jo = new JSONObject(map);
-		adminMgr.removeService("http://1");
 		adminMgr.addService(jo);
 		System.out.println("service added");
 	}
@@ -101,6 +101,6 @@ public class TestServiceAdminManager {
 	
 	@AfterClass
 	public static void cleanUp() throws UnknownServiceException, MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException{
-//		adminMgr.removeService("http://1");
+		adminMgr.removeAll();
 	}
 }

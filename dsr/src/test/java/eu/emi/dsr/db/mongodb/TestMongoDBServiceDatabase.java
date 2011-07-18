@@ -31,6 +31,7 @@ public class TestMongoDBServiceDatabase {
 	public static void setUp() {
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services");
+		db.deleteAll();
 	}
 
 	@Test

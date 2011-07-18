@@ -40,14 +40,6 @@ public class TestServiceAdminResourceWithSecurity extends
 	}
 
 	@Test
-	public void testDeleteResource() throws JSONException {
-		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?serviceUrl=http://1", getSecurityProperties());
-		cr.getClientResource().delete();
-
-	}
-	
-	@Test
 	public void testRegisterService() {
 		JSONObject jo = getDummyServiceDesc();
 		DSRClient cr = new DSRClient(BaseURI
@@ -67,4 +59,12 @@ public class TestServiceAdminResourceWithSecurity extends
 		System.out.println(jo);
 	}
 
+	
+	@Test
+	public void testDeleteResource() throws JSONException {
+		DSRClient cr = new DSRClient(BaseURI
+				+ "/serviceadmin?serviceUrl=http://1", getSecurityProperties());
+		cr.getClientResource().delete();
+
+	}
 }

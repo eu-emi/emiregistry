@@ -96,7 +96,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		try {
 			connection = MongoConnection.get(hostname, port);
 			database = connection.getDB(dbName);
+
+			if (Boolean.parseBoolean(DSRServer.getConfiguration().getProperty(
+					ServerConstants.MONGODB_COL_CREATE, "false"))) {
+				serviceCollection = database.getCollection(colName);
+				serviceCollection.dropIndexes();
+				serviceCollection.drop();
+			}
 			serviceCollection = database.getCollection(colName);
+
 			// setting index and uniquesness on "serviceurl"
 			BasicDBObject obj = new BasicDBObject(
 					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
@@ -104,6 +112,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.info(obj);
 			serviceCollection.createIndex(obj);
 			serviceCollection.ensureIndex(obj, "serviceUrl", true);
+
 		} catch (UnknownHostException e) {
 			Log.logException(e);
 		} catch (MongoException e) {
@@ -116,7 +125,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			PersistentStoreFailureException {
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
-			logger.info("inserting: " + item.toDBObject());
+			if (logger.isDebugEnabled()) {
+				logger.debug("inserting: " + item.toDBObject());
+			}
+
 			DBObject db = item.toDBObject();
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
@@ -167,9 +179,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		DBObject d = serviceCollection.findAndRemove(query);
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
-				String msg = "No service description with the URL:"+url+" exists";
+				String msg = "No service description with the URL:" + url
+						+ " exists";
 				logger.debug(msg);
 			}
+			throw new NonExistingResourceException(
+					"No service description with the URL:" + url + " exists");
 		}
 
 	}

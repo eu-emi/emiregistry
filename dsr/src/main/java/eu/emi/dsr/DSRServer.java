@@ -14,6 +14,7 @@ import java.util.logging.LogManager;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.jetty.server.Server;
 
 
 import eu.emi.dsr.core.Configuration;
@@ -117,7 +118,10 @@ public class DSRServer{
 		System.out.println("DSR server started");
 		logger.info("DSR server started");
 	}
-
+	
+	public Server getServer(){
+		return jettyServer.getServer();
+	}
 	/**
 	 * Starts the servicereaper thread to purge the expired service entries
 	 */
@@ -206,6 +210,8 @@ public class DSRServer{
 			logger.warn("Invalid log location: <"+log4jConfig+">");
 		}
 	}
+	
+	
 	
 	
 }
