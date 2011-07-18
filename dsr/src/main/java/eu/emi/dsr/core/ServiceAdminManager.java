@@ -114,8 +114,8 @@ public class ServiceAdminManager {
 		}
 
 		// request should json should not update the creation time
-		if (jo.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-				.getAttributeName()) != null) {
+		if (jo.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+				.getAttributeName())) {
 			jo.remove(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName());
 		}

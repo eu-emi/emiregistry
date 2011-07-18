@@ -166,7 +166,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				url);
 		DBObject d = serviceCollection.findAndRemove(query);
 		if (d == null) {
-			throw new NonExistingResourceException();
+			if (logger.isDebugEnabled()) {
+				String msg = "No service description with the URL:"+url+" exists";
+				logger.debug(msg);
+			}
 		}
 
 	}

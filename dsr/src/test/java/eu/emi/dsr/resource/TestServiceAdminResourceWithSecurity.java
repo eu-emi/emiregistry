@@ -30,15 +30,11 @@ public class TestServiceAdminResourceWithSecurity extends
 		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
 				"http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"http://1");
+				"sms");
 		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-				"http://1");
+				"12-12-2121,12:12");
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
 				"http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-				.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-				.getAttributeName(), "http://1");
 		JSONObject jo = new JSONObject(map);
 		return jo;
 	}
