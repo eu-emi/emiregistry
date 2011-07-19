@@ -1,9 +1,28 @@
 {
-    "servicetype":"job.management"
-    "serviceurl":"http://localhost/someservice"
-    "ownerdn":"CN=Duke, OU=JavaSoft, O=Sun Microsystems, C=US"
-    "entrycreated":"12-12-2012,12:12:12"
-    "lastupdated":"12-12-2012,12:12:12"
-    "state":"somestate"
-    "alive":"true"         
+    "Service.CreationTime":"12-12-2012,12:12:12",
+    "Service.Type":"job-management",
+	"Service.Capability":["capability1","capability2"],
+	"Service.QualityLevel":"production",
+	"Service.Complexity":"complexity",
+	"Service.Validity": 12313,
+	"Service.Extensions":[{"key":"value"},{"key":"value"}],
+    "Service.Endpoint.URL":"date-time",
+    "Service.Endpoint.Capability":"",
+	"Service.Endpoint.Technology":"",
+	"Service.Endpoint.InterfaceName":"",
+	"Service.Endpoint.InterfaceVersion":"",
+	"Service.Endpoint.InterfaceExtension":"",
+	"Service.Endpoint.WSDL":"",
+	"Service.Endpoint.SupportedProfile":["profile1","profile2"],
+	"Service.Endpoint.Semantics":["semantic1","semantic2"],
+	"Service.Endpoint.HealthState":"info",
+	"Service.Endpoint.HealthStateInfo":"info",
+	"Service.Endpoint.ServingState":"info",
+	"Service.Endpoint.StartTime":"12-12-2012,12:12:12",
+	"Service.Endpoint.IssuerCA":"some-dn",
+	"Service.Endpoint.TrustedCA":["dn1","dn2","dn3"],
+	"Service.Endpoint.DowntimeAnnounce":"date-time",
+	"Service.Endpoint.DowntimeStart":"date-time",
+	"Service.Endpoint.DowntimeEnd":"date-time",
+	"Service.Endpoint.DowntimeEnd":"date-time"	
 }
