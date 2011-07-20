@@ -17,7 +17,7 @@ public enum ServiceBasicAttributeNames {
 			Date.class), SERVICE_CAPABILITY("Service_Capability"), SERVICE_QUALITYLEVEL(
 			"Service_QualityLevel"), SERVICE_COMPLEXITY("Service_Complexity"), SERVICE_VALIDITY(
 			"Service_Validity", Long.class), SERVICE_EXPIRE_ON(
-			"serviceExpireOn", Date.class), SERVICE_UPDATE_SINCE("updateSince",
+			"Service_ExpireOn", Date.class), SERVICE_UPDATE_SINCE("updateSince",
 			Date.class), SERVICE_OWNER("serviceOwner"), SERVICE_EXTENSIONS(
 			"Service_Extensions", JSONArray.class), SERVICE_ENDPOINT_CAPABILITY(
 			"Service_Endpoint_Capability"), SERVICE_ENDPOINT_TECHNOLOGY(

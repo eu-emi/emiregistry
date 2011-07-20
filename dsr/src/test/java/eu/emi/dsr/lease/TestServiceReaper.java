@@ -51,7 +51,7 @@ public class TestServiceReaper {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011, 13:25");
+		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011,13:25");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"someservice-type");
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
