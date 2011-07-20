@@ -66,7 +66,48 @@ public class TestInfrastructureManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#SetParentsRoute(java.util.List)}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#setParent(java.util.List)}.
+	 */
+	@Test
+	public void testSetParent() {
+        // NULL pointer test
+		try {
+			manager.setParent(null);
+			// if the SetParentsRoute don't throw exception, then it is failure
+			fail("Don't throw NullPointerFailureException exception, because an input was a NULL pointer!");			
+		} catch (EmptyIdentifierFailureException e) {
+			e.printStackTrace();
+			fail("An input was a NULL pointer and not an empty collection!");			
+		} catch (NullPointerFailureException e) {
+			assertTrue("Detecting NullPointerFailureException exception.",true);
+		}
+
+		String inputParent = new String();
+		// empty input test
+		try {
+			manager.setParent(inputParent);
+			// if the SetParentsRoute don't throw exception, then it is failure
+			fail("Don't throw EmptyIdentifierFailureException exception, because an input list was empty!");			
+		} catch (EmptyIdentifierFailureException e) {
+			assertTrue("Detecting EmptyIdentifierFailureException exception.",true);
+		} catch (NullPointerFailureException e) {
+			fail("Input was a valid value and not NULL pointer!");			
+		}
+		
+		inputParent = "test_parent";
+		try {
+			manager.setParent(inputParent);
+		} catch (EmptyIdentifierFailureException e) {
+			fail("Input parents list was not empty!");
+		} catch (NullPointerFailureException e) {
+			fail("Input parents list was not NULL pointer!");
+		}
+		
+		assertEquals(inputParent, manager.getParent());
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#setParentsRoute(java.util.List)}.
 	 */
 	@Test
 	public void testSetParentsRoute() {
@@ -106,9 +147,39 @@ public class TestInfrastructureManager {
 		assertEquals(inputParentsRoute, manager.getParentsRoute());
 	}
 
-	
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetParentsRoute()}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#getParent()}.
+	 */
+	@Test
+	public void testGetParent() {
+		List<String> parents = new ArrayList<String>();
+		parents.add("test_paretn1");
+		parents.add("test_parent2");
+		parents.add("test_parent3");
+		try {
+			manager.setParent(parents.get(0));
+		} catch (EmptyIdentifierFailureException e) {
+			fail("The parents list was not empty!");
+		} catch (NullPointerFailureException e) {
+			fail("Detecting NullPointerFailureException exception, but the input is valid.");
+		}
+		
+		assertEquals(parents.get(0), manager.getParent());
+
+		// set new parent
+		try {
+			manager.setParent(parents.get(1));
+		} catch (EmptyIdentifierFailureException e) {
+			fail("The parents list was not empty!");
+		} catch (NullPointerFailureException e) {
+			fail("Detecting NullPointerFailureException exception, but the input is valid.");
+		}
+		
+		assertEquals(parents.get(1), manager.getParent());
+	}
+
+	/**
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#getParentsRoute()}.
 	 */
 	@Test
 	public void testGetParentsRoute() {
@@ -153,7 +224,7 @@ public class TestInfrastructureManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#AddChildDSR(java.lang.String)}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#addChildDSR(java.lang.String)}.
 	 */
 	@Test
 	public void testAddChildDSR() {
