@@ -40,7 +40,7 @@ public class TestServiceAdminManager {
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		Configuration conf = new Configuration(p);
 		DSRServer s = new DSRServer(conf);
-		adminMgr = ServiceManagerFactory.getServiceAdminManager();
+		adminMgr = new ServiceAdminManager();
 		adminMgr.removeAll();
 		
 	}
@@ -48,7 +48,7 @@ public class TestServiceAdminManager {
 	@Test
 	public void addServiceDescription() throws Exception {		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011,13:25");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -70,7 +70,7 @@ public class TestServiceAdminManager {
 	@Test
 	public void updateService() throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"myType");
@@ -93,10 +93,10 @@ public class TestServiceAdminManager {
 		assertEquals("Europe", adminMgr.findServiceByUrl("http://1").get("Location"));
 	}
 
-	//@Test
+	@Test
 	public void findService() throws Exception {
-		System.out.println(adminMgr.findServiceByUrl("http://1").get("serviceUrl"));
-		assertEquals("http://1",adminMgr.findServiceByUrl("http://1").get("serviceUrl"));
+		System.out.println(adminMgr.findServiceByUrl("http://1").get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
+		assertEquals("http://1",adminMgr.findServiceByUrl("http://1").get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
 	}
 	
 	@AfterClass

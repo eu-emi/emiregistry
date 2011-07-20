@@ -5,12 +5,15 @@ package eu.emi.dsr;
 
 import java.util.Properties;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import eu.emi.dsr.client.ClientSecurityProperties;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.db.ServiceDatabase;
+import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 
 /**
  * @author a.memon
@@ -87,5 +90,11 @@ public class TestRegistryBaseWithSecurity {
 		if (server.isStarted()) {
 			server.stopJetty();
 		}
+	}
+	
+	@After
+	public void cleanup() {
+		ServiceDatabase sd = new MongoDBServiceDatabase();
+		sd.deleteAll();
 	}
 }

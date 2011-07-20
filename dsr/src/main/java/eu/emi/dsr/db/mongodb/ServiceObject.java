@@ -66,7 +66,7 @@ public class ServiceObject {
 		String serviceUrl = null;
 		try {
 			serviceUrl = jo.get(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName())
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName())
 					.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -143,7 +143,7 @@ public class ServiceObject {
 			d.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), getExpireOn());
 
-		if (d.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+		if (d.get(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 				.getAttributeName()) != null)
 			d.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 					.getAttributeName(), getUpdateSince());

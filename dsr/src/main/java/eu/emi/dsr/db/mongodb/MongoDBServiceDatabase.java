@@ -66,13 +66,17 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			connection = MongoConnection.get(hostname, Integer.valueOf(port));
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
+			
 			// setting index and uniquesness on "serviceUrl"
 			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-					1);
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(),
+					"1");
 			logger.info(obj);
-			serviceCollection.createIndex(obj);
-			serviceCollection.ensureIndex(obj, "serviceUrl", true);
+			serviceCollection.ensureIndex(obj,
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(), true);
+			
 		} catch (UnknownHostException e) {
 			Log.logException(e);
 		} catch (MongoException e) {
@@ -94,25 +98,27 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public MongoDBServiceDatabase(String hostname, Integer port, String dbName,
 			String colName) {
 		try {
+			if (DSRServer.getConfiguration() == null) {
+				DSRServer s = new DSRServer(new Configuration(new Properties()));
+			}
 			connection = MongoConnection.get(hostname, port);
 			database = connection.getDB(dbName);
 
-			if (Boolean.parseBoolean(DSRServer.getConfiguration().getProperty(
-					ServerConstants.MONGODB_COL_CREATE, "false"))) {
-				serviceCollection = database.getCollection(colName);
-				serviceCollection.dropIndexes();
-				serviceCollection.drop();
-			}
+			
 			serviceCollection = database.getCollection(colName);
+			
+			
 
-			// setting index and uniquesness on "serviceurl"
+			// setting index and uniquesness on service url
 			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-					1);
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(),
+					"1");
 			logger.info(obj);
-			serviceCollection.createIndex(obj);
-			serviceCollection.ensureIndex(obj, "serviceUrl", true);
-
+			serviceCollection.ensureIndex(obj,
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(), true);
+			
 		} catch (UnknownHostException e) {
 			Log.logException(e);
 		} catch (MongoException e) {
@@ -132,7 +138,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			DBObject db = item.toDBObject();
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
-			WriteResult wr = serviceCollection.insert(db, WriteConcern.SAFE);
+			serviceCollection.insert(db, WriteConcern.SAFE);
 			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, db));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
@@ -141,6 +147,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			} else {
 				throw new PersistentStoreFailureException(e);
 			}
+			
 		}
 
 	}
@@ -149,22 +156,22 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public ServiceObject getServiceByUrl(String identifier)
 			throws MultipleResourceException, NonExistingResourceException,
 			PersistentStoreFailureException {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-				identifier);
 		ServiceObject so = null;
 		try {
 
-			DBCursor cur = serviceCollection.find(new BasicDBObject(
-					"serviceUrl", identifier));
-			while (cur.hasNext()) {
-				so = new ServiceObject(cur.next().toString());
+			DBObject db = serviceCollection.findOne(new BasicDBObject(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(), identifier));
+			if (db == null) {
+				return null;
 			}
+			so = new ServiceObject(db);
+			
 
 		} catch (MongoException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
-			e.printStackTrace();
+			throw new NonExistingResourceException(e);
 		}
 
 		return so;
@@ -174,8 +181,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public void deleteByUrl(String url) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		BasicDBObject query = new BasicDBObject();
-		query.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-				url);
+		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				.getAttributeName(), url);
 		DBObject d = serviceCollection.findAndRemove(query);
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
@@ -197,8 +204,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 				.getAttributeName(), new Date());
 		BasicDBObject query = new BasicDBObject();
-		query.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-				sObj.getUrl());
+		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				.getAttributeName(), sObj.getUrl());
 
 		serviceCollection.update(query, dbObj);
 		// sending update event to the recievers
@@ -220,9 +227,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return Collections.unmodifiableList(resultCollection);
 	}
 
@@ -247,6 +256,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next());
 				resultCollection.add(s);
 			}
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -272,7 +282,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
-
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -289,7 +299,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		while (cur.hasNext()) {
 			arr.put(JSON.serialize(cur.next()));
 		}
-
+		cur.close();
 		return arr;
 	}
 
@@ -314,6 +324,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(JSON.serialize(cur.next()));
 			}
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -335,7 +346,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(JSON.serialize(cur.next()));
 			}
-
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -361,7 +372,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(JSON.serialize(cur.next()));
 			}
-
+			cur.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -405,6 +416,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 
 		List<DBObject> lst = cur.toArray();
+		cur.close();
 		JSONArray arr = new JSONArray(lst);
 		return arr;
 	}
@@ -416,6 +428,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public void deleteAll() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleting all the contents from the db collection");
+		}
 		BasicDBObject o = new BasicDBObject(0);
 		serviceCollection.remove(o);
 
@@ -433,6 +448,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			ServiceObject s = new ServiceObject(type.toString());
 			lst.add(s);
 		}
+		c.close();
 		return Collections.unmodifiableList(lst);
 	}
 

@@ -14,5 +14,8 @@ public class NonExistingResourceException extends Exception {
 	public NonExistingResourceException(String message) {
 		super(message);
 	}
+	public NonExistingResourceException(Throwable e) {
+		super(e);
+	}
 
 }

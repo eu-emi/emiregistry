@@ -40,8 +40,8 @@ public class TestServiceColManager {
 	@Test
 	public void testQueryServiceCollection(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("serviceurl", "http://1");
-		map.put("servicetype", "jms");
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1");
+		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "jms");
 		JSONObject j = new JSONObject(map);
 		try {
 			mgr.queryServiceCollection(j);

@@ -57,6 +57,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
 		logger.debug("user dn: "+certArr[0].getSubjectDN());
 		logger.debug(request.getMethod());
 		logger.debug(request.getPath());
+		
 		return request;
 	}
 

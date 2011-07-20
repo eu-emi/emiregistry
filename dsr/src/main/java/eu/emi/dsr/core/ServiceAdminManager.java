@@ -151,17 +151,11 @@ public class ServiceAdminManager {
 	 * @throws MultipleResourceException
 	 * @throws PersistentStoreFailureException
 	 */
-	public JSONObject findServiceByUrl(String url) {
+	public JSONObject findServiceByUrl(String url) throws NonExistingResourceException, PersistentStoreFailureException{
 		ServiceObject so = null;
 		try {
 			so = serviceDB.getServiceByUrl(url);
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PersistentStoreFailureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -184,8 +178,7 @@ public class ServiceAdminManager {
 
 		JSONObject predicate = new JSONObject();
 		JSONObject query = new JSONObject();
-		// { "serviceExpireOn" : { "$lte" : { "$date" :
-		// "2011-07-06T16:05:40Z"}}}
+		// { "serviceExpireOn" : { "$lte" : { "$date" : "2011-07-06T16:05:40Z"}}}
 
 		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 		predicate.put("$lte", date);

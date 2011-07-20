@@ -76,7 +76,7 @@ public class TestJSON {
 		 * Call the method to convert the stream to string
 		 */
 		JSONObject jo = new JSONObject(convertStreamToString(is));
-		assertNotNull(jo.get("Service.Endpoint.URL"));
+		assertNotNull(jo.get("Service_Endpoint_URL"));
 	}
 
 	public String convertStreamToString(InputStream is) throws IOException {

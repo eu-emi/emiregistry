@@ -3,7 +3,7 @@
  */
 package eu.emi.dsr.resource;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
@@ -27,7 +26,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		TestRegistryBaseWithSecurity {
 	private static JSONObject getDummyServiceDesc() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
@@ -40,31 +39,18 @@ public class TestServiceAdminResourceWithSecurity extends
 	}
 
 	@Test
-	public void testRegisterService() {
+	public void testRegisterService() throws JSONException {
 		JSONObject jo = getDummyServiceDesc();
 		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?serviceurl=http://1", getSecurityProperties());
+				+ "/serviceadmin?Service_Endpoint_URL=http://1", getSecurityProperties());
 		cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(String.class, jo);
-	}
-
-	@Test
-	public void testGetServiceInfo() {
 		System.out.println("/serviceadmin");
-		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?serviceUrl=http://1", getSecurityProperties());
-		JSONObject jo = cr.getClientResource()
+		DSRClient cr1 = new DSRClient(BaseURI
+				+ "/serviceadmin?Service_Endpoint_URL=http://1", getSecurityProperties());
+		JSONObject jo1 = cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertNotNull(jo);
-		System.out.println(jo);
+		assertEquals("http://1",jo1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
 	}
-
 	
-	@Test
-	public void testDeleteResource() throws JSONException {
-		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?serviceUrl=http://1", getSecurityProperties());
-		cr.getClientResource().delete();
-
-	}
 }

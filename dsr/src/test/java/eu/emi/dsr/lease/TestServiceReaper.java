@@ -41,7 +41,7 @@ public class TestServiceReaper {
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		Configuration conf = new Configuration(p);
 		DSRServer s = new DSRServer(conf);
-		adminMgr = ServiceManagerFactory.getServiceAdminManager();
+		adminMgr = new ServiceAdminManager();
 		adminMgr.removeAll();
 	}
 	
@@ -49,7 +49,7 @@ public class TestServiceReaper {
 	public void test() throws InvalidServiceDescriptionException, JSONException{
 		//adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011, 13:25");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -64,7 +64,7 @@ public class TestServiceReaper {
 		JSONObject jo = new JSONObject(map);
 		
 		for (int i = 0; i < 10; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://"+UUID.randomUUID().toString());
 			//to be expired
 			Calendar c = Calendar.getInstance();
@@ -75,7 +75,7 @@ public class TestServiceReaper {
 		}
 		
 		for (int i = 0; i < 15; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://"+UUID.randomUUID().toString());
 			//to be expired in future
 			Calendar c = Calendar.getInstance();

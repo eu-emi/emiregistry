@@ -126,7 +126,7 @@ public class DSRServer{
 	 * Starts the servicereaper thread to purge the expired service entries
 	 */
 	private void startServiceExpiryCheckcer() {
-		RegistryThreadPool.getScheduledExecutorService().scheduleWithFixedDelay(new ServiceReaper(), 10, 5, TimeUnit.SECONDS);		
+		RegistryThreadPool.getScheduledExecutorService().scheduleWithFixedDelay(new ServiceReaper(), 10, 1, TimeUnit.SECONDS);		
 	}
 
 

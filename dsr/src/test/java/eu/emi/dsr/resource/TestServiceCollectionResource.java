@@ -45,7 +45,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		for (int i = 0; i < 50; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -56,7 +56,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		for (int i = 0; i < 50; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -78,7 +78,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindByType() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query?serviceType=jms");
+					+ "/services/query?Service_Type=jms");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -96,7 +96,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindNone() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query?serviceType=blah");
+					+ "/services/query?Service_Type=blah");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -114,7 +114,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testLimit20() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query?serviceType=jms&limit=20");
+					+ "/services/query?Service_Type=jms&limit=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -132,7 +132,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindLast30() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query?serviceType=jms&skip=20");
+					+ "/services/query?Service_Type=jms&skip=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -149,7 +149,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void testFindLastHalfOf40() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
-					+ "/services/query?serviceType=jms&skip=20&limit=20");
+					+ "/services/query?Service_Type=jms&skip=20&limit=20");
 			JSONArray o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JSONArray.class);
@@ -184,21 +184,21 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testPagedQuery() throws JSONException{
 		//starting page
-		DSRClient cr = new DSRClient(BaseURI + "/services/pagedquery?serviceType=jms&pageSize=10");
+		DSRClient cr = new DSRClient(BaseURI + "/services/pagedquery?Service_Type=jms&pageSize=10");
 		JSONObject o = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals(10, o.getJSONArray("result").length());
 		
 		
-		System.out.println(BaseURI + "/services/pagedquery?serviceType=jms&pageSize=10&ref="+o.get("ref"));
-		cr = new DSRClient(BaseURI + "/services/pagedquery?serviceType=jms&pageSize=10&ref="+o.get("ref"));
+		System.out.println(BaseURI + "/services/pagedquery?Service_Type=jms&pageSize=10&ref="+o.get("ref"));
+		cr = new DSRClient(BaseURI + "/services/pagedquery?Service_Type=jms&pageSize=10&ref="+o.get("ref"));
 		o = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals(10, o.getJSONArray("result").length());
 		
 		
-		System.out.println(BaseURI + "/services/pagedquery?serviceType=jms&pageSize=10&ref="+o.get("ref"));
-		cr = new DSRClient(BaseURI + "/services/pagedquery?serviceType=jms&pageSize=10&ref="+o.get("ref"));
+		System.out.println(BaseURI + "/services/pagedquery?Service_Type=jms&pageSize=10&ref="+o.get("ref"));
+		cr = new DSRClient(BaseURI + "/services/pagedquery?Service_Type=jms&pageSize=10&ref="+o.get("ref"));
 		o = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals(10, o.getJSONArray("result").length());

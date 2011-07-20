@@ -21,6 +21,8 @@ import org.codehaus.jettison.json.JSONObject;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.ServiceManagerFactory;
+import eu.emi.dsr.db.NonExistingResourceException;
+import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.util.Log;
@@ -41,7 +43,8 @@ public class ServiceAdminResource {
 	 * 
 	 */
 	public ServiceAdminResource() {
-		serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
+//		serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
+		serviceAdmin = new ServiceAdminManager();
 	}
 
 	@GET	
@@ -49,21 +52,27 @@ public class ServiceAdminResource {
 			throws WebApplicationException{
 		logger.debug("getting service by url");
 		final JSONObject result;
-		result = serviceAdmin.findServiceByUrl(extractServiceUrlFromUri(infos));
+		try {
+			result = serviceAdmin.findServiceByUrl(extractServiceUrlFromUri(infos));
+		} catch (NonExistingResourceException e) {
+			return null;
+		} catch (PersistentStoreFailureException e) {
+			throw new WebApplicationException(e);
+		}
 		
 		return result;
 	}
 
 	private static String extractServiceUrlFromUri(UriInfo infos) {
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();
-		String attrName = ServiceBasicAttributeNames.SERVICE_URL
+		String attrName = ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName();
 		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
 		if (key == "unknown") {
 			throw new WebApplicationException(new IllegalArgumentException(
 					"invalid param"));
 		}
-		String value = mm.getFirst(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName());
+		String value = mm.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName());
 		return value;
 	}
 

@@ -58,7 +58,7 @@ public class ServiceUtil {
 	 */
 	public static boolean isValidServiceInfo(JSONObject jo) throws JSONException {
 		
-		if ((jo.get(ServiceBasicAttributeNames.SERVICE_URL
+		if ((jo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()) == null)
 				&& (jo.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 						.getAttributeName()) == null)) {

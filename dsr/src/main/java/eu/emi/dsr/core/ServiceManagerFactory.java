@@ -15,10 +15,10 @@ public class ServiceManagerFactory {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceManagerFactory.class);
 
-	private static ServiceAdminManager adminMgr = null;
+	private ServiceAdminManager adminMgr = null;
 	private static ServiceColManager colMgr = null;
 
-	public static ServiceAdminManager getServiceAdminManager() {
+	public ServiceAdminManager getServiceAdminManager() {
 		return new ServiceAdminManager();
 	}
 
