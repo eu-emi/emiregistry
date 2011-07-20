@@ -59,7 +59,7 @@ public class TestInfrastructureManager {
 		if (!parents.isEmpty()) fail("Can not clean the parents collection!");
 		
 		// Child collection check
-		List<String> childs = manager.getChildServices();
+		List<String> childs = manager.getChildDSRs();
 		if (!childs.isEmpty()) fail("Can not clean the childs collection!");
 		
 		assertEquals(parents.isEmpty(),childs.isEmpty());
@@ -128,19 +128,19 @@ public class TestInfrastructureManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetChildServices()}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetChildDSRs()}.
 	 */
 	@Test
-	public void testGetChildServices() {
+	public void testGetChildDSRs() {
 		List<String> childs = new ArrayList<String>();
 		childs.add("test_child1");
 		childs.add("test_child2");
 		childs.add("test_child3");
 		
 		try {
-			manager.addChildService("test_child1");
-			manager.addChildService("test_child2");
-			manager.addChildService("test_child3");
+			manager.addChildDSR("test_child1");
+			manager.addChildDSR("test_child2");
+			manager.addChildDSR("test_child3");
 		} catch (AlreadyExistFailureException e) {
 			fail("Detecting AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -149,17 +149,17 @@ public class TestInfrastructureManager {
 			fail("Detecting NullPointerFailureException exception.");
 		}
 		
-		assertEquals(childs, manager.getChildServices());
+		assertEquals(childs, manager.getChildDSRs());
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#AddChildService(java.lang.String)}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#AddChildDSR(java.lang.String)}.
 	 */
 	@Test
-	public void testAddChildService() {
+	public void testAddChildDSR() {
 		// NULL pointer test
 		try {
-			manager.addChildService(null);
+			manager.addChildDSR(null);
 		} catch (AlreadyExistFailureException e) {
 			fail("Input was a NULL pointer and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -170,7 +170,7 @@ public class TestInfrastructureManager {
 		
 		// empty input test
 		try {
-			manager.addChildService("");
+			manager.addChildDSR("");
 		} catch (AlreadyExistFailureException e) {
 			fail("Child collection was emtpy and we catch AlreadyExistFailureException exception.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -181,8 +181,8 @@ public class TestInfrastructureManager {
 		
 		// AlreadyExistFailureException exception test
 		try {
-			manager.addChildService("test_child1");
-			manager.addChildService("test_child1");
+			manager.addChildDSR("test_child1");
+			manager.addChildDSR("test_child1");
 		} catch (AlreadyExistFailureException e) {
 			assertTrue("Detecting AlreadyExistFailureException exception.",true);           
 		} catch (EmptyIdentifierFailureException e) {
@@ -190,11 +190,11 @@ public class TestInfrastructureManager {
 		} catch (NullPointerFailureException e) {
 			fail("The input identifier is not empty but we catch NullPointerFailureException exception.");
 		}
-		assertEquals("test_child1", manager.getChildServices().get(0));
+		assertEquals("test_child1", manager.getChildDSRs().get(0));
 		
 		try {
-			manager.addChildService("test_child2");
-			manager.addChildService("test_child3");
+			manager.addChildDSR("test_child2");
+			manager.addChildDSR("test_child3");
 		} catch (AlreadyExistFailureException e) {
 			fail("Every input identifier was unique.");
 		} catch (EmptyIdentifierFailureException e) {
@@ -203,8 +203,8 @@ public class TestInfrastructureManager {
 			fail("Detecting NullPointerFailureException exception.");
 		}
 		// Value checking
-		for (int i=0; i<manager.getChildServices().size(); i++){
-			assertEquals("test_child"+(i+1), manager.getChildServices().get(i));
+		for (int i=0; i<manager.getChildDSRs().size(); i++){
+			assertEquals("test_child"+(i+1), manager.getChildDSRs().get(i));
 		}
 	}
 

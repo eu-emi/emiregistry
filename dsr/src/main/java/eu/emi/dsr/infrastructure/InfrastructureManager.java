@@ -15,12 +15,10 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	public InfrastructureManager() {
 		parentsRoute = new ArrayList<String>();
 		childServices = new ArrayList<String>();
-		//parentsRoute.clear();
-		//childServices.clear();
 	}
 	
 	/* 
-	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#SetParentsRoute(java.util.List)
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#setParentsRoute(java.util.List)
 	 */
 	@Override
 	public void setParentsRoute(List<String> identifiers) throws EmptyIdentifierFailureException, NullPointerFailureException{
@@ -32,7 +30,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/* 
-	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#GetParentsRoute()
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#getParentsRoute()
 	 */
 	@Override
 	public List<String> getParentsRoute() {
@@ -40,23 +38,42 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/* 
-	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#GetChildServices()
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#getChildDSRs()
 	 */
 	@Override
-	public List<String> getChildServices() {
+	public List<String> getChildDSRs() {
 		return childServices;
 	}
 
 	/* 
-	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#AddChildService(java.util.String)
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#addChildDSR(java.util.String)
 	 */
 	@Override
-	public void addChildService(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException {
+	public void addChildDSR(String identifier) throws AlreadyExistFailureException, EmptyIdentifierFailureException, NullPointerFailureException {
 		if (identifier == null) throw new NullPointerFailureException();
 		if (identifier.isEmpty()) throw new EmptyIdentifierFailureException();
 		
 		if (childServices.contains(identifier)) throw new AlreadyExistFailureException();
 		childServices.add(identifier);
+	}
+
+	/* 
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#setParent(java.util.String)
+	 */
+	@Override
+	public void setParent(String identifier)
+			throws EmptyIdentifierFailureException, NullPointerFailureException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* 
+	 * @see eu.emi.dsr.infrastructure.ServiceInfrastructure#getParent()
+	 */
+	@Override
+	public String getParent() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private List<String> parentsRoute;
