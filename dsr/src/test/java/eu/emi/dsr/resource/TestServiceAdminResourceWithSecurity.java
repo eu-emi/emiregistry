@@ -5,6 +5,7 @@ package eu.emi.dsr.resource;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.junit.Test;
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * @author a.memon
@@ -26,15 +28,28 @@ public class TestServiceAdminResourceWithSecurity extends
 		TestRegistryBaseWithSecurity {
 	private static JSONObject getDummyServiceDesc() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
-				"http://1");
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"sms");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-				"12-12-2121,12:12");
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				"http://1");
+				"jms");
+		
+		JSONObject date = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		c.add(c.MONTH, 12);
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		
 		JSONObject jo = new JSONObject(map);
+		try {
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
+					date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return jo;
 	}
 

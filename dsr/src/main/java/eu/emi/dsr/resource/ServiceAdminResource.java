@@ -8,8 +8,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -17,6 +19,9 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
@@ -123,5 +128,4 @@ public class ServiceAdminResource {
 		} 
 		return Response.ok().build();
 	}
-
 }

@@ -3,6 +3,7 @@
  */
 package eu.emi.dsr.resource;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
 
@@ -22,6 +25,7 @@ import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.util.ServiceUtil;
 
 import static org.junit.Assert.*;
 
@@ -37,9 +41,24 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"jms");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-				"12-12-2121,12:12");
+		
+		JSONObject date = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		c.add(c.MONTH, 12);
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		
 		JSONObject jo = new JSONObject(map);
+		try {
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
+					date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return jo;
 	}
 
@@ -66,11 +85,26 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-				"12-12-2121,12:12");
+		
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
 				"http://1");
+		JSONObject date = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		c.add(c.MONTH, 12);
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		
 		JSONObject jo = new JSONObject(map);
+		try {
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
+					date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return jo;
 	}
 
@@ -111,9 +145,13 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		Response res = cr2.getClientResource().get(javax.ws.rs.core.Response.class);
 		System.out.println(res.getStatus());
-
+		
+		Object o = cr2.getClientResource().accept("application/vnd.sun.wadl+xml").get(Object.class);
+		System.out.println(o);
 	}
 
+	
+	
 	@After
 	public void cleanup() {
 		ServiceDatabase sd = new MongoDBServiceDatabase();
