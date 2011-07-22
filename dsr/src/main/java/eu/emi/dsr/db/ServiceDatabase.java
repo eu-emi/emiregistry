@@ -8,6 +8,8 @@ import java.util.List;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
+import com.mongodb.MongoException;
+
 import eu.emi.dsr.db.mongodb.ServiceObject;
 
 /**
@@ -149,9 +151,11 @@ public interface ServiceDatabase {
 	 * @return
 	 * @throws QueryException
 	 * @throws PersistentStoreFailureException
+	 * @throws JSONException 
+	 * @throws MongoException 
 	 */
 	JSONArray queryJSON(String query) throws QueryException,
-			PersistentStoreFailureException;
+			PersistentStoreFailureException, MongoException, JSONException;
 
 	/**
 	 * @param query

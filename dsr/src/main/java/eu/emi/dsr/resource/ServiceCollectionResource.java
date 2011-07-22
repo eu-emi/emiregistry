@@ -3,6 +3,8 @@
  */
 package eu.emi.dsr.resource;
 
+import java.io.StringWriter;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,20 +19,27 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.mongodb.MongoException;
+
 import eu.emi.dsr.core.ServiceColManager;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
+import eu.emi.dsr.glue2.Glue2Mapper;
 import eu.emi.dsr.util.Log;
+import eu.eu_emi.emiregistry.QueryResult;
 
 /**
  * @author a.memon
- * 
+ * TODO support for glue2 in paged query
  */
 @Path("/services")
 public class ServiceCollectionResource {
@@ -116,9 +125,47 @@ public class ServiceCollectionResource {
 			new WebApplicationException(e);
 		} catch (PersistentStoreFailureException e) {
 			new WebApplicationException(e);
+		} catch (MongoException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 		return jArr;
+	}
+
+	@GET
+	@Path("/query.xml")
+	public QueryResult queryXml(@Context UriInfo ui)
+			throws WebApplicationException {
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
+
+		JSONArray jArr = null;
+		Glue2Mapper gm = new Glue2Mapper();
+		QueryResult qr = null;
+		try {
+			qr = col.queryGlue2(m);
+		} catch (QueryException e) {
+			new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
+			new WebApplicationException(e);
+		} catch (JSONException e) {
+			new WebApplicationException(e);
+			e.printStackTrace();
+		} catch (DatatypeConfigurationException e) {
+			new WebApplicationException(e);
+		} catch (ParseException e) {
+			new WebApplicationException(e);
+		}		
+
+		
+		return qr;
 	}
 
 	@GET
