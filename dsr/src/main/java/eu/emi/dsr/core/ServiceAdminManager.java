@@ -60,12 +60,12 @@ public class ServiceAdminManager {
 		}
 		try {
 			// current time and last update should be same in the beginning
+			JSONObject date = new JSONObject();
+			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName(), ServiceUtil.ServiceDateFormat
-					.format(new Date()));
+					.getAttributeName(), date);
 			jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-					.getAttributeName(), ServiceUtil.ServiceDateFormat
-					.format(new Date()));
+					.getAttributeName(), date);
 			serviceDB.insert(new ServiceObject(jo));
 		} catch (ExistingResourceException e) {
 			// TODO Auto-generated catch block

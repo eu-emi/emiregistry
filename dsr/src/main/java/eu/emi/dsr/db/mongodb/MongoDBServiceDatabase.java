@@ -291,13 +291,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	@Override
 	public JSONArray queryJSON(String query) throws QueryException,
-			PersistentStoreFailureException {
+			PersistentStoreFailureException, MongoException, JSONException {
 		DBObject o = (DBObject) JSON.parse(query);
 		DBCursor cur = serviceCollection.find(o);
 		JSONArray arr = new JSONArray();
 		logger.info(cur.size());
 		while (cur.hasNext()) {
-			arr.put(JSON.serialize(cur.next()));
+			arr.put(new JSONObject(JSON.serialize(cur.next())));
 		}
 		cur.close();
 		return arr;
@@ -322,7 +322,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		try {
 			while (cur.hasNext()) {
-				arr.put(JSON.serialize(cur.next()));
+				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
 			cur.close();
 		} catch (Exception e) {
@@ -344,7 +344,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		JSONArray arr = new JSONArray();
 		try {
 			while (cur.hasNext()) {
-				arr.put(JSON.serialize(cur.next()));
+				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
 			cur.close();
 		} catch (Exception e) {
@@ -370,7 +370,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		JSONArray arr = new JSONArray();
 		try {
 			while (cur.hasNext()) {
-				arr.put(JSON.serialize(cur.next()));
+				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
 			cur.close();
 		} catch (Exception e) {

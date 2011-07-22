@@ -11,7 +11,7 @@
 	<groupId>eu.emi</groupId>
 	<artifactId>xmltypes</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>Global Service Registry</name>
+	<name>XML Types</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
