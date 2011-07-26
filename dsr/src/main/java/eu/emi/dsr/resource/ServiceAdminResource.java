@@ -48,23 +48,24 @@ public class ServiceAdminResource {
 	 * 
 	 */
 	public ServiceAdminResource() {
-//		serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
+		// serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
 		serviceAdmin = new ServiceAdminManager();
 	}
 
-	@GET	
+	@GET
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
-			throws WebApplicationException{
+			throws WebApplicationException {
 		logger.debug("getting service by url");
 		final JSONObject result;
 		try {
-			result = serviceAdmin.findServiceByUrl(extractServiceUrlFromUri(infos));
+			result = serviceAdmin
+					.findServiceByUrl(extractServiceUrlFromUri(infos));
 		} catch (NonExistingResourceException e) {
 			return null;
 		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		}
-		
+
 		return result;
 	}
 
@@ -77,7 +78,9 @@ public class ServiceAdminResource {
 			throw new WebApplicationException(new IllegalArgumentException(
 					"invalid param"));
 		}
-		String value = mm.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName());
+		String value = mm
+				.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+						.getAttributeName());
 		return value;
 	}
 
@@ -90,8 +93,8 @@ public class ServiceAdminResource {
 			throw new WebApplicationException(e);
 		} catch (JSONException e) {
 			throw new WebApplicationException(e);
-		} 
-		
+		}
+
 		return Response.ok().build();
 	}
 
@@ -99,14 +102,21 @@ public class ServiceAdminResource {
 	public Response updateService(JSONObject serviceInfo)
 			throws WebApplicationException {
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("updating service by url: "
+						+ serviceInfo
+								.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+										.getAttributeName()));
+			}
 			serviceAdmin.updateService(serviceInfo);
+
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
 		} catch (JSONException e) {
 			throw new WebApplicationException(e);
 		} catch (UnknownServiceException e) {
-			throw new WebApplicationException(e);
-		} 
+			return Response.noContent().build();
+		}
 		return Response.ok().build();
 	}
 
@@ -118,14 +128,15 @@ public class ServiceAdminResource {
 	 * */
 	@DELETE
 	public Response deleteService(@Context UriInfo infos) {
-		
+
 		try {
-			logger.debug("deleting service by url");
+
 			String serviceurl = extractServiceUrlFromUri(infos);
+			logger.debug("deleting service by url: " + serviceurl);
 			serviceAdmin.removeService(serviceurl);
 		} catch (UnknownServiceException e) {
-			throw new WebApplicationException(e);
-		} 
+			return Response.noContent().build();
+		}
 		return Response.ok().build();
 	}
 }

@@ -114,10 +114,14 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
 					"1");
-			logger.info(obj);
+			
+			
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
+			if (logger.isDebugEnabled()) {
+				logger.info("Unique index created: "+obj);	
+			}
 			
 		} catch (UnknownHostException e) {
 			Log.logException(e);
@@ -139,7 +143,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, db));
+			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item.toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "
@@ -193,24 +197,34 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			throw new NonExistingResourceException(
 					"No service description with the URL:" + url + " exists");
 		}
-
+		// sending update event to the recievers
+		EventManager
+				.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
 	}
 
 	@Override
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
-		DBObject dbObj = sObj.toDBObject();
-		// change the update date
-		dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-				.getAttributeName(), new Date());
-		BasicDBObject query = new BasicDBObject();
-		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), sObj.getUrl());
+		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("updating service description: "+sObj);
+			}
+			DBObject dbObj = sObj.toDBObject();
+			// change the update date
+			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+					.getAttributeName(), new Date());
+			BasicDBObject query = new BasicDBObject();
+			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName(), sObj.getUrl());
 
-		serviceCollection.update(query, dbObj);
-		// sending update event to the recievers
-		EventManager
-				.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE, dbObj));
+			serviceCollection.update(query, dbObj);
+			// sending update event to the recievers
+			EventManager
+					.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE, sObj.toJSON()));	
+		} catch (MongoException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
@@ -466,5 +480,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		serviceCollection.remove(db);
 	}
-
+	
+	
+	public void dropCollection(){
+		if (logger.isDebugEnabled()) {
+			logger.debug("dropping collection: "+serviceCollection.getName());
+		}
+		serviceCollection.drop();
+	}
 }

@@ -20,6 +20,7 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
+import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
@@ -121,27 +122,22 @@ public class ServiceAdminManager {
 		}
 
 		// setting the update time
-		jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-				.getAttributeName(), ServiceUtil.ServiceDateFormat
-				.format(new Date()));
+		jo = DateUtil.addDate(jo,
+				ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+						.getAttributeName(), new Date());
 
 		ServiceObject sObj = new ServiceObject(jo);
 		try {
 			serviceDB.update(sObj);
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-
-	
 
 	/**
 	 * Finding a service by its url
@@ -151,7 +147,9 @@ public class ServiceAdminManager {
 	 * @throws MultipleResourceException
 	 * @throws PersistentStoreFailureException
 	 */
-	public JSONObject findServiceByUrl(String url) throws NonExistingResourceException, PersistentStoreFailureException{
+	public JSONObject findServiceByUrl(String url)
+			throws NonExistingResourceException,
+			PersistentStoreFailureException {
 		ServiceObject so = null;
 		try {
 			so = serviceDB.getServiceByUrl(url);
@@ -178,7 +176,8 @@ public class ServiceAdminManager {
 
 		JSONObject predicate = new JSONObject();
 		JSONObject query = new JSONObject();
-		// { "serviceExpireOn" : { "$lte" : { "$date" : "2011-07-06T16:05:40Z"}}}
+		// { "serviceExpireOn" : { "$lte" : { "$date" :
+		// "2011-07-06T16:05:40Z"}}}
 
 		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 		predicate.put("$lte", date);

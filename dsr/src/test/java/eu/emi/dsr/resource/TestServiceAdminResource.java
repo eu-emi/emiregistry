@@ -146,8 +146,6 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		Response res = cr2.getClientResource().get(javax.ws.rs.core.Response.class);
 		System.out.println(res.getStatus());
 		
-		Object o = cr2.getClientResource().accept("application/vnd.sun.wadl+xml").get(Object.class);
-		System.out.println(o);
 	}
 
 	
