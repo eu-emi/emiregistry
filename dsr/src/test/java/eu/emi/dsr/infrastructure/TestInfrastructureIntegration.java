@@ -38,7 +38,7 @@ import eu.emi.dsr.util.ServiceUtil;
  * @author a.memon
  * 
  */
-public class TestRegisterIntegration {
+public class TestInfrastructureIntegration {
 	@Before
 	public void setUp() {
 		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(

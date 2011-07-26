@@ -18,7 +18,7 @@ import org.junit.Test;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.sun.jersey.api.client.UniformInterfaceException;
-
+import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.dsr.client.DSRClient;
@@ -41,7 +41,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"jms");
-		
+
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
 		c.add(c.MONTH, 12);
@@ -50,12 +50,11 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		JSONObject jo = new JSONObject(map);
 		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-					date);
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +84,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
-		
+
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
 				"http://1");
 		JSONObject date = new JSONObject();
@@ -96,12 +95,11 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		JSONObject jo = new JSONObject(map);
 		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-					date);
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -131,7 +129,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName()));
 	}
 
-	@Test(expected=UniformInterfaceException.class)
+	@Test
 	public void testDeleteResource() throws JSONException {
 		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
 		cr1.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
@@ -140,16 +138,20 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		DSRClient cr = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		cr.getClientResource().delete();
-		
+
 		DSRClient cr2 = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
-		Response res = cr2.getClientResource().get(javax.ws.rs.core.Response.class);
-		System.out.println(res.getStatus());
-		
+		try {
+		cr2.getClientResource().get(
+				javax.ws.rs.core.Response.class);
+		} catch (UniformInterfaceException e) {
+			assertTrue(e.getResponse().getStatus() == Status.NO_CONTENT
+					.getStatusCode());
+
+		}
+
 	}
 
-	
-	
 	@After
 	public void cleanup() {
 		ServiceDatabase sd = new MongoDBServiceDatabase();
