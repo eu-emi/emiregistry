@@ -9,7 +9,7 @@ package eu.emi.dsr.core;
  */
 public class ServerConstants {
 	public static final String CLIENT_AUTHN = "registry.security.clientauthentication";
-	
+
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
@@ -17,7 +17,8 @@ public class ServerConstants {
 	public static String REGISTRY_ACCESSCONTROL = "registry.security.accesscontrol";
 	public static String REGISTRY_ATTRIBUTESOURCE_TYPE = "registry.security.attributesource.location";
 	public static String REGISTRY_ATTRIBUTESOURCE_LOCATION = "registry.security.attributesource.location";
-	
+	public static String REGISTRY_PARENT_URL = "registry.parent.url";
+
 	// Log4J
 	public static String LOGGER_CONF_PATH = "logger.conf.path";
 
@@ -28,7 +29,7 @@ public class ServerConstants {
 	public static String MONGODB_COLLECTION_NAME = "mongodb.colname";
 	public static String MONGODB_COLLECTION_USERNAME = "mongodb.username";
 	public static String MONGODB_COLLECTION_PASSWORD = "mongodb.password";
-	//create new on startup, drop the old one - type: boolean
+	// create new on startup, drop the old one - type: boolean
 	public static final String MONGODB_COL_CREATE = "mongodb.create";
 
 	// Security Properties
@@ -37,13 +38,12 @@ public class ServerConstants {
 	public static String KEYSTORE_ALIAS = "keystore.alias";
 	public static String KEYSTORE_TYPE = "keystore.type";
 	public static String KEYSTORE_PASSWORD = "keystore.password";
-	
 
 	// trust store
 	public static String TRUSTSTORE_PATH = "truststore.path";
 	public static String TRUSTSTORE_PASSWORD = "truststore.password";
 	public static String TRUSTSTORE_TYPE = "truststore.type";
-	
+
 	// Jetty
 	public static String JETTY_MAXIDLETIME = "jetty.maxIdleTime";
 	public static String JETTY_LOW_RESOURCE_MAXIDLETIME = "jetty.lowResourceMaxIdleTime";

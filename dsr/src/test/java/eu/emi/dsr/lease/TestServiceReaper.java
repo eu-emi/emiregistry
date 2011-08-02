@@ -24,15 +24,16 @@ import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.ServiceManagerFactory;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.util.ServiceUtil;
+
 /**
  * @author a.memon
- *
+ * 
  */
 public class TestServiceReaper {
 	private static ServiceAdminManager adminMgr;
-	
+
 	@BeforeClass
-	public static void setup(){
+	public static void setup() {
 		Properties p = new Properties();
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
@@ -41,61 +42,87 @@ public class TestServiceReaper {
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		Configuration conf = new Configuration(p);
 		DSRServer s = new DSRServer(conf);
-		adminMgr = ServiceManagerFactory.getServiceAdminManager();
+		adminMgr = new ServiceAdminManager();
 		adminMgr.removeAll();
 	}
-	
+
 	@Test
-	public void test() throws InvalidServiceDescriptionException, JSONException{
-		//adding service entries
+	public void test() throws InvalidServiceDescriptionException, JSONException, InterruptedException {
+		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-				"http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), "06-07-2011, 13:25");
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				.getAttributeName(), "http://1");
+
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"someservice-type");
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
 				"http://1");
-		//the following attributes should be added/changed at the controller side (AdminManager)
-		map.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-				.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-				.getAttributeName(), "http://1");
-		JSONObject jo = new JSONObject(map);
-		
-		for (int i = 0; i < 10; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-					"http://"+UUID.randomUUID().toString());
-			//to be expired
-			Calendar c = Calendar.getInstance();
-			
-			String date = ServiceUtil.ServiceDateFormat.format(c.getTime());
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), date);
-			adminMgr.addService(jo);	
+
+
+
+		JSONObject date = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		c.add(c.MONTH, 12);
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+
+		JSONObject jo = new JSONObject(map);
+		try {
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		for (int i = 0; i < 10; i++) {
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName(), "http://"
+					+ UUID.randomUUID().toString());
+			JSONObject date1 = new JSONObject();
+			Calendar c1 = Calendar.getInstance();
+			c1.add(c1.SECOND, 2);
+			try {
+				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date1);
+			adminMgr.addService(jo);
+		}
+
+		Thread.sleep(3000);
 		
 		for (int i = 0; i < 15; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-					"http://"+UUID.randomUUID().toString());
-			//to be expired in future
-			Calendar c = Calendar.getInstance();
-			//these records will expire on 2012
-			c.add(c.YEAR, 1);
-			String date = ServiceUtil.ServiceDateFormat.format(c.getTime());
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), date);
-			adminMgr.addService(jo);		
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName(), "http://"
+					+ UUID.randomUUID().toString());
+			// to be expired in future
+			Calendar c1 = Calendar.getInstance();
+			c1.add(c1.MONTH, 12);
+			JSONObject date1 = new JSONObject();
+			try {
+				
+				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date1);
+			adminMgr.addService(jo);
 		}
-		
+
 		int size = adminMgr.findAll().size();
 		assertEquals(25, size);
-		
+
 		ServiceReaper r = new ServiceReaper();
 		r.run();
-		
+
 		int size1 = adminMgr.findAll().size();
 		assertEquals(15, size1);
 	}
-	
-	
-	
+
 }

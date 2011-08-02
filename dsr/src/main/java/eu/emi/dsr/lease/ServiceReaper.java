@@ -24,7 +24,7 @@ public class ServiceReaper implements Runnable {
 	 * 
 	 */
 	public ServiceReaper() {
-		sm = ServiceManagerFactory.getServiceAdminManager();
+		sm = new ServiceAdminManager();
 	}
 
 	/*

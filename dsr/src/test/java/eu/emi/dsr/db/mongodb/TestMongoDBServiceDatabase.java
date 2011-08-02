@@ -2,8 +2,12 @@ package eu.emi.dsr.db.mongodb;
 
 import static org.junit.Assert.*;
 
+import java.util.Properties;
 
+
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,6 +15,8 @@ import org.junit.rules.ExpectedException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.MultipleResourceException;
@@ -27,10 +33,11 @@ public class TestMongoDBServiceDatabase {
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
-	@BeforeClass
-	public static void setUp() {
+	@Before
+	public void setUp() {
+		DSRServer s = new DSRServer(new Configuration(new Properties()));
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
-				"services");
+				"services-test");
 		db.deleteAll();
 	}
 
@@ -41,15 +48,17 @@ public class TestMongoDBServiceDatabase {
 		JSONObject entry = new JSONObject();
 		try {
 			entry.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://1");
 			entry.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 					"some_service");
 			ServiceObject s = new ServiceObject(entry);
-
+			
+			
+			
 			db.insert(s);
-
+			
 			assertEquals("http://1", db.getServiceByUrl("http://1").getUrl());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,7 +78,7 @@ public class TestMongoDBServiceDatabase {
 	public void testRedundantServiceEntries() throws JSONException,
 			PersistentStoreFailureException, ExistingResourceException {
 		JSONObject entry = new JSONObject();
-		entry.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		entry.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_1");
@@ -77,12 +86,20 @@ public class TestMongoDBServiceDatabase {
 		db.insert(s1);
 
 		JSONObject entry1 = new JSONObject();
-		entry1.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://1");
 		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_2");
 		ServiceObject s2 = new ServiceObject(entry1);
 		db.insert(s2);
+		
+		JSONObject entry2 = new JSONObject();
+		entry2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+				"http://2");
+		entry2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"some_service_3");
+		ServiceObject s3 = new ServiceObject(entry2);
+		db.insert(s3);
 
 	}
 
@@ -90,7 +107,7 @@ public class TestMongoDBServiceDatabase {
 	@Test
 	public void testDeleteServiceByUrl() throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException, ExistingResourceException{
 		JSONObject entry1 = new JSONObject();
-		entry1.put(ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 				"http://2");
 		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_2");
@@ -105,8 +122,8 @@ public class TestMongoDBServiceDatabase {
 	
 	
 	
-	@AfterClass
-	public static void cleanUp() throws JSONException{
+	@After
+	public void cleanUp() throws JSONException{
 			db.deleteAll();
 			assertTrue(db.findAll().size() == 0);
 	}

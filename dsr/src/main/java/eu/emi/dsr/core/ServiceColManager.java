@@ -3,7 +3,13 @@
  */
 package eu.emi.dsr.core;
 
+import java.io.StringWriter;
+import java.text.ParseException;
 import java.util.Map;
+
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -11,11 +17,15 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.eclipse.jetty.util.ajax.JSON;
 
+import com.mongodb.MongoException;
+
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.glue2.Glue2Mapper;
 import eu.emi.dsr.util.Log;
+import eu.eu_emi.emiregistry.QueryResult;
 
 /**
  * @author a.memon
@@ -96,9 +106,11 @@ public class ServiceColManager {
 	 * @return {@link JSONArray}
 	 * @throws PersistentStoreFailureException
 	 * @throws QueryException
+	 * @throws JSONException 
+	 * @throws MongoException 
 	 */
 	public JSONArray query(Map<String, Object> m) throws QueryException,
-			PersistentStoreFailureException {
+			PersistentStoreFailureException, MongoException, JSONException {
 
 		Integer limit = 0;
 		Integer skip = 0;
@@ -126,6 +138,25 @@ public class ServiceColManager {
 
 		return jArr;
 	}
+	
+	/**
+	 * @param m
+	 * @return
+	 * @throws PersistentStoreFailureException 
+	 * @throws QueryException 
+	 * @throws ParseException 
+	 * @throws DatatypeConfigurationException 
+	 * @throws JSONException 
+	 */
+	public QueryResult queryGlue2(Map<String, Object> m) throws QueryException, PersistentStoreFailureException, JSONException, DatatypeConfigurationException, ParseException {
+		JSONArray ja = query(m);
+		logger.debug("array"+ja);
+		Glue2Mapper gm = new Glue2Mapper();
+		QueryResult qr = gm.toQueryResult(ja);
+		return qr;
+	}
+	
+	
 
 	public JSONObject pagedQuery(Map<String, Object> m) throws JSONException {
 		Integer pageSize = 0;
@@ -154,4 +185,6 @@ public class ServiceColManager {
 		jObj.put("result", jArr);
 		return jObj;
 	}
+
+	
 }

@@ -49,8 +49,8 @@ public class TestQueryCollection {
 		for (int i = 0; i < 100; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
-					"http://" + UUID.randomUUID());
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					"http://" + UUID.randomUUID()+Math.random());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 					"some_service_2");
@@ -82,7 +82,7 @@ public class TestQueryCollection {
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -104,7 +104,7 @@ public class TestQueryCollection {
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -126,7 +126,7 @@ public class TestQueryCollection {
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -145,7 +145,7 @@ public class TestQueryCollection {
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -187,7 +187,7 @@ public class TestQueryCollection {
 		for (int i = 0; i < 100; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),

@@ -54,9 +54,13 @@ public class AuthorisationFilter implements ContainerRequestFilter {
 			
 		}
 		X509Certificate[] certArr = (X509Certificate[]) httpRequest.getAttribute("javax.servlet.request.X509Certificate");
-		logger.debug("user dn: "+certArr[0].getSubjectDN());
-		logger.debug(request.getMethod());
-		logger.debug(request.getPath());
+		if (certArr != null) {
+			logger.debug("user dn: "+certArr[0].getSubjectDN());
+			logger.debug(request.getMethod());
+			logger.debug(request.getPath());	
+		}
+		
+		
 		return request;
 	}
 

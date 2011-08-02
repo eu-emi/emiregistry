@@ -20,6 +20,7 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
+import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
@@ -60,12 +61,12 @@ public class ServiceAdminManager {
 		}
 		try {
 			// current time and last update should be same in the beginning
+			JSONObject date = new JSONObject();
+			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName(), ServiceUtil.ServiceDateFormat
-					.format(new Date()));
+					.getAttributeName(), date);
 			jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-					.getAttributeName(), ServiceUtil.ServiceDateFormat
-					.format(new Date()));
+					.getAttributeName(), date);
 			serviceDB.insert(new ServiceObject(jo));
 		} catch (ExistingResourceException e) {
 			// TODO Auto-generated catch block
@@ -121,27 +122,22 @@ public class ServiceAdminManager {
 		}
 
 		// setting the update time
-		jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-				.getAttributeName(), ServiceUtil.ServiceDateFormat
-				.format(new Date()));
+		jo = DateUtil.addDate(jo,
+				ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+						.getAttributeName(), new Date());
 
 		ServiceObject sObj = new ServiceObject(jo);
 		try {
 			serviceDB.update(sObj);
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-
-	
 
 	/**
 	 * Finding a service by its url
@@ -151,17 +147,13 @@ public class ServiceAdminManager {
 	 * @throws MultipleResourceException
 	 * @throws PersistentStoreFailureException
 	 */
-	public JSONObject findServiceByUrl(String url) {
+	public JSONObject findServiceByUrl(String url)
+			throws NonExistingResourceException,
+			PersistentStoreFailureException {
 		ServiceObject so = null;
 		try {
 			so = serviceDB.getServiceByUrl(url);
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PersistentStoreFailureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

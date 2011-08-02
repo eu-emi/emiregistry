@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.eu-emi.eu/emiregistry" 
+	xmlns:emi="http://www.eu-emi.eu/emiregistry"
+	xmlns:glue="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:import namespace="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1" schemaLocation="GLUE2.xsd" />
+	<xsd:element name="QueryResult">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="glue:Service" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="count" type="xsd:unsignedLong" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
