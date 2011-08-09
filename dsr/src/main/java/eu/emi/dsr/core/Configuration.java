@@ -43,6 +43,10 @@ public class Configuration implements Cloneable{
 
 	}
 	
+	public Properties getProperties(){
+		return this.props;
+	}
+	
 	public Configuration(Properties properties) {
 		this.props = properties;		
 	}
@@ -59,8 +63,16 @@ public class Configuration implements Cloneable{
 		return Integer.valueOf(props.getProperty(key));
 	}
 	
+	public Boolean getBooleanProperty(String key, String defaultValue) {
+		return Boolean.valueOf(props.getProperty(key,defaultValue));
+	}
+	
 	public Boolean getBooleanProperty(String key) {
 		return Boolean.valueOf(props.getProperty(key));
+	}
+	
+	public Boolean getBooleanProperty(String key, Boolean defaultValue) {
+		return Boolean.valueOf(props.getProperty(key,"false"));
 	}
 
 	public Long getLongProperty(String key) {

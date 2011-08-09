@@ -13,11 +13,9 @@ public class ServerConstants {
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
-	public static String REGISTRY_SSL_ENABLED = "registry.ssl.enabled";
-	public static String REGISTRY_ACCESSCONTROL = "registry.security.accesscontrol";
-	public static String REGISTRY_ATTRIBUTESOURCE_TYPE = "registry.security.attributesource.location";
-	public static String REGISTRY_ATTRIBUTESOURCE_LOCATION = "registry.security.attributesource.location";
 	public static String REGISTRY_PARENT_URL = "registry.parent.url";
+	public static String REGISTRY_FILTERS_REQUEST = "registry.filters.request";
+	public static String REGISTRY_FILTERS_RESPONSE = "registry.filters.response";
 
 	// Log4J
 	public static String LOGGER_CONF_PATH = "logger.conf.path";

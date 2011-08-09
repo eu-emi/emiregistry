@@ -6,6 +6,7 @@ package eu.emi.dsr.jetty;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.AbstractConnector;
@@ -19,9 +20,10 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import eu.emi.dsr.authz.AuthorisationFilter;
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.security.ISecurityProperties;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -94,7 +96,7 @@ public class JettyServer {
 		if ((scheme.equals("http") || (scheme == null))) {
 			connector = createConnector();
 		} else if (scheme.equals("https")) {
-			connector = createSecureConnector();			
+			connector = createSecureConnector();
 		} else {
 			try {
 				throw new Exception();
@@ -106,19 +108,19 @@ public class JettyServer {
 
 		// initialising the server
 		ServletHolder sh = new ServletHolder(ServletContainer.class);
-		
+
 		setInitParams(sh);
 		
-		
 		server = new Server();
-		
+
 		ServletContextHandler context = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
-		
-		context.addServlet(sh, "/*");		
+
+		context.addServlet(sh, "/*");
 		server.addConnector(connector);
+		
 	}
 
 	/**
@@ -126,9 +128,42 @@ public class JettyServer {
 	 */
 	private void setInitParams(ServletHolder sh) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("javax.ws.rs.Application", appClass.getCanonicalName());
-		map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, AuthorisationFilter.class.getName());
+		map.put("javax.ws.rs.Application", appClass.getCanonicalName());		
+		addFilterClasses(map);
 		sh.setInitParameters(map);
+	}
+
+	/**
+	 * 
+	 */
+	private void addFilterClasses(Map<String, String> map) {
+		String reqClasses = DSRServer
+				.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
+		if ((reqClasses != null)) {
+			String[] arrReq = reqClasses.split(" ");
+			try {
+				for (int i = 0; i < arrReq.length; i++) {
+					map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
+							Class.forName(arrReq[i]).getName());
+				}
+			} catch (ClassNotFoundException e) {
+				Log.logException("Error in adding request filters",e);
+			}
+		}
+
+		String resClasses = DSRServer
+				.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
+		if ((resClasses != null)) {
+			String[] arrRes = resClasses.split(" ");
+			try {
+				for (int i = 0; i < arrRes.length; i++) {
+					map.put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
+							Class.forName(arrRes[i]).getName());
+				}
+			} catch (ClassNotFoundException e) {
+				Log.logException("Error in adding response filters",e);
+			}
+		}
 	}
 
 	/**
@@ -138,23 +173,34 @@ public class JettyServer {
 		SslSelectChannelConnector ssl_connector = null;
 		try {
 			ssl_connector = new SslSelectChannelConnector();
-			ssl_connector.setHost(conf.getProperty(ServerConstants.REGISTRY_HOSTNAME));
-			ssl_connector.setPort(Integer.valueOf(conf.getProperty(ServerConstants.REGISTRY_PORT)));
+			ssl_connector.setHost(conf
+					.getProperty(ServerConstants.REGISTRY_HOSTNAME));
+			ssl_connector.setPort(Integer.valueOf(conf
+					.getProperty(ServerConstants.REGISTRY_PORT)));
 
 			SslContextFactory cf = ssl_connector.getSslContextFactory();
 
-			cf.setKeyStore(conf.getProperty(ServerConstants.KEYSTORE_PATH));// "src/main/certs/demo-server.p12"
-			cf.setKeyStoreType(conf.getProperty(ServerConstants.KEYSTORE_TYPE));//"pkcs12";
-			cf.setKeyManagerPassword(conf.getProperty(ServerConstants.KEYSTORE_PASSWORD));//("emi");
-			cf.setKeyStorePassword(conf.getProperty(ServerConstants.KEYSTORE_PASSWORD));//("emi");
+			cf.setKeyStore(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_KEYSTORE));// "src/main/certs/demo-server.p12"
+			cf.setKeyStoreType(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_KEYTYPE));// "pkcs12";
+			cf.setKeyManagerPassword(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_KEYPASS));// ("emi");
+			cf.setKeyStorePassword(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_KEYPASS));// ("emi");
 
-			cf.setTrustStore(conf.getProperty(ServerConstants.TRUSTSTORE_PATH));//("src/main/certs/demo-server.jks");
-			cf.setTrustStorePassword(conf.getProperty(ServerConstants.TRUSTSTORE_PASSWORD));//("emi");
-			cf.setTrustStoreType(conf.getProperty(ServerConstants.TRUSTSTORE_TYPE));//("jks");
+			cf.setTrustStore(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE));// ("src/main/certs/demo-server.jks");
+			cf.setTrustStorePassword(conf
+					.getProperty(ISecurityProperties.REGISTRY_SSL_TRUSTPASS));// ("emi");
+			cf.setTrustStoreType(conf.getProperty(
+					ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks"));// ("jks");
 
-			cf.setWantClientAuth(Boolean.valueOf(conf.getProperty(ServerConstants.CLIENT_AUTHN))); //true
-			cf.setNeedClientAuth(Boolean.valueOf(conf.getProperty(ServerConstants.CLIENT_AUTHN)));
-
+			cf.setWantClientAuth(conf.getBooleanProperty(
+					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false")); // true
+			cf.setNeedClientAuth(conf.getBooleanProperty(
+					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false"));
+			
 		} catch (Exception e) {
 			Log.logException("Error creating secure connectore", e, logger);
 		}
@@ -203,10 +249,8 @@ public class JettyServer {
 		}
 	}
 
-	public Server getServer(){
+	public Server getServer() {
 		return server;
 	}
-	
-	
 
 }

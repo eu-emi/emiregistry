@@ -3,17 +3,29 @@
  */
 package eu.emi.dsr;
 
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Properties;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
+import eu.emi.dsr.aip.FileAttributeSource;
 import eu.emi.dsr.client.ClientSecurityProperties;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.pdp.local.LocalHerasafPDP;
+import eu.emi.dsr.security.AccessControlFilter;
+import eu.emi.dsr.security.ISecurityProperties;
+//import eu.unicore.uas.pdp.local.LocalHerasafPDP;
 
 /**
  * @author a.memon
@@ -22,36 +34,45 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 public class TestRegistryBaseWithSecurity {
 	static DSRServer server = null;
 	public static String BaseURI;
-
+	private static Properties props = null;
+	
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+	
 	@BeforeClass
 	public static void startServer() {
-//		System.setProperty("javax.net.debug", "all");
+		// System.setProperty("javax.net.debug", "all");
 		Properties p = new Properties();
 		setSecuritySettings(p);
 		setGeneralSettings(p);
 		setDatabaseProperties(p);
-		
-     	Configuration conf = new Configuration(p);
+		props = p;
+		Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();
-		BaseURI = "https://localhost:"+server.getServer().getConnectors()[0].getLocalPort();	
+		BaseURI = "https://localhost:"
+				+ server.getServer().getConnectors()[0].getLocalPort();
 	}
 
-	
-	
 	private static void setSecuritySettings(Properties p) {
-		p.put(ServerConstants.CLIENT_AUTHN, "true");
-		p.put(ServerConstants.KEYSTORE_PASSWORD, "emi");
-		p.put(ServerConstants.KEYSTORE_TYPE, "pkcs12");
-		p.put(ServerConstants.KEYSTORE_PATH, "src/main/certs/demo-server.p12");		
-		p.put(ServerConstants.TRUSTSTORE_PASSWORD, "emi");
-		p.put(ServerConstants.TRUSTSTORE_PATH, "src/main/certs/demo-server.jks");
-		p.put(ServerConstants.TRUSTSTORE_TYPE, "jks");
-		p.put(ServerConstants.REGISTRY_ACCESSCONTROL, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_ENABLED, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
+				"src/main/certs/demo-server.p12");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
+				"src/main/certs/demo-server.jks");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
+		p.put("registry.security.attributes.order", "FILE");
+		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
+		p.put("registry.security.attributes.FILE.file", "src/test/resources/users/testUudb-strict.xml");
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/main/conf/xacml2.config");
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
 	}
 
-	
-	
 	private static void setGeneralSettings(Properties p) {
 		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
 		p.put(ServerConstants.REGISTRY_PORT, "0");
@@ -60,10 +81,14 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
-		p.put(ServerConstants.LOGGER_CONF_PATH, "src/main/resources/log4j.properties");
+		p.put(ServerConstants.LOGGER_CONF_PATH,
+				"src/main/resources/log4j.properties");
+		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
+				AccessControlFilter.class.getName());
+		
 	}
-	
-	private static void setDatabaseProperties(Properties p){
+
+	private static void setDatabaseProperties(Properties p) {
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
@@ -71,27 +96,50 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
 	}
 
-	public ClientSecurityProperties getSecurityProperties(){
-		ClientSecurityProperties csp = new ClientSecurityProperties();
-		csp.setKeystorePassword("emi");
-		csp.setKeystorePath("src/main/certs/demo-user.p12");
-		csp.setKeystoreType("pkcs12");
-		csp.setTruststoreType("jks");
-		csp.setTruststorePassword("emi");
-		csp.setTruststorePath("src/main/certs/demo-user.jks");
+	public ClientSecurityProperties getSecurityProperties_1()
+			throws UnrecoverableKeyException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException {
+		Properties p = new Properties();
+
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
+				"src/main/certs/demo-user.p12");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
+				"src/main/certs/demo-server.jks");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
+		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;
 	}
 	
+	public ClientSecurityProperties getSecurityProperties_2()
+			throws UnrecoverableKeyException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException {
+		Properties p = new Properties();
+
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
+				"src/main/certs/demo-user-2.p12");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
+				"src/main/certs/demo-server.jks");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
+		ClientSecurityProperties csp = new ClientSecurityProperties(p);
+		return csp;
+	}
 	
-	
-	
+
 	@AfterClass
 	public static void stopServer() {
 		if (server.isStarted()) {
 			server.stopJetty();
 		}
 	}
-	
+
 	@After
 	public void cleanup() {
 		ServiceDatabase sd = new MongoDBServiceDatabase();

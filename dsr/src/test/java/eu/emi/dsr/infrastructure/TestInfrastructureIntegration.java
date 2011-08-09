@@ -35,7 +35,11 @@ import eu.emi.dsr.util.ServiceUtil;
  * 
  * follow the similar steps for update, delete and expire registrations
  * 
+ * Pre-condition: Both child and parent should be running
+ * 
  * @author a.memon
+ * 
+ * 
  * 
  */
 public class TestInfrastructureIntegration {
@@ -149,7 +153,7 @@ public class TestInfrastructureIntegration {
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9000" + path);
+		DSRClient c = new DSRClient("http://localhost:9001" + path);
 		return c.getClientResource();
 	}
 

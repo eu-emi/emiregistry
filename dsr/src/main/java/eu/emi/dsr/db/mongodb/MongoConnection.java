@@ -16,7 +16,7 @@ public class MongoConnection {
 	private static Mongo mongo = null;
 	public static Mongo get(String hostname, Integer port) throws UnknownHostException, MongoException{
 		if (mongo == null) {
-			mongo = new Mongo(hostname, port);
+				mongo = new Mongo(hostname, port);	
 		}
 		return mongo;
 	}

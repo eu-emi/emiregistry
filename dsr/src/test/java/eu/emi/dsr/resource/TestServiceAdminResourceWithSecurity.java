@@ -3,8 +3,14 @@
  */
 package eu.emi.dsr.resource;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +21,13 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.UniformInterfaceException;
+
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.security.AuthorisationException;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**
@@ -32,7 +42,7 @@ public class TestServiceAdminResourceWithSecurity extends
 				.getAttributeName(), "http://1");
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"jms");
-		
+
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
 		c.add(c.MONTH, 12);
@@ -41,12 +51,11 @@ public class TestServiceAdminResourceWithSecurity extends
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		JSONObject jo = new JSONObject(map);
 		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-					date);
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -54,18 +63,55 @@ public class TestServiceAdminResourceWithSecurity extends
 	}
 
 	@Test
-	public void testRegisterService() throws JSONException {
+	public void testRegisterService() throws JSONException,
+			UnrecoverableKeyException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException {
 		JSONObject jo = getDummyServiceDesc();
 		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1", getSecurityProperties());
-		cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(String.class, jo);
+				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				getSecurityProperties_1());
+		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(String.class, jo);
 		System.out.println("/serviceadmin");
 		DSRClient cr1 = new DSRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1", getSecurityProperties());
+				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				getSecurityProperties_1());
 		JSONObject jo1 = cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertEquals("http://1",jo1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
+		assertEquals("http://1",
+				jo1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+						.getAttributeName()));
 	}
 	
+	@Test
+	public void testUnAuthzRegisterService() throws JSONException,
+			UnrecoverableKeyException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, IOException {
+		JSONObject jo = getDummyServiceDesc();
+		DSRClient cr = new DSRClient(BaseURI
+				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				getSecurityProperties_2());
+		try {
+			cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+					.post(String.class, jo);
+		} catch (UniformInterfaceException e) {
+			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
+					.compareTo(e.getResponse().getStatus()) == 0);
+		}
+
+		System.out.println("/serviceadmin");
+		DSRClient cr1 = new DSRClient(BaseURI
+				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				getSecurityProperties_2());
+		try {
+			JSONObject jo1 = cr1.getClientResource()
+					.accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONObject.class);
+		} catch (UniformInterfaceException e) {
+			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
+					.compareTo(e.getResponse().getStatus()) == 0);
+		}
+		
+	}
+
 }
