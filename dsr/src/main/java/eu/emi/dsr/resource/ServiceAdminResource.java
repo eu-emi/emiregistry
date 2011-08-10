@@ -15,6 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
@@ -25,8 +26,10 @@ import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
+import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
+import eu.emi.dsr.security.Client;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -98,6 +101,8 @@ public class ServiceAdminResource {
 	public Response registerService(JSONObject serviceInfo)
 			throws WebApplicationException {
 		try {
+			Client c = (Client) req.getAttribute("client");
+			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), c.getDistinguishedName());
 			serviceAdmin.addService(serviceInfo);
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
@@ -112,13 +117,23 @@ public class ServiceAdminResource {
 	public Response updateService(JSONObject serviceInfo)
 			throws WebApplicationException {
 		try {
+			Client c = (Client) req.getAttribute("client");
+			String owner = c.getDistinguishedName();
+			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), c.getDistinguishedName());
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service by url: "
 						+ serviceInfo
 								.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-										.getAttributeName()));
+										.getAttributeName())+ ", Owned by: "+owner);
 			}
-			serviceAdmin.updateService(serviceInfo);
+			
+			if (owner != null && serviceAdmin.checkOwner(owner, serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()))) {
+				serviceAdmin.updateService(serviceInfo);	
+			} else {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			
+			
 
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
@@ -126,6 +141,10 @@ public class ServiceAdminResource {
 			throw new WebApplicationException(e);
 		} catch (UnknownServiceException e) {
 			return Response.noContent().build();
+		} catch (QueryException e) {
+			throw new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
+			throw new WebApplicationException(e);
 		}
 		return Response.ok().build();
 	}
@@ -140,12 +159,22 @@ public class ServiceAdminResource {
 	public Response deleteService(@Context UriInfo infos) {
 
 		try {
-
+			Client c = (Client) req.getAttribute("client");
+			String owner = c.getDistinguishedName();
 			String serviceurl = extractServiceUrlFromUri(infos);
-			logger.debug("deleting service by url: " + serviceurl);
-			serviceAdmin.removeService(serviceurl);
+			logger.debug("deleting service by url: " + serviceurl+", Owned by: "+owner);
+			if (owner!=null && serviceAdmin.checkOwner(owner, serviceurl)) {				
+				serviceAdmin.removeService(serviceurl);	
+			} else {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			
 		} catch (UnknownServiceException e) {
 			return Response.noContent().build();
+		} catch (QueryException e) {
+			throw new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
+			throw new WebApplicationException(e);
 		}
 		return Response.ok().build();
 	}

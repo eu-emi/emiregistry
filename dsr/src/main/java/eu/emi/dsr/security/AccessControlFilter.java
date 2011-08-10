@@ -1,17 +1,13 @@
 package eu.emi.dsr.security;
 
 import java.security.cert.CertPath;
-import java.security.cert.CertPathBuilder;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Enumeration;
 
-import javax.security.auth.x500.X500Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
@@ -50,23 +46,13 @@ public class AccessControlFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
-//		if (!DSRServer.getConfiguration().getBooleanProperty(
-//				ISecurityProperties.REGISTRY_CHECKACCESS)) {
-//			return request;
-//		} else 	{
-//			X509Certificate[] certArr = (X509Certificate[]) httpRequest
-//					.getAttribute("javax.servlet.request.X509Certificate");
-//			logger.debug("user dn: "
-//					+ certArr[0].getSubjectX500Principal().getName(
-//							X500Principal.CANONICAL));
+
 			try {
 				checkAccess();
 			} catch (AuthorisationException e) {
 				throw new WebApplicationException(e,
 						Status.UNAUTHORIZED.getStatusCode());
 			}
-
-//		}
 
 		return request;
 	}
