@@ -5,7 +5,6 @@ package eu.emi.dsr.infrastructure;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 
 /**
  * @author a.memon
