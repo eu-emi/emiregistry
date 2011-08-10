@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -41,9 +42,10 @@ import eu.emi.dsr.util.Log;
 public class ServiceAdminResource {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
-	
+
 	private final ServiceAdminManager serviceAdmin;
-	@Context HttpServletRequest req;
+	@Context
+	HttpServletRequest req;
 
 	/**
 	 * 
@@ -53,18 +55,19 @@ public class ServiceAdminResource {
 		serviceAdmin = new ServiceAdminManager();
 	}
 
-	protected String getUserPrincipalName(){
+	protected String getUserPrincipalName() {
 		String p = null;
 		if (req.isSecure()) {
-			X509Certificate[] cert = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
+			X509Certificate[] cert = (X509Certificate[]) req
+					.getAttribute("javax.servlet.request.X509Certificate");
 			p = cert[0].getSubjectDN().getName();
 		} else {
-			return ""; 
+			return "";
 		}
-		
-		return p;		
+
+		return p;
 	}
-	
+
 	@GET
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
@@ -97,20 +100,39 @@ public class ServiceAdminResource {
 		return value;
 	}
 
+	/**
+	 * adding array of entries
+	 * */
+	
 	@POST
-	public Response registerService(JSONObject serviceInfo)
+	public JSONArray registerService(JSONArray serviceInfo)
 			throws WebApplicationException {
-		try {
-			Client c = (Client) req.getAttribute("client");
-			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), c.getDistinguishedName());
-			serviceAdmin.addService(serviceInfo);
-		} catch (InvalidServiceDescriptionException e) {
-			throw new WebApplicationException(e);
-		} catch (JSONException e) {
-			throw new WebApplicationException(e);
+		Integer length = serviceInfo.length();
+		if (length <= 0 || length > 100) {
+			throw new WebApplicationException(Status.FORBIDDEN);
 		}
 
-		return Response.ok().build();
+		Client c = (Client) req.getAttribute("client");
+		JSONArray registerResponse = new JSONArray();
+		for (int i = 0; i < length; i++) {
+			JSONObject j = null;
+			try {
+				j = serviceInfo.getJSONObject(i);
+				j.put(ServiceBasicAttributeNames.SERVICE_OWNER
+						.getAttributeName(), c.getDistinguishedName());
+				serviceAdmin.addService(j);
+			} catch (Exception e) {
+				JSONObject err = new JSONObject();
+				try {
+					j.put("Error", e.toString());
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+				registerResponse.put(j);				
+			} 
+		}
+
+		return registerResponse;
 	}
 
 	@PUT
@@ -119,21 +141,28 @@ public class ServiceAdminResource {
 		try {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
-			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), c.getDistinguishedName());
+			serviceInfo
+					.put(ServiceBasicAttributeNames.SERVICE_OWNER
+							.getAttributeName(), c.getDistinguishedName());
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service by url: "
 						+ serviceInfo
 								.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-										.getAttributeName())+ ", Owned by: "+owner);
+										.getAttributeName()) + ", Owned by: "
+						+ owner);
 			}
-			
-			if (owner != null && serviceAdmin.checkOwner(owner, serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()))) {
-				serviceAdmin.updateService(serviceInfo);	
+
+			if (owner != null
+					&& serviceAdmin
+							.checkOwner(
+									owner,
+									serviceInfo
+											.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+													.getAttributeName()))) {
+				serviceAdmin.updateService(serviceInfo);
 			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
 			}
-			
-			
 
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
@@ -162,13 +191,14 @@ public class ServiceAdminResource {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
 			String serviceurl = extractServiceUrlFromUri(infos);
-			logger.debug("deleting service by url: " + serviceurl+", Owned by: "+owner);
-			if (owner!=null && serviceAdmin.checkOwner(owner, serviceurl)) {				
-				serviceAdmin.removeService(serviceurl);	
+			logger.debug("deleting service by url: " + serviceurl
+					+ ", Owned by: " + owner);
+			if (owner != null && serviceAdmin.checkOwner(owner, serviceurl)) {
+				serviceAdmin.removeService(serviceurl);
 			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
 			}
-			
+
 		} catch (UnknownServiceException e) {
 			return Response.noContent().build();
 		} catch (QueryException e) {

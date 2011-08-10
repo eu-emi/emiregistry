@@ -12,9 +12,7 @@ import java.util.Properties;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.emi.dsr.DSRServer;
@@ -67,12 +65,7 @@ public class TestServiceAdminManager {
 		
 		
 		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
-					date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
 		return jo;
 	}
 	
