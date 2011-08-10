@@ -150,22 +150,22 @@ public class TestInfrastructureIntegration {
 	}
 
 	protected WebResource getChildClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9000" + path);
+		DSRClient c = new DSRClient("http://localhost:27017" + path);
 		return c.getClientResource();
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9001" + path);
+		DSRClient c = new DSRClient("http://localhost:27017" + path);
 		return c.getClientResource();
 	}
 
 	@After
 	public void tearDown() {
 		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
-				"localhost", 27017, "emiregistry", "services-test");
+				"localhost", 27017, "emiregistry-parentdb", "services-test");
 		parentDB.deleteAll();
 		final MongoDBServiceDatabase childDB = new MongoDBServiceDatabase(
-				"localhost", 27017, "emiregistry", "services-test");
+				"localhost", 27017, "emiregistry-childdb", "services-test");
 		childDB.deleteAll();
 	}
 
