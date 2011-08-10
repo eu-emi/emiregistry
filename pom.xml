@@ -68,6 +68,14 @@
 				<version>${jetty.version}</version>
 			</dependency>
 
+			<!-- slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+
+
 
 			<!-- Mongodb -->
 			<dependency>
@@ -84,7 +92,84 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
 			</dependency>
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+			<!-- Herasaf PDP -->
+			<dependency>
+				<groupId>org.herasaf.xacml.core</groupId>
+				<artifactId>herasaf-xacml-core</artifactId>
+				<version>1.0.0-M2</version>
+				<exclusions>
+					<!-- we require JDK 1.6 which has JAXB built in. XJC dependency is not 
+						used by herasaf, only JAXB. -->
+					<exclusion>
+						<groupId>com.sun.xml.bind</groupId>
+						<artifactId>jaxb-xjc</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+
+			<!-- unicore dependencies for pdp and aip -->
+			<!-- <dependency> -->
+			<!-- <groupId>eu.unicore.services</groupId> -->
+			<!-- <artifactId>use-aip</artifactId> -->
+			<!-- <version>2.0.1</version> -->
+			<!-- <exclusions> -->
+			<!-- <exclusion> -->
+			<!-- <artifactId>use-core</artifactId> -->
+			<!-- <groupId>eu.unicore.services</groupId> -->
+			<!-- </exclusion> -->
+			<!-- <exclusion> -->
+			<!-- <groupId>de.fzj.unicore.xuudb</groupId> -->
+			<!-- <artifactId>xuudb-common</artifactId> -->
+			<!-- </exclusion> -->
+			<!-- <exclusion> -->
+			<!-- <groupId>pl.edu.icm.uvos</groupId> -->
+			<!-- <artifactId>xfire-voutils</artifactId> -->
+			<!-- </exclusion> -->
+			<!-- <exclusion> -->
+			<!-- <groupId>eu.unicore.services</groupId> -->
+			<!-- <artifactId>use-wsrfclient</artifactId> -->
+			<!-- </exclusion> -->
+			<!-- </exclusions> -->
+			<!-- </dependency> -->
+			<dependency>
+				<groupId>eu.unicore.services</groupId>
+				<artifactId>use-pdp</artifactId>
+				<version>2.0.1</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>use-core</artifactId>
+						<groupId>eu.unicore.services</groupId>
+					</exclusion>
+					<exclusion>
+						<groupId>eu.unicore.services</groupId>
+						<artifactId>use-wsrfclient</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<artifactId>sunxacml</artifactId> -->
+<!-- 				<groupId>net.sourceforge.sunxacml</groupId> -->
+<!-- 				<version>1.2</version> -->
+<!-- 			</dependency> -->
 		</dependencies>
+
+
+
 	</dependencyManagement>
 	<modules>
 		<module>dsr</module>
@@ -143,6 +228,11 @@
 			<name>Java.net Repository for Maven</name>
 			<url>http://download.java.net/maven/2</url>
 			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>unicore.eu</id>
+			<name>UNICORE repository</name>
+			<url>http://unicore-dev.zam.kfa-juelich.de/maven</url>
 		</repository>
 		<repository>
 			<id>maven-repository.java.net</id>

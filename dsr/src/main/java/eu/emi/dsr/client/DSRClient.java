@@ -72,7 +72,7 @@ public class DSRClient {
 			//setting keystore
 			KeyStore ks = KeyStore.getInstance(sProps.getKeystoreType());
 			FileInputStream fis = new FileInputStream(new File(
-					sProps.getKeystorePath()));
+					sProps.getKeystore()));
 			ks.load(fis, sProps.getKeystorePassword().toCharArray());
 			fis.close();
 
@@ -84,7 +84,7 @@ public class DSRClient {
 			//setting truststore
 			KeyStore ts = KeyStore.getInstance(sProps.getTruststoreType());
 			FileInputStream fis1 = new FileInputStream(new File(
-					sProps.getTrustStorePath()));
+					sProps.getTruststore()));
 			ts.load(fis1, sProps.getTruststorePassword().toCharArray());
 			fis1.close();
 			TrustManagerFactory tmf = TrustManagerFactory

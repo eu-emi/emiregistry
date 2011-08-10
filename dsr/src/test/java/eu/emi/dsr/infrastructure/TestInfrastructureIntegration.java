@@ -35,7 +35,11 @@ import eu.emi.dsr.util.ServiceUtil;
  * 
  * follow the similar steps for update, delete and expire registrations
  * 
+ * Pre-condition: Both child and parent should be running
+ * 
  * @author a.memon
+ * 
+ * 
  * 
  */
 public class TestInfrastructureIntegration {
@@ -50,7 +54,7 @@ public class TestInfrastructureIntegration {
 	}
 
 	@Test
-	public void testRegister() throws JSONException, IOException {
+	public void testRegister() throws JSONException, IOException, InterruptedException {
 		JSONObject jo = new JSONObject(
 				ServiceUtil
 						.convertFileToString("src/test/resources/serviceinfo.json"));
@@ -58,6 +62,8 @@ public class TestInfrastructureIntegration {
 		System.out.println("registering: " + jo);
 		getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(jo);
+		
+		Thread.sleep(2000);
 
 		JSONObject parentJO = getParentClient(
 				"/serviceadmin?Service_Endpoint_URL=http://1").accept(
@@ -149,7 +155,7 @@ public class TestInfrastructureIntegration {
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9000" + path);
+		DSRClient c = new DSRClient("http://localhost:9001" + path);
 		return c.getClientResource();
 	}
 

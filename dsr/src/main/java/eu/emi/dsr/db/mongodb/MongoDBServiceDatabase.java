@@ -4,14 +4,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.print.ServiceUI;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -32,7 +28,6 @@ import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventManager;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.util.Log;
-import eu.emi.dsr.util.ServiceUtil;
 
 import com.mongodb.*;
 import com.mongodb.MongoException.DuplicateKey;
@@ -66,7 +61,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			connection = MongoConnection.get(hostname, Integer.valueOf(port));
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
-			
+
 			// setting index and uniquesness on "serviceUrl"
 			BasicDBObject obj = new BasicDBObject(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -76,7 +71,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
-			
+
 		} catch (UnknownHostException e) {
 			Log.logException(e);
 		} catch (MongoException e) {
@@ -104,25 +99,20 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			connection = MongoConnection.get(hostname, port);
 			database = connection.getDB(dbName);
 
-			
 			serviceCollection = database.getCollection(colName);
-			
-			
 
 			// setting index and uniquesness on service url
 			BasicDBObject obj = new BasicDBObject(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
 					"1");
-			
-			
+
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
 			if (logger.isDebugEnabled()) {
-				logger.info("Unique index created: "+obj);	
+				logger.info("Unique index created: " + obj);
 			}
-			
 		} catch (UnknownHostException e) {
 			Log.logException(e);
 		} catch (MongoException e) {
@@ -143,7 +133,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item.toJSON()));
+			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
+					.toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "
@@ -151,7 +142,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			} else {
 				throw new PersistentStoreFailureException(e);
 			}
-			
+
 		}
 
 	}
@@ -170,7 +161,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				return null;
 			}
 			so = new ServiceObject(db);
-			
 
 		} catch (MongoException e) {
 			e.printStackTrace();
@@ -198,8 +188,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					"No service description with the URL:" + url + " exists");
 		}
 		// sending update event to the recievers
-		EventManager
-				.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
+		EventManager.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
 	}
 
 	@Override
@@ -207,7 +196,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			NonExistingResourceException, PersistentStoreFailureException {
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.debug("updating service description: "+sObj);
+				logger.debug("updating service description: " + sObj);
 			}
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
@@ -219,12 +208,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.update(query, dbObj);
 			// sending update event to the recievers
-			EventManager
-					.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE, sObj.toJSON()));	
+			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
+					sObj.toJSON()));
 		} catch (MongoException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -245,7 +234,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return Collections.unmodifiableList(resultCollection);
 	}
 
@@ -480,11 +469,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		serviceCollection.remove(db);
 	}
-	
-	
-	public void dropCollection(){
+
+	public void dropCollection() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("dropping collection: "+serviceCollection.getName());
+			logger.debug("dropping collection: " + serviceCollection.getName());
 		}
 		serviceCollection.drop();
 	}

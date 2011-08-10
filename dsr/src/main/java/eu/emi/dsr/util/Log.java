@@ -26,6 +26,10 @@ public class Log {
 	 * logger prefix for client stack
 	 */
 	public static final String DSRDB="emiregistry.dsr.db";
+
+	public static final String SECURITY = "emiregistry.dsr.security";
+
+	public static final String CLIENT = "emiregistry.dsr.client";
 	
 	/**
 	 * returns a logger name, using the given prefix and the simple name

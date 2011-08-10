@@ -3,15 +3,16 @@
  */
 package eu.emi.dsr.resource;
 
+import java.security.cert.X509Certificate;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -20,12 +21,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
-import eu.emi.dsr.core.ServiceManagerFactory;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
@@ -41,8 +38,9 @@ import eu.emi.dsr.util.Log;
 public class ServiceAdminResource {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
-
+	
 	private final ServiceAdminManager serviceAdmin;
+	@Context HttpServletRequest req;
 
 	/**
 	 * 
@@ -52,6 +50,18 @@ public class ServiceAdminResource {
 		serviceAdmin = new ServiceAdminManager();
 	}
 
+	protected String getUserPrincipalName(){
+		String p = null;
+		if (req.isSecure()) {
+			X509Certificate[] cert = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
+			p = cert[0].getSubjectDN().getName();
+		} else {
+			return ""; 
+		}
+		
+		return p;		
+	}
+	
 	@GET
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
