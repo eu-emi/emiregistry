@@ -160,13 +160,13 @@ public class TestInfrastructureIntegration {
 	}
 
 	@After
-	public void tearDown() {
-		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
-				"localhost", 27017, "emiregistry", "services-test");
-		parentDB.deleteAll();
-		final MongoDBServiceDatabase childDB = new MongoDBServiceDatabase(
-				"localhost", 27017, "emiregistry", "services-test");
-		childDB.deleteAll();
-	}
+	  public void tearDown() {
+        final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
+                        "localhost", 27017, "emiregistry-parentdb", "services-test");
+        parentDB.deleteAll();
+        final MongoDBServiceDatabase childDB = new MongoDBServiceDatabase(
+                        "localhost", 27017, "emiregistry-childdb", "services-test");
+        childDB.deleteAll();
+}
 
 }
