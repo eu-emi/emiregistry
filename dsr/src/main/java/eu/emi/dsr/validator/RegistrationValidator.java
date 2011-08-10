@@ -11,9 +11,13 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.herasaf.xacml.core.function.impl.setFunction.DateUnionFunction;
 
+import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
+import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
@@ -134,35 +138,49 @@ public class RegistrationValidator extends AbstractInfoValidator {
 										.getString("$date"));
 						Calendar c = Calendar.getInstance();
 						c.setTime(d);
-						if ((c.compareTo(Calendar.getInstance()) <= 0)) {
-							logger.error("service expiry should not be the date in past");
+						
+						//creating the max expiry time calendar
+						Calendar cMax = Calendar.getInstance();
+						int max_def=Integer.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "90"));
+						cMax.add(Calendar.DATE, max_def);
+						
+						if ((cMax.compareTo(c) < 0)) {
+							logger.error("Failed to validate the service information: Given service expiry- "+ c.getTime() +", exceeds the default maximum- " + cMax.getTime());							
 							return false;
-						} else {
-							return true;
+						} 
+						Calendar now = Calendar.getInstance();
+						if (c.compareTo(Calendar.getInstance())<=0) {
+							logger.error("Failed to validate the service information: Given service expiry- "+ c.getTime() +", mustn't be less than or equal-to current time - " + now.getTime());
+							return false;
 						}
+						
 					}
 				} else {
-					logger.error("invalid date format for the key: "
+					logger.error("Failed to validate the service information: invalid date format for the key: "
 							+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 									.getAttributeName());
 					valid = false;
 					return false;
 				}
 
-			} else {
+			} 
+			
+			// else {
 				// if expiry is not mentioned then will be added and set to 6
 				// months from now
-				Calendar c = Calendar.getInstance();
-				c.add(c.MONTH, 6);
-				JSONObject j = new JSONObject();
-				j.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-				jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-						.getAttributeName(), j);
-				valid = true;
-				logger.error("missing expiry, added new field "
-						+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-								.getAttributeName());
-			}
+//				Calendar c = Calendar.getInstance();
+//				c.add(c.MONTH, 6);
+//				JSONObject j = new JSONObject();				
+//				j.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+//				jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+//						.getAttributeName(), j);
+				
+//				jo = DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT, "1")));
+//				valid = true;
+//				logger.error("missing expiry, added new field "
+//						+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+//								.getAttributeName());
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.logException("Invalid expiry time", e);

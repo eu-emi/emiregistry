@@ -3,6 +3,7 @@
  */
 package eu.emi.dsr.core;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
@@ -67,6 +69,15 @@ public class ServiceAdminManager {
 					.getAttributeName(), date);
 			jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 					.getAttributeName(), date);
+			
+			//in case the expiry attribute is not mentioned in the service description, then will be taken from the config or otherwise the default prop. value
+			if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName())) {
+				DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer.getProperty(
+						ServerConstants.REGISTRY_EXPIRY_DEFAULT, "1")));	
+			}
+			
+			
+			
 			serviceDB.insert(new ServiceObject(jo));
 		} catch (ExistingResourceException e) {
 			// TODO Auto-generated catch block

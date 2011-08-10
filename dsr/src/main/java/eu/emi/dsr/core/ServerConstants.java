@@ -16,6 +16,8 @@ public class ServerConstants {
 	public static String REGISTRY_PARENT_URL = "registry.parent.url";
 	public static String REGISTRY_FILTERS_REQUEST = "registry.filters.request";
 	public static String REGISTRY_FILTERS_RESPONSE = "registry.filters.response";
+	public static String REGISTRY_EXPIRY_MAXIMUM = "registry.expiry.maximum";
+	public static String REGISTRY_EXPIRY_DEFAULT = "registry.expiry.default";
 
 	// Log4J
 	public static String LOGGER_CONF_PATH = "logger.conf.path";

@@ -54,7 +54,7 @@ public class TestInfrastructureIntegration {
 	}
 
 	@Test
-	public void testRegister() throws JSONException, IOException {
+	public void testRegister() throws JSONException, IOException, InterruptedException {
 		JSONObject jo = new JSONObject(
 				ServiceUtil
 						.convertFileToString("src/test/resources/serviceinfo.json"));
@@ -62,6 +62,8 @@ public class TestInfrastructureIntegration {
 		System.out.println("registering: " + jo);
 		getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(jo);
+		
+		Thread.sleep(2000);
 
 		JSONObject parentJO = getParentClient(
 				"/serviceadmin?Service_Endpoint_URL=http://1").accept(
