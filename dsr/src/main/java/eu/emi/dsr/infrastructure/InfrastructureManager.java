@@ -63,7 +63,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	@Override
 	public void setParent(String identifier)
 			throws EmptyIdentifierFailureException, NullPointerFailureException {
-		// TODO Auto-generated method stub
+		if (identifier == null) throw new NullPointerFailureException();
+		if (identifier.isEmpty()) throw new EmptyIdentifierFailureException();
+		
+		parentsRoute.clear();
+		parentsRoute.add(identifier);
 		
 	}
 
@@ -72,8 +76,10 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 */
 	@Override
 	public String getParent() {
-		// TODO Auto-generated method stub
-		return null;
+		if (parentsRoute.isEmpty()){
+			return "";
+		}
+		return parentsRoute.get(0);
 	}
 
 	private List<String> parentsRoute;
