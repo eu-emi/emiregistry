@@ -4,12 +4,10 @@
 package eu.emi.dsr.infrastructure;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
