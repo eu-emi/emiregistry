@@ -175,7 +175,6 @@
 		<module>dsr</module>
 		<module>gsr</module>
 		<module>xmltypes</module>
-		<module>pdp</module>
 	</modules>
 	<build>
 		<pluginManagement>
