@@ -11,6 +11,7 @@ import javax.security.auth.x500.X500Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 	UriInfo uriInfo;
 	@Context
 	HttpServletRequest httpRequest;
+	
 	private static final String REALM = "HTTPS authentication";
 
 	/*
@@ -48,28 +50,28 @@ public class AccessControlFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
-		if (!DSRServer.getConfiguration().getBooleanProperty(
-				ISecurityProperties.REGISTRY_CHECKACCESS)) {
-			return request;
-		} else if (request.getPath().startsWith("serviceadmin")) {
-			X509Certificate[] certArr = (X509Certificate[]) httpRequest
-					.getAttribute("javax.servlet.request.X509Certificate");
-			logger.debug("user dn: "
-					+ certArr[0].getSubjectX500Principal().getName(
-							X500Principal.CANONICAL));
+//		if (!DSRServer.getConfiguration().getBooleanProperty(
+//				ISecurityProperties.REGISTRY_CHECKACCESS)) {
+//			return request;
+//		} else 	{
+//			X509Certificate[] certArr = (X509Certificate[]) httpRequest
+//					.getAttribute("javax.servlet.request.X509Certificate");
+//			logger.debug("user dn: "
+//					+ certArr[0].getSubjectX500Principal().getName(
+//							X500Principal.CANONICAL));
 			try {
-				checkAccess(certArr);
+				checkAccess();
 			} catch (AuthorisationException e) {
 				throw new WebApplicationException(e,
 						Status.UNAUTHORIZED.getStatusCode());
 			}
 
-		}
+//		}
 
 		return request;
 	}
 
-	protected void checkAccess(X509Certificate[] certArr)
+	protected void checkAccess()
 			throws AuthorisationException {
 		SecurityTokens tokens = null;
 		Client client = null;
@@ -77,20 +79,32 @@ public class AccessControlFilter implements ContainerRequestFilter {
 		ResourceDescriptor resourceDescriptor = null;
 
 		try {
-			tokens = new SecurityTokens();
-			CertPath cp = CertificateFactory.getInstance("X.509")
-					.generateCertPath(Arrays.asList(certArr));
-			tokens.setUser(cp);
-			tokens.setUserName(certArr[0].getSubjectX500Principal());
+			Boolean b = Boolean.valueOf(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED,"false"));
+			//dealing with the principal
+			if (b) {
+				X509Certificate[] certArr = (X509Certificate[]) httpRequest
+						.getAttribute("javax.servlet.request.X509Certificate");
+				tokens = new SecurityTokens();
+				CertPath cp = CertificateFactory.getInstance("X.509")
+						.generateCertPath(Arrays.asList(certArr));
+				tokens.setUser(cp);
+				tokens.setUserName(certArr[0].getSubjectX500Principal());					
+			} 
+			
 			client = SecurityManager.createAndAuthoriseClient(tokens);
-			AuthZAttributeStore.setTokens(tokens);
-			AuthZAttributeStore.setClient(client);
-
-			action = httpRequest.getMethod();
-			String owner = SecurityManager.getServerIdentity().getName();
-			resourceDescriptor = new ResourceDescriptor(uriInfo.getPath(),
-					null, owner);
-
+			httpRequest.setAttribute(ServerConstants.CLIENT, client);
+			
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
+				AuthZAttributeStore.setTokens(tokens);
+				AuthZAttributeStore.setClient(client);	
+				action = httpRequest.getMethod();
+				String owner = SecurityManager.getServerIdentity().getName();
+				resourceDescriptor = new ResourceDescriptor(uriInfo.getPath(),
+						null, owner);
+				doCheck(tokens, client, action, resourceDescriptor);
+			}
+			
+			
 		} catch (Exception e) {
 			Log.logException("Error setting up authorisation check", e, logger);
 			AuthZAttributeStore.removeClient();
@@ -98,7 +112,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 			throw new AuthorisationException("Authorisation failed. Reason: "
 					+ e.getMessage());
 		}
-		doCheck(tokens, client, action, resourceDescriptor);
+		
 	}
 
 	/**

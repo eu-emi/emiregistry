@@ -53,12 +53,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		}
 
 		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
 		return jo;
 	}
 

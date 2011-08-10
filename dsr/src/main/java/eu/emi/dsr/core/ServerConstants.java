@@ -32,6 +32,8 @@ public class ServerConstants {
 	// create new on startup, drop the old one - type: boolean
 	public static final String MONGODB_COL_CREATE = "mongodb.create";
 
+	public static final String CLIENT = "client";
+
 	// Security Properties
 	// key store
 	public static String KEYSTORE_PATH = "keystore.path";

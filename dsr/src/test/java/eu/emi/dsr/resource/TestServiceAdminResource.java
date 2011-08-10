@@ -52,12 +52,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		}
 
 		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
 		return jo;
 	}
 
@@ -97,12 +92,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		}
 
 		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
 		return jo;
 	}
 
@@ -125,6 +115,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		JSONObject jo1 = cr2.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+		System.out.println(jo1);
 		assertEquals("sms", jo1.get(ServiceBasicAttributeNames.SERVICE_TYPE
 				.getAttributeName()));
 	}
