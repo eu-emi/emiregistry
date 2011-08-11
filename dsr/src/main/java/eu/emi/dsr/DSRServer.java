@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 
+import sun.security.util.SecurityConstants;
+
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
@@ -27,6 +29,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
+import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.DSRSecurityProperties;
 import eu.emi.dsr.security.ISecurityProperties;
 import eu.emi.dsr.util.Log;
@@ -106,6 +109,7 @@ public class DSRServer {
 	}
 
 	public void startJetty() {
+		addDefaultFilters();
 		initLog4j();
 		if (!started) {
 			jettyServer = new JettyServer(DSRApplication.class, conf);
@@ -120,11 +124,21 @@ public class DSRServer {
 	}
 
 	
+	/**
+	 * 
+	 */
+	private void addDefaultFilters() {
+		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, AccessControlFilter.class.getName());		
+	}
+
 	public static String getProperty(String key){
 		return conf.getProperty(key);
 	}
 	
 	public static String getProperty(String key, String defaultValue){
+		if (conf == null) {
+			return null;
+		}
 		return conf.getProperty(key, defaultValue);
 	}
 	
@@ -242,5 +256,8 @@ public class DSRServer {
 		}
 
 	}
+	
+	
+	
 
 }

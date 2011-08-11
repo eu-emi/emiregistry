@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -41,8 +38,7 @@ public class ServiceAdminManager {
 			ServiceAdminManager.class);
 	private ServiceDatabase serviceDB = null;
 
-	@Context
-	HttpServletRequest req;
+	
 
 	/**
 	 * 

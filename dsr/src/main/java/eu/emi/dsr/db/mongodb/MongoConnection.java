@@ -19,8 +19,5 @@ public class MongoConnection {
 				mongo = new Mongo(hostname, port);	
 		}
 		return mongo;
-	}
-	public static Mongo getCachedInstance(){
-		return mongo;
-	}
+	}	
 }

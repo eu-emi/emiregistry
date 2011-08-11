@@ -105,34 +105,30 @@ public class ServiceAdminResource {
 	 * */
 	
 	@POST
-	public JSONArray registerService(JSONArray serviceInfo)
-			throws WebApplicationException {
+	public Response registerService(JSONObject serviceInfo)
+			throws WebApplicationException{
 		Integer length = serviceInfo.length();
 		if (length <= 0 || length > 100) {
 			throw new WebApplicationException(Status.FORBIDDEN);
 		}
 
-		Client c = (Client) req.getAttribute("client");
-		JSONArray registerResponse = new JSONArray();
-		for (int i = 0; i < length; i++) {
-			JSONObject j = null;
-			try {
-				j = serviceInfo.getJSONObject(i);
-				j.put(ServiceBasicAttributeNames.SERVICE_OWNER
-						.getAttributeName(), c.getDistinguishedName());
-				serviceAdmin.addService(j);
-			} catch (Exception e) {
-				JSONObject err = new JSONObject();
-				try {
-					j.put("Error", e.toString());
-				} catch (JSONException e1) {
-					e1.printStackTrace();
-				}
-				registerResponse.put(j);				
-			} 
+		
+		try {
+			Client c = (Client) req.getAttribute("client");
+			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+					.getAttributeName(), c.getDistinguishedName());
+			serviceAdmin.addService(serviceInfo);
+		} catch (JSONException e) {
+			throw new WebApplicationException(e);
+		} catch (InvalidServiceDescriptionException e) {
+			throw new WebApplicationException(e);
+		} catch (NullPointerException e){
+			throw new WebApplicationException(e);
 		}
+		
+		
 
-		return registerResponse;
+		return Response.ok().build();
 	}
 
 	@PUT

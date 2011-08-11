@@ -40,11 +40,11 @@ public class RegistrationValidator extends AbstractInfoValidator {
 			if ((jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName()))
 					&& (jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-							.getAttributeName()).isEmpty())){
+							.getAttributeName()).isEmpty())) {
 				logger.error("Invalid url");
 				return false;
 			}
-				
+
 			valid = true;
 		} catch (JSONException e) {
 			Log.logException(e);
@@ -71,7 +71,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 					ServiceUtil.toUTCFormat(jo.getJSONObject(key).getString(
 							"$date"));
 					valid = true;
-				} 
+				}
 
 				// some of the glue2 attributes should be defined as date
 				// if
@@ -95,16 +95,16 @@ public class RegistrationValidator extends AbstractInfoValidator {
 		for (ServiceBasicAttributeNames s : ServiceBasicAttributeNames.values()) {
 			if (s.getAttributeType() == Date.class) {
 				try {
-					if (jo.has(s.getAttributeName())){
-						if ((jo.get(s.getAttributeName()) instanceof JSONObject) && (jo
-								.getJSONObject(s.getAttributeName()).has("$date"))) {
-							//do nothing
-						}else {
+					if (jo.has(s.getAttributeName())) {
+						if ((jo.get(s.getAttributeName()) instanceof JSONObject)
+								&& (jo.getJSONObject(s.getAttributeName())
+										.has("$date"))) {
+							// do nothing
+						} else {
 							return false;
 						}
-					
-						
-					} 
+
+					}
 				} catch (JSONException e) {
 					return false;
 
@@ -141,7 +141,14 @@ public class RegistrationValidator extends AbstractInfoValidator {
 						
 						//creating the max expiry time calendar
 						Calendar cMax = Calendar.getInstance();
-						int max_def=Integer.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "90"));
+						int max_def=0;
+						try {
+							max_def=Integer.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "730"));
+						} catch (NumberFormatException e) {
+							logger.warn("Error in reading the configuration property of maximum default expiry days - setting the value to 730 days");
+							max_def = 730;
+						}
+						
 						cMax.add(Calendar.DATE, max_def);
 						
 						if ((cMax.compareTo(c) < 0)) {
@@ -190,7 +197,9 @@ public class RegistrationValidator extends AbstractInfoValidator {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see eu.emi.dsr.validator.AbstractInfoValidator#checkArrays()
 	 */
 	@Override
@@ -198,17 +207,19 @@ public class RegistrationValidator extends AbstractInfoValidator {
 		for (ServiceBasicAttributeNames s : ServiceBasicAttributeNames.values()) {
 			if (s.getAttributeType() == JSONArray.class) {
 				try {
-					if (jo.has(s.getAttributeName())){
+					if (jo.has(s.getAttributeName())) {
 						if (jo.get(s.getAttributeName()) instanceof JSONArray) {
-							//do nothing
-						}else {
+							// do nothing
+						} else {
 							return false;
 						}
-					
-						
-					} 
+
+					}
 				} catch (JSONException e) {
-					Log.logException(s.getAttributeName() +" is an array-it should be defined as [\"object\",\"object\"...]",e);
+					Log.logException(
+							s.getAttributeName()
+									+ " is an array-it should be defined as [\"object\",\"object\"...]",
+							e);
 					return false;
 
 				}

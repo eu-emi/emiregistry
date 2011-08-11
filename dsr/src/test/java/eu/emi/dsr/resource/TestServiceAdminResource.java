@@ -8,16 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
@@ -44,15 +40,6 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"jms");
 
-		JSONObject date = new JSONObject();
-		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
-		try {
-			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
 		JSONObject jo = new JSONObject(map);
 
 		return jo;
@@ -66,15 +53,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				"sms");
 
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				"http://1");
-		JSONObject date = new JSONObject();
-		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
-		try {
-			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+				"http://1");		
 
 		JSONObject jo = new JSONObject(map);
 
@@ -88,39 +67,10 @@ public class TestServiceAdminResource extends TestRegistryBase {
 			InterruptedException {
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
 
-		JSONArray j = new JSONArray();
-
-		j.put(getDummyServiceDesc());
-
-		JSONArray arr = cr.getClientResource()
+		cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(JSONArray.class, j);
-		System.out.println("res" + arr);
-
-		DSRClient cr1 = new DSRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1");
-		JSONObject jo = cr1.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertEquals("http://1",
-				jo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-						.getAttributeName()));
-
-	}
-
-	@Test
-	public void testRegisterOutdatedService() throws JSONException,
-			InterruptedException {
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
-
-		JSONArray j = new JSONArray();
-
-		j.put(getDummyServiceDesc());
-		j.put(getOutdatedServiceDesc());
-
-		JSONArray arr = cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(JSONArray.class, j);
-		System.out.println("res" + arr);
+				.post(getDummyServiceDesc());
+		
 
 		DSRClient cr1 = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
@@ -158,14 +108,12 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	public void testUpdateService() throws JSONException {
 		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
-		JSONArray j = new JSONArray();
 
-		j.put(getDummyServiceDesc());
 
-		JSONArray arr = cr1.getClientResource()
+		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(JSONArray.class, j);
-		System.out.println("res" + arr);
+				.post(getDummyServiceDesc()
+						);
 		
 
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
@@ -189,14 +137,13 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	public void testDeleteResource() throws JSONException {
 		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
-		JSONArray j = new JSONArray();
+		
 
-		j.put(getDummyServiceDesc());
+		
 
-		JSONArray arr = cr1.getClientResource()
+		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(JSONArray.class, j);
-		System.out.println("res" + arr);
+				.post(getDummyServiceDesc());
 		DSRClient cr = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		cr.getClientResource().delete();

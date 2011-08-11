@@ -42,8 +42,7 @@ public class TestRegistryBase {
 		server = new DSRServer(conf);
 		server.startJetty();
 		System.out.println("server started");
-		BaseURI = "http://localhost:"+server.getServer().getConnectors()[0].getLocalPort();	
-		
+		BaseURI = "http://localhost:"+server.getServer().getConnectors()[0].getLocalPort();
 	}
 
 	@AfterClass
