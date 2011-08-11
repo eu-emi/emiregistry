@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
-
+import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
@@ -28,38 +29,21 @@ import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**
- * # cleanup 1. start child server and mongodb instance 2. start parent server
- * with same mongodb instance (perhaps a different collection name) 3. register
- * with the client-dsr 4. check if the parent dsr have received the notification
- * and updated its database # cleanup
+ * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start
+ * parent server with same mongodb instance (perhaps a different collection
+ * name)</li> <li>register with the client-dsr 4. check if the parent dsr have
+ * received the notification and updated its database</li> <li>cleanup</li>
  * 
- * follow the similar steps for update, delete and expire registrations
+ * Follow the similar steps for update, delete and expire registrations.
  * 
- * Pre-condition: Both child and parent should be running
+ * Pre-condition: Both child and parent should be running in a separate jvm
  * 
  * @author a.memon
- *         g.szigeti
- * 
- * 
- * 
+ * @author g.szigeti
  */
 public class TestInfrastructureIntegration {
 	private static ChildServer childs = null;
 	private static ParentServer parents = null;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		childs = new ChildServer();
-		childs.start();
-		parents = new ParentServer();
-		parents.start();
-		System.out.println("Child and parent server is running...");
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		childs.stop();
-		parents.stop();
-	}
 
 	@Before
 	public void setUp() {
@@ -72,15 +56,17 @@ public class TestInfrastructureIntegration {
 	}
 
 	@Test
-	public void testRegister() throws JSONException, IOException, InterruptedException {
+	public void testRegister() throws JSONException, IOException,
+			InterruptedException {
 		JSONObject jo = new JSONObject(
 				ServiceUtil
 						.convertFileToString("src/test/resources/serviceinfo.json"));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
-		getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(jo);
-		
+		ClientResponse res = getChildClient("/serviceadmin").accept(
+				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
+		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+
 		Thread.sleep(2000);
 
 		JSONObject parentJO = getParentClient(
@@ -178,13 +164,13 @@ public class TestInfrastructureIntegration {
 	}
 
 	@After
-	  public void tearDown() {
-        final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
-                        "localhost", 27017, "emiregistry-parentdb", "services-test");
-        parentDB.deleteAll();
-        final MongoDBServiceDatabase childDB = new MongoDBServiceDatabase(
-                        "localhost", 27017, "emiregistry-childdb", "services-test");
-        childDB.deleteAll();
-}
+	public void tearDown() {
+		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
+				"localhost", 27017, "emiregistry-parentdb", "services-test");
+		parentDB.deleteAll();
+		final MongoDBServiceDatabase childDB = new MongoDBServiceDatabase(
+				"localhost", 27017, "emiregistry-childdb", "services-test");
+		childDB.deleteAll();
+	}
 
 }

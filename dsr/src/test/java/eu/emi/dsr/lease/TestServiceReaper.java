@@ -88,35 +88,14 @@ public class TestServiceReaper {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 2; i++) {
 			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), "http://"
 					+ UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
 			Calendar c1 = Calendar.getInstance();
-			c1.add(c1.SECOND, 3);
+			c1.add(c1.SECOND, 2);
 			try {
-				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date1);
-			adminMgr.addService(jo);
-		}
-
-		Thread.sleep(3000);
-
-		for (int i = 0; i < 15; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName(), "http://"
-					+ UUID.randomUUID().toString());
-			// to be expired in future
-			Calendar c1 = Calendar.getInstance();
-			c1.add(c1.MONTH, 1);
-			JSONObject date1 = new JSONObject();
-			try {
-
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -127,13 +106,15 @@ public class TestServiceReaper {
 		}
 
 		int size = adminMgr.findAll().size();
-		assertEquals(25, size);
-
+		assertEquals(2, size);
+		
+		Thread.sleep(3000);
+		
 		ServiceReaper r = new ServiceReaper();
 		r.run();
 
 		int size1 = adminMgr.findAll().size();
-		assertEquals(15, size1);
+		assertEquals(0, size1);
 	}
 
 	@Test
