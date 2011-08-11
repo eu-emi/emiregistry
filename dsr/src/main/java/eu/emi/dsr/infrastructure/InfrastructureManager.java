@@ -5,16 +5,47 @@ package eu.emi.dsr.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.*;
+
+import org.apache.log4j.Logger;
+import eu.emi.dsr.util.Log;
 
 /**
- * @author szigeti
+ * @author g.szigeti
  *
  */
 public class InfrastructureManager implements ServiceInfrastructure {
+	private static Logger logger = Log.getLogger(Log.DSR,
+			InfrastructureManager.class);
+	private static Connection conn;
+	private static Statement stat;
+	private String dbname = "emiregistry";
+	
+	private List<String> parentsRoute;
+	private List<String> childServices;
 
 	public InfrastructureManager() {
 		parentsRoute = new ArrayList<String>();
 		childServices = new ArrayList<String>();
+		try {
+			Class.forName("org.h2.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+        	conn = DriverManager.getConnection("jdbc:h2:./Emiregistry", "sa", "");
+	        stat = conn.createStatement();
+	        stat.execute("create table " + dbname + "(id varchar(255) primary key, new int, del int)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("DB exist. " + e);
+		}
+	}
+	
+	protected void finalize () throws SQLException {
+		stat.close();
+		conn.close();
 	}
 	
 	/* 
@@ -81,7 +112,88 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		}
 		return parentsRoute.get(0);
 	}
+	
+	/**
+	 * Handle the unsended registration message.
+	 * @param service identifier
+	 * @return 
+	 * @return None
+	 */
+	public void handleRegistration(String identifier) {
+		logger.debug("handleRegistration called with this ID: " + identifier);
+		try {
+		    ResultSet rs;
+		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
+		    if (rs.wasNull()) {
+				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 1, 0)");
+		    }
+		    else {
+				logger.debug( "The list contains this '" + identifier + "' ID! Update comming...");
+				rs.next();
+		    	stat.execute("update " + dbname + " set del=0 where id='"+ identifier+"'");
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+	}
+	
+	/**
+	 * Handle the unsended update message.
+	 * @param service identifier
+	 * @return 
+	 * @return None
+	 */
+	public void handleUpdate(String identifier) {
+		logger.debug("handleUpdate called with this ID: " + identifier);
+		try {
+		    ResultSet rs;
+		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
+		    if (rs.wasNull()) {
+				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 0)");
+		    }
+		    else {
+				logger.debug( "The list contains this '" + identifier + "' ID! Everything correct.");
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Handle the unsended delete message.
+	 * @param service identifier
+	 * @return 
+	 * @return None
+	 */
+	public void handleDelete(String identifier) {
+		logger.debug("handleDelete called with this ID: " + identifier);
+		try {
+		    ResultSet rs;
+		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
+		    if (rs.wasNull()) {
+				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 1)");
+		    }
+		    else {
+				logger.debug( "The list contains this '" + identifier + "' ID!");
+				rs.next();
+				if ( rs.getString("new") == "1"){
+					logger.debug( "Remove this '" + identifier + "' ID from the list!");
+					stat.execute("delete from " + dbname + " where id='"+ identifier+"'");				
+				}
+				else {
+					logger.debug( "Update comming...");
+					stat.execute("update " + dbname + " set del=1 where id='"+ identifier+"'");
+				}
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	private List<String> parentsRoute;
-	private List<String> childServices;
+	}
 }
