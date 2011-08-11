@@ -12,7 +12,9 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -36,11 +38,29 @@ import eu.emi.dsr.util.ServiceUtil;
  * Pre-condition: Both child and parent should be running
  * 
  * @author a.memon
+ *         g.szigeti
  * 
  * 
  * 
  */
 public class TestInfrastructureIntegration {
+	private static ChildServer childs = null;
+	private static ParentServer parents = null;
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		childs = new ChildServer();
+		childs.start();
+		parents = new ParentServer();
+		parents.start();
+		System.out.println("Child and parent server is running...");
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		childs.stop();
+		parents.stop();
+	}
+
 	@Before
 	public void setUp() {
 		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
