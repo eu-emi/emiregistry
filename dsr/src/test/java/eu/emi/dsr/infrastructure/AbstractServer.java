@@ -49,6 +49,8 @@ public abstract class AbstractServer {
 		p.put(ServerConstants.MONGODB_PORT, ""+mongodbPort);
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, mongodbName);
+		p.put(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "1000");
+		p.put(ServerConstants.REGISTRY_EXPIRY_DEFAULT, "5");
 		if (parenturl != null) {
 			p.put(ServerConstants.REGISTRY_PARENT_URL, parenturl);	
 		}

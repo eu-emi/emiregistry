@@ -1,6 +1,4 @@
 package eu.emi.dsr;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
 
 import org.junit.AfterClass;
@@ -9,6 +7,7 @@ import org.junit.BeforeClass;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.security.AccessControlFilter;
 
 /**
  * 
@@ -37,12 +36,13 @@ public class TestRegistryBase {
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
+		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
+				AccessControlFilter.class.getName());
      	Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();
 		System.out.println("server started");
-		BaseURI = "http://localhost:"+server.getServer().getConnectors()[0].getLocalPort();	
-		
+		BaseURI = "http://localhost:"+server.getServer().getConnectors()[0].getLocalPort();
 	}
 
 	@AfterClass

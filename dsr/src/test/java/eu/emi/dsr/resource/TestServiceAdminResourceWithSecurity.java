@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -53,12 +54,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		}
 
 		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
 		return jo;
 	}
 
@@ -66,13 +62,11 @@ public class TestServiceAdminResourceWithSecurity extends
 	public void testRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		JSONObject jo = getDummyServiceDesc();
-		DSRClient cr = new DSRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1",
-				getSecurityProperties_1());
-		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(String.class, jo);
-		System.out.println("/serviceadmin");
+		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin",getSecurityProperties_1());
+		
+		cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(getDummyServiceDesc());
 		DSRClient cr1 = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_1());
@@ -93,7 +87,7 @@ public class TestServiceAdminResourceWithSecurity extends
 				getSecurityProperties_2());
 		try {
 			cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(String.class, jo);
+					.post(jo);
 		} catch (UniformInterfaceException e) {
 			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
 					.compareTo(e.getResponse().getStatus()) == 0);

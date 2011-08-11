@@ -3,9 +3,10 @@
  */
 package eu.emi.dsr.core;
 
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
@@ -36,6 +37,8 @@ public class ServiceAdminManager {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminManager.class);
 	private ServiceDatabase serviceDB = null;
+
+	
 
 	/**
 	 * 
@@ -69,15 +72,17 @@ public class ServiceAdminManager {
 					.getAttributeName(), date);
 			jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 					.getAttributeName(), date);
-			
-			//in case the expiry attribute is not mentioned in the service description, then will be taken from the config or otherwise the default prop. value
-			if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName())) {
-				DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer.getProperty(
-						ServerConstants.REGISTRY_EXPIRY_DEFAULT, "1")));	
+
+			// in case the expiry attribute is not mentioned in the service
+			// description, then will be taken from the config or otherwise the
+			// default prop. value
+			if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName())) {
+				DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer
+						.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
+								"1")));
 			}
-			
-			
-			
+
 			serviceDB.insert(new ServiceObject(jo));
 		} catch (ExistingResourceException e) {
 			// TODO Auto-generated catch block
@@ -210,4 +215,27 @@ public class ServiceAdminManager {
 		return serviceDB.findAll();
 	}
 
+	/**
+	 * @param owner
+	 * @param serviceurl 
+	 * @return
+	 * @throws PersistentStoreFailureException
+	 * @throws QueryException
+	 */
+	public boolean checkOwner(String owner, String serviceurl) throws QueryException,
+			PersistentStoreFailureException {
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+				owner);
+		
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+		
+		JSONObject jo = new JSONObject(map);
+
+		if (serviceDB.query(jo.toString()).size() > 0)
+			return true;
+		else
+			return false;
+	}
 }

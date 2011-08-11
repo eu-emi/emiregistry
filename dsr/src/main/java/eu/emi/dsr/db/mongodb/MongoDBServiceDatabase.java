@@ -49,16 +49,17 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		if (DSRServer.getConfiguration() == null) {
 			DSRServer s = new DSRServer(new Configuration(new Properties()));
 		}
-		String hostname = DSRServer.getConfiguration().getProperty(
+		String hostname = DSRServer.getProperty(
 				ServerConstants.MONGODB_HOSTNAME, "localhost");
-		String port = DSRServer.getConfiguration().getProperty(
+		String port = DSRServer.getProperty(
 				ServerConstants.MONGODB_PORT, "27017");
-		String dbName = DSRServer.getConfiguration().getProperty(
+		String dbName = DSRServer.getProperty(
 				ServerConstants.MONGODB_DB_NAME, "emiregistry");
-		String colName = DSRServer.getConfiguration().getProperty(
+		String colName = DSRServer.getProperty(
 				ServerConstants.MONGODB_COLLECTION_NAME, "services");
 		try {
-			connection = MongoConnection.get(hostname, Integer.valueOf(port));
+//			connection = MongoConnection.get(hostname, Integer.valueOf(port));
+			connection = new Mongo(hostname, Integer.valueOf(port));
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
 
@@ -467,13 +468,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("delete by query: " + db.toString());
 		}
 
-		serviceCollection.remove(db);
+		serviceCollection.remove(db);		
 	}
 
 	public void dropCollection() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("dropping collection: " + serviceCollection.getName());
 		}
-		serviceCollection.drop();
+		serviceCollection.drop();		
 	}
+	
+	
 }

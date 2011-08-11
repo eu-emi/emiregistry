@@ -14,6 +14,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**
@@ -24,11 +25,7 @@ public class TestRegistrationValidator {
 	@Test
 	public void testValidateExpiryInfo() throws JSONException, IOException{
 		JSONObject jo = new JSONObject(ServiceUtil.convertFileToString("src/test/resources/serviceinfo.json"));
-		Calendar c = Calendar.getInstance();
-		c.add(12, c.MONTH);
-		JSONObject d = new JSONObject();
-		d.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-		jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), d);
+		DateUtil.setExpiryTime(jo, 365);
 		assertTrue(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	
@@ -42,7 +39,7 @@ public class TestRegistrationValidator {
 	public void testInvalidDateType() throws JSONException, IOException{
 		JSONObject jo = new JSONObject(ServiceUtil.convertFileToString("src/test/resources/serviceinfo.json"));
 		Calendar c = Calendar.getInstance();
-		c.add(12, c.MONTH);
+		c.add(c.MONTH,12);
 		JSONObject d = new JSONObject();
 		d.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), d);
