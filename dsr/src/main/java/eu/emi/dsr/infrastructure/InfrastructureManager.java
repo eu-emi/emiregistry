@@ -163,6 +163,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * Handle the unsended delete message.
 	 * @param service identifier
@@ -196,4 +197,28 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		}
 
 	}
+	
+	/**
+	 * Database synchronization with the parent.
+	 * @return True or False. It is depends from DB synchronization.
+	 */
+	public boolean dbSynchronization(String id, Method method) {
+		logger.debug("DB synchronization started.");
+		switch (method){
+		case REGISTER:
+			logger.debug("REGISTRATION comming..., ID: " + id);
+			break;
+		case UPDATE:
+			logger.debug("UPDATE comming..., ID: " + id);
+			break;
+		case DELETE:
+			logger.debug("DELETE comming..., ID: " + id);
+			break;
+		default:
+			logger.debug("Bad method type, ID: " + id);
+			return false;
+		}
+		return true;
+	}
+	
 }

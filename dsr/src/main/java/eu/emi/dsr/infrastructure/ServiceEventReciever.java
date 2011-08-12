@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
@@ -22,21 +24,33 @@ import eu.emi.dsr.util.Log;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class ServiceEventReciever implements EventReciever, Runnable {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceEventReciever.class);
 	private final WebResource client;
+	private static InfrastructureManager infrastructure;
+	private static boolean parent_lost;
 
 	/**
 	 * @param property
 	 */
 	public ServiceEventReciever(String parentUrl) {
+		infrastructure = new InfrastructureManager();
+		try {
+			infrastructure.setParent(parentUrl);
+		} catch (EmptyIdentifierFailureException e) {
+			logger.error("Empty parent URL added!");
+		} catch (NullPointerFailureException e) {
+			logger.error("NULL point error by the parent URL!");
+		}
 		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
 		client = c.getClientResource();
+		parent_lost = false;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,22 +58,49 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 	 */
 	@Override
 	public void recieve(Event event) {
+		String ID = null;
+		JSONObject jo = (JSONObject) event.getData();
+		try {
+			ID = jo.getString("Service_Endpoint_URL");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// here sending messages to the parent DSR's
 		if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_ADD)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("service added event fired");
 			}
-			client.accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(event.getData());
+			try{
+				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+					    .post(ClientResponse.class, event.getData());
+				if ( res.getStatus() == Status.OK.getStatusCode() ){
+					if (parent_lost){
+						// DB sync
+						parent_lost = !infrastructure.dbSynchronization(ID, Method.REGISTER);
+					}
+				}
+			} catch(ClientHandlerException e){
+				parent_lost = true;
+				infrastructure.handleRegistration(ID);
+			} 
 		}
 		if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_UPDATE)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("service update event fired");
 			}
-			JSONObject j = (JSONObject) event.getData();
 			try {
-				client.accept(MediaType.APPLICATION_JSON_TYPE)
-						.put(j);
+				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+						.put(ClientResponse.class, jo);
+				if ( res.getStatus() == Status.OK.getStatusCode() ){
+					if (parent_lost){
+						// DB sync
+						parent_lost = !infrastructure.dbSynchronization(ID, Method.UPDATE);
+					}
+				}
+			} catch(ClientHandlerException e){
+				parent_lost = true;
+				infrastructure.handleUpdate(ID);
 			} catch (Exception e) {
 				Log.logException("Error making update on the parent dsr",e);
 			}
@@ -68,10 +109,21 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 			if (logger.isDebugEnabled()) {
 				logger.debug("service added delete event fired");
 			}
-			client.queryParam(
+			try{
+				ClientResponse res = client.queryParam(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
-					event.getData().toString()).delete();
+					event.getData().toString()).delete(ClientResponse.class);
+				if ( res.getStatus() == Status.OK.getStatusCode() ){
+					if (parent_lost){
+						// DB sync
+						parent_lost = !infrastructure.dbSynchronization(event.getData().toString(), Method.DELETE);
+					}
+				}
+		    } catch(ClientHandlerException e){
+				parent_lost = true;
+				infrastructure.handleDelete(event.getData().toString());
+			}
 		}
 	}
 
