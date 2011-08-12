@@ -120,7 +120,7 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 						parent_lost = !infrastructure.dbSynchronization(event.getData().toString(), Method.DELETE);
 					}
 				}
-		    } catch(ClientHandlerException e){
+			} catch(ClientHandlerException e){
 				parent_lost = true;
 				infrastructure.handleDelete(event.getData().toString());
 			}

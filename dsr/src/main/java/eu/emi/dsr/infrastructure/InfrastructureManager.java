@@ -116,7 +116,6 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsended registration message.
 	 * @param service identifier
-	 * @return 
 	 * @return None
 	 */
 	public void handleRegistration(String identifier) {
@@ -125,12 +124,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
 		    if (rs.wasNull()) {
-				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 1, 0)");
 		    }
 		    else {
-				logger.debug( "The list contains this '" + identifier + "' ID! Update comming...");
-				rs.next();
+		    	logger.debug( "The list contains this '" + identifier + "' ID! Update comming...");
+		    	rs.next();
 		    	stat.execute("update " + dbname + " set del=0 where id='"+ identifier+"'");
 		    }
 		} catch (SQLException e) {
@@ -143,7 +142,6 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsended update message.
 	 * @param service identifier
-	 * @return 
 	 * @return None
 	 */
 	public void handleUpdate(String identifier) {
@@ -152,11 +150,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
 		    if (rs.wasNull()) {
-				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 0)");
 		    }
 		    else {
-				logger.debug( "The list contains this '" + identifier + "' ID! Everything correct.");
+		    	logger.debug( "The list contains this '" + identifier + "' ID! Everything correct.");
 		    }
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -167,7 +165,6 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsended delete message.
 	 * @param service identifier
-	 * @return 
 	 * @return None
 	 */
 	public void handleDelete(String identifier) {
@@ -176,20 +173,20 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
 		    if (rs.wasNull()) {
-				logger.debug( identifier + " is not in the list! Insert new record...");
+		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 1)");
 		    }
 		    else {
-				logger.debug( "The list contains this '" + identifier + "' ID!");
-				rs.next();
-				if ( rs.getString("new") == "1"){
-					logger.debug( "Remove this '" + identifier + "' ID from the list!");
-					stat.execute("delete from " + dbname + " where id='"+ identifier+"'");				
-				}
-				else {
-					logger.debug( "Update comming...");
-					stat.execute("update " + dbname + " set del=1 where id='"+ identifier+"'");
-				}
+		    	logger.debug( "The list contains this '" + identifier + "' ID!");
+		    	rs.next();
+		    	if ( rs.getString("new") == "1"){
+		    		logger.debug( "Remove this '" + identifier + "' ID from the list!");
+		    		stat.execute("delete from " + dbname + " where id='"+ identifier+"'");				
+		    	}
+		    	else {
+		    		logger.debug( "Update comming...");
+		    		stat.execute("update " + dbname + " set del=1 where id='"+ identifier+"'");
+		    	}
 		    }
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
