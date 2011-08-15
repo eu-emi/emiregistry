@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -85,8 +88,7 @@ public class ServiceAdminManager {
 
 			serviceDB.insert(new ServiceObject(jo));
 		} catch (ExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
 		} catch (PersistentStoreFailureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,7 +150,7 @@ public class ServiceAdminManager {
 		} catch (MultipleResourceException e) {
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
-			e.printStackTrace();
+			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
 		} catch (PersistentStoreFailureException e) {
 			e.printStackTrace();
 		}
