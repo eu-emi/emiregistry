@@ -21,9 +21,10 @@ public class ChildServer extends AbstractServer{
 	
 	public void start(){
 		Configuration c = getConfiguration("localhost", 9000, "localhost",
-				27017, "emiregistry-childdb", false, "http://localhost:9001");
+				27017, "emiregistry-childdb", false, "http://localhost:9001",
+				"./Emiregistry", "sa", "");
 		
-		client = new DSRServer(c);		
+		client = new DSRServer(c);	
 		
 		
 		client.startJetty();
@@ -37,6 +38,6 @@ public class ChildServer extends AbstractServer{
 			System.err.println("ChildServer stopped");
 		}
 	}
-	
+
 	
 }

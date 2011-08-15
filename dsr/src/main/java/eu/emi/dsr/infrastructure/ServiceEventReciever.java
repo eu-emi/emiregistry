@@ -15,6 +15,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.client.DSRClient;
+import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventManager;
@@ -30,6 +31,7 @@ import eu.emi.dsr.util.Log;
 public class ServiceEventReciever implements EventReciever, Runnable {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceEventReciever.class);
+	private static Configuration conf;
 	private final WebResource client;
 	private static InfrastructureManager infrastructure;
 	private static boolean parent_lost;
@@ -37,8 +39,9 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 	/**
 	 * @param property
 	 */
-	public ServiceEventReciever(String parentUrl) {
-		infrastructure = new InfrastructureManager();
+	public ServiceEventReciever(String parentUrl, Configuration config) {
+		conf = config;
+		infrastructure = new InfrastructureManager(conf);
 		try {
 			infrastructure.setParent(parentUrl);
 		} catch (EmptyIdentifierFailureException e) {

@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
+import eu.emi.dsr.core.Configuration;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
@@ -25,6 +27,7 @@ import eu.emi.dsr.util.Log;
 public class InfrastructureManager implements ServiceInfrastructure {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			InfrastructureManager.class);
+	private Configuration conf;
 	private static Connection conn;
 	private static Statement stat;
 	private String dbname = "emiregistry";
@@ -32,7 +35,8 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	private List<String> parentsRoute;
 	private List<String> childServices;
 
-	public InfrastructureManager() {
+	public InfrastructureManager(Configuration config) {
+		conf = config;
 		parentsRoute = new ArrayList<String>();
 		childServices = new ArrayList<String>();
 		try {
@@ -42,7 +46,14 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			e.printStackTrace();
 		}
         try {
-        	conn = DriverManager.getConnection("jdbc:h2:./Emiregistry", "sa", "");
+        	String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
+        	if (h2db.isEmpty()){
+        		h2db = "./Emiregistry";
+        	}
+        	//conn = DriverManager.getConnection("jdbc:h2:./Emiregistry", "sa", "");
+        	conn = DriverManager.getConnection("jdbc:h2:"+h2db,
+        			conf.getProperty(ServerConstants.H2_USERNAME),
+        			conf.getProperty(ServerConstants.H2_PASSWORD));
 	        stat = conn.createStatement();
 	        stat.execute("create table " + dbname + "(id varchar(255) primary key, new int, del int)");
 		} catch (SQLException e) {
@@ -278,10 +289,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    //TODO: konfigurációt megkapja az osztály és onnan vegyük az értékeket...
+
 	    MongoDBServiceDatabase mongoDB = new MongoDBServiceDatabase(
-				"localhost", 27017, "emiregistry-childdb", "services-test");
-	    
+	    		conf.getProperty(ServerConstants.MONGODB_HOSTNAME),
+	    		Integer.valueOf(conf.getProperty(ServerConstants.MONGODB_PORT)),
+	    		conf.getProperty(ServerConstants.MONGODB_DB_NAME),
+	    		conf.getProperty(ServerConstants.MONGODB_COLLECTION_NAME));
 	    
 		ServiceObject so = null;
 		try {

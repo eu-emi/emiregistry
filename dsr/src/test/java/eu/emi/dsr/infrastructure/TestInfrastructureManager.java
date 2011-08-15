@@ -7,12 +7,15 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import eu.emi.dsr.core.Configuration;
 
 /**
  * @author szigeti
@@ -40,7 +43,7 @@ public class TestInfrastructureManager {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		manager = new InfrastructureManager();
+		manager = new InfrastructureManager(new Configuration(new Properties()));
 	}
 
 	/**
