@@ -85,10 +85,10 @@
 			<groupId>eu.unicore.services</groupId>
 			<artifactId>use-pdp</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <artifactId>sunxacml</artifactId> -->
-		<!-- <groupId>net.sourceforge.sunxacml</groupId> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
