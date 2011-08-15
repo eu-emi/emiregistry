@@ -9,7 +9,6 @@ import java.sql.*;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
-
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.db.MultipleResourceException;
@@ -47,8 +46,13 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	        stat = conn.createStatement();
 	        stat.execute("create table " + dbname + "(id varchar(255) primary key, new int, del int)");
 		} catch (SQLException e) {
-			//TODO: error -> debug
-			logger.error("DB exist. " + e);
+			if ( e.toString().substring(30, 60).equals("Database may be already in use") ){
+				logger.error("DB locked! " + e);
+			} else if ( e.toString().substring(30, 64).equals("Table \"EMIREGISTRY\" already exists") )  {
+				logger.debug("DB exist. " + e);
+			} else {
+				logger.error("Other SQL exception: " + e);
+			}
 		}
 	}
 	
@@ -287,7 +291,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				if ( so != null ) {
 					//append to the JSONObject
 					System.out.println("adatbazis elem: " + so.toJSON().toString());
-					jo.
+					//jo.
 				}
 			}
 		} catch (MultipleResourceException e) {
