@@ -8,6 +8,15 @@ import java.util.List;
 import java.sql.*;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.api.client.ClientResponse.Status;
+
+import eu.emi.dsr.db.MultipleResourceException;
+import eu.emi.dsr.db.NonExistingResourceException;
+import eu.emi.dsr.db.PersistentStoreFailureException;
+import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -38,8 +47,8 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	        stat = conn.createStatement();
 	        stat.execute("create table " + dbname + "(id varchar(255) primary key, new int, del int)");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("DB exist. " + e);
+			//TODO: error -> debug
+			logger.error("DB exist. " + e);
 		}
 	}
 	
@@ -123,20 +132,18 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
-		    if (rs.wasNull()) {
+		    if (!rs.first()) {
 		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 1, 0)");
 		    }
 		    else {
 		    	logger.debug( "The list contains this '" + identifier + "' ID! Update comming...");
-		    	rs.next();
 		    	stat.execute("update " + dbname + " set del=0 where id='"+ identifier+"'");
 		    }
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
- 
 	}
 	
 	/**
@@ -199,23 +206,101 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * Database synchronization with the parent.
 	 * @return True or False. It is depends from DB synchronization.
 	 */
-	public boolean dbSynchronization(String id, Method method) {
+	public boolean dbSynchronization(String id, Method method, int responsestatus) {
 		logger.debug("DB synchronization started.");
 		switch (method){
 		case REGISTER:
-			logger.debug("REGISTRATION comming..., ID: " + id);
+			logger.debug("REGISTRATION comming..., ID: " + id +", response status: " + responsestatus);
+			if ( responsestatus == Status.OK.getStatusCode() ){
+	    		//try {
+	    			logger.debug("register, delete");
+					//stat.execute("delete from " + dbname + " where id='"+ id+"'");
+				//} catch (SQLException e) {}				
+			}
+			else if ( responsestatus == Status.NOT_MODIFIED.getStatusCode() ){
+	    		try {
+	    			logger.debug("register, update");
+					stat.execute("update " + dbname + " set new=0, del=0 where id='"+ id+"'");
+				} catch (SQLException e) {}
+			}
 			break;
 		case UPDATE:
-			logger.debug("UPDATE comming..., ID: " + id);
+			logger.debug("UPDATE comming..., ID: " + id +", response status: " + responsestatus);
+			if ( responsestatus == Status.OK.getStatusCode() ){
+	    		try {
+					stat.execute("delete from " + dbname + " where id='"+ id+"'");
+				} catch (SQLException e) {}				
+			}
+			else if ( responsestatus == Status.NOT_MODIFIED.getStatusCode() ){
+	    		try {
+					stat.execute("update " + dbname + " set new=1, del=0 where id='"+ id+"'");
+				} catch (SQLException e) {}
+			}
 			break;
 		case DELETE:
-			logger.debug("DELETE comming..., ID: " + id);
+			logger.debug("DELETE comming..., ID: " + id +", response status: " + responsestatus);
+			if ( responsestatus == Status.OK.getStatusCode() ){
+	    		try {
+					stat.execute("delete from " + dbname + " where id='"+ id+"'");
+				} catch (SQLException e) {}				
+			}
 			break;
 		default:
 			logger.debug("Bad method type, ID: " + id);
 			return false;
 		}
+		JSONObject jo;
+		//Registration messages
+		jo = search(1,0);
+		//Update messages
+		jo = search(0,0);
+		//Remove messages
+		jo = search(0,1);
 		return true;
 	}
 	
+	private JSONObject search( int ne, int del){
+		JSONObject jo = new JSONObject();
+		List<String> ids = new ArrayList<String>();
+	    ResultSet rs;
+	    logger.debug("search new = "+ne+" del= "+ del);
+	    // IDs search
+	    try {
+			rs = stat.executeQuery("select id from " + dbname + " where new = " + ne + " and del = " + del + "");
+			while ( rs.next() ){
+				ids.add(rs.getString("id"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    //TODO: konfigurációt megkapja az osztály és onnan vegyük az értékeket...
+	    MongoDBServiceDatabase mongoDB = new MongoDBServiceDatabase(
+				"localhost", 27017, "emiregistry-childdb", "services-test");
+	    
+	    
+		ServiceObject so = null;
+		try {
+			for (int i=0; i < ids.size(); i++){
+				logger.debug("listában:: "+ ids.get(i));
+				so = mongoDB.getServiceByUrl(ids.get(i));
+				if ( so != null ) {
+					//append to the JSONObject
+					System.out.println("adatbazis elem: " + so.toJSON().toString());
+					jo.
+				}
+			}
+		} catch (MultipleResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PersistentStoreFailureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+		} catch (NonExistingResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jo;
+	}
 }
