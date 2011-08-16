@@ -7,12 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
-import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-import com.sun.jersey.api.client.ClientResponse.Status;
+import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.WebResource;
+
+import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
@@ -264,21 +271,37 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			logger.debug("Bad method type, ID: " + id);
 			return false;
 		}
-		JSONObject jo;
+		//Synchronization messages are sending
+		JSONArray jos;
 		//Registration messages
-		jo = search(1,0);
+		jos = search(1,0);
+		if ( jos.length() >0 ){
+			if ( send(jos, Method.REGISTER) ){
+				databaseclean(1,0);
+			}
+		}
 		//Update messages
-		jo = search(0,0);
+		jos = search(0,0);
+		if ( jos.length() >0 ){
+			if ( send(jos, Method.UPDATE) ){
+				databaseclean(0,0);
+			}
+		}
 		//Remove messages
-		jo = search(0,1);
+		jos = search(0,1);
+		if ( jos.length() >0 ){
+			if ( send(jos, Method.DELETE) ){
+				databaseclean(0,1);
+			}
+		}
 		return true;
 	}
 	
-	private JSONObject search( int ne, int del){
-		JSONObject jo = new JSONObject();
+	private JSONArray search( int ne, int del){
+		JSONArray jo = new JSONArray();
 		List<String> ids = new ArrayList<String>();
-	    ResultSet rs;
-	    logger.debug("search new = "+ne+" del= "+ del);
+		ResultSet rs;
+		logger.debug("search new = "+ne+" del= "+ del);
 	    // IDs search
 	    try {
 			rs = stat.executeQuery("select id from " + dbname + " where new = " + ne + " and del = " + del + "");
@@ -304,7 +327,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				if ( so != null ) {
 					//append to the JSONObject
 					System.out.println("adatbazis elem: " + so.toJSON().toString());
-					//jo.
+					jo.put(so.toJSON());
 				}
 			}
 		} catch (MultipleResourceException e) {
@@ -319,5 +342,53 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		}
 
 		return jo;
+	}
+	
+	private boolean send( JSONArray jos, Method method){
+		String parentUrl = conf.getProperty(ServerConstants.REGISTRY_PARENT_URL);
+		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
+		WebResource client = c.getClientResource();
+		ClientResponse res = null;
+		try{
+			switch (method){
+			case REGISTER:
+				logger.debug("send register");
+				res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+				    		.post(ClientResponse.class, jos);
+				break;
+			case UPDATE:
+				logger.debug("send update");
+				res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+							.put(ClientResponse.class, jos);
+				break;
+			case DELETE:
+				logger.debug("send delete");
+				res = client.queryParam(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName(),
+						jos.toString()).delete(ClientResponse.class);
+				break;
+			default:
+				break;
+			}
+		} catch(ClientHandlerException e){
+			return false;
+		}
+		
+		
+		if ( res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
+			logger.debug("Error during the "+ method.name()+" method.");
+			return false;
+		}
+
+		return true;
+	}
+
+	private void databaseclean(int ne, int del){
+		logger.debug("Database cleaning! new="+ne+" del="+del);
+		try {
+			stat.execute("delete from " + dbname + " where new="+ ne+" and del="+del);
+		} catch (SQLException e) {}				
+		return;
 	}
 }
