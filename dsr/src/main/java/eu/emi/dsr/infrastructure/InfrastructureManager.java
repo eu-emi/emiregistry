@@ -178,7 +178,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
-		    if (rs.wasNull()) {
+		    if (!rs.first()) {
 		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 0)");
 		    }
@@ -201,7 +201,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 		    ResultSet rs;
 		    rs = stat.executeQuery("select * from " + dbname + " where id = '" + identifier + "'");
-		    if (rs.wasNull()) {
+		    if (!rs.first()) {
 		    	logger.debug( identifier + " is not in the list! Insert new record...");
 		    	stat.execute("insert into " + dbname + " values('"+identifier+"', 0, 1)");
 		    }
@@ -239,7 +239,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					//stat.execute("delete from " + dbname + " where id='"+ id+"'");
 				//} catch (SQLException e) {}				
 			}
-			else if ( responsestatus == Status.NOT_MODIFIED.getStatusCode() ){
+			else if ( responsestatus == Status.NOT_ACCEPTABLE.getStatusCode() ){
 	    		try {
 	    			logger.debug("register, update");
 					stat.execute("update " + dbname + " set new=0, del=0 where id='"+ id+"'");
@@ -253,7 +253,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					stat.execute("delete from " + dbname + " where id='"+ id+"'");
 				} catch (SQLException e) {}				
 			}
-			else if ( responsestatus == Status.NOT_MODIFIED.getStatusCode() ){
+			else if ( responsestatus == Status.NOT_ACCEPTABLE.getStatusCode() ){
 	    		try {
 					stat.execute("update " + dbname + " set new=1, del=0 where id='"+ id+"'");
 				} catch (SQLException e) {}
