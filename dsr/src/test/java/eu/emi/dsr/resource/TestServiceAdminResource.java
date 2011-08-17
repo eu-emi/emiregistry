@@ -22,6 +22,7 @@ import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 
@@ -72,13 +73,27 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.post(getDummyServiceDesc());
 		
 
-		DSRClient cr1 = new DSRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1");
-		JSONObject jo = cr1.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+		JSONObject jo = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1").get(JSONObject.class);
 		assertEquals("http://1",
 				jo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName()));
+		
+		System.out.println(jo);
+		
+		//adding second service
+		JSONObject j = getDummyServiceDesc();
+		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2");
+		cr.getClientResource()
+		.accept(MediaType.APPLICATION_JSON_TYPE)
+		.post(j);
+
+		
+		
+		JSONObject res = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").get(JSONObject.class);
+		assertEquals("http://2",
+				res.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
+		System.out.println(res);
 
 	}
 
