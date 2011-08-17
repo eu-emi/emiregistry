@@ -55,19 +55,18 @@ public class InfrastructureManager implements ServiceInfrastructure {
         try {
         	String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
         	if (h2db.isEmpty()){
-        		h2db = "./Emiregistry";
+        		h2db = "./data/Emiregistry";
         	}
-        	//conn = DriverManager.getConnection("jdbc:h2:./Emiregistry", "sa", "");
-        	conn = DriverManager.getConnection("jdbc:h2:"+h2db,
-        			conf.getProperty(ServerConstants.H2_USERNAME),
-        			conf.getProperty(ServerConstants.H2_PASSWORD));
+        	conn = DriverManager.getConnection("jdbc:h2:"+h2db, "sa", "");
 	        stat = conn.createStatement();
 	        stat.execute("create table " + dbname + "(id varchar(255) primary key, new int, del int)");
 		} catch (SQLException e) {
 			if ( e.toString().substring(30, 60).equals("Database may be already in use") ){
 				logger.error("DB locked! " + e);
 			} else if ( e.toString().substring(30, 64).equals("Table \"EMIREGISTRY\" already exists") )  {
-				logger.debug("DB exist. " + e);
+				if (logger.isDebugEnabled()) {
+					logger.debug("DB exist. " + e);
+				}
 			} else {
 				logger.error("Other SQL exception: " + e);
 			}
