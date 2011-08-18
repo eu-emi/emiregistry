@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
   <groupId>eu.emi</groupId>
-  <artifactId>xmltypes</artifactId>
+  <artifactId>gsr</artifactId>
   <version>1.0-SNAPSHOT</version>
   <versioning>
     <snapshot>
       <timestamp>20110818.150629</timestamp>
-      <buildNumber>2</buildNumber>
+      <buildNumber>1</buildNumber>
     </snapshot>
-    <lastUpdated>20110818150641</lastUpdated>
+    <lastUpdated>20110818150647</lastUpdated>
   </versioning>
 </metadata>
