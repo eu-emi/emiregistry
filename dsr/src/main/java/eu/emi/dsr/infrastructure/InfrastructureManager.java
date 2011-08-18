@@ -11,9 +11,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.dsr.client.DSRClient;
@@ -273,27 +276,25 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		//Synchronization messages are sending
 		JSONArray jos;
 		//Registration messages
+		boolean register = true;
 		jos = search(1,0);
 		if ( jos.length() >0 ){
-			if ( send(jos, Method.REGISTER) ){
-				databaseclean(1,0);
-			}
+			register = send(jos, Method.REGISTER);
 		}
 		//Update messages
+		boolean update = true;
 		jos = search(0,0);
 		if ( jos.length() >0 ){
-			if ( send(jos, Method.UPDATE) ){
-				databaseclean(0,0);
-			}
+			update = send(jos, Method.UPDATE);
 		}
 		//Remove messages
+		boolean delete = true;
 		jos = search(0,1);
 		if ( jos.length() >0 ){
-			if ( send(jos, Method.DELETE) ){
-				databaseclean(0,1);
-			}
+			delete = send(jos, Method.DELETE);
 		}
-		return true;
+
+		return (register && update && delete);
 	}
 	
 	private JSONArray search( int ne, int del){
@@ -348,39 +349,60 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
 		WebResource client = c.getClientResource();
 		ClientResponse res = null;
-		try{
-			switch (method){
-			case REGISTER:
-				logger.debug("send register");
-				res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-				    		.post(ClientResponse.class, jos);
-				break;
-			case UPDATE:
-				logger.debug("send update");
-				res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-							.put(ClientResponse.class, jos);
-				break;
-			case DELETE:
-				logger.debug("send delete");
-				res = client.queryParam(
-						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		boolean retval = true;
+		for(int i=0; i<jos.length(); i++){
+			try{
+				switch (method){
+				case REGISTER:
+					logger.debug("send register");
+					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+					    		.post(ClientResponse.class, jos.getJSONObject(i));
+					break;
+				case UPDATE:
+					logger.debug("send update");
+					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
+								.put(ClientResponse.class, jos.getJSONObject(i));
+					break;
+				case DELETE:
+					logger.debug("send delete");
+					res = client.queryParam(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName(),
-						jos.toString()).delete(ClientResponse.class);
-				break;
-			default:
-				break;
+								jos.toString()).delete(ClientResponse.class);
+					break;
+				default:
+					break;
+				}
+			} catch(ClientHandlerException e){
+				retval = false;
+			} catch (UniformInterfaceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				retval = false;
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				retval = false;
 			}
-		} catch(ClientHandlerException e){
-			return false;
-		}
-		
-		
-		if ( res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
-			logger.debug("Error during the "+ method.name()+" method.");
-			return false;
-		}
 
-		return true;
+			if ( res.getStatus() == Status.OK.getStatusCode() ){
+				//delete entry from the list
+				try {
+					deleteentry(jos.getJSONObject(i)
+							.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName()).toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		
+			if ( res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
+				logger.debug("Error during the "+ method.name()+" method.");
+				retval=false;
+			}
+		}
+		return retval;
 	}
 
 	private void databaseclean(int ne, int del){
@@ -388,6 +410,14 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 			stat.execute("delete from " + dbname + " where new="+ ne+" and del="+del);
 		} catch (SQLException e) {}				
+		return;
+	}
+	
+	private void deleteentry(String id){
+		logger.debug("Delete entry! id="+id);
+		try {
+			stat.execute("delete from " + dbname + " where id='"+ id+"'");
+		} catch (SQLException e) {e.printStackTrace();}				
 		return;
 	}
 }
