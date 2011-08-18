@@ -24,6 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
@@ -123,6 +124,8 @@ public class ServiceAdminResource {
 			throw new WebApplicationException(e);
 		} catch (NullPointerException e){
 			throw new WebApplicationException(e);
+		} catch (ExistingResourceException e) {
+			return Response.status(Status.CONFLICT).build();
 		}
 		
 		

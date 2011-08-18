@@ -247,5 +247,17 @@
 			<url>http://download.java.net/maven/1</url>
 			<layout>legacy</layout>
 		</repository>
+		<repository>
+			<id>emiregistry</id>
+			<name>EMI Maven repository on github</name>
+			<url>http://eu-emi.github.com/emiregistry/repository/</url>
+		</repository>
 	</repositories>
+	<distributionManagement>
+		<repository>
+			<id>gh-pages</id>
+			<!-- path to the local repo -->
+			<url>file:///${basedir}/../../emiregistry-pages/repository/</url>
+		</repository>
+	</distributionManagement>
 </project>
