@@ -241,7 +241,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					//stat.execute("delete from " + dbname + " where id='"+ id+"'");
 				//} catch (SQLException e) {}				
 			}
-			else if ( responsestatus == Status.NOT_ACCEPTABLE.getStatusCode() ){
+			else if ( responsestatus == Status.CONFLICT.getStatusCode() ){
 	    		try {
 	    			logger.debug("register, update");
 					stat.execute("update " + dbname + " set new=0, del=0 where id='"+ id+"'");
@@ -255,7 +255,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					stat.execute("delete from " + dbname + " where id='"+ id+"'");
 				} catch (SQLException e) {}				
 			}
-			else if ( responsestatus == Status.NOT_ACCEPTABLE.getStatusCode() ){
+			else if ( responsestatus == Status.CONFLICT.getStatusCode() ){
 	    		try {
 					stat.execute("update " + dbname + " set new=1, del=0 where id='"+ id+"'");
 				} catch (SQLException e) {}
@@ -326,7 +326,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				so = mongoDB.getServiceByUrl(ids.get(i));
 				if ( so != null ) {
 					//append to the JSONObject
-					System.out.println("adatbazis elem: " + so.toJSON().toString());
+					System.out.println("Stored JSON: " + so.toJSON().toString());
 					jo.put(so.toJSON());
 				}
 			}
@@ -397,7 +397,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 			}
 		
-			if ( res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
+			if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
 				logger.debug("Error during the "+ method.name()+" method.");
 				retval=false;
 			}

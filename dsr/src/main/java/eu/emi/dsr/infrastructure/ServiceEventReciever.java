@@ -78,7 +78,7 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
 					    .post(ClientResponse.class, event.getData());
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
-					 res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
+					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){
 						// DB sync
 						parent_lost = !infrastructure.dbSynchronization(ID, Method.REGISTER, res.getStatus());
@@ -97,7 +97,7 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
 						.put(ClientResponse.class, jo);
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
-					 res.getStatus() == Status.NOT_ACCEPTABLE.getStatusCode() ){
+					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){
 						// DB sync
 						parent_lost = !infrastructure.dbSynchronization(ID, Method.UPDATE, res.getStatus());
