@@ -62,7 +62,7 @@ public class ServiceAdminManager {
 	 * @throws ExistingResourceException
 	 */
 	public void addService(JSONObject jo)
-			throws InvalidServiceDescriptionException, JSONException {
+			throws InvalidServiceDescriptionException, JSONException, ExistingResourceException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes");
@@ -87,11 +87,8 @@ public class ServiceAdminManager {
 			}
 
 			serviceDB.insert(new ServiceObject(jo));
-		} catch (ExistingResourceException e) {
-			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
 		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException(e);
 		}
 	}
 

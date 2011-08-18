@@ -26,6 +26,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.ServiceManagerFactory;
+import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
@@ -60,7 +61,7 @@ public class TestServiceReaper {
 
 	@Test
 	public void testReaping() throws InvalidServiceDescriptionException,
-			JSONException, InterruptedException {
+			JSONException, InterruptedException, ExistingResourceException {
 		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -118,7 +119,7 @@ public class TestServiceReaper {
 	}
 
 	@Test
-	public void testAddingDefaultExpiry() throws JSONException, InvalidServiceDescriptionException, NonExistingResourceException, PersistentStoreFailureException {
+	public void testAddingDefaultExpiry() throws JSONException, InvalidServiceDescriptionException, NonExistingResourceException, PersistentStoreFailureException, ExistingResourceException {
 		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
