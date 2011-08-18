@@ -54,7 +54,4 @@ public class ServerConstants {
 
 	// H2 database
 	public static String H2_DBFILE_PATH = "h2.dbpath";
-	public static String H2_USERNAME = "h2.username";
-	public static String H2_PASSWORD = "h2.password";
-
 }

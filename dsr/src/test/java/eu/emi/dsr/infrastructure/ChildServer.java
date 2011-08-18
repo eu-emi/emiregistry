@@ -22,7 +22,7 @@ public class ChildServer extends AbstractServer{
 	public void start(){
 		Configuration c = getConfiguration("localhost", 9000, "localhost",
 				27017, "emiregistry-childdb", false, "http://localhost:9001",
-				"./Emiregistry", "sa", "");
+				"./data/Emiregistry-child");
 		
 		client = new DSRServer(c);	
 		
