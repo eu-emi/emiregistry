@@ -3,6 +3,7 @@
  */
 package eu.emi.dsr;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +11,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,12 +37,21 @@ public class TestRegistryBaseWithSecurity {
 	static DSRServer server = null;
 	public static String BaseURI;
 	private static Properties props = null;
+	private static Process p = null;
+	private static String mongodPath = "/usr/sbin/mongod";
+	private static Logger logger = Logger.getLogger(TestRegistryBaseWithSecurity
+			.class);
 	
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 	
 	@BeforeClass
 	public static void startServer() {
+		try {
+			startMongoDB();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
 		// System.setProperty("javax.net.debug", "all");
 		Properties p = new Properties();
 		setSecuritySettings(p);
@@ -135,6 +146,11 @@ public class TestRegistryBaseWithSecurity {
 
 	@AfterClass
 	public static void stopServer() {
+		try {
+			stopMongoDB();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if (server.isStarted()) {
 			server.stopJetty();
 		}
@@ -145,4 +161,49 @@ public class TestRegistryBaseWithSecurity {
 		ServiceDatabase sd = new MongoDBServiceDatabase();
 		sd.deleteAll();
 	}
+	/**
+	 * @throws InterruptedException
+	 * 
+	 */
+	private static void stopMongoDB() throws InterruptedException {
+		// Stop mongod process
+		boolean processClosed = false;
+
+		Thread.sleep(500);
+		if (p != null) {
+			while (!processClosed) {
+
+				try {
+					p.destroy();
+					processClosed = true;
+					Thread.sleep(500);
+					logger.info(" Process destroyed: " + p.exitValue());
+				} catch (IllegalThreadStateException itse) {
+					logger.warn(itse);
+					processClosed = false;
+				}
+			}
+		}
+
+	}
+	/**
+	 * @throws IOException
+	 * 
+	 */
+	private static void startMongoDB() throws IOException {
+		File f = new File("./mongodata");
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		String[] command = new String[] { mongodPath, "--dbpath",
+				f.getAbsolutePath() };
+
+		ProcessBuilder pb = new ProcessBuilder(command);
+
+		p = pb.start();
+
+		logger.debug("Process started with pid: " + p);
+
+	}
+
 }
