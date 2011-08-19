@@ -147,7 +147,7 @@ public class ServiceAdminManager {
 		} catch (MultipleResourceException e) {
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
-			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
+			throw new WebApplicationException(Status.CONFLICT);
 		} catch (PersistentStoreFailureException e) {
 			e.printStackTrace();
 		}
