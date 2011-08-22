@@ -7,7 +7,6 @@ package eu.emi.dsr.lease;
 import org.apache.log4j.Logger;
 
 import eu.emi.dsr.core.ServiceAdminManager;
-import eu.emi.dsr.core.ServiceManagerFactory;
 import eu.emi.dsr.util.Log;
 
 /**

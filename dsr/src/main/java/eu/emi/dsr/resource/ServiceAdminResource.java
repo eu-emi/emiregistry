@@ -117,7 +117,8 @@ public class ServiceAdminResource {
 			Client c = (Client) req.getAttribute("client");
 			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
 					.getAttributeName(), c.getDistinguishedName());
-			serviceAdmin.addService(serviceInfo);
+			JSONObject res = serviceAdmin.addService(serviceInfo);
+			return Response.ok(res).build();
 		} catch (JSONException e) {
 			throw new WebApplicationException(e);
 		} catch (InvalidServiceDescriptionException e) {
@@ -127,10 +128,6 @@ public class ServiceAdminResource {
 		} catch (ExistingResourceException e) {
 			return Response.status(Status.CONFLICT).build();
 		}
-		
-		
-
-		return Response.ok().build();
 	}
 
 	@PUT
@@ -157,7 +154,8 @@ public class ServiceAdminResource {
 									serviceInfo
 											.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 													.getAttributeName()))) {
-				serviceAdmin.updateService(serviceInfo);
+				JSONObject res = serviceAdmin.updateService(serviceInfo);
+				return Response.ok(res).build();
 			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
 			}
@@ -173,7 +171,6 @@ public class ServiceAdminResource {
 		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		}
-		return Response.ok().build();
 	}
 
 	/**

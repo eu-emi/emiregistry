@@ -19,6 +19,7 @@ import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
+import eu.emi.dsr.db.mongodb.MongoDBTestBase;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.util.ServiceUtil;
 import static org.junit.Assert.*;
@@ -27,7 +28,7 @@ import static org.junit.Assert.*;
  * 
  */
 
-public class TestServiceAdminManager {
+public class TestServiceAdminManager extends MongoDBTestBase{
 	static ServiceAdminManager adminMgr;
 	private static SimpleDateFormat sf = new SimpleDateFormat(
 	"dd-mm-yyyy, HH:mm");

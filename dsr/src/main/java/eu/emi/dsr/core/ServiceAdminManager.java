@@ -56,12 +56,13 @@ public class ServiceAdminManager {
 
 	/**
 	 * @param jo
-	 * @return the service id
+	 * @return the inserted service description
 	 * @throws JSONException
 	 * @throws PersistentStoreFailureException
 	 * @throws ExistingResourceException
-	 */
-	public void addService(JSONObject jo)
+	 * 
+	 * 	 */
+	public JSONObject addService(JSONObject jo)
 			throws InvalidServiceDescriptionException, JSONException, ExistingResourceException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
@@ -87,9 +88,11 @@ public class ServiceAdminManager {
 			}
 
 			serviceDB.insert(new ServiceObject(jo));
+			return jo;
 		} catch (PersistentStoreFailureException e) {
 			Log.logException(e);
 		}
+		return null;
 	}
 
 	/**
@@ -122,7 +125,7 @@ public class ServiceAdminManager {
 	 * @throws NonExistingResourceException
 	 * @throws MultipleResourceException
 	 */
-	public void updateService(JSONObject jo) throws UnknownServiceException,
+	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
@@ -144,6 +147,7 @@ public class ServiceAdminManager {
 		ServiceObject sObj = new ServiceObject(jo);
 		try {
 			serviceDB.update(sObj);
+			return jo;
 		} catch (MultipleResourceException e) {
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
@@ -151,6 +155,7 @@ public class ServiceAdminManager {
 		} catch (PersistentStoreFailureException e) {
 			e.printStackTrace();
 		}
+		return null;
 
 	}
 
