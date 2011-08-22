@@ -209,8 +209,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		    }
 		    else {
 		    	logger.debug( "The list contains this '" + identifier + "' ID!");
-		    	rs.next();
-		    	if ( rs.getString(2) == "1"){
+		    	if ( rs.getString(2).equals("1")){
 		    		logger.debug( "Remove this '" + identifier + "' ID from the list!");
 		    		stat.execute("delete from " + dbname + " where id='"+ identifier+"'");				
 		    	}
