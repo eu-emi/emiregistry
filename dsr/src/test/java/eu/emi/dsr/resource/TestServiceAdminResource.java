@@ -14,6 +14,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
@@ -82,10 +83,13 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		//adding second service
 		JSONObject j = getDummyServiceDesc();
 		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2");
-		cr.getClientResource()
+		ClientResponse cRes = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE)
-		.post(j);
-
+		.post(ClientResponse.class, j);
+		
+		JSONObject resJo = cRes.getEntity(JSONObject.class);
+		System.out.println("insert response: "+resJo);
+		assertTrue(resJo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()).equalsIgnoreCase("http://2"));
 		
 		
 		JSONObject res = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").get(JSONObject.class);
