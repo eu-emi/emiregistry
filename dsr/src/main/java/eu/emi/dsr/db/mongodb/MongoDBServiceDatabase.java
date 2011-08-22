@@ -501,5 +501,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 		serviceCollection.drop();
 	}
+	
+	public void dropDB(){
+		database.dropDatabase();
+	}
 
 }
