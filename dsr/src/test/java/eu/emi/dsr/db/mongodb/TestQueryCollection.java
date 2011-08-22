@@ -32,7 +32,7 @@ import eu.emi.dsr.util.ServiceUtil;
  * @author a.memon
  * 
  */
-public class TestQueryCollection {
+public class TestQueryCollection extends MongoDBTestBase{
 	public static MongoDBServiceDatabase db;
 
 	@Before

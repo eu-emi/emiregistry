@@ -10,12 +10,14 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+
+import eu.emi.dsr.db.mongodb.MongoDBTestBase;
 import static org.junit.Assert.*;
 /**
  * @author a.memon
  * 
  */
-public class TestServiceColManager {
+public class TestServiceColManager extends MongoDBTestBase{
 	ServiceColManager mgr = null;
 	@Before
 	public void setup(){

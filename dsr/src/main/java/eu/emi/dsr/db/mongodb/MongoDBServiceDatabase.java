@@ -130,8 +130,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 
 			DBObject db = item.toDBObject();
-			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName(), new Date());
+//			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+//					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 					.toJSON()));
@@ -225,8 +225,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
-			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-					.getAttributeName(), new Date());
+//			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+//					.getAttributeName(), new Date());
 			BasicDBObject query = new BasicDBObject();
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), sObj.getUrl());
