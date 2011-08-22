@@ -35,7 +35,7 @@ import eu.emi.dsr.util.ServiceUtil;
 public class TestInfrastructureIntegrationSyncTestPart2 {
 
 	@Test
-	public void testDelayedRegistration() throws JSONException, IOException, InterruptedException{
+	public void testDelayedRegistrationCheck() throws JSONException, IOException, InterruptedException{
 		// one registration to the child server
 		JSONObject jo = new JSONObject(
 				ServiceUtil

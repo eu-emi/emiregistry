@@ -132,23 +132,17 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 	@Test
 	public void testDelayedUpdate() throws InterruptedException, JSONException, IOException{
 		// one registration to the child server
-/*		JSONObject jo = new JSONObject(
+		JSONObject jo = new JSONObject(
 				ServiceUtil
 						.convertFileToString("src/test/resources/serviceinfo.json"));
 		jo = DateUtil.setExpiryTime(jo, 12);
-		System.out.println("registering update: " + jo);
-		ClientResponse res = getChildClient("/serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
-		assertTrue(res.getStatus() == Status.OK.getStatusCode());
-
-		Thread.sleep(2000);
 
 		// Updating the entry
 		System.out.println("updateing: " + jo);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
 				.getAttributeName(), "health-state-info-changed");
 
-		res = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
+		ClientResponse res = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
 				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jo);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 		Thread.sleep(2000);
@@ -162,7 +156,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 				.getAttributeName()),
 				childJO.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
 						.getAttributeName()));
-*/
+
 	}
 
 	protected WebResource getChildClient(String path) {

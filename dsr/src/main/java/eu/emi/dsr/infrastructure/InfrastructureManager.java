@@ -210,7 +210,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		    else {
 		    	logger.debug( "The list contains this '" + identifier + "' ID!");
 		    	rs.next();
-		    	if ( rs.getString("new") == "1"){
+		    	if ( rs.getString(2) == "1"){
 		    		logger.debug( "Remove this '" + identifier + "' ID from the list!");
 		    		stat.execute("delete from " + dbname + " where id='"+ identifier+"'");				
 		    	}
@@ -236,10 +236,10 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		case REGISTER:
 			logger.debug("REGISTRATION comming..., ID: " + id +", response status: " + responsestatus);
 			if ( responsestatus == Status.OK.getStatusCode() ){
-	    		//try {
+	    		try {
 	    			logger.debug("register, delete");
-					//stat.execute("delete from " + dbname + " where id='"+ id+"'");
-				//} catch (SQLException e) {}				
+					stat.execute("delete from " + dbname + " where id='"+ id+"'");
+				} catch (SQLException e) {}				
 			}
 			else if ( responsestatus == Status.CONFLICT.getStatusCode() ){
 	    		try {
@@ -307,12 +307,18 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			rs = stat.executeQuery("select id from " + dbname + " where new = " + ne + " and del = " + del + "");
 			while ( rs.next() ){
 				ids.add(rs.getString("id"));
+			    if (ne == 0 && del == 1){
+			    	jo.put(rs.getString("id"));
+			    }
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	    if (ne == 0 && del == 1){
+	    	return jo;
+	    }
+	    
 	    MongoDBServiceDatabase mongoDB = new MongoDBServiceDatabase(
 	    		conf.getProperty(ServerConstants.MONGODB_HOSTNAME),
 	    		Integer.valueOf(conf.getProperty(ServerConstants.MONGODB_PORT)),
@@ -322,10 +328,9 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		ServiceObject so = null;
 		try {
 			for (int i=0; i < ids.size(); i++){
-				logger.debug("listában:: "+ ids.get(i));
 				so = mongoDB.getServiceByUrl(ids.get(i));
 				if ( so != null ) {
-					//append to the JSONObject
+					//append to the JSONArray
 					System.out.println("Stored JSON: " + so.toJSON().toString());
 					jo.put(so.toJSON());
 				}
@@ -368,7 +373,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					res = client.queryParam(
 							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName(),
-								jos.toString()).delete(ClientResponse.class);
+								jos.getString(i)).delete(ClientResponse.class);
 					break;
 				default:
 					break;
@@ -388,9 +393,13 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			if ( res.getStatus() == Status.OK.getStatusCode() ){
 				//delete entry from the list
 				try {
-					deleteentry(jos.getJSONObject(i)
+					if ( method == Method.DELETE ){
+						deleteentry(jos.getString(i));
+					} else {
+						deleteentry(jos.getJSONObject(i)
 							.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName()).toString());
+					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

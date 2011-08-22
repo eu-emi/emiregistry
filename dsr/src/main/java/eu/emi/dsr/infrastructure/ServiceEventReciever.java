@@ -62,12 +62,20 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 	@Override
 	public void recieve(Event event) {
 		String ID = null;
-		JSONObject jo = (JSONObject) event.getData();
+		JSONObject jo = new JSONObject();
+		try {
+			jo = (JSONObject) event.getData();
+		} catch (ClassCastException e) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("event.data to JSONObject cast problem. May be delete message.");
+			}
+		}
 		try {
 			ID = jo.getString("Service_Endpoint_URL");
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			if (logger.isDebugEnabled()) {
+				logger.debug(e1);
+			}
 		}
 		// here sending messages to the parent DSR's
 		if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_ADD)) {
