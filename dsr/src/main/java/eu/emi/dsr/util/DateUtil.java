@@ -3,31 +3,34 @@
  */
 package eu.emi.dsr.util;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.infrastructure.ServiceEventReciever;
 
 /**
  * @author a.memon
- *
+ * 
  */
 public class DateUtil {
-	public static JSONObject setExpiryTime(JSONObject jo, Integer days){
-		JSONObject date = new JSONObject();		
+	public static JSONObject setExpiryTime(JSONObject jo, Integer days) {
+		JSONObject date = new JSONObject();
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(addDays(days)));
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), date);
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return jo;
 	}
-	
-	public static JSONObject addDate(JSONObject jo, String attrName, Date d){
+
+	public static JSONObject addDate(JSONObject jo, String attrName, Date d) {
 		JSONObject date = new JSONObject();
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(d));
@@ -37,22 +40,38 @@ public class DateUtil {
 		}
 		return jo;
 	}
-	
-	/** 
+
+	/**
 	 * Add days to the given date
 	 * **/
-	public static Date addDays(Date date, Integer days){
+	public static Date addDays(Date date, Integer days) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(c.DATE, days);
 		return c.getTime();
 	}
-	
-	/** 
+
+	/**
 	 * Add days to the current date
 	 * **/
-	public static Date addDays(Integer days){
+	public static Date addDays(Integer days) {
 		return addDays(new Date(), days);
 	}
-	
+
+	/**
+	 * @param resJson
+	 */
+	public static Date getDate(JSONObject json) {
+		Date date = null;
+		try {
+			String strDate = json.getString("$date");
+			date = ServiceUtil.toUTCFormat(strDate);
+		} catch (JSONException e) {
+			Log.logException(e);
+		} catch (ParseException e) {
+			Log.logException(e);
+		}
+		return date;
+	}
+
 }
