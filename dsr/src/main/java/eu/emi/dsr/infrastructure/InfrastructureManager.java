@@ -296,6 +296,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		return (register && update && delete);
 	}
 	
+	/**
+	 * Search in the H2 database.
+	 * @param int, it is a new value in the filter
+	 * @param int, it is a del value in the filter
+	 * @return JSONArray, every JSONs from the database, that fit to the filter.
+	 */
 	private JSONArray search( int ne, int del){
 		JSONArray jo = new JSONArray();
 		List<String> ids = new ArrayList<String>();
@@ -348,6 +354,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		return jo;
 	}
 	
+	/**
+	 * Send message to the parent.
+	 * @param JSONArray, collections of the JSONs
+	 * @param method, type of the message
+	 * @return boolean
+	 */
 	private boolean send( JSONArray jos, Method method){
 		String parentUrl = conf.getProperty(ServerConstants.REGISTRY_PARENT_URL);
 		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
@@ -413,6 +425,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		return retval;
 	}
 
+	/**
+	 * Delete all entries from the H2 database, that fit to the filter.
+	 * @param int, new filter value
+	 * @param int, del filter value
+	 * @return None
+	 */
 	private void databaseclean(int ne, int del){
 		logger.debug("Database cleaning! new="+ne+" del="+del);
 		try {
@@ -421,6 +439,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		return;
 	}
 	
+	/**
+	 * Delete one entry from the H2 database, that fit to the filter.
+	 * @param String, ID filter value
+	 * @return None
+	 */
 	private void deleteentry(String id){
 		logger.debug("Delete entry! id="+id);
 		try {
