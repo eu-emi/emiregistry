@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -53,13 +56,14 @@ public class ServiceAdminManager {
 
 	/**
 	 * @param jo
-	 * @return the service id
+	 * @return the inserted service description
 	 * @throws JSONException
 	 * @throws PersistentStoreFailureException
 	 * @throws ExistingResourceException
-	 */
-	public void addService(JSONObject jo)
-			throws InvalidServiceDescriptionException, JSONException {
+	 * 
+	 * 	 */
+	public JSONObject addService(JSONObject jo)
+			throws InvalidServiceDescriptionException, JSONException, ExistingResourceException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes");
@@ -84,13 +88,11 @@ public class ServiceAdminManager {
 			}
 
 			serviceDB.insert(new ServiceObject(jo));
-		} catch (ExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return jo;
 		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException(e);
 		}
+		return null;
 	}
 
 	/**
@@ -123,7 +125,7 @@ public class ServiceAdminManager {
 	 * @throws NonExistingResourceException
 	 * @throws MultipleResourceException
 	 */
-	public void updateService(JSONObject jo) throws UnknownServiceException,
+	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
@@ -145,13 +147,15 @@ public class ServiceAdminManager {
 		ServiceObject sObj = new ServiceObject(jo);
 		try {
 			serviceDB.update(sObj);
+			return jo;
 		} catch (MultipleResourceException e) {
 			e.printStackTrace();
 		} catch (NonExistingResourceException e) {
-			e.printStackTrace();
+			throw new WebApplicationException(Status.CONFLICT);
 		} catch (PersistentStoreFailureException e) {
 			e.printStackTrace();
 		}
+		return null;
 
 	}
 

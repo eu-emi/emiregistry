@@ -27,7 +27,8 @@ public abstract class AbstractServer {
 	 */
 	protected Configuration getConfiguration(String jettyHostname,
 			int jettyPort, String mongodbHostName, int mongodbPort,
-			String mongodbName, boolean secure, String parenturl) {
+			String mongodbName, boolean secure, String parenturl,
+			String h2path) {
 		Properties p = new Properties();
 		p.put(ServerConstants.REGISTRY_HOSTNAME, jettyHostname);
 		p.put(ServerConstants.REGISTRY_PORT, ""+jettyPort);
@@ -55,6 +56,8 @@ public abstract class AbstractServer {
 			p.put(ServerConstants.REGISTRY_PARENT_URL, parenturl);	
 		}
 		
+		p.put(ServerConstants.H2_DBFILE_PATH, h2path);
+
 		Configuration c = new Configuration(p);
 		return c;
 	}

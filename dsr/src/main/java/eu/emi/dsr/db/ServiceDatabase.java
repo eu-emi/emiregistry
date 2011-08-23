@@ -154,7 +154,7 @@ public interface ServiceDatabase {
 	 * @throws JSONException 
 	 * @throws MongoException 
 	 */
-	JSONArray queryJSON(String query) throws QueryException,
+	public JSONArray queryJSON(String query) throws QueryException,
 			PersistentStoreFailureException, MongoException, JSONException;
 
 	/**
@@ -165,7 +165,7 @@ public interface ServiceDatabase {
 	 * @throws QueryException
 	 * @throws PersistentStoreFailureException
 	 */
-	JSONArray queryJSON(String query, Integer limit, Integer skip)
+	public JSONArray queryJSON(String query, Integer limit, Integer skip)
 			throws QueryException, PersistentStoreFailureException;
 
 	/**
@@ -175,7 +175,7 @@ public interface ServiceDatabase {
 	 * @throws QueryException
 	 * @throws PersistentStoreFailureException
 	 */
-	JSONArray queryJSON(String query, Integer skip) throws QueryException,
+	public JSONArray queryJSON(String query, Integer skip) throws QueryException,
 			PersistentStoreFailureException;
 
 	/**

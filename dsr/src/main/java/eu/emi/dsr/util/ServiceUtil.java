@@ -52,18 +52,7 @@ public class ServiceUtil {
 	public static SimpleDateFormat ISODateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ssZ");
 	private static List<String> lstNames;
-	/**
-	 * Checks if the description contains the minimal valid information i.e.
-	 * <b>url</b> and <b>type</b>
-	 * 
-	 * @param serviceDesc
-	 * @throws JSONException
-	 */
-	public static void isValid(String serviceDesc) throws JSONException {
-		JSONObject jo = new JSONObject(serviceDesc);
-		jo.get("serviceurl");
-		jo.get("servicetype");
-	}
+	
 
 	/**
 	 * Checks the service description being registered contains the mandatory
@@ -72,14 +61,12 @@ public class ServiceUtil {
 	 * @param serviceDesc
 	 * @throws JSONException
 	 */
-	public static boolean isValidServiceInfo(JSONObject jo)
+	public synchronized static boolean isValidServiceInfo(JSONObject jo)
 			throws JSONException {
-
 		return ValidatorFactory.getRegistrationValidator().validateInfo(jo);
-
 	}
 
-	public static String toUTCFormat(Date d) {
+	public synchronized static String toUTCFormat(Date d) {
 		SimpleDateFormat formatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss'Z'");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));

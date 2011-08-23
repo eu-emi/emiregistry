@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -51,15 +50,17 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 		String hostname = DSRServer.getProperty(
 				ServerConstants.MONGODB_HOSTNAME, "localhost");
-		String port = DSRServer.getProperty(
-				ServerConstants.MONGODB_PORT, "27017");
-		String dbName = DSRServer.getProperty(
-				ServerConstants.MONGODB_DB_NAME, "emiregistry");
+		String port = DSRServer.getProperty(ServerConstants.MONGODB_PORT,
+				"27017");
+		String dbName = DSRServer.getProperty(ServerConstants.MONGODB_DB_NAME,
+				"emiregistry");
 		String colName = DSRServer.getProperty(
 				ServerConstants.MONGODB_COLLECTION_NAME, "services");
 		try {
-//			connection = MongoConnection.get(hostname, Integer.valueOf(port));
+			// connection = MongoConnection.get(hostname,
+			// Integer.valueOf(port));
 			connection = new Mongo(hostname, Integer.valueOf(port));
+			
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
 
@@ -68,16 +69,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
 					"1");
-			logger.info(obj);
+			
+			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), "1");
+			
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
-
-		} catch (UnknownHostException e) {
-			Log.logException(e);
-		} catch (MongoException e) {
-			Log.logException(e);
-		}
+		} catch (Exception e) {
+			logger.error("Error in connecting the MongoDB database",e);
+		} 
 
 	}
 
@@ -114,11 +114,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.info("Unique index created: " + obj);
 			}
-		} catch (UnknownHostException e) {
-			Log.logException(e);
-		} catch (MongoException e) {
-			Log.logException(e);
-		}
+		} catch (Exception e) {
+			logger.error("Error in connecting the MongoDB database",e);
+			
+		} 
 	}
 
 	@Override
@@ -131,8 +130,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 
 			DBObject db = item.toDBObject();
-			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName(), new Date());
+//			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+//					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 					.toJSON()));
@@ -140,6 +139,31 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "
 						+ item.getUrl() + " - already exists", e);
+			} else {
+				throw new PersistentStoreFailureException(e);
+			}
+
+		}
+
+	}
+
+	public void insert(DBObject item) throws ExistingResourceException,
+			PersistentStoreFailureException {
+		List<String> lstError = new CopyOnWriteArrayList<String>();
+		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("inserting: " + item);
+			}
+
+			DBObject db = item;
+			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+					.getAttributeName(), new Date());
+			serviceCollection.insert(db, WriteConcern.SAFE);
+//			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
+//					.toJSON()));
+		} catch (MongoException e) {
+			if (e instanceof DuplicateKey) {
+				throw new ExistingResourceException(e);
 			} else {
 				throw new PersistentStoreFailureException(e);
 			}
@@ -201,8 +225,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
-			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-					.getAttributeName(), new Date());
+//			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+//					.getAttributeName(), new Date());
 			BasicDBObject query = new BasicDBObject();
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), sObj.getUrl());
@@ -468,15 +492,18 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("delete by query: " + db.toString());
 		}
 
-		serviceCollection.remove(db);		
+		serviceCollection.remove(db);
 	}
 
 	public void dropCollection() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("dropping collection: " + serviceCollection.getName());
 		}
-		serviceCollection.drop();		
+		serviceCollection.drop();
 	}
 	
-	
+	public void dropDB(){
+		database.dropDatabase();
+	}
+
 }

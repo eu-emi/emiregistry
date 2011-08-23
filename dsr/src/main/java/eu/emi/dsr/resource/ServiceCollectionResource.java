@@ -3,7 +3,6 @@
  */
 package eu.emi.dsr.resource;
 
-import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,8 +18,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;

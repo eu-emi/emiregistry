@@ -26,8 +26,10 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.ServiceManagerFactory;
+import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
+import eu.emi.dsr.db.mongodb.MongoDBTestBase;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
@@ -36,7 +38,7 @@ import eu.emi.dsr.util.ServiceUtil;
  * @author a.memon
  * 
  */
-public class TestServiceReaper {
+public class TestServiceReaper extends MongoDBTestBase{
 	private static ServiceAdminManager adminMgr;
 	Properties p;
 	@Before
@@ -60,7 +62,7 @@ public class TestServiceReaper {
 
 	@Test
 	public void testReaping() throws InvalidServiceDescriptionException,
-			JSONException, InterruptedException {
+			JSONException, InterruptedException, ExistingResourceException {
 		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -73,7 +75,7 @@ public class TestServiceReaper {
 
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
+		c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
@@ -94,7 +96,7 @@ public class TestServiceReaper {
 					+ UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
 			Calendar c1 = Calendar.getInstance();
-			c1.add(c1.SECOND, 2);
+			c1.add(Calendar.SECOND, 2);
 			try {
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {
@@ -118,7 +120,7 @@ public class TestServiceReaper {
 	}
 
 	@Test
-	public void testAddingDefaultExpiry() throws JSONException, InvalidServiceDescriptionException, NonExistingResourceException, PersistentStoreFailureException {
+	public void testAddingDefaultExpiry() throws JSONException, InvalidServiceDescriptionException, NonExistingResourceException, PersistentStoreFailureException, ExistingResourceException {
 		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL

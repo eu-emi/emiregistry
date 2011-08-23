@@ -7,12 +7,9 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,6 +41,16 @@ import eu.emi.dsr.util.ServiceUtil;
 public class TestInfrastructureIntegration {
 	private static ChildServer childs = null;
 	private static ParentServer parents = null;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+            /*childs = new ChildServer();
+            //(new ChildServer()).start();
+            childs.start();
+            parents = new ParentServer();
+            parents.start();*/
+            System.out.println("Child and parent server are running...");
+    }
 
 	@Before
 	public void setUp() {
@@ -152,6 +159,7 @@ public class TestInfrastructureIntegration {
 		}
 
 	}
+
 
 	protected WebResource getChildClient(String path) {
 		DSRClient c = new DSRClient("http://localhost:27017" + path);

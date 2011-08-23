@@ -19,12 +19,12 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
@@ -117,18 +117,17 @@ public class ServiceAdminResource {
 			Client c = (Client) req.getAttribute("client");
 			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
 					.getAttributeName(), c.getDistinguishedName());
-			serviceAdmin.addService(serviceInfo);
+			JSONObject res = serviceAdmin.addService(serviceInfo);
+			return Response.ok(res).build();
 		} catch (JSONException e) {
 			throw new WebApplicationException(e);
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
 		} catch (NullPointerException e){
 			throw new WebApplicationException(e);
+		} catch (ExistingResourceException e) {
+			return Response.status(Status.CONFLICT).build();
 		}
-		
-		
-
-		return Response.ok().build();
 	}
 
 	@PUT
@@ -155,7 +154,8 @@ public class ServiceAdminResource {
 									serviceInfo
 											.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 													.getAttributeName()))) {
-				serviceAdmin.updateService(serviceInfo);
+				JSONObject res = serviceAdmin.updateService(serviceInfo);
+				return Response.ok(res).build();
 			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
 			}
@@ -171,7 +171,6 @@ public class ServiceAdminResource {
 		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		}
-		return Response.ok().build();
 	}
 
 	/**

@@ -52,4 +52,6 @@ public class ServerConstants {
 	public static String JETTY_MAXTHREADS = "jetty.maxThreads";
 	public static String JETTY_LOWTHREADS = "jetty.lowThreads";
 
+	// H2 database
+	public static String H2_DBFILE_PATH = "h2.dbpath";
 }

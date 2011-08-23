@@ -252,7 +252,7 @@ public class DSRServer {
 			logger.info("adding parent dsr : " + url + " to: " + getBaseUrl());
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReciever(conf
-							.getProperty(ServerConstants.REGISTRY_PARENT_URL)));
+							.getProperty(ServerConstants.REGISTRY_PARENT_URL), conf));
 		}
 
 	}
