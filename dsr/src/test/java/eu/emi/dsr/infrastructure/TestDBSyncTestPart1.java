@@ -48,7 +48,7 @@ import eu.emi.dsr.util.ServiceUtil;
        *  @throws IOException
        */
 
-public class TestInfrastructureIntegrationSyncTestPart1 {
+public class TestDBSyncTestPart1 {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -72,7 +72,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		//Registration check
 		JSONObject childJO = getChildClient(
@@ -84,7 +84,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 				childJO.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
 		
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		// 2nd registration to the child server
 		JSONObject jo2 = new JSONObject(
@@ -96,7 +96,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 				.post(ClientResponse.class, jo2);
 		assertTrue(res2.getStatus() == Status.OK.getStatusCode());
 
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		// 2nd Registration check
 		JSONObject childJO2 = getChildClient(
@@ -116,7 +116,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 		ClientResponse resu = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
 				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jo);
 		assertTrue(resu.getStatus() == Status.OK.getStatusCode());
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		//Update check
 		JSONObject childJOu = getChildClient(
@@ -132,26 +132,21 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 	@Test
 	public void testDelayedUpdate() throws InterruptedException, JSONException, IOException{
 		// one registration to the child server
-/*		JSONObject jo = new JSONObject(
+		JSONObject jo = new JSONObject(
 				ServiceUtil
 						.convertFileToString("src/test/resources/serviceinfo.json"));
 		jo = DateUtil.setExpiryTime(jo, 12);
-		System.out.println("registering update: " + jo);
-		ClientResponse res = getChildClient("/serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
-		assertTrue(res.getStatus() == Status.OK.getStatusCode());
-
-		Thread.sleep(2000);
 
 		// Updating the entry
 		System.out.println("updateing: " + jo);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
 				.getAttributeName(), "health-state-info-changed");
 
-		res = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
+		ClientResponse res = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
 				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jo);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
-		Thread.sleep(2000);
+		
+		Thread.sleep(1000);
 
 		//Update check
 		JSONObject childJO = getChildClient(
@@ -162,7 +157,7 @@ public class TestInfrastructureIntegrationSyncTestPart1 {
 				.getAttributeName()),
 				childJO.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
 						.getAttributeName()));
-*/
+
 	}
 
 	protected WebResource getChildClient(String path) {

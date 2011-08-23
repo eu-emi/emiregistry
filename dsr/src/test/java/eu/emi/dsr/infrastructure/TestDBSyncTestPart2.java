@@ -32,10 +32,10 @@ import eu.emi.dsr.util.ServiceUtil;
  * 
  * @author g.szigeti
  */
-public class TestInfrastructureIntegrationSyncTestPart2 {
+public class TestDBSyncTestPart2 {
 
 	@Test
-	public void testDelayedRegistration() throws JSONException, IOException, InterruptedException{
+	public void testDelayedRegistrationCheck() throws JSONException, IOException, InterruptedException{
 		// one registration to the child server
 		JSONObject jo = new JSONObject(
 				ServiceUtil
@@ -46,7 +46,7 @@ public class TestInfrastructureIntegrationSyncTestPart2 {
 				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		//Registration check
 		JSONObject parentJO3 = getChildClient(
@@ -58,10 +58,10 @@ public class TestInfrastructureIntegrationSyncTestPart2 {
 				parentJO3.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
 		
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		// sync messages arrive checking
-		JSONObject parentJO1 = getChildClient(
+		JSONObject parentJO1 = getParentClient(
 				"/serviceadmin?Service_Endpoint_URL=http://1").accept(
 				MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 
@@ -70,7 +70,7 @@ public class TestInfrastructureIntegrationSyncTestPart2 {
 						.getAttributeName()));
 
 
-		JSONObject parentJO2 = getChildClient(
+		JSONObject parentJO2 = getParentClient(
 				"/serviceadmin?Service_Endpoint_URL=http://2").accept(
 				MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 
