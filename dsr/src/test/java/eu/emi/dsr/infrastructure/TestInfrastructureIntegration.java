@@ -162,12 +162,12 @@ public class TestInfrastructureIntegration {
 
 
 	protected WebResource getChildClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:27017" + path);
+		DSRClient c = new DSRClient("http://localhost:9000" + path);
 		return c.getClientResource();
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:27017" + path);
+		DSRClient c = new DSRClient("http://localhost:9001" + path);
 		return c.getClientResource();
 	}
 
