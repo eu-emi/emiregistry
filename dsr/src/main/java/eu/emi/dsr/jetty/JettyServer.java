@@ -6,7 +6,6 @@ package eu.emi.dsr.jetty;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.AbstractConnector;
@@ -51,7 +50,8 @@ public class JettyServer {
 	 * @param class1
 	 * @param c
 	 */
-	public JettyServer(@SuppressWarnings("rawtypes") Class clazz, Configuration c) {
+	public JettyServer(@SuppressWarnings("rawtypes") Class clazz,
+			Configuration c) {
 		if (clazz == null) {
 			throw new IllegalArgumentException("Application ");
 		}
@@ -111,7 +111,7 @@ public class JettyServer {
 		ServletHolder sh = new ServletHolder(ServletContainer.class);
 
 		setInitParams(sh);
-		
+
 		server = new Server();
 
 		ServletContextHandler context = new ServletContextHandler(
@@ -121,7 +121,7 @@ public class JettyServer {
 
 		context.addServlet(sh, "/*");
 		server.addConnector(connector);
-		
+
 	}
 
 	/**
@@ -129,42 +129,21 @@ public class JettyServer {
 	 */
 	private void setInitParams(ServletHolder sh) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("javax.ws.rs.Application", appClass.getCanonicalName());		
+		map.put("javax.ws.rs.Application", appClass.getCanonicalName());
 		addFilterClasses(map);
 		sh.setInitParameters(map);
 	}
 
 	/**
-	 * 
-	 */
+	 * Adding request and response filters to the jersey servlet
+	 * */
 	private void addFilterClasses(Map<String, String> map) {
 		String reqClasses = DSRServer
 				.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		if ((reqClasses != null)) {
-			String[] arrReq = reqClasses.split(" ");
-			try {
-				for (int i = 0; i < arrReq.length; i++) {
-					map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
-							Class.forName(arrReq[i]).getName());
-				}
-			} catch (ClassNotFoundException e) {
-				Log.logException("Error in adding request filters",e);
-			}
-		}
-
+		map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, reqClasses);
 		String resClasses = DSRServer
 				.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
-		if ((resClasses != null)) {
-			String[] arrRes = resClasses.split(" ");
-			try {
-				for (int i = 0; i < arrRes.length; i++) {
-					map.put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-							Class.forName(arrRes[i]).getName());
-				}
-			} catch (ClassNotFoundException e) {
-				Log.logException("Error in adding response filters",e);
-			}
-		}
+		map.put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, resClasses);
 	}
 
 	/**
@@ -201,7 +180,7 @@ public class JettyServer {
 					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false")); // true
 			cf.setNeedClientAuth(conf.getBooleanProperty(
 					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false"));
-			
+
 		} catch (Exception e) {
 			Log.logException("Error creating secure connectore", e, logger);
 		}

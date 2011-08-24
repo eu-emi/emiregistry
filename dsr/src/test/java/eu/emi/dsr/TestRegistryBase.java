@@ -45,9 +45,7 @@ public class TestRegistryBase {
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
-		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
-		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
-				AccessControlFilter.class.getName());
+		p.put(ServerConstants.MONGODB_COL_CREATE, "true");		
 		Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();

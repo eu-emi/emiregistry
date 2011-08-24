@@ -93,9 +93,7 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/main/resources/log4j.properties");
-		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
-				AccessControlFilter.class.getName());
+				"src/main/resources/log4j.properties");	
 		
 	}
 

@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 
+import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
+
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
@@ -107,7 +109,7 @@ public class DSRServer {
 	}
 
 	public void startJetty() {
-		addDefaultFilters();
+		addDefaultFilterClasses();
 		initLog4j();
 		if (!started) {
 			jettyServer = new JettyServer(DSRApplication.class, conf);
@@ -125,8 +127,32 @@ public class DSRServer {
 	/**
 	 * 
 	 */
-	private void addDefaultFilters() {
-		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, AccessControlFilter.class.getName());		
+	private void addDefaultFilterClasses() {
+		addRequestFilters();
+		addResponseFilters();
+				
+	}
+
+	/**
+	 * 
+	 */
+	private void addResponseFilters() {
+		StringBuilder sb = new StringBuilder();
+		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
+		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		conf.setProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE, sb.toString());
+		
+	}
+
+	/**
+	 * 
+	 */
+	private void addRequestFilters() {
+		StringBuilder sb = new StringBuilder();
+		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
+		sb.append(AccessControlFilter.class.getName()).append(",").append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
+		
 	}
 
 	public static String getProperty(String key){
