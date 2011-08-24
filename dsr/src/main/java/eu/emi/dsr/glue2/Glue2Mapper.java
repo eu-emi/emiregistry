@@ -105,8 +105,8 @@ public class Glue2Mapper {
 		if (jo.length() > 0) {
 			for (Iterator<?> iterator = jo.keys(); iterator.hasNext();) {
 				String type = (String) iterator.next();
-
-				st.setID(jo.getJSONObject("_id").getString("$oid"));
+				
+				
 
 				st.setName(jo.has(ServiceBasicAttributeNames.SERVICE_NAME
 						.getAttributeName()) ? jo
@@ -140,7 +140,11 @@ public class Glue2Mapper {
 										.getAttributeName()).getString("$date")))
 						: null);
 
-				et.setID(jo.getJSONObject("_id").getString("$oid"));
+				if (jo.has("_id")) {
+					st.setID(jo.getJSONObject("_id").getString("$oid"));
+					et.setID(jo.getJSONObject("_id").getString("$oid"));
+				}
+				
 				et.setName(jo.has(ServiceBasicAttributeNames.SERVICE_NAME
 						.getAttributeName()) ? jo
 						.getString(ServiceBasicAttributeNames.SERVICE_NAME

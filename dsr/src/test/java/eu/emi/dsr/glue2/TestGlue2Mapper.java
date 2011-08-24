@@ -42,7 +42,9 @@ public class TestGlue2Mapper {
 
 	@Before
 	public void setup() throws IOException, JSONException {
-		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
+		String str = FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json"));
+		System.out.println(str);
+		jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 	}
 
 	@Test
@@ -52,7 +54,7 @@ public class TestGlue2Mapper {
 		JSONArray ja = new JSONArray();
 		ja.put(jo);
 		JAXBElement<ServiceT>[] sa = gm.toGlue2Service(ja);
-		assertNotNull(sa[0].getValue().getID());
+		assertNotNull(sa[0].getValue().getName());
 
 		StringWriter sw = new StringWriter();
 		QueryResult qr = gm.toQueryResult(ja);
@@ -70,7 +72,7 @@ public class TestGlue2Mapper {
 		ja.put(jo);
 		ja.put(jo);
 		QueryResult qr = gm.toQueryResult(ja);
-		assertNotNull(qr.getService().get(0).getID());
+		assertNotNull(qr.getService().get(0).getName());
 		assertEquals(new BigInteger("" + 2), qr.getCount());
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(qr, sw);
@@ -89,7 +91,7 @@ public class TestGlue2Mapper {
 		QueryResult qr = gm.toQueryResult(ja);
 		
 		
-		assertNotNull(qr.getService().get(0).getID());
+		assertNotNull(qr.getService().get(0).getName());
 		assertEquals("myextension1", qr.getService().get(0).getExtensions().getExtension().get(0).getKey());
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(qr, sw);

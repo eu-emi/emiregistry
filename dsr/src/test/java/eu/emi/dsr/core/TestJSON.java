@@ -62,7 +62,7 @@ public class TestJSON {
 		 * you application folder or inside a jar file if the program is packed
 		 * as a jar.
 		 */
-		InputStream is = new FileInputStream(new File("src/test/resources/serviceinfo.json"));
+		InputStream is = new FileInputStream(new File("src/test/resources/json/serviceinfo.json"));
 		
 		/*
 		 * Call the method to convert the stream to string

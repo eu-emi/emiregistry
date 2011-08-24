@@ -92,7 +92,7 @@ public class TestServiceReaper extends MongoDBTestBase{
 					+ UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
 			Calendar c1 = Calendar.getInstance();
-			c1.add(Calendar.SECOND, 2);
+			c1.add(Calendar.SECOND, 3);
 			try {
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {

@@ -71,15 +71,15 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/certs/demo-server.p12");
+				"src/test/resources/certs/demo-server.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
 		p.put("registry.security.attributes.order", "FILE");
 		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
-		p.put("registry.security.attributes.FILE.file", "src/test/resources/users/testUudb-strict.xml");
+		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUudb-strict.xml");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
 	}
@@ -114,10 +114,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/certs/demo-user.p12");
+				"src/test/resources/certs/demo-user.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;
@@ -132,10 +132,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/certs/demo-user-2.p12");
+				"src/test/resources/certs/demo-user-2.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;
