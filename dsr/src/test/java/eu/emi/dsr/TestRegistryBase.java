@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.security.AccessControlFilter;
 
 /**
  * 

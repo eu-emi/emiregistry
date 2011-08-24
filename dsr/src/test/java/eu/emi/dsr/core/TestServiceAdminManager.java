@@ -3,7 +3,6 @@
  */
 package eu.emi.dsr.core;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +29,7 @@ import static org.junit.Assert.*;
 
 public class TestServiceAdminManager extends MongoDBTestBase{
 	static ServiceAdminManager adminMgr;
-	private static SimpleDateFormat sf = new SimpleDateFormat(
-	"dd-mm-yyyy, HH:mm");
-	
+
 	@Before
 	public void setup() {
 		Properties p = new Properties();
@@ -42,7 +39,7 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		Configuration conf = new Configuration(p);
-		DSRServer s = new DSRServer(conf);
+		new DSRServer(conf);
 		adminMgr = new ServiceAdminManager();
 		adminMgr.removeAll();
 		

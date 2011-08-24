@@ -27,7 +27,6 @@ import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
-import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start

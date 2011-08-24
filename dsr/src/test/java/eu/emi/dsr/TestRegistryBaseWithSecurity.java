@@ -25,9 +25,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.pdp.local.LocalHerasafPDP;
-import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.ISecurityProperties;
-//import eu.unicore.uas.pdp.local.LocalHerasafPDP;
 
 /**
  * @author a.memon

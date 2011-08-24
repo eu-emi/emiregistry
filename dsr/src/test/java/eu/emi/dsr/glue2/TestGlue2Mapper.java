@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
@@ -28,9 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
-import eu.emi.dsr.util.ServiceUtil;
-import eu.eu_emi.emiregistry.ObjectFactory;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**
