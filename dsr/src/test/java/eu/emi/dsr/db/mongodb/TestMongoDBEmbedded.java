@@ -31,8 +31,6 @@ public class TestMongoDBEmbedded extends Assert{
 			.getLogger(TestMongoDBEmbedded.class);
 	static Process p = null;
 	
-	static String mongodPath = "/usr/sbin/mongod";	
-
 	@Before
 	public void setUp() throws Exception {
 		// @Todo Run mongo with a test specific .js file to produce initial data
@@ -46,6 +44,13 @@ public class TestMongoDBEmbedded extends Assert{
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		String mongodPath = "/usr/sbin/mongod";
+		File daemonFile = new File("/usr/sbin/mongod");
+		if (!daemonFile.exists()) {
+			mongodPath = "/usr/bin/mongod";
+		}
+		
+		
 		File f = new File("./mongodata"); 
 		if (!f.exists()) {
 			f.mkdir();
@@ -67,7 +72,7 @@ public class TestMongoDBEmbedded extends Assert{
 		MongoDBServiceDatabase m = new MongoDBServiceDatabase("localhost",27017,"testdb","testcol");
 		
 		m.insert(new BasicDBObject("testname", "testvalue"));
-		
+				
 		List<ServiceObject> lst = m.findAll();
 		
 		System.out.println(lst.get(0));
