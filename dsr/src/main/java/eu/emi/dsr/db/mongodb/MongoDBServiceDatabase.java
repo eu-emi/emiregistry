@@ -1,6 +1,5 @@
 package eu.emi.dsr.db.mongodb;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -304,7 +303,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("result size: " + cur.size());
 		}
 		List<ServiceObject> resultCollection = new ArrayList<ServiceObject>();
-		int i = 0;
 		try {
 			while (cur.hasNext()) {
 				ServiceObject s = new ServiceObject(cur.next().toString());

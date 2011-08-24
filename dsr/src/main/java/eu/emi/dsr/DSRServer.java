@@ -59,7 +59,7 @@ public class DSRServer {
 	 * @param conf
 	 */
 	public DSRServer(Configuration conf) {
-		this.conf = conf;
+		DSRServer.conf = conf;
 		init();
 	}
 

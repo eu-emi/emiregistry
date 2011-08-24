@@ -52,7 +52,6 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.security.util.KeystoreChecker;
 import eu.emi.dsr.util.Log;
 

@@ -11,13 +11,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.herasaf.xacml.core.function.impl.setFunction.DateUnionFunction;
-
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
-import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
@@ -62,7 +59,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 	@Override
 	Boolean checkDateTypes() {
 		// the format should be utc
-		for (Iterator iterator = jo.keys(); iterator.hasNext();) {
+		for (Iterator<?> iterator = jo.keys(); iterator.hasNext();) {
 			String key = null;
 			try {
 				key = (String) iterator.next();

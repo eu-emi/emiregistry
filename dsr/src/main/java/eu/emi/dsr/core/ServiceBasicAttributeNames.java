@@ -3,10 +3,7 @@
  */
 package eu.emi.dsr.core;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.codehaus.jettison.json.JSONArray;
 
 /**

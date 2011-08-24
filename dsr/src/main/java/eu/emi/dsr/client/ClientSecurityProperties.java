@@ -22,7 +22,6 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.dsr.security.ISecurityProperties;
 import eu.emi.dsr.security.client.IClientProperties;
 import eu.emi.dsr.security.util.KeystoreChecker;
 import eu.emi.dsr.util.Log;

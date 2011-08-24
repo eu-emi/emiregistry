@@ -3,19 +3,16 @@
  */
 package eu.emi.dsr.glue2;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -104,7 +101,7 @@ public class Glue2Mapper {
 		ExtensionsT ets = of.createExtensionsT();
 		int i = 1;
 		if (jo.length() > 0) {
-			for (Iterator iterator = jo.keys(); iterator.hasNext();) {
+			for (Iterator<?> iterator = jo.keys(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 
 				st.setID(jo.getJSONObject("_id").getString("$oid"));

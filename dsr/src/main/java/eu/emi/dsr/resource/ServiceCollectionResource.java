@@ -109,7 +109,7 @@ public class ServiceCollectionResource {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
 		Map<String, Object> m = new HashMap<String, Object>();
-		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			m.put(key, queryParams.getFirst(key));
 		}
@@ -138,12 +138,11 @@ public class ServiceCollectionResource {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
 		Map<String, Object> m = new HashMap<String, Object>();
-		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			m.put(key, queryParams.getFirst(key));
 		}
 
-		JSONArray jArr = null;
 		Glue2Mapper gm = new Glue2Mapper();
 		QueryResult qr = null;
 		try {
@@ -172,7 +171,7 @@ public class ServiceCollectionResource {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
 		Map<String, Object> m = new HashMap<String, Object>();
-		for (Iterator iterator = s.iterator(); iterator.hasNext();) {
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			m.put(key, queryParams.getFirst(key));
 		}
