@@ -60,7 +60,9 @@ public class Configuration implements Cloneable{
 		String retval = "";
 		try {
 			retval = props.getProperty(key);
-		} catch (NullPointerException e) {}
+		} catch (NullPointerException e) {
+			return null;
+		}
 		return retval;
 	}
 
