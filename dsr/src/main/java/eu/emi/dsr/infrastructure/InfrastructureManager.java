@@ -431,6 +431,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @param int, del filter value
 	 * @return None
 	 */
+	@SuppressWarnings("unused")
 	private void databaseclean(int ne, int del){
 		logger.debug("Database cleaning! new="+ne+" del="+del);
 		try {

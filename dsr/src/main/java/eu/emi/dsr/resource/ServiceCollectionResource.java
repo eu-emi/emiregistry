@@ -30,7 +30,6 @@ import com.mongodb.MongoException;
 import eu.emi.dsr.core.ServiceColManager;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
-import eu.emi.dsr.glue2.Glue2Mapper;
 import eu.emi.dsr.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
@@ -143,7 +142,6 @@ public class ServiceCollectionResource {
 			m.put(key, queryParams.getFirst(key));
 		}
 
-		Glue2Mapper gm = new Glue2Mapper();
 		QueryResult qr = null;
 		try {
 			qr = col.queryGlue2(m);
