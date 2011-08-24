@@ -42,6 +42,7 @@ public class Glue2Mapper {
 	private static SimpleDateFormat formatter = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 	
+	@SuppressWarnings("unused")
 	private static List<String> lstNames;
 	private final ObjectFactory of;
 	/**
@@ -70,6 +71,7 @@ public class Glue2Mapper {
 	public JAXBElement<ServiceT>[] toGlue2Service(JSONArray jo)
 			throws JSONException, DatatypeConfigurationException,
 			ParseException {
+		@SuppressWarnings("unchecked")
 		JAXBElement<ServiceT>[] e = new JAXBElement[jo.length()];
 		List<JAXBElement<ServiceT>> lst = new ArrayList<JAXBElement<ServiceT>>();
 						

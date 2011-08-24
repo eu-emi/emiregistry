@@ -45,7 +45,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	public MongoDBServiceDatabase() {
 		if (DSRServer.getConfiguration() == null) {
-			DSRServer s = new DSRServer(new Configuration(new Properties()));
+			new DSRServer(new Configuration(new Properties()));
 		}
 		String hostname = DSRServer.getProperty(
 				ServerConstants.MONGODB_HOSTNAME, "localhost");
@@ -94,7 +94,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			String colName) {
 		try {
 			if (DSRServer.getConfiguration() == null) {
-				DSRServer s = new DSRServer(new Configuration(new Properties()));
+				new DSRServer(new Configuration(new Properties()));
 			}
 			connection = MongoConnection.get(hostname, port);
 			database = connection.getDB(dbName);
@@ -122,6 +122,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public void insert(ServiceObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
+		@SuppressWarnings("unused")
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
 			if (logger.isDebugEnabled()) {
@@ -148,6 +149,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	public void insert(DBObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
+		@SuppressWarnings("unused")
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
 			if (logger.isDebugEnabled()) {
@@ -412,6 +414,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public JSONArray queryDistinctJSON(String attributeName) {
+		@SuppressWarnings("unchecked")
 		List<DBObject> lst = serviceCollection.distinct(attributeName);
 		JSONArray arr = new JSONArray(lst);
 		return arr;

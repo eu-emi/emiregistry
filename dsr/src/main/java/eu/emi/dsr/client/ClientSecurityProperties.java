@@ -297,6 +297,7 @@ public class ClientSecurityProperties implements IClientProperties {
 		// }
 	}
 
+	@SuppressWarnings("unused")
 	private void loadGWCert(String alias) {
 		String truststoreName = getTruststore();
 		String truststoreType = getTruststoreType();

@@ -35,6 +35,7 @@ public class JettyServer {
 
 	Server server;
 	boolean started = false;
+	@SuppressWarnings("rawtypes")
 	private Class appClass;
 	private String hostName;
 	private Integer portNumber;
@@ -50,7 +51,7 @@ public class JettyServer {
 	 * @param class1
 	 * @param c
 	 */
-	public JettyServer(Class clazz, Configuration c) {
+	public JettyServer(@SuppressWarnings("rawtypes") Class clazz, Configuration c) {
 		if (clazz == null) {
 			throw new IllegalArgumentException("Application ");
 		}

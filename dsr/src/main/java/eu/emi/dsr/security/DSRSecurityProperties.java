@@ -263,6 +263,7 @@ public class DSRSecurityProperties implements ISecurityProperties, Cloneable {
 //	    	}
 	}
 	
+	@SuppressWarnings("unused")
 	private void loadGWCert(String alias){
 		String truststoreName=getTruststore();
 		String truststoreType=getTruststoreType();

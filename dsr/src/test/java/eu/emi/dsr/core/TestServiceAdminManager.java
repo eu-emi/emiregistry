@@ -57,7 +57,7 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 		
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
+		c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {

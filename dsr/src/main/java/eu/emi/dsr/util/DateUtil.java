@@ -46,7 +46,7 @@ public class DateUtil {
 	public static Date addDays(Date date, Integer days) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		c.add(c.DATE, days);
+		c.add(Calendar.DATE, days);
 		return c.getTime();
 	}
 

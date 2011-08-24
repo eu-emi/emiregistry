@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -37,8 +36,6 @@ import eu.emi.dsr.util.ServiceUtil;
  * 
  */
 public class ServiceAdminManager {
-	private static Logger logger = Log.getLogger(Log.DSR,
-			ServiceAdminManager.class);
 	private ServiceDatabase serviceDB = null;
 
 	

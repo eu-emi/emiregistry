@@ -2,17 +2,13 @@ package eu.emi.dsr.db.mongodb;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.Properties;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -29,7 +25,6 @@ import eu.emi.dsr.db.PersistentStoreFailureException;
  * @author a.memon
  */
 public class TestMongoDBServiceDatabase extends MongoDBTestBase{
-	private static Logger logger = Logger.getLogger(TestMongoDBServiceDatabase.class);
 	public static MongoDBServiceDatabase db;
 
 	@Rule
@@ -38,7 +33,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 	
 	@Before
 	public void setUp() {
-		DSRServer s = new DSRServer(new Configuration(new Properties()));
+		new DSRServer(new Configuration(new Properties()));
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services-test");
 		db.deleteAll();
