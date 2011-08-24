@@ -5,9 +5,12 @@ package eu.emi.dsr.infrastructure;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -69,9 +72,7 @@ public class TestDBSyncTestPart3 {
 	@Test
 	public void testDelayedUpdateRemove() throws JSONException, IOException, InterruptedException{
 		// one update to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo2.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 
 		// Updating the entry
@@ -102,9 +103,7 @@ public class TestDBSyncTestPart3 {
 	@Test
 	public void testDelayedUpdate() throws JSONException, IOException, InterruptedException{
 		// one update to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 
 		// Updating the entry
@@ -132,9 +131,7 @@ public class TestDBSyncTestPart3 {
 	@Test
 	public void testDelayedRegistrationRemove() throws JSONException, IOException, InterruptedException{
 		// one registration to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo4.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo4.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
 		ClientResponse res = getChildClient("/serviceadmin").accept(

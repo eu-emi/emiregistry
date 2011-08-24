@@ -11,6 +11,9 @@
 				<include>*.xml</include>
 				<include>*.conf</include>
 			</includes>
+			<excludes>
+				<exclude>pom.xml</exclude>
+			</excludes>
 		</fileSet>
 
 		<!-- <fileSet> <directory>doc</directory> </fileSet> -->
@@ -28,11 +31,11 @@
 		</fileSet>
 		<fileSet>
 			<!-- <excludes> <exclude>registry_*</exclude> </excludes> -->
-			<directory>src/main/conf</directory>
+			<directory>src/main/resources/conf</directory>
 			<outputDirectory>/conf</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/certs</directory>
+			<directory>src/test/resources/certs</directory>
 			<outputDirectory>/certs</outputDirectory>
 		</fileSet>
 		<fileSet>

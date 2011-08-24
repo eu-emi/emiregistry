@@ -5,9 +5,12 @@ package eu.emi.dsr.infrastructure;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -65,9 +68,7 @@ public class TestDBSyncTestPart4 {
 						.getAttributeName()));
 
 		// one registration to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo5.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo5.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
 		ClientResponse res = getChildClient("/serviceadmin").accept(

@@ -71,16 +71,16 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-server.p12");
+				"src/certs/demo-server.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
 		p.put("registry.security.attributes.order", "FILE");
 		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
 		p.put("registry.security.attributes.FILE.file", "src/test/resources/users/testUudb-strict.xml");
-		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/main/conf/xacml2.config");
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
 	}
 
@@ -93,7 +93,7 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/main/resources/log4j.properties");	
+				"src/test/resources/conf/log4j.properties");	
 		
 	}
 
@@ -114,10 +114,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-user.p12");
+				"src/certs/demo-user.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;
@@ -132,10 +132,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-user-2.p12");
+				"src/certs/demo-user-2.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;

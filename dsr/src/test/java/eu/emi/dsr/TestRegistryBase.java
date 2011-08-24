@@ -40,7 +40,7 @@ public class TestRegistryBase {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/main/resources/log4j.properties");
+				"src/test/resources/conf/log4j.properties");
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");

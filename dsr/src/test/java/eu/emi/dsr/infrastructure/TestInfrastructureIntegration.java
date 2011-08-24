@@ -4,9 +4,13 @@
 package eu.emi.dsr.infrastructure;
 
 import static org.junit.Assert.*;
+
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
@@ -65,9 +69,7 @@ public class TestInfrastructureIntegration {
 	@Test
 	public void testRegister() throws JSONException, IOException,
 			InterruptedException {
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
 		ClientResponse res = getChildClient("/serviceadmin").accept(
@@ -89,9 +91,7 @@ public class TestInfrastructureIntegration {
 	@Test
 	public void testUpdate() throws JSONException, IOException,
 			InterruptedException {
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering the service: " + jo);
 		getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
@@ -128,9 +128,7 @@ public class TestInfrastructureIntegration {
 
 	@Test
 	public void testDelete() throws JSONException, IOException {
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
 		getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)

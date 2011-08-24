@@ -77,16 +77,6 @@ public class ServiceUtil {
 		return timestamp;
 	}
 
-	public synchronized static String convertFileToString(File file)
-			throws IOException {
-		return convertStreamToString(new FileInputStream(file));
-	}
-
-	public synchronized static String convertFileToString(String filePath)
-			throws IOException {
-		return convertStreamToString(new FileInputStream(new File(filePath)));
-	}
-
 	public synchronized static String convertStreamToString(InputStream is)
 			throws IOException {
 		/*

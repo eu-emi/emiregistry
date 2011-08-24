@@ -6,6 +6,7 @@ package eu.emi.dsr.glue2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -19,6 +20,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -40,9 +42,7 @@ public class TestGlue2Mapper {
 
 	@Before
 	public void setup() throws IOException, JSONException {
-		jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/mongo-serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 	}
 
 	@Test

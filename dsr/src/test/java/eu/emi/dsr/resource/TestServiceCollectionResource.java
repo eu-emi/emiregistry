@@ -7,21 +7,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXB;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.emi.dsr.TestRegistryBase;
@@ -48,7 +44,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	public void setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
+		c.add(Calendar.MONTH, 12);
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services-test");
 		JSONObject date = new JSONObject();
