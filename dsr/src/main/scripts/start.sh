@@ -76,4 +76,9 @@ fi
 #go
 #
 
+if [ ! -d  logs ]
+then
+  mkdir -p logs
+fi
+
 nohup java ${MEM} ${OPTS} ${DEFS} -cp ${CP} eu.emi.dsr.DSRServer ${PARAM} > logs/startup.log 2>&1 & echo $! > LAST_PID
