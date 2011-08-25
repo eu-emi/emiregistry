@@ -57,7 +57,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		}
         try {
         	String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
-        	if (h2db.isEmpty()){
+        	if (h2db == null || h2db.isEmpty()){
         		h2db = "./data/Emiregistry";
         	}
         	conn = DriverManager.getConnection("jdbc:h2:"+h2db, "sa", "");
@@ -431,6 +431,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @param int, del filter value
 	 * @return None
 	 */
+	@SuppressWarnings("unused")
 	private void databaseclean(int ne, int del){
 		logger.debug("Database cleaning! new="+ne+" del="+del);
 		try {

@@ -40,7 +40,7 @@ public class DBObjectEncoder {
     public static DBObject encode(JSONObject o) {
         BasicDBObject result = new BasicDBObject();
         try {
-            Iterator i = o.keys();
+            Iterator<?> i = o.keys();
             while (i.hasNext()) {
                 String k = (String)i.next();
                 Object v = o.get(k);

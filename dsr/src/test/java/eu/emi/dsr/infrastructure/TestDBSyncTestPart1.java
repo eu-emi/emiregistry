@@ -6,8 +6,11 @@ package eu.emi.dsr.infrastructure;
 import static org.junit.Assert.*;
 
 
+import java.io.File;
 import java.io.IOException;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.BeforeClass;
@@ -21,7 +24,6 @@ import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
-import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start
@@ -63,9 +65,7 @@ public class TestDBSyncTestPart1 {
 	@Test
 	public void testDelayedRegistration() throws JSONException, IOException, InterruptedException{
 		// one registration to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 		System.out.println("registering: " + jo);
 		ClientResponse res = getChildClient("/serviceadmin").accept(
@@ -87,9 +87,7 @@ public class TestDBSyncTestPart1 {
 		Thread.sleep(1000);
 
 		// 2nd registration to the child server
-		JSONObject jo2 = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo2.json"));
+		JSONObject jo2 = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
 		jo2 = DateUtil.setExpiryTime(jo2, 12);
 		System.out.println("registering2: " + jo2);
 		ClientResponse res2 = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
@@ -132,9 +130,7 @@ public class TestDBSyncTestPart1 {
 	@Test
 	public void testDelayedUpdate() throws InterruptedException, JSONException, IOException{
 		// one registration to the child server
-		JSONObject jo = new JSONObject(
-				ServiceUtil
-						.convertFileToString("src/test/resources/serviceinfo.json"));
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
 
 		// Updating the entry

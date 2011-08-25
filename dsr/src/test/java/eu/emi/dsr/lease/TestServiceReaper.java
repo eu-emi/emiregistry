@@ -4,7 +4,6 @@
 package eu.emi.dsr.lease;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -16,16 +15,13 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ogf.schemas.glue._2009._03.spec_2.DataStoreT;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
-import eu.emi.dsr.core.ServiceManagerFactory;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
@@ -46,11 +42,11 @@ public class TestServiceReaper extends MongoDBTestBase{
 		p = new Properties();
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "servicestest");
+		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		Configuration conf = new Configuration(p);
-		DSRServer s = new DSRServer(conf);
+		new DSRServer(conf);
 		adminMgr = new ServiceAdminManager();
 		adminMgr.removeAll();
 	}
@@ -96,7 +92,7 @@ public class TestServiceReaper extends MongoDBTestBase{
 					+ UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
 			Calendar c1 = Calendar.getInstance();
-			c1.add(Calendar.SECOND, 2);
+			c1.add(Calendar.SECOND, 3);
 			try {
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {

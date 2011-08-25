@@ -38,9 +38,6 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.cert.CertPath;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,9 +54,7 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-
 import eu.emi.dsr.DSRServer;
-//import eu.unicore.security.Xlogin;
 import eu.emi.dsr.pdp.PDPResult;
 import eu.emi.dsr.pdp.PDPResult.Decision;
 import eu.emi.dsr.pdp.RegistryPDP;

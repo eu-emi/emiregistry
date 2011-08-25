@@ -34,7 +34,6 @@
 package eu.emi.dsr.util;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.UUID;
 
 import org.apache.xmlbeans.XmlCursor;

@@ -4,7 +4,6 @@
 package eu.emi.dsr.core;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.Character.UnicodeBlock;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +33,6 @@ public class TestJSON {
 	@Test
 	public void test() throws JSONException {
 		Map<String, String> map = new HashMap<String, String>();
-		Character c = new Character('/');
-		UnicodeBlock d = null;
 		map.put("serviceurl", "http:/");
 		JSONObject jo = new JSONObject(map);
 		System.out.println(jo.get("serviceurl"));
@@ -47,11 +43,7 @@ public class TestJSON {
 	@Test
 	public void testArray() throws JSONException {
 		Map<String, String> map = new HashMap<String, String>();
-		Character c = new Character('/');
-		UnicodeBlock d = null;
 		map.put("serviceurl", "http:/");
-		JSONObject jo = new JSONObject(map);
-
 		JSONArray j = new JSONArray();
 		j.put(map);
 		j.put(map);
@@ -70,7 +62,7 @@ public class TestJSON {
 		 * you application folder or inside a jar file if the program is packed
 		 * as a jar.
 		 */
-		InputStream is = new FileInputStream(new File("src/test/resources/serviceinfo.json"));
+		InputStream is = new FileInputStream(new File("src/test/resources/json/serviceinfo.json"));
 		
 		/*
 		 * Call the method to convert the stream to string

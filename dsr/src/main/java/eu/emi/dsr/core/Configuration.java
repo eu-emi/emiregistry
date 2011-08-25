@@ -11,6 +11,7 @@ import java.util.Properties;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class Configuration implements Cloneable{
@@ -19,9 +20,9 @@ public class Configuration implements Cloneable{
 	/**
 	 * 
 	 */
-	public Configuration(final String path) {
-		if (path != null) {
-			this.path = path;
+	public Configuration(final String pathparam) {
+		if (pathparam != null) {
+			path = pathparam;
 		} else {
 			try {
 				throw new Exception("path cannot be empty");
@@ -56,7 +57,13 @@ public class Configuration implements Cloneable{
 	}
 
 	public String getProperty(String key) {
-		return props.getProperty(key);
+		String retval = "";
+		try {
+			retval = props.getProperty(key);
+		} catch (NullPointerException e) {
+			return null;
+		}
+		return retval;
 	}
 
 	public Integer getIntegerProperty(String key) {

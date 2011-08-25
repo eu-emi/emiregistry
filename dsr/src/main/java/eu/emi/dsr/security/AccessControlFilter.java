@@ -34,6 +34,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 	@Context
 	HttpServletRequest httpRequest;
 	
+	@SuppressWarnings("unused")
 	private static final String REALM = "HTTPS authentication";
 
 	/*

@@ -113,7 +113,7 @@ public class RegistryThreadPool {
 
 	protected static void configureScheduler() {
 		if (DSRServer.getConfiguration() == null) {
-			DSRServer s = new DSRServer(new Configuration(new Properties()));
+			new DSRServer(new Configuration(new Properties()));
 		}
 		String corePoolSizeParam = DSRServer.getConfiguration().getProperty(
 				CORE_POOL_SIZE, "3");

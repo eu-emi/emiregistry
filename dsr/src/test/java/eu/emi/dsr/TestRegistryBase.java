@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.security.AccessControlFilter;
 
 /**
  * 
@@ -40,14 +39,12 @@ public class TestRegistryBase {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/main/resources/log4j.properties");
+				"src/test/resources/conf/log4j.properties");
 		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
-		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
-		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
-				AccessControlFilter.class.getName());
+		p.put(ServerConstants.MONGODB_COL_CREATE, "true");		
 		Configuration conf = new Configuration(p);
 		server = new DSRServer(conf);
 		server.startJetty();

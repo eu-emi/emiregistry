@@ -19,8 +19,6 @@ public class MongoDBTestBase {
 			.getLogger(MongoDBTestBase.class);
 	static Process p = null;
 	
-	static String mongodPath = "/usr/sbin/mongod";	
-
 	@AfterClass
 	public static void afterClass() throws Exception {
 		// Stop mongod process
@@ -42,8 +40,15 @@ public class MongoDBTestBase {
 			}
 		}
 	}
+	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		String mongodPath = "/usr/sbin/mongod";
+		File daemonFile = new File("/usr/sbin/mongod");
+		if (!daemonFile.exists()) {
+			mongodPath = "/usr/bin/mongod";
+		}
+		
 		File f = new File("./mongodata");
 		if (!f.exists()) {
 			f.mkdir();

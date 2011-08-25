@@ -20,7 +20,7 @@ public class TestEventManager {
 	@Before
 	public void setup() {
 		Properties p = new Properties();
-		DSRServer d = new DSRServer(new Configuration(p));
+		new DSRServer(new Configuration(p));
 	}
 
 	@Test

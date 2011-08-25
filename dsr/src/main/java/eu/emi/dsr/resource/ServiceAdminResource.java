@@ -85,7 +85,7 @@ public class ServiceAdminResource {
 		return result;
 	}
 
-	private static String extractServiceUrlFromUri(UriInfo infos) {
+	private String extractServiceUrlFromUri(UriInfo infos) {
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();
 		String attrName = ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName();
@@ -126,7 +126,7 @@ public class ServiceAdminResource {
 		} catch (NullPointerException e){
 			throw new WebApplicationException(e);
 		} catch (ExistingResourceException e) {
-			return Response.status(Status.CONFLICT).build();
+			return Response.status(Status.CONFLICT).entity(serviceInfo).build();
 		}
 	}
 

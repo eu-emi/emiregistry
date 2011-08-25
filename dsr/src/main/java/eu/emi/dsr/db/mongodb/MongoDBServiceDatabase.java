@@ -1,6 +1,5 @@
 package eu.emi.dsr.db.mongodb;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -46,7 +45,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	public MongoDBServiceDatabase() {
 		if (DSRServer.getConfiguration() == null) {
-			DSRServer s = new DSRServer(new Configuration(new Properties()));
+			new DSRServer(new Configuration(new Properties()));
 		}
 		String hostname = DSRServer.getProperty(
 				ServerConstants.MONGODB_HOSTNAME, "localhost");
@@ -95,7 +94,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			String colName) {
 		try {
 			if (DSRServer.getConfiguration() == null) {
-				DSRServer s = new DSRServer(new Configuration(new Properties()));
+				new DSRServer(new Configuration(new Properties()));
 			}
 			connection = MongoConnection.get(hostname, port);
 			database = connection.getDB(dbName);
@@ -123,6 +122,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public void insert(ServiceObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
+		@SuppressWarnings("unused")
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
 			if (logger.isDebugEnabled()) {
@@ -149,6 +149,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	public void insert(DBObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
+		@SuppressWarnings("unused")
 		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
 			if (logger.isDebugEnabled()) {
@@ -304,7 +305,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("result size: " + cur.size());
 		}
 		List<ServiceObject> resultCollection = new ArrayList<ServiceObject>();
-		int i = 0;
 		try {
 			while (cur.hasNext()) {
 				ServiceObject s = new ServiceObject(cur.next().toString());
@@ -414,6 +414,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public JSONArray queryDistinctJSON(String attributeName) {
+		@SuppressWarnings("unchecked")
 		List<DBObject> lst = serviceCollection.distinct(attributeName);
 		JSONArray arr = new JSONArray(lst);
 		return arr;

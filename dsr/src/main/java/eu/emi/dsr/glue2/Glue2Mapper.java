@@ -3,19 +3,16 @@
  */
 package eu.emi.dsr.glue2;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -45,6 +42,7 @@ public class Glue2Mapper {
 	private static SimpleDateFormat formatter = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 	
+	@SuppressWarnings("unused")
 	private static List<String> lstNames;
 	private final ObjectFactory of;
 	/**
@@ -73,6 +71,7 @@ public class Glue2Mapper {
 	public JAXBElement<ServiceT>[] toGlue2Service(JSONArray jo)
 			throws JSONException, DatatypeConfigurationException,
 			ParseException {
+		@SuppressWarnings("unchecked")
 		JAXBElement<ServiceT>[] e = new JAXBElement[jo.length()];
 		List<JAXBElement<ServiceT>> lst = new ArrayList<JAXBElement<ServiceT>>();
 						
@@ -104,10 +103,10 @@ public class Glue2Mapper {
 		ExtensionsT ets = of.createExtensionsT();
 		int i = 1;
 		if (jo.length() > 0) {
-			for (Iterator iterator = jo.keys(); iterator.hasNext();) {
+			for (Iterator<?> iterator = jo.keys(); iterator.hasNext();) {
 				String type = (String) iterator.next();
-
-				st.setID(jo.getJSONObject("_id").getString("$oid"));
+				
+				
 
 				st.setName(jo.has(ServiceBasicAttributeNames.SERVICE_NAME
 						.getAttributeName()) ? jo
@@ -141,7 +140,11 @@ public class Glue2Mapper {
 										.getAttributeName()).getString("$date")))
 						: null);
 
-				et.setID(jo.getJSONObject("_id").getString("$oid"));
+				if (jo.has("_id")) {
+					st.setID(jo.getJSONObject("_id").getString("$oid"));
+					et.setID(jo.getJSONObject("_id").getString("$oid"));
+				}
+				
 				et.setName(jo.has(ServiceBasicAttributeNames.SERVICE_NAME
 						.getAttributeName()) ? jo
 						.getString(ServiceBasicAttributeNames.SERVICE_NAME

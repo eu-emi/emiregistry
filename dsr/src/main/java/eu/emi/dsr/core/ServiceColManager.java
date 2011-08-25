@@ -3,20 +3,15 @@
  */
 package eu.emi.dsr.core;
 
-import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.Map;
 
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
-
 import com.mongodb.MongoException;
 
 import eu.emi.dsr.db.PersistentStoreFailureException;

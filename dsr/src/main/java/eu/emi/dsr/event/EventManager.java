@@ -6,10 +6,7 @@ package eu.emi.dsr.event;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-
 import eu.emi.dsr.core.RegistryThreadPool;
 
 /**
@@ -29,7 +26,7 @@ public class EventManager {
 		RegistryThreadPool.getExecutorService().execute(new Runnable() {			
 			@Override
 			public void run() {
-				for (Iterator iterator = lstEvent.iterator(); iterator.hasNext();) {
+				for (Iterator<EventReciever> iterator = lstEvent.iterator(); iterator.hasNext();) {
 					EventReciever eventReciever = (EventReciever) iterator
 							.next();
 					eventReciever.recieve(e);

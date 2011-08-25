@@ -25,9 +25,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.pdp.local.LocalHerasafPDP;
-import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.ISecurityProperties;
-//import eu.unicore.uas.pdp.local.LocalHerasafPDP;
 
 /**
  * @author a.memon
@@ -71,16 +69,16 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-server.p12");
+				"src/test/resources/certs/demo-server.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
 		p.put("registry.security.attributes.order", "FILE");
 		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
-		p.put("registry.security.attributes.FILE.file", "src/test/resources/users/testUudb-strict.xml");
-		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/main/conf/xacml2.config");
+		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUudb-strict.xml");
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
 	}
 
@@ -93,9 +91,7 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
 		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		p.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/main/resources/log4j.properties");
-		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST,
-				AccessControlFilter.class.getName());
+				"src/test/resources/conf/log4j.properties");	
 		
 	}
 
@@ -116,10 +112,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-user.p12");
+				"src/test/resources/certs/demo-user.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;
@@ -134,10 +130,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/main/certs/demo-user-2.p12");
+				"src/test/resources/certs/demo-user-2.p12");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/main/certs/demo-server.jks");
+				"src/test/resources/certs/demo-server.jks");
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
 		ClientSecurityProperties csp = new ClientSecurityProperties(p);
 		return csp;

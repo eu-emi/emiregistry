@@ -4,14 +4,10 @@
 package eu.emi.dsr.db.mongodb;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.DateCache;
-import org.eclipse.jetty.util.ajax.JSONDateConvertor;
-
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
