@@ -11,13 +11,14 @@ import org.codehaus.jettison.json.JSONArray;
  * 
  */
 public enum ServiceBasicAttributeNames {
-	SERVICE_NAME("Service_Name"), SERVICE_TYPE("Service_Type"), SERVICE_ENDPOINT_URL(
-			"Service_Endpoint_URL"), SERVICE_CREATED_ON("Service_CreationTime",
-			Date.class), SERVICE_CAPABILITY("Service_Capability"), SERVICE_QUALITYLEVEL(
-			"Service_QualityLevel"),SERVICE_ENDPOINT_QUALITYLEVEL(
-			"Service_Endpoint_QualityLevel"), SERVICE_COMPLEXITY("Service_Complexity"), SERVICE_VALIDITY(
-			"Service_Validity", Long.class), SERVICE_EXPIRE_ON(
-			"Service_ExpireOn", Date.class), SERVICE_UPDATE_SINCE(
+	SERVICE_NAME("Service_Name", null, "Service Name"), SERVICE_TYPE(
+			"Service_Type", null, "Service Type"), SERVICE_ENDPOINT_URL(
+			"Service_Endpoint_URL", null, "Service URL (Mandatory Attribute)"), SERVICE_CREATED_ON(
+			"Service_CreationTime", Date.class), SERVICE_CAPABILITY(
+			"Service_Capability"), SERVICE_QUALITYLEVEL("Service_QualityLevel"), SERVICE_ENDPOINT_QUALITYLEVEL(
+			"Service_Endpoint_QualityLevel"), SERVICE_COMPLEXITY(
+			"Service_Complexity"), SERVICE_VALIDITY("Service_Validity",
+			Long.class), SERVICE_EXPIRE_ON("Service_ExpireOn", Date.class), SERVICE_UPDATE_SINCE(
 			"updateSince", Date.class), SERVICE_OWNER("serviceOwner"), SERVICE_EXTENSIONS(
 			"Service_Extensions", JSONArray.class), SERVICE_ENDPOINT_CAPABILITY(
 			"Service_Endpoint_Capability"), SERVICE_ENDPOINT_TECHNOLOGY(
@@ -37,14 +38,14 @@ public enum ServiceBasicAttributeNames {
 			"Service_Endpoint_DowntimeAnnounce", Date.class), SERVICE_ENDPOINT_DOWNTIME_START(
 			"Service_Endpoint_DowntimeStart", Date.class), SERVICE_ENDPOINT_DOWNTIME_END(
 			"Service_Endpoint_DowntimeEnd", Date.class), SERVICE_ENDPOINT_DOWNTIME_INFO(
-			"Service_DowntimeInfo"),SERVICE_ENDPOINT_IMPL_NAME(
-			"Service_Endpoint_ImplementationName"),SERVICE_ENDPOINT_IMPL_VERSION(
-			"Service_Endpoint_ImplementationVersion"),SERVICE_ENDPOINT_IMPLEMENTOR(
+			"Service_DowntimeInfo"), SERVICE_ENDPOINT_IMPL_NAME(
+			"Service_Endpoint_ImplementationName"), SERVICE_ENDPOINT_IMPL_VERSION(
+			"Service_Endpoint_ImplementationVersion"), SERVICE_ENDPOINT_IMPLEMENTOR(
 			"Service_Endpoint_Implementor"), SERVICE_ID("_id");
 
 	private String attributeName;
-	
 	private Class<?> attributeType;
+	private String attributeDesc;
 
 	/**
 	 * 
@@ -56,8 +57,13 @@ public enum ServiceBasicAttributeNames {
 	private ServiceBasicAttributeNames(String attr, Class<?> type) {
 		this.attributeName = attr;
 		this.attributeType = type;
-		
-		
+	}
+
+	private ServiceBasicAttributeNames(String attr, Class<?> type,
+			String description) {
+		this.attributeName = attr;
+		this.attributeType = type;
+		this.attributeDesc = description;
 	}
 
 	/**
@@ -78,6 +84,15 @@ public enum ServiceBasicAttributeNames {
 		}
 		return attributeType;
 	}
-	
-	
+
+	/**
+	 * @return
+	 */
+	public String getAttributeDesc() {
+		if (attributeDesc == null) {
+			return "Description Not Define";
+		}
+		return attributeDesc;
+	}
+
 }
