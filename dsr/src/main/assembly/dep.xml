@@ -37,14 +37,7 @@
 		<fileSet>
 			<directory>src/test/resources/certs</directory>
 			<outputDirectory>/certs</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>src/main/resources</directory>
-			<includes>
-				<include>log4j.properties</include>
-			</includes>
-			<outputDirectory>/conf</outputDirectory>
-		</fileSet>
+		</fileSet>		
 		<!-- <fileSet> <directory>target/site</directory> <outputDirectory>doc</outputDirectory> 
 			</fileSet> -->
 		<!-- -->

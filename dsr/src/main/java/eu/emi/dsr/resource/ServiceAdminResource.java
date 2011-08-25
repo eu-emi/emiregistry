@@ -6,13 +6,16 @@ package eu.emi.dsr.resource;
 import java.security.cert.X509Certificate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -69,6 +72,7 @@ public class ServiceAdminResource {
 	}
 
 	@GET
+	@Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
 		logger.debug("getting service by url");
@@ -85,14 +89,13 @@ public class ServiceAdminResource {
 		return result;
 	}
 
-	private String extractServiceUrlFromUri(UriInfo infos) {
+	private String extractServiceUrlFromUri(UriInfo infos) throws IllegalArgumentException{
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();
 		String attrName = ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName();
 		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
 		if (key == "unknown") {
-			throw new WebApplicationException(new IllegalArgumentException(
-					"invalid param"));
+			throw new IllegalArgumentException();
 		}
 		String value = mm
 				.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -104,7 +107,10 @@ public class ServiceAdminResource {
 	 * adding array of entries
 	 * */
 	
+	
 	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
 	public Response registerService(JSONObject serviceInfo)
 			throws WebApplicationException{
 		Integer length = serviceInfo.length();
@@ -131,19 +137,22 @@ public class ServiceAdminResource {
 	}
 
 	@PUT
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	public Response updateService(JSONObject serviceInfo)
 			throws WebApplicationException {
 		try {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
+			String url = serviceInfo
+			.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName());
 			serviceInfo
 					.put(ServiceBasicAttributeNames.SERVICE_OWNER
 							.getAttributeName(), c.getDistinguishedName());
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service by url: "
-						+ serviceInfo
-								.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-										.getAttributeName()) + ", Owned by: "
+						+ url + ", Owned by: "
 						+ owner);
 			}
 
@@ -154,18 +163,24 @@ public class ServiceAdminResource {
 									serviceInfo
 											.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 													.getAttributeName()))) {
-				JSONObject res = serviceAdmin.updateService(serviceInfo);
+				JSONObject res;
+				try {
+					res = serviceAdmin.updateService(serviceInfo);					
+				} catch (UnknownServiceException e) {
+					return Response.status(Status.NOT_FOUND).build();
+				}
 				return Response.ok(res).build();
 			} else {
-				return Response.status(Status.UNAUTHORIZED).build();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Service with url: "+serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName())+" does not exist.");
+				}
+				return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
 			}
 
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
 		} catch (JSONException e) {
 			throw new WebApplicationException(e);
-		} catch (UnknownServiceException e) {
-			return Response.noContent().build();
 		} catch (QueryException e) {
 			throw new WebApplicationException(e);
 		} catch (PersistentStoreFailureException e) {
@@ -181,25 +196,27 @@ public class ServiceAdminResource {
 	 * */
 	@DELETE
 	public Response deleteService(@Context UriInfo infos) {
-
+		String serviceurl = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
-			String serviceurl = extractServiceUrlFromUri(infos);
+			serviceurl = extractServiceUrlFromUri(infos);
 			logger.debug("deleting service by url: " + serviceurl
 					+ ", Owned by: " + owner);
 			if (owner != null && serviceAdmin.checkOwner(owner, serviceurl)) {
 				serviceAdmin.removeService(serviceurl);
 			} else {
-				return Response.status(Status.UNAUTHORIZED).build();
+				return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+serviceurl).build();
 			}
 
 		} catch (UnknownServiceException e) {
-			return Response.noContent().build();
+			return Response.status(Status.NOT_FOUND).entity("Service with URL: "+serviceurl+" does not exist").build();
 		} catch (QueryException e) {
 			throw new WebApplicationException(e);
 		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
+		} catch(IllegalArgumentException e){
+			return Response.status(Status.BAD_REQUEST).entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"+ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()+" = <SERVICE URL>").build();
 		}
 		return Response.ok().build();
 	}

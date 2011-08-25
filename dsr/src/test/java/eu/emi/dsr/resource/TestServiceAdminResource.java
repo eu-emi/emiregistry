@@ -66,6 +66,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	public void testRegisterService() throws JSONException,
 			InterruptedException {
+		Thread.sleep(3000000);
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
 
 		cr.getClientResource()
@@ -73,7 +74,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.post(getDummyServiceDesc());
 		
 
-		JSONObject jo = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1").get(JSONObject.class);
+		JSONObject jo = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals("http://1",
 				jo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName()));
@@ -92,7 +93,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		assertTrue(resJo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()).equalsIgnoreCase("http://2"));
 		
 		
-		JSONObject res = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").get(JSONObject.class);
+		JSONObject res = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals("http://2",
 				res.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
