@@ -3,15 +3,14 @@
  */
 package eu.emi.dsr.resource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXB;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -39,7 +38,7 @@ import eu.eu_emi.emiregistry.QueryResult;
 public class TestServiceCollectionResource extends TestRegistryBase {
 
 	public static MongoDBServiceDatabase db;
-
+	
 	@Before
 	public void setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
@@ -222,12 +221,36 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		try {
 			DSRClient cr = new DSRClient(BaseURI
 					+ "/services/query.xml?Service_Type=jms");
-			QueryResult o = cr.getClientResource().get(QueryResult.class);			
+			QueryResult o = cr.getClientResource().get(QueryResult.class);
+			JAXB.marshal(o, System.out);
 			assertTrue(o.getCount().equals(new BigInteger("50")));
 		} catch (Exception e) {
+			fail();
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGlue2QueryCollection1(){
+		try {
+			JSONObject entry1 = new JSONObject();
+			entry1.put(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					"http://1");
+			ServiceObject so = new ServiceObject(entry1);
+			db.insert(so);
+			
+			DSRClient cr = new DSRClient(BaseURI
+					+ "/services/query.xml?Service_Endpoint_URL=http://1");
+			QueryResult o = cr.getClientResource().get(QueryResult.class);
+			JAXB.marshal(o, System.out);
+			assertTrue(o.getCount().equals(new BigInteger("1")));
+		} catch (Exception e) {
+			fail();
 			e.printStackTrace();
 		}
 	}
 
+	
 	
 }
