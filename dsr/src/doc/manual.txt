@@ -1,0 +1,31 @@
+EMI Registry Manual
+===================
+EMI Registry Team <info@example.org>
+v1.0.0-SNAPSHOT, August 2011
+:revnumber: 1.0.0
+
+Overview
+--------
+
+The EMI Registry is a federated service registry based on REST-ful interfaces. The major functionalities of the registry includes 
+ 
+   
+
+
+Features
+--------
+
+The registry provides following features:
+
+*	the service registration includes the management of the services' information.
+*	Powerful data back-end based on MongoDB
+*	Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
+*	Seam-less access: Plain HTTP interface to browse the service registrations
+*	Security
+**	PKI governed authentication
+**	Distinguished Name based authorization using XACML driven PDP
+
+
+For more information about EMI visit http://www.eu-emi.eu[http://www.eu-emi.eu].
+
+include::registry.txt[]

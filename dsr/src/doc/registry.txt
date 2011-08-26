@@ -1,0 +1,37 @@
+Getting Started
+---------------
+
+Some intro here...
+This guide describes the installation and configuration for the binary release.
+
+Prerequisites
+~~~~~~~~~~~~~
+
+To run EMI Registry, you need the SUN or OpenJDK Java 6 (JRE or SDK). 
+If not installed on your system, you can download it 
+from http://java.oracle.com[http://java.oracle.com]
+
+* Linux based operating system
+* MongoDB[www.mongodb.org]
+
+REST Interface: URI design
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section contains individual URIs and their description
+
+
+Single Registry Deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+...
+
+
+Federated Registry Deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+....
+
+
+ 
+
+

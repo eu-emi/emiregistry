@@ -92,6 +92,10 @@
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<releaseVersion>${version}</releaseVersion>
+		<docman.enabled />
+		<doc.src>src/doc/manual.txt</doc.src>
+		<doc.target>registry-manual</doc.target>
 	</properties>
 	<build>
 		<plugins>
@@ -121,4 +125,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<site>
+			<id>gh-pages</id>
+			<!-- path to the local repo -->
+			<url>file:///${basedir}/../../emiregistry-pages/documentation/registry-${version}</url>
+		</site>
+	</distributionManagement>
 </project>
