@@ -6,8 +6,6 @@ package eu.emi.dsr.resource;
 import static org.junit.Assert.*;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;

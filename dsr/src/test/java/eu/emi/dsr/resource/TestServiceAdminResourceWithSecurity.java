@@ -4,8 +4,6 @@
 package eu.emi.dsr.resource;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +15,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -28,7 +25,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
-import eu.emi.dsr.security.AuthorisationException;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**
@@ -46,7 +42,7 @@ public class TestServiceAdminResourceWithSecurity extends
 
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
+		c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
@@ -98,7 +94,7 @@ public class TestServiceAdminResourceWithSecurity extends
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {
-			JSONObject jo1 = cr1.getClientResource()
+			cr1.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JSONObject.class);
 		} catch (UniformInterfaceException e) {
