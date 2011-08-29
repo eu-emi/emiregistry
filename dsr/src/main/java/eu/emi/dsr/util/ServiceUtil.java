@@ -62,7 +62,7 @@ public class ServiceUtil {
 
 	public synchronized static String toUTCFormat(Date d) {
 		SimpleDateFormat formatter = new SimpleDateFormat(
-				"yyyy-MM-dd'T'HH:mm:ss'Z'");
+				"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String timestamp = formatter.format(d);
 		return timestamp;
@@ -70,7 +70,7 @@ public class ServiceUtil {
 
 	public static Date toUTCFormat(String d) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat(
-				"yyyy-MM-dd'T'HH:mm:ss'Z'");
+				"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		Date timestamp = formatter.parse(d);
 		return timestamp;

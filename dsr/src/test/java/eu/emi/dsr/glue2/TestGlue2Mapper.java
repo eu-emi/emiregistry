@@ -42,8 +42,7 @@ public class TestGlue2Mapper {
 	}
 
 	@Test
-	public void testToQueryResultSingleXML() throws JSONException,
-			JAXBException, DatatypeConfigurationException, ParseException {
+	public void testToQueryResultSingleXML() throws Exception {
 		Glue2Mapper gm = new Glue2Mapper();
 		JSONArray ja = new JSONArray();
 		ja.put(jo);
@@ -59,8 +58,7 @@ public class TestGlue2Mapper {
 	}
 
 	@Test
-	public void testToQueryResultMultipleXML() throws JSONException,
-			JAXBException, DatatypeConfigurationException, ParseException {
+	public void testToQueryResultMultipleXML() throws Exception {
 		Glue2Mapper gm = new Glue2Mapper();
 		JSONArray ja = new JSONArray();
 		ja.put(jo);
@@ -75,7 +73,7 @@ public class TestGlue2Mapper {
 	}
 
 	@Test
-	public void testExtensions() throws JSONException, DatatypeConfigurationException, ParseException {
+	public void testExtensions() throws JSONException, DatatypeConfigurationException, ParseException, JSONToGlue2MappingException {
 		Glue2Mapper gm = new Glue2Mapper();
 		JSONArray ja = new JSONArray();
 		jo.put("myextension1", "value1");

@@ -30,7 +30,11 @@ import org.ogf.schemas.glue._2009._03.spec_2.QualityLevelT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServingStateT;
 
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 
@@ -53,8 +57,7 @@ public class Glue2Mapper {
 		of = new ObjectFactory();
 		createAttributelist();
 	}
-	public QueryResult toQueryResult(JSONArray jo) throws JSONException,
-			DatatypeConfigurationException, ParseException {
+	public QueryResult toQueryResult(JSONArray jo) throws JSONToGlue2MappingException {
 		eu.eu_emi.emiregistry.ObjectFactory o = new eu.eu_emi.emiregistry.ObjectFactory();
 		QueryResult qr = o.createQueryResult();
 		List<ServiceT> l = qr.getService();
@@ -69,17 +72,21 @@ public class Glue2Mapper {
 	}
 
 	public JAXBElement<ServiceT>[] toGlue2Service(JSONArray jo)
-			throws JSONException, DatatypeConfigurationException,
-			ParseException {
+			throws JSONToGlue2MappingException {
 		@SuppressWarnings("unchecked")
 		JAXBElement<ServiceT>[] e = new JAXBElement[jo.length()];
 		List<JAXBElement<ServiceT>> lst = new ArrayList<JAXBElement<ServiceT>>();
-						
-		for (int i = 0; i < jo.length(); i++) {
-			JAXBElement<ServiceT> jt = toGlue2XML(jo.getJSONObject(i));
-			e[i] = jt;
-			lst.add(jt);
+		try {
+			for (int i = 0; i < jo.length(); i++) {
+				JAXBElement<ServiceT> jt = toGlue2XML(jo.getJSONObject(i));
+				e[i] = jt;
+				lst.add(jt);
+			}	
+		} catch (Exception e2) {
+			throw new JSONToGlue2MappingException(e2);
+			
 		}
+		
 		
 		
 		return e;
@@ -93,15 +100,15 @@ public class Glue2Mapper {
 		lstNames = lst;
 	}
 
-	public JAXBElement<ServiceT> toGlue2XML(JSONObject jo)
-			throws JSONException, DatatypeConfigurationException,
-			ParseException {
+	public JAXBElement<ServiceT> toGlue2XML(JSONObject jo) throws JSONToGlue2MappingException {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		
 		ServiceT st =  of.createServiceT();
 		EndpointT et =of.createEndpointT();
 		ExtensionsT ets = of.createExtensionsT();
 		int i = 1;
+		try {
+			
+		
 		if (jo.length() > 0) {
 			for (Iterator<?> iterator = jo.keys(); iterator.hasNext();) {
 				String type = (String) iterator.next();
@@ -131,14 +138,18 @@ public class Glue2Mapper {
 								.getAttributeName()) ? new BigInteger(jo
 						.getString(ServiceBasicAttributeNames.SERVICE_VALIDITY
 								.getAttributeName())) : null);
-
+				
+				
+				
 				st.setCreationTime(jo
 						.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo.getJSONObject(
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(
+						jo.getJSONObject(
 								ServiceBasicAttributeNames.SERVICE_CREATED_ON
-										.getAttributeName()).getString("$date")))
-						: null);
+										.getAttributeName())))
+						: null);				
+				
+				
 
 				if (jo.has("_id")) {
 					st.setID(jo.getJSONObject("_id").getString("$oid"));
@@ -150,39 +161,36 @@ public class Glue2Mapper {
 						.getString(ServiceBasicAttributeNames.SERVICE_NAME
 								.getAttributeName()) : null);
 				et.setBaseType("Entity");
+				
 				et.setCreationTime(jo
 						.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo.getJSONObject(
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(
+						jo.getJSONObject(
 								ServiceBasicAttributeNames.SERVICE_CREATED_ON
-										.getAttributeName()).getString("$date")))
+										.getAttributeName())))
 						: null);
+				
 				et.setDowntimeAnnounce(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(jo
 								.getJSONObject(
 										ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE
-												.getAttributeName()).getString(
-										"$date")))
+												.getAttributeName())))
 						: null);
+				
 				et.setDowntimeEnd(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_END
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(jo
 								.getJSONObject(
 										ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_END
-												.getAttributeName()).getString(
-										"$date")))
+												.getAttributeName())))
 						: null);
 				et.setDowntimeStart(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(jo
 								.getJSONObject(
 										ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START
-												.getAttributeName()).getString(
-										"$date")))
+												.getAttributeName())))
 						: null);
 				et.setDowntimeInfo(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_INFO
@@ -248,12 +256,10 @@ public class Glue2Mapper {
 						: null);
 				et.setStartTime(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_STARTTIME
-								.getAttributeName()) ? toXmlGregorian(formatter
-						.parse(jo
+								.getAttributeName()) ? toXmlGregorian(DateUtil.getDate(jo
 								.getJSONObject(
 										ServiceBasicAttributeNames.SERVICE_ENDPOINT_STARTTIME
-												.getAttributeName()).getString(
-										"$date")))
+												.getAttributeName())))
 						: null);
 				et.setTechnology(jo
 						.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_TECHNOLOGY
@@ -322,7 +328,9 @@ public class Glue2Mapper {
 			return null;
 		}
 		
-		
+		} catch (Exception e) {
+			throw new JSONToGlue2MappingException(e);
+		}
 				
 		return of.createService(st);
 
@@ -338,7 +346,7 @@ public class Glue2Mapper {
 		return lst;
 	}
 
-	private static XMLGregorianCalendar toXmlGregorian(Date d)
+	private XMLGregorianCalendar toXmlGregorian(Date d)
 			throws DatatypeConfigurationException {
 		GregorianCalendar gcal = new GregorianCalendar();
 		gcal.setTime(d);

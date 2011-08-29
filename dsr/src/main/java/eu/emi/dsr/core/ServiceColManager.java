@@ -19,6 +19,7 @@ import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.glue2.Glue2Mapper;
+import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 import eu.emi.dsr.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
@@ -142,8 +143,9 @@ public class ServiceColManager {
 	 * @throws ParseException 
 	 * @throws DatatypeConfigurationException 
 	 * @throws JSONException 
+	 * @throws JSONToGlue2MappingException 
 	 */
-	public QueryResult queryGlue2(Map<String, Object> m) throws QueryException, PersistentStoreFailureException, JSONException, DatatypeConfigurationException, ParseException {
+	public QueryResult queryGlue2(Map<String, Object> m) throws QueryException, PersistentStoreFailureException, JSONException, DatatypeConfigurationException, ParseException, JSONToGlue2MappingException {
 		JSONArray ja = query(m);
 		logger.debug("array"+ja);
 		Glue2Mapper gm = new Glue2Mapper();

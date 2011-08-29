@@ -1,5 +1,5 @@
 {
-    "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
+    "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z.111"},
     "Service_Type":"job-management",
 	"Service_Capability":["capability1","capability2"],
 	"Service_QualityLevel":"production",
@@ -18,12 +18,12 @@
 	"Service_Endpoint_HealthState":"ok",
 	"Service_Endpoint_HealthStateInfo":"state info",
 	"Service_Endpoint_ServingState":"production",
-	"Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24Z"},
+	"Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24.111Z"},
 	"Service_Endpoint_IssuerCA":"issuer-dn",
 	"Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
-	"Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24Z"},
-	"Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
-	"Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
+	"Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24.111Z"},
 	"Service_Endpoint_QualityLevel":"production",
-    "Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
+    "Service_ExpireOn":{"$date":"2011-07-21T11:47:24.111Z"}
 }

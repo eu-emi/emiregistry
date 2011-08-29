@@ -3,7 +3,6 @@
  */
 package eu.emi.dsr.resource;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,18 +17,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.mongodb.MongoException;
-
 import eu.emi.dsr.core.ServiceColManager;
-import eu.emi.dsr.db.PersistentStoreFailureException;
-import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
@@ -72,13 +66,9 @@ public class ServiceCollectionResource {
 		JSONArray o = null;
 		try {
 			o = col.getDistinctTypes();
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			throw new WebApplicationException(e);
-		} catch (QueryException e) {
-			throw new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
-		}
+		} 
 
 		return o;
 	}
@@ -91,13 +81,9 @@ public class ServiceCollectionResource {
 		JSONArray o = null;
 		try {
 			o = col.getServicesByType(type);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			throw new WebApplicationException(e);
-		} catch (QueryException e) {
-			throw new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
-		}
+		} 
 
 		return o;
 	}
@@ -117,21 +103,16 @@ public class ServiceCollectionResource {
 
 		try {
 			jArr = col.query(m);
-		} catch (QueryException e) {
-			new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			new WebApplicationException(e);
-		} catch (MongoException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
+		} 
 
 		return jArr;
 	}
 
 	@GET
 	@Path("/query.xml")
+	@Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})
 	public QueryResult queryXml(@Context UriInfo ui)
 			throws WebApplicationException {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
@@ -145,18 +126,9 @@ public class ServiceCollectionResource {
 		QueryResult qr = null;
 		try {
 			qr = col.queryGlue2(m);
-		} catch (QueryException e) {
-			new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			new WebApplicationException(e);
-		} catch (JSONException e) {
-			new WebApplicationException(e);
-			e.printStackTrace();
-		} catch (DatatypeConfigurationException e) {
-			new WebApplicationException(e);
-		} catch (ParseException e) {
-			new WebApplicationException(e);
-		}		
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
+		} 
 
 		
 		return qr;
@@ -178,8 +150,8 @@ public class ServiceCollectionResource {
 
 		try {
 			jArr = col.pagedQuery(m);
-		} catch (JSONException e) {
-			new WebApplicationException(e);
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
 		}
 
 		return jArr;

@@ -3,13 +3,19 @@
  */
 package eu.emi.dsr.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.util.ajax.JSON;
+
+import com.mongodb.DBObject;
+
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 
 /**
  * @author a.memon
@@ -60,15 +66,15 @@ public class DateUtil {
 	/**
 	 * @param resJson
 	 */
-	public static Date getDate(JSONObject json) {
+	public static Date getDate(JSONObject json)
+			throws JSONToGlue2MappingException {
 		Date date = null;
 		try {
-			String strDate = json.getString("$date");
+			String strDate = json.get("$date").toString();
 			date = ServiceUtil.toUTCFormat(strDate);
-		} catch (JSONException e) {
-			Log.logException(e);
-		} catch (ParseException e) {
-			Log.logException(e);
+		} catch (Exception e) {
+			throw new JSONToGlue2MappingException(
+					"Error converting $date to java.util.Date", e);
 		}
 		return date;
 	}

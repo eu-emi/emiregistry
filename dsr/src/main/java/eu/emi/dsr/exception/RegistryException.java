@@ -9,7 +9,10 @@ package eu.emi.dsr.exception;
  *
  */
 public class RegistryException extends Exception{
-	private static final long serialVersionUID=1l;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5492335381718980124L;
 	/**
 	 * 
 	 */
