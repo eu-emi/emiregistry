@@ -187,6 +187,11 @@ public class TestRegistryBaseWithSecurity {
 	 * 
 	 */
 	private static void startMongoDB() throws IOException {
+		File daemonFile = new File(mongodPath);
+		if (!daemonFile.exists()) {
+			mongodPath = "/usr/bin/mongod";
+		}
+
 		File f = new File("./mongodata");
 		if (!f.exists()) {
 			f.mkdir();
