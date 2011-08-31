@@ -57,9 +57,8 @@ Since there is no JSON rendering modeling GLUE 2.0 available, thus the new templ
 
 ----------
 
-Only the following GLUE 2.0 elements are supported
+GLUE 2.0 XML: Only the following GLUE 2.0 elements are supported
 
-. GLUE 2.0 XML exemplar
 ----------
 
 <glue:Service BaseType="Service" CreationTime="2011-07-21T11:47:24.111Z" Validity="0" xmlns:glue="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1 GLUE2.xsd ">
