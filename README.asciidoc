@@ -109,7 +109,7 @@ GLUE 2.0 XML: Only the following GLUE 2.0 elements are supported
 ----------
 
 
-As you have already noticed in the JSON document above that the GLUE 2.0 (sub-)elements are being mapped as JSON attributes 
+As you have already noticed in the JSON document above that the GLUE 2.0 (sub-)elements are being mapped as JSON attributes. The mapping criteria is quite straight forward as the main Element under Service within XML document becomes the Service_Element, while the (sub-)child elements are represented as Service_Element_SubElement.    
 
 === Security Model
 
