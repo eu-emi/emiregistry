@@ -1,0 +1,131 @@
+== EMI Registry 
+
+=== Description
+
+==== EMI
+
+http://www.eu-emi.eu[European Middleware Initiative (EMI)] is EU funded project of FP7.
+
+==== The Registry
+
+The project is an implementation of the EMI Registry (part of the EMI project) specification to discover the services in a large-scale Distributed Computing Infrastructure (DCI).
+
+=== Information Model
+
+==== OGSA GLUE 2.0
+
+https://github.com/OGF-GLUE/XSD[OGSA GLUE2] is a standard from http://www.ogf.org[OGSA], which richly models Grid (Computing, User, Jobs and Storage) entities.  
+EMI Registry highly endorses the service model of GLUE 2.0, while exposing the service information in XML as well as in JSON format.
+  
+==== JSON representation
+
+Since there is no JSON rendering modeling GLUE 2.0 available, thus the new template has been derived, which maps the GLUE 2.0 entities with the JSON objects. Here is the brief example of a Service represented in JSON document.
+
+.JSON Service desrciption template
+----------
+
+{
+	"Service_Name":"ComputingService",
+	"Service_CreationTime":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Type":"job-management",
+	"Service_Capability":["capability1","capability2"],
+	"Service_QualityLevel":"production",
+	"Service_Complexity":"complexity",
+	"Service_Validity": 12313,
+	"Service_Extensions":[{"key1":"value1"},{"key2":"value2"}],
+	"Service_Endpoint_URL":"http://1", //Mandatory attribute (also considered as PK in SQL terms)
+	"Service_Endpoint_Capability":["capability1","capability2"],
+	"Service_Endpoint_Technology":"technology",
+	"Service_Endpoint_InterfaceName":"interface",
+	"Service_Endpoint_InterfaceVersion":["version1","version2"],
+	"Service_Endpoint_InterfaceExtension":["extension1","extension2"],
+	"Service_Endpoint_WSDL":"http://tempuri.org?EMIES-ResourceInfo.wsdl",
+	"Service_Endpoint_SupportedProfile":["OGSA-BSP","OGSA-WSRF-BP"],
+	"Service_Endpoint_Semantics":["semantic1","semantic2"],
+	"Service_Endpoint_HealthState":"ok",
+	"Service_Endpoint_HealthStateInfo":"state info",
+	"Service_Endpoint_ServingState":"production",
+	"Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_IssuerCA":"issuer-dn",
+	"Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
+	"Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24.111Z"},
+	"Service_Endpoint_QualityLevel":"production",
+	"Service_ExpireOn":{"$date":"2011-07-21T11:47:24.111Z"}
+}
+
+----------
+
+Only the following GLUE 2.0 elements are supported
+
+. GLUE 2.0 XML exemplar
+----------
+
+<glue:Service BaseType="Service" CreationTime="2011-07-21T11:47:24.111Z" Validity="0" xmlns:glue="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.ogf.org/glue/2009/03/spec_2.0_r1 GLUE2.xsd ">
+	<glue:ID>4e5e2f27ca91287bab38ba8f</glue:ID>
+	<glue:Name>ComputingService</glue:Name>
+	<glue:Capability>capability1</glue:Capability>
+	<glue:Capability>capability2</glue:Capability>
+	<glue:Extensions>
+		<glue:Extension>
+			<glue:LocalID>glue:LocalID</glue:LocalID>
+			<glue:Key>key1</glue:Key>
+			<glue:Value>value1</glue:Value>
+		</glue:Extension>
+		<glue:Extension>
+			<glue:LocalID>glue:LocalID</glue:LocalID>
+			<glue:Key>key2</glue:Key>
+			<glue:Value>value2</glue:Value>
+		</glue:Extension>
+	<glue:Extensions>
+	<glue:Type>job-management</glue:Type>
+	<glue:Endpoint BaseType="Entity">
+		<glue:ID>4e5e2f27ca91287bab38ba8f<glue:/ID>
+		<glue:URL>http://bbd14a9b-0267-4479-a65d-14a04ba52043</glue:URL>
+		<glue:Capability>capability1</glue:Capability>
+		<glue:Capability>capability2</glue:Capability>
+		<glue:InterfaceName>EMIES-ResourceInfo</glue:InterfaceName>
+		<glue:InterfaceVersion>1.0</glue:InterfaceVersion>
+		<glue:InterfaceExtension>extension1</glue:InterfaceExtension>
+		<glue:InterfaceExtension>extension2</glue:InterfaceExtension>			
+		<glue:WSDL>http://tempuri.org?EMIES-ResourceInfo.wsdl</glue:WSDL>
+		<glue:SupportedProfile>OGSA-BSP</glue:SupportedProfile>
+		<glue:SupportedProfile>OGSA-WSRF-BP</glue:SupportedProfile>
+		<glue:Semantics>semantics</glue:Semantics>
+		<glue:QualityLevel>development</glue:QualityLevel>
+		<glue:HealthState>critical</glue:HealthState>
+		<glue:HealthStateInfo>glue:HealthStateInfo</glue:HealthStateInfo>
+		<glue:ServingState>closed</glue:ServingState>
+		<glue:StartTime>2001-12-31T12:00:00</glue:StartTime>
+		<glue:IssuerCA>glue:IssuerCA</glue:IssuerCA>
+		<glue:TrustedCA>glue:TrustedCA</glue:TrustedCA>
+		<glue:DowntimeAnnounce>2001-12-31T12:00:00</glue:DowntimeAnnounce>
+		<glue:DowntimeStart>2001-12-31T12:00:00</glue:DowntimeStart>
+		<glue:DowntimeEnd>2001-12-31T12:00:00</glue:DowntimeEnd>
+		<glue:DowntimeInfo>glue:DowntimeInfo</glue:DowntimeInfo>
+	</glue:Endpoint>
+</glue:Service>
+
+----------
+
+
+As you have already noticed in the JSON document above that the GLUE 2.0 (sub-)elements are being mapped as JSON attributes 
+
+=== Security Model
+
+==== Authentication
+
+The client authentication is leveraging from SSL/TLS. This imply the registry user should possess an X.509 certificate for service registration as well as discovery  
+
+==== Authorization
+
+The authorization model is being carried out using the PUSH model, where the attributes such as role, organization etc.. are being fetched at the registry while receiving the request
+
+=== Implementation Remarks
+
+* The registry is implemented in  http://www.oracle.com/technetwork/java/javase/overview/index.html[Oracle JAVA 6]
+** To expose the REST-ful resources, rracle's Jersey (the reference impl. of JAX-RS) is being used  
+* Powerful database back-end on http://www.mongodb.org[MongDB]
+* http://maven.apache.org/[Maven 2] for project management
+* Documentation using maven site plug-in with asciidoc markdown
