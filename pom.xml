@@ -245,13 +245,13 @@
 								<argument>export</argument>
 								<argument>https://unicore.svn.sourceforge.net/svnroot/unicore/tools/docman/trunk</argument>
 								<argument>target/docman</argument>
-								<argument>--force</argument>
+
 							</arguments>
 						</configuration>
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution>												
 				</executions>
 			</plugin>
 			<plugin>

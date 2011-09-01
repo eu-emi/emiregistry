@@ -96,6 +96,7 @@
 		<docman.enabled />
 		<doc.src>src/doc/manual.txt</doc.src>
 		<doc.target>registry-manual</doc.target>
+		<doc.template>emi-nonunicore</doc.template>
 	</properties>
 	<build>
 		<plugins>
