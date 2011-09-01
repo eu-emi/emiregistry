@@ -192,7 +192,7 @@ public class ServiceAdminResource {
 	 * Deleting the service description
 	 * 
 	 * @param infos
-	 *            contains a ../serviceurl=http://serviceurl
+	 *            contains a ..?SERVICE_ENDPOINT_URL=http://serviceurl
 	 * */
 	@DELETE
 	public Response deleteService(@Context UriInfo infos) {
