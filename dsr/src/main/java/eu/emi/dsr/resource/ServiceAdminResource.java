@@ -110,9 +110,6 @@ public class ServiceAdminResource {
 	 * */
 	
 	
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
 	public Response registerService(JSONObject serviceInfo)
 			throws WebApplicationException{
 		Integer length = serviceInfo.length();
@@ -179,9 +176,6 @@ public class ServiceAdminResource {
 	 * updating only one entry
 	 * */
 
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	public Response updateService(JSONObject serviceInfo)
 			throws WebApplicationException {
 		try {
