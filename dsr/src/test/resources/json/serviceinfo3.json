@@ -1,5 +1,5 @@
 {
-    "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z.111"},
+    "Service_CreationTime":{"$date":"2011-07-21T11:47:24.111Z"},
     "Service_Type":"job-management",
 	"Service_Capability":["capability1","capability2"],
 	"Service_QualityLevel":"production",
