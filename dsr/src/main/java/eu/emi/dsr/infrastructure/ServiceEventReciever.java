@@ -6,6 +6,7 @@ package eu.emi.dsr.infrastructure;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -83,8 +84,10 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 				logger.debug("service added event fired");
 			}
 			try{
+				JSONArray job = new JSONArray();
+				job.put(event.getData());
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-					    .post(ClientResponse.class, event.getData());
+					    .post(ClientResponse.class, job);
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
 					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){
@@ -102,8 +105,10 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 				logger.debug("service update event fired");
 			}
 			try {
+				JSONArray job = new JSONArray();
+				job.put(event.getData());
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-						.put(ClientResponse.class, jo);
+						.put(ClientResponse.class, job);
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
 					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){

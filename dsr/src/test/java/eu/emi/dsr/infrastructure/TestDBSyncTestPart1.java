@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.BeforeClass;
@@ -67,9 +68,11 @@ public class TestDBSyncTestPart1 {
 		// one registration to the child server
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo = DateUtil.setExpiryTime(jo, 12);
+		JSONArray jos = new JSONArray();
+		jos.put(jo);
 		System.out.println("registering: " + jo);
 		ClientResponse res = getChildClient("/serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jo);
+				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jos);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
 		Thread.sleep(1000);
@@ -89,9 +92,11 @@ public class TestDBSyncTestPart1 {
 		// 2nd registration to the child server
 		JSONObject jo2 = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
 		jo2 = DateUtil.setExpiryTime(jo2, 12);
+		JSONArray jos2 = new JSONArray();
+		jos2.put(jo2);
 		System.out.println("registering2: " + jo2);
 		ClientResponse res2 = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(ClientResponse.class, jo2);
+				.post(ClientResponse.class, jos2);
 		assertTrue(res2.getStatus() == Status.OK.getStatusCode());
 
 		Thread.sleep(1000);
@@ -112,7 +117,7 @@ public class TestDBSyncTestPart1 {
 		System.out.println("updating: " + jo);
 
 		ClientResponse resu = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
-				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jo);
+				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jos);
 		assertTrue(resu.getStatus() == Status.OK.getStatusCode());
 		Thread.sleep(1000);
 
@@ -134,12 +139,14 @@ public class TestDBSyncTestPart1 {
 		jo = DateUtil.setExpiryTime(jo, 12);
 
 		// Updating the entry
-		System.out.println("updateing: " + jo);
+		System.out.println("updating: " + jo);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
 				.getAttributeName(), "health-state-info-changed");
+		JSONArray jos = new JSONArray();
+		jos.put(jo);
 
 		ClientResponse res = getChildClient("/serviceadmin?Service_Endpoint_URL").accept(
-				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jo);
+				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, jos);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 		
 		Thread.sleep(1000);

@@ -368,16 +368,18 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		boolean retval = true;
 		for(int i=0; i<jos.length(); i++){
 			try{
+				JSONArray joList = new JSONArray();
+				joList.put(jos.getJSONObject(i));
 				switch (method){
 				case REGISTER:
 					logger.debug("send register");
 					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-					    		.post(ClientResponse.class, jos.getJSONObject(i));
+					    		.post(ClientResponse.class, joList);
 					break;
 				case UPDATE:
 					logger.debug("send update");
 					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-								.put(ClientResponse.class, jos.getJSONObject(i));
+								.put(ClientResponse.class, joList);
 					break;
 				case DELETE:
 					logger.debug("send delete");
