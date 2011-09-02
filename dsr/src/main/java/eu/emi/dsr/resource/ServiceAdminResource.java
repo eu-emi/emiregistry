@@ -145,6 +145,7 @@ public class ServiceAdminResource {
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException{
 		JSONObject serviceInfo = null;
+		JSONArray arr = new JSONArray();
 		for ( int i=0; i< serviceInfos.length(); i++ ) {
 			try {
 				serviceInfo = serviceInfos.getJSONObject(i);
@@ -157,6 +158,7 @@ public class ServiceAdminResource {
 				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
 						.getAttributeName(), c.getDistinguishedName());
 				JSONObject res = serviceAdmin.addService(serviceInfo);
+				arr.put(res);
 				continue;
 				//return Response.ok(res).build();
 			} catch (JSONException e) {
@@ -169,7 +171,7 @@ public class ServiceAdminResource {
 				return Response.status(Status.CONFLICT).entity(serviceInfo).build();
 			}
 		}
-		return Response.ok().build();
+		return Response.ok(arr).build();
 	}
 
 	/**
@@ -235,6 +237,7 @@ public class ServiceAdminResource {
 	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException {
 		try {
+			JSONArray arr = new JSONArray();
 			for ( int i=0; i< serviceInfos.length(); i++ ) {
 				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
@@ -260,7 +263,8 @@ public class ServiceAdminResource {
 														.getAttributeName()))) {
 					JSONObject res;
 					try {
-						res = serviceAdmin.updateService(serviceInfo);					
+						res = serviceAdmin.updateService(serviceInfo);
+						arr.put(res);
 					} catch (UnknownServiceException e) {
 						return Response.status(Status.NOT_FOUND).build();
 					}
@@ -273,8 +277,7 @@ public class ServiceAdminResource {
 					return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
 				}
 			}
-			return Response.ok().build();
-
+			return Response.ok(arr).build();
 		} catch (InvalidServiceDescriptionException e) {
 			throw new WebApplicationException(e);
 		} catch (JSONException e) {

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import eu.emi.dsr.util.ServiceUtil;
  */
 public class TestServiceAdminResourceWithSecurity extends
 		TestRegistryBaseWithSecurity {
-	private static JSONObject getDummyServiceDesc() {
+	private static JSONArray getDummyServiceDesc() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), "http://1");
@@ -50,8 +51,9 @@ public class TestServiceAdminResourceWithSecurity extends
 		}
 
 		JSONObject jo = new JSONObject(map);
-		
-		return jo;
+		JSONArray jArr = new JSONArray();
+		jArr.put(jo);
+		return jArr;
 	}
 
 	@Test
@@ -77,7 +79,7 @@ public class TestServiceAdminResourceWithSecurity extends
 	public void testUnAuthzRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		JSONObject jo = getDummyServiceDesc();
+		JSONArray jo = getDummyServiceDesc();
 		DSRClient cr = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
