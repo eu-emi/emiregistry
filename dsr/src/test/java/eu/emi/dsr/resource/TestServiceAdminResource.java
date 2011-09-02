@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
@@ -34,7 +35,7 @@ import static org.junit.Assert.*;
  */
 public class TestServiceAdminResource extends TestRegistryBase {
 
-	private static JSONObject getDummyServiceDesc() {
+	private static JSONArray getDummyServiceDesc() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), "http://1");
@@ -42,8 +43,11 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				"jms");
 
 		JSONObject jo = new JSONObject(map);
-
-		return jo;
+		
+		JSONArray arr = new JSONArray();
+		arr.put(jo);
+		
+		return arr;
 	}
 
 	private static JSONObject getOutdatedServiceDesc() {
@@ -66,13 +70,13 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	public void testRegisterService() throws JSONException,
 			InterruptedException {
-		Thread.sleep(3000000);
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
 
-		cr.getClientResource()
+		ClientResponse res = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(getDummyServiceDesc());
-		
+				.post(ClientResponse.class, getDummyServiceDesc());
+		JSONArray resArr = res.getEntity(JSONArray.class);
+		assertNotNull(resArr);
 
 		JSONObject jo = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals("http://1",
@@ -82,26 +86,36 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		System.out.println(jo);
 		
 		//adding second service
-		JSONObject j = getDummyServiceDesc();
-		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2");
+		JSONArray j = getDummyServiceDesc();
+		JSONObject j1 = new JSONObject();
+		
+		j1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2");
+		
+		j.put(j1);
+		System.out.println(j);
 		ClientResponse cRes = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE)
 		.post(ClientResponse.class, j);
+		if (cRes.getStatus() == Status.OK.getStatusCode()) {
+			JSONArray resJo = cRes.getEntity(JSONArray.class);
+			System.out.println("insert response: "+resJo);
+			assertTrue(resJo.getJSONObject(0).getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()).equalsIgnoreCase("http://2"));
+			
+			
+			JSONObject res1 = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+			assertEquals("http://2",
+					res1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName()));
+			System.out.println(res1);	
+		} else {
+			assertTrue(Status.fromStatusCode(cRes.getStatus()).compareTo(Status.CONFLICT) == 0);
+		}
 		
-		JSONObject resJo = cRes.getEntity(JSONObject.class);
-		System.out.println("insert response: "+resJo);
-		assertTrue(resJo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()).equalsIgnoreCase("http://2"));
-		
-		
-		JSONObject res = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertEquals("http://2",
-				res.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-						.getAttributeName()));
-		System.out.println(res);
 
 	}
 
-	private static JSONObject getUpdatedServiceDesc() {
+	private static JSONArray getUpdatedServiceDesc() {
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), "http://1");
@@ -112,7 +126,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				"http://1");
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH, 12);
+		c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
@@ -120,8 +134,9 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		}
 
 		JSONObject jo = new JSONObject(map);
-
-		return jo;
+		JSONArray jArr = new JSONArray();
+		jArr.put(jo);
+		return jArr;
 	}
 
 	@Test
@@ -143,7 +158,9 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				.getAttributeName(), "http://1");
 		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(getUpdatedServiceDesc());
-
+		
+		
+		
 		DSRClient cr2 = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		JSONObject jo1 = cr2.getClientResource()
