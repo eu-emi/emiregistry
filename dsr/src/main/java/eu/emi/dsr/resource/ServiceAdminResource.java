@@ -143,16 +143,10 @@ public class ServiceAdminResource {
 	 * */
 	
 	@POST
-	@Consumes({MediaType.TEXT_PLAIN})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response registerServices(String message)
+	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException{
-		JSONArray serviceInfos;
-		try {
-			serviceInfos = new JSONArray(message);
-		} catch (JSONException e1) {
-			return Response.status(Status.BAD_REQUEST).entity(message).build();
-		}
 		JSONObject serviceInfo = null;
 		for ( int i=0; i< serviceInfos.length(); i++ ) {
 			try {
@@ -242,16 +236,10 @@ public class ServiceAdminResource {
 	 * */
 
 	@PUT
-	@Consumes({MediaType.TEXT_PLAIN})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-	public Response updateServices(String message)
+	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException {
-		JSONArray serviceInfos;
-		try {
-			serviceInfos = new JSONArray(message);
-		} catch (JSONException e1) {
-			return Response.status(Status.BAD_REQUEST).entity(message).build();
-		}
 		try {
 			for ( int i=0; i< serviceInfos.length(); i++ ) {
 				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
