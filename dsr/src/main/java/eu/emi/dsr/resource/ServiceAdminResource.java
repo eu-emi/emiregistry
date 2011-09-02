@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -40,6 +41,7 @@ import eu.emi.dsr.util.Log;
  * Resource for the service providers (privileged) to manage their services
  * 
  * @author a.memon
+ * @author g.szigeti
  */
 @Path("/serviceadmin")
 public class ServiceAdminResource {
@@ -104,7 +106,7 @@ public class ServiceAdminResource {
 	}
 
 	/**
-	 * adding array of entries
+	 * adding only one entry
 	 * */
 	
 	
@@ -135,6 +137,53 @@ public class ServiceAdminResource {
 			return Response.status(Status.CONFLICT).entity(serviceInfo).build();
 		}
 	}
+	
+	/**
+	 * adding array of entries
+	 * */
+	
+	@POST
+	@Consumes({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response registerServices(String message)
+			throws WebApplicationException{
+		JSONArray serviceInfos;
+		try {
+			serviceInfos = new JSONArray(message);
+		} catch (JSONException e1) {
+			return Response.status(Status.BAD_REQUEST).entity(message).build();
+		}
+		JSONObject serviceInfo = null;
+		for ( int i=0; i< serviceInfos.length(); i++ ) {
+			try {
+				serviceInfo = serviceInfos.getJSONObject(i);
+				Integer length = serviceInfo.length();
+				if (length <= 0 || length > 100) {
+					throw new WebApplicationException(Status.FORBIDDEN);
+				}
+		
+				Client c = (Client) req.getAttribute("client");
+				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+						.getAttributeName(), c.getDistinguishedName());
+				JSONObject res = serviceAdmin.addService(serviceInfo);
+				continue;
+				//return Response.ok(res).build();
+			} catch (JSONException e) {
+				throw new WebApplicationException(e);
+			} catch (InvalidServiceDescriptionException e) {
+				throw new WebApplicationException(e);
+			} catch (NullPointerException e){
+				throw new WebApplicationException(e);
+			} catch (ExistingResourceException e) {
+				return Response.status(Status.CONFLICT).entity(serviceInfo).build();
+			}
+		}
+		return Response.ok().build();
+	}
+
+	/**
+	 * updating only one entry
+	 * */
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -188,6 +237,73 @@ public class ServiceAdminResource {
 		}
 	}
 
+	/**
+	 * updating array of entries
+	 * */
+
+	@PUT
+	@Consumes({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+	public Response updateServices(String message)
+			throws WebApplicationException {
+		JSONArray serviceInfos;
+		try {
+			serviceInfos = new JSONArray(message);
+		} catch (JSONException e1) {
+			return Response.status(Status.BAD_REQUEST).entity(message).build();
+		}
+		try {
+			for ( int i=0; i< serviceInfos.length(); i++ ) {
+				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
+				Client c = (Client) req.getAttribute("client");
+				String owner = c.getDistinguishedName();
+				String url = serviceInfo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName());
+				serviceInfo
+					.put(ServiceBasicAttributeNames.SERVICE_OWNER
+							.getAttributeName(), c.getDistinguishedName());
+				if (logger.isDebugEnabled()) {
+					logger.debug("updating service by url: "
+							+ url + ", Owned by: "
+							+ owner);
+				}
+
+				if (owner != null
+						&& serviceAdmin
+							.checkOwner(
+										owner,
+										serviceInfo
+												.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+														.getAttributeName()))) {
+					JSONObject res;
+					try {
+						res = serviceAdmin.updateService(serviceInfo);					
+					} catch (UnknownServiceException e) {
+						return Response.status(Status.NOT_FOUND).build();
+					}
+					continue;
+					//return Response.ok(res).build();
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Service with url: "+serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName())+" does not exist.");
+					}
+					return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
+				}
+			}
+			return Response.ok().build();
+
+		} catch (InvalidServiceDescriptionException e) {
+			throw new WebApplicationException(e);
+		} catch (JSONException e) {
+			throw new WebApplicationException(e);
+		} catch (QueryException e) {
+			throw new WebApplicationException(e);
+		} catch (PersistentStoreFailureException e) {
+			throw new WebApplicationException(e);
+		}
+	}
+	
 	/**
 	 * Deleting the service description
 	 * 
