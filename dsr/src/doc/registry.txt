@@ -17,8 +17,70 @@ from http://java.oracle.com[http://java.oracle.com]
 REST Interface: URI design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section contains individual URIs and their description
+The EMI Registry allows Services to register/publish their capabilities
+while the Service Consumers are able the find the Service information in
+the large scale infrastructure.
 
+This section contains the description of the interface that allows the
+maintenace of and access to service entries by presenting the individual
+URIs and their description. The presented examples shows a package to be
+sent. Since the interface is a REST one, the required HTTP methods are also
+presented at the given features.
+
+Register new Services
+^^^^^^^^^^^^^^^^^^^^^
+
+METHOD: POST
+URI: http://registry.example.com:54321/serviceadmin
+
+The message must contain a JSON Array object that contains the
+description of the Services to be registered. The new entries will be
+created in the EMI Registry database.
+
+An example JSON Array:
+[source]
+source~~~~
+include::../main/java/eu/emi/dsr/resource/servicemodel.json
+source~~~~
+
+
+Update Service information
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+METHOD: PUT
+URI: http://registry.example.com:54321/serviceadmin
+
+The message must contain a JSON array object that contains the
+description of the Services to be updated. The Service Entries
+identified by the `Service_Endpoint_URL` key in the individual JSON
+objects will be updated respectively if the client is properly
+authorized and the method were allowed by the security plugins.
+
+
+Delete existing Services
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+METHOD: DELETE
+URI: http://registry.example.com:54321/serviceadmin?Service_Endpoint_URL=<URL>
+
+The Service Entry identified by the URL will be deleted from the
+database if the client is properly authorized and the method were
+allowed by the security plugins.
+
+Query the EMI Registry database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+METHOD: GET
+URI: http://registry.example.com:54321/services/query?<Search term>
+URI: http://registry.example.com:54321/services/query.xml?<Search term>
+
+Example: http://registry.example.com:54321/services/query?Service_Type=eu.eu-emi.emies
+
+The +serices+ interface can be used for querying the EMI Registry
+database. The search term can be defined by the GET parameters of the
+HTTP request like in the example shown above. The result in the first
+case is a JSON Array object. The second presented way provide an XML
+format result. Spot the `.xml` extension after query part of the path!
 
 Single Registry Deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
