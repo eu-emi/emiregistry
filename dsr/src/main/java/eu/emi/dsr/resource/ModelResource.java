@@ -6,17 +6,21 @@ package eu.emi.dsr.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Enumeration;
+import java.util.Iterator;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 
@@ -28,22 +32,33 @@ import eu.emi.dsr.core.ServiceBasicAttributeNames;
  */
 @Path("/model")
 public class ModelResource {
-	private static JSONObject jo;
+	@Context
+	HttpServletRequest req;
+	private static JSONArray jo;
 	{
 		InputStream is = ModelResource.class.getResourceAsStream("servicemodel.json");
 		StringWriter writer = new StringWriter();
 		try {
 			IOUtils.copy(is, writer);
-			jo = new JSONObject(writer.toString());
+			jo = new JSONArray(writer.toString()); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	@Produces(MediaType.TEXT_HTML)
+	
+	@Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON})
 	@GET
 	public Response getModel() throws WebApplicationException {
+		String[] str = req.getHeader("Accept").split(",");
+		
+		for(String s : str){
+			if (s.contains("json")) {
+				return Response.ok(jo).build();
+			}
+		}
+		
 		StringBuilder b = new StringBuilder();
 		b.append("<html>");
 		b.append("<head>");
@@ -82,6 +97,6 @@ public class ModelResource {
 		b.append("</textarea>");		
 		b.append("</body></html>");
 		return Response.ok(b.toString()).build();
-	}
-
+	}	
+	
 }
