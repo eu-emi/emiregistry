@@ -366,20 +366,22 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		WebResource client = c.getClientResource();
 		ClientResponse res = null;
 		boolean retval = true;
-		for(int i=0; i<jos.length(); i++){
+		int cycleNr = 1;
+		if ( method == Method.DELETE ){
+			cycleNr = jos.length();
+		}
+		for(int i=0; i<cycleNr; i++){
 			try{
-				JSONArray joList = new JSONArray();
-				joList.put(jos.getJSONObject(i));
 				switch (method){
 				case REGISTER:
 					logger.debug("send register");
 					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-					    		.post(ClientResponse.class, joList);
+					    		.post(ClientResponse.class, jos);
 					break;
 				case UPDATE:
 					logger.debug("send update");
 					res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-								.put(ClientResponse.class, joList);
+								.put(ClientResponse.class, jos);
 					break;
 				case DELETE:
 					logger.debug("send delete");
@@ -404,15 +406,15 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			}
 
 			if ( res.getStatus() == Status.OK.getStatusCode() ){
-				//delete entry from the list
+				//delete entry(s) from the list
 				try {
 					if ( method == Method.DELETE ){
 						deleteentry(jos.getString(i));
-					} else {
-						deleteentry(jos.getJSONObject(i)
-							.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-							.getAttributeName()).toString());
-					}
+					} else if ( method == Method.REGISTER ){
+						databaseclean(1,0);
+					} else if ( method == Method.UPDATE ){
+						databaseclean(0,0);
+				    }
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -420,6 +422,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			}
 		
 			if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
+				//TODO: response mining + H2 cleaning
 				logger.debug("Error during the "+ method.name()+" method.");
 				retval=false;
 			}
@@ -433,7 +436,6 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @param int, del filter value
 	 * @return None
 	 */
-	@SuppressWarnings("unused")
 	private void databaseclean(int ne, int del){
 		logger.debug("Database cleaning! new="+ne+" del="+del);
 		try {
