@@ -23,7 +23,7 @@ import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.event.Event;
-import eu.emi.dsr.event.EventManager;
+import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.util.Log;
 
@@ -34,6 +34,7 @@ import com.mongodb.util.JSON;
 /**
  * @author martoni
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class MongoDBServiceDatabase implements ServiceDatabase {
@@ -133,7 +134,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 //			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 //					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 					.toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
@@ -214,7 +215,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					"No service description with the URL:" + url + " exists");
 		}
 		// sending update event to the recievers
-		EventManager.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
+		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
 	}
 
 	@Override
@@ -234,7 +235,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.update(query, dbObj);
 			// sending update event to the recievers
-			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
 					sObj.toJSON()));
 		} catch (MongoException e) {
 			e.printStackTrace();
