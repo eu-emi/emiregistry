@@ -7,6 +7,6 @@ package eu.emi.dsr.event;
  * @author a.memon
  *
  */
-public interface EventReciever {
+public interface EventListener {
 	public void recieve(Event event);
 }
