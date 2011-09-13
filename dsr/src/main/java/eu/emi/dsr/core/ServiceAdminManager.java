@@ -123,7 +123,7 @@ public class ServiceAdminManager {
 	 * @throws MultipleResourceException
 	 */
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
-			InvalidServiceDescriptionException, JSONException {
+			InvalidServiceDescriptionException, JSONException, WebApplicationException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes: serviceurl and servicetype");

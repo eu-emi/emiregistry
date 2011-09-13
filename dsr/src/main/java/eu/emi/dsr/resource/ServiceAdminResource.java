@@ -137,15 +137,17 @@ public class ServiceAdminResource {
 	
 	/**
 	 * adding array of entries
+	 * @throws InterruptedException 
 	 * */
 	
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response registerServices(JSONArray serviceInfos)
-			throws WebApplicationException{
+			throws WebApplicationException, InterruptedException{
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
+		JSONArray errorArray = new JSONArray();
 		for ( int i=0; i< serviceInfos.length(); i++ ) {
 			try {
 				serviceInfo = serviceInfos.getJSONObject(i);
@@ -159,6 +161,7 @@ public class ServiceAdminResource {
 						.getAttributeName(), c.getDistinguishedName());
 				JSONObject res = serviceAdmin.addService(serviceInfo);
 				arr.put(res);
+				Thread.sleep(10);
 				continue;
 				//return Response.ok(res).build();
 			} catch (JSONException e) {
@@ -168,8 +171,11 @@ public class ServiceAdminResource {
 			} catch (NullPointerException e){
 				throw new WebApplicationException(e);
 			} catch (ExistingResourceException e) {
-				return Response.status(Status.CONFLICT).entity(serviceInfo).build();
+				errorArray.put(serviceInfo);
 			}
+		}
+		if (errorArray.length()>0){
+			return Response.status(Status.CONFLICT).entity(errorArray).build();
 		}
 		return Response.ok(arr).build();
 	}
@@ -238,6 +244,7 @@ public class ServiceAdminResource {
 			throws WebApplicationException {
 		try {
 			JSONArray arr = new JSONArray();
+			JSONArray errorArray = new JSONArray();
 			for ( int i=0; i< serviceInfos.length(); i++ ) {
 				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
@@ -267,6 +274,8 @@ public class ServiceAdminResource {
 						arr.put(res);
 					} catch (UnknownServiceException e) {
 						return Response.status(Status.NOT_FOUND).build();
+					} catch (WebApplicationException e) {
+						errorArray.put(serviceInfo);
 					}
 					continue;
 					//return Response.ok(res).build();
@@ -276,6 +285,9 @@ public class ServiceAdminResource {
 					}
 					return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
 				}
+			}
+			if (errorArray.length()>0){
+				return Response.status(Status.CONFLICT).entity(errorArray).build();
 			}
 			return Response.ok(arr).build();
 		} catch (InvalidServiceDescriptionException e) {

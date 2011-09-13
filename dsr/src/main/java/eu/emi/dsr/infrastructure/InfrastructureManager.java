@@ -422,7 +422,50 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			}
 		
 			if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
-				//TODO: response mining + H2 cleaning
+				int failedIndex = 0;
+				String failedURL = "";
+				JSONArray failedJSONs = res.getEntity( JSONArray.class  );
+				try {
+					failedURL = failedJSONs.getJSONObject(failedIndex)
+									.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+											.getAttributeName()).toString();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				String currentURL = "";
+				int j =0;
+				while ( j!=jos.length() ) {
+					try {
+						currentURL = jos.getJSONObject(j)
+						 				   .get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+												.getAttributeName()).toString();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						break;
+					}
+					if ( !currentURL.equals(failedURL) ) {
+						// The 'currentURL' was successfully synchronized
+						deleteentry(currentURL);
+					} else {
+						// Error happened in the synchronization
+						failedIndex++;
+						if ( failedIndex<failedJSONs.length() ){
+							try {
+								// next failed URL calculation
+								failedURL = failedJSONs.getJSONObject(failedIndex)
+										.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+												.getAttributeName()).toString();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}	
+						}
+					}
+					j++;
+				}
 				logger.debug("Error during the "+ method.name()+" method.");
 				retval=false;
 			}
