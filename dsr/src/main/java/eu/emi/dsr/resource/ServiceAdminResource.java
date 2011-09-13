@@ -26,6 +26,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.Configuration;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
@@ -138,13 +141,18 @@ public class ServiceAdminResource {
 	/**
 	 * adding array of entries
 	 * @throws InterruptedException 
+	 * TODO: polymorphic registrations: Supporting JSONObject as well as Array
 	 * */
 	
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException{
+		Long max = Long.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
+		if (serviceInfos.length() > max) {
+			return Response.status(Status.FORBIDDEN).entity(new String("Number of entries/json objects in the array must not exceed: "+max)).build();
+		}
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
 		JSONArray errorArray = new JSONArray();

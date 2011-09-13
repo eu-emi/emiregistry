@@ -13,12 +13,12 @@ import eu.emi.dsr.core.RegistryThreadPool;
  * @author a.memon
  *
  */
-public class EventManager {
-	private static List<EventReciever> lstEvent = new CopyOnWriteArrayList<EventReciever>();
-	public static void add(EventReciever e){
+public class EventDispatcher {
+	private static List<EventListener> lstEvent = new CopyOnWriteArrayList<EventListener>();
+	public static void add(EventListener e){
 		lstEvent.add(e);
 	}
-	public static void remove(EventReciever e){
+	public static void remove(EventListener e){
 		lstEvent.remove(e);
 	}
 	
@@ -26,8 +26,8 @@ public class EventManager {
 		RegistryThreadPool.getExecutorService().execute(new Runnable() {			
 			@Override
 			public void run() {
-				for (Iterator<EventReciever> iterator = lstEvent.iterator(); iterator.hasNext();) {
-					EventReciever eventReciever = (EventReciever) iterator
+				for (Iterator<EventListener> iterator = lstEvent.iterator(); iterator.hasNext();) {
+					EventListener eventReciever = (EventListener) iterator
 							.next();
 					eventReciever.recieve(e);
 					
@@ -41,7 +41,7 @@ public class EventManager {
 		lstEvent.clear();
 	}
 	
-	public List<EventReciever> getRecieverList(){
+	public List<EventListener> getRecieverList(){
 		return Collections.unmodifiableList(lstEvent);
 	}
 }

@@ -25,7 +25,7 @@ public class TestEventManager {
 
 	@Test
 	public void test() {
-		EventManager.add(new EventReciever() {
+		EventDispatcher.add(new EventListener() {
 
 			@Override
 			public void recieve(Event event) {
@@ -35,10 +35,10 @@ public class TestEventManager {
 
 			}
 		});
-		EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
+		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
 				"service_being_added"));
 		
-		EventManager.removeAll();
+		EventDispatcher.removeAll();
 		
 		
 		
