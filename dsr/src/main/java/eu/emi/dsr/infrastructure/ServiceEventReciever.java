@@ -19,8 +19,8 @@ import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.event.Event;
-import eu.emi.dsr.event.EventManager;
-import eu.emi.dsr.event.EventReciever;
+import eu.emi.dsr.event.EventDispatcher;
+import eu.emi.dsr.event.EventListener;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.util.Log;
 
@@ -29,7 +29,7 @@ import eu.emi.dsr.util.Log;
  * @author g.szigeti
  * 
  */
-public class ServiceEventReciever implements EventReciever, Runnable {
+public class ServiceEventReciever implements EventListener, Runnable {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceEventReciever.class);
 	private static Configuration conf;
@@ -152,7 +152,7 @@ public class ServiceEventReciever implements EventReciever, Runnable {
 	 */
 	@Override
 	public void run() {
-		EventManager.add(this);
+		EventDispatcher.add(this);
 	}
 
 }
