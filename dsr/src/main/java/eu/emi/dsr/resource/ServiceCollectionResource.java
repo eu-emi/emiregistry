@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -73,20 +72,6 @@ public class ServiceCollectionResource {
 		return o;
 	}
 
-	/** query method */
-	@GET
-	@Path("/type/{servicetype:.+}")
-	public JSONArray getServiceByType(@PathParam("servicetype") String type)
-			throws WebApplicationException {
-		JSONArray o = null;
-		try {
-			o = col.getServicesByType(type);
-		} catch (Exception e) {
-			throw new WebApplicationException(e);
-		} 
-
-		return o;
-	}
 
 	@GET
 	@Path("/query")
