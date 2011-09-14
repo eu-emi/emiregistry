@@ -35,6 +35,7 @@ package eu.emi.dsr.security;
 
 import java.security.cert.X509Certificate;
 import java.util.Map;
+import java.util.Properties;
 
 import eu.emi.dsr.security.client.IClientProperties;
 
@@ -199,4 +200,9 @@ public interface ISecurityProperties extends IClientProperties {
 	 * @param classLoader - the classloader to use
 	 */
 	public void setClassLoader(ClassLoader classLoader);
+	
+	/**
+	 * get the raw properties
+	 * */
+	public Properties getProperties();
 }

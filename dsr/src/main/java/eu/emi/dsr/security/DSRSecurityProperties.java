@@ -418,6 +418,15 @@ public class DSRSecurityProperties implements ISecurityProperties, Cloneable {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.emi.dsr.security.ISecurityProperties#getProperties()
+	 */
+	@Override
+	public Properties getProperties() {
+		Properties p = (Properties) properties.clone();
+		return p;
+	}
+
 //	@Override
 //	public synchronized ETDClientSettings getETDSettings() {
 //		return etdSettings;

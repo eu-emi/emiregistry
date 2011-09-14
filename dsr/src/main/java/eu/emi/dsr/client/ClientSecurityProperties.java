@@ -77,15 +77,6 @@ public class ClientSecurityProperties implements IClientProperties {
 	 */
 	public static final String REGISTRY_SSL_TRUSTTYPE = "registry.ssl.truststoretype";
 
-	// /**
-	// * set to "true" to enable proxy certificate support, i.e. proper handling
-	// of the proxy DNs
-	// * (does NOT mean that proxies can be used for the SSL connection to the
-	// UNICORE/X container)
-	// */
-	// public static final String
-	// UAS_AUTHORISER_PROXY_SUPPORT="uas.security.authoriser.proxysupport";
-
 	/**
 	 * do we check access on the WSRF level?
 	 */
