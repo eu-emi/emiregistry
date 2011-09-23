@@ -361,6 +361,7 @@ public class SecurityTokens implements Serializable
 		{
 			return false;
 		}
+		@SuppressWarnings("unused")
 		SecurityTokens other = (SecurityTokens) otherO;
 		
 //		if (!other.getMessageSignatureStatus().equals(getMessageSignatureStatus()))

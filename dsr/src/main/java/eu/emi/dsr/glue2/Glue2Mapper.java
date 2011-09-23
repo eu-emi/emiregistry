@@ -4,7 +4,6 @@
 package eu.emi.dsr.glue2;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,9 +28,6 @@ import org.ogf.schemas.glue._2009._03.spec_2.ObjectFactory;
 import org.ogf.schemas.glue._2009._03.spec_2.QualityLevelT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServingStateT;
-
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.DateUtil;

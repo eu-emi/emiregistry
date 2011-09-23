@@ -3,17 +3,11 @@
  */
 package eu.emi.dsr.util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
-
-import com.mongodb.DBObject;
-
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 

@@ -5,11 +5,6 @@ package eu.emi.dsr.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.sql.*;
 
 import javax.ws.rs.core.MediaType;

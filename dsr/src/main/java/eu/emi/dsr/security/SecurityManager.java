@@ -85,11 +85,13 @@ public final class SecurityManager {
 
 	private static Boolean isAccessControlEnabled=null;
 
+	@SuppressWarnings("unused")
 	private static Boolean isProxyModeEnabled=null;
 
 	private static IAttributeSource attributeSource = null;
 
 	private static X509Certificate serverCert=null;
+	@SuppressWarnings("unused")
 	private static X509Certificate gatewayCert=null;
 
 	private static List<AuthNCheckingStrategy>authNCheckStrategies=new ArrayList<AuthNCheckingStrategy>();
@@ -425,6 +427,7 @@ public final class SecurityManager {
 //			handleXlogin(client, preferences, validAttributes, defaultAttributes);
 			handleRole(client, preferences, validAttributes, defaultAttributes);
 //			handleQueue(client, preferences, validAttributes, defaultAttributes);
+			@SuppressWarnings("unused")
 			String[] vos = validAttributes.get(IAttributeSource.ATTRIBUTE_VOS);
 //			if (vos != null)
 //				client.setVos(vos);

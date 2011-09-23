@@ -6,9 +6,6 @@ package eu.emi.dsr.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.Iterator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
