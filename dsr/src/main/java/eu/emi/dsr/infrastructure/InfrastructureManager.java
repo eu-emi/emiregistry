@@ -143,6 +143,25 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		childServices.add(identifier);
 	}
 
+	/**
+	 * Checked every child DSR with ping message.
+	 * If the child is not available, remove it from the list.
+	 * 
+	 * @param None
+	 * @return None
+	 */
+	public void childLiveCheck() {
+		for (int i=0; i<childServices.size(); i++ ) {
+			DSRClient c = new DSRClient(childServices.get(i) + "/ping");
+			WebResource client = c.getClientResource();
+			ClientResponse res = client.accept(MediaType.TEXT_PLAIN)
+					.get(ClientResponse.class);
+			if ( res.getStatus() != Status.OK.getStatusCode() ){
+				childServices.remove(i);
+			}
+		}
+	}
+	
 	/*
 	 * @see
 	 * eu.emi.dsr.infrastructure.ServiceInfrastructure#setParent(java.util.String
