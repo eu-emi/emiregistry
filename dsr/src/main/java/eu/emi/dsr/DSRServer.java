@@ -13,6 +13,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 
@@ -47,7 +48,7 @@ public class DSRServer {
 	private JettyServer jettyServer;
 	private Logger logger = Log.getLogger(Log.DSR, DSRServer.class);
 	private static ISecurityProperties sProps;
-
+	private static Date runningSince;
 	/**
 	 * @param path
 	 *            configuration file
@@ -109,6 +110,7 @@ public class DSRServer {
 	}
 
 	public void startJetty() {
+		runningSince = new Date();
 		addDefaultFilterClasses();
 		initLog4j();
 		if (!started) {
@@ -235,8 +237,11 @@ public class DSRServer {
 		} else {
 			server = new DSRServer("conf/dsr.config");
 		}
-
 		server.startJetty();
+	}
+	
+	public static Date getRunningSince(){
+		return runningSince;
 	}
 
 	/**

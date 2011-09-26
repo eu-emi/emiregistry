@@ -4,6 +4,7 @@
 package eu.emi.dsr.db.mongodb;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -16,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
@@ -71,11 +73,23 @@ public class TestMongoDBEmbedded extends Assert{
 		
 		MongoDBServiceDatabase m = new MongoDBServiceDatabase("localhost",27017,"testdb","testcol");
 		
-		m.insert(new BasicDBObject("testname", "testvalue"));
-				
+		BasicDBObject bdb = new BasicDBObject();
+		
+		bdb.put("testname", "testvalue");
+		
+		Date now = new Date();
+		
+		bdb.put("now", now);
+		
+		m.insert(bdb);
+		
 		List<ServiceObject> lst = m.findAll();
 		
-		System.out.println(lst.get(0));
+		DBObject db = lst.get(0).toDBObject();
+		
+		Date d = (Date) db.get("now");
+		
+		assertEquals(now, d);
 		
 		assertEquals("testvalue", lst.get(0).toDBObject().get("testname"));
 		
