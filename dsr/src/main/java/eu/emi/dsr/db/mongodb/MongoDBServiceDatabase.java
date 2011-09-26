@@ -133,12 +133,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.debug("inserting: " + item.toDBObject());
 			}
-
+			database.requestStart();
 			DBObject db = item.toDBObject();
 //			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 //					.getAttributeName(), new Date());
-			serviceCollection.insert(db, WriteConcern.SAFE);
 			
+			serviceCollection.insert(db, WriteConcern.SAFE);
+			database.requestDone();
 			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 					.toJSON()));
 		} catch (MongoException e) {
@@ -161,11 +162,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.debug("inserting: " + item);
 			}
-
+			database.requestStart();
 			DBObject db = item;
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
+			database.requestDone();
 //			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 //					.toJSON()));
 		} catch (MongoException e) {
@@ -206,10 +208,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public void deleteByUrl(String url) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
+		database.requestStart();
 		BasicDBObject query = new BasicDBObject();
 		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), url);
 		DBObject d = serviceCollection.findAndRemove(query);
+		
+		database.requestDone();
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
 				String msg = "No service description with the URL:" + url
@@ -230,6 +235,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service description: " + sObj);
 			}
+			database.requestEnsureConnection();
+			database.requestStart();
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
 //			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
@@ -239,6 +246,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					.getAttributeName(), sObj.getUrl());
 
 			serviceCollection.update(query, dbObj);
+			database.requestDone();
 			// sending update event to the recievers
 			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
 					sObj.toJSON()));
