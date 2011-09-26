@@ -40,7 +40,7 @@ import com.mongodb.util.JSON;
 public class MongoDBServiceDatabase implements ServiceDatabase {
 	private static Logger logger = Log.getLogger(Log.DSRDB,
 			MongoDBServiceDatabase.class);
-	private Mongo connection;
+	private static Mongo connection;
 	private DB database;
 	private DBCollection serviceCollection;
 
@@ -59,8 +59,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		try {
 			// connection = MongoConnection.get(hostname,
 			// Integer.valueOf(port));
-			connection = new Mongo(hostname, Integer.valueOf(port));
-			
+			if (connection == null) {
+				connection = new Mongo(hostname, Integer.valueOf(port));	
+			}
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
 
@@ -97,7 +98,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (DSRServer.getConfiguration() == null) {
 				new DSRServer(new Configuration(new Properties()));
 			}
-			connection = MongoConnection.get(hostname, port);
+			if (connection == null) {
+				connection = new Mongo(hostname, port);
+			}
+			
 			database = connection.getDB(dbName);
 
 			serviceCollection = database.getCollection(colName);
@@ -112,7 +116,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
 			if (logger.isDebugEnabled()) {
-				logger.info("Unique index created: " + obj);
+				logger.debug("Unique index created: " + obj);
 			}
 		} catch (Exception e) {
 			logger.error("Error in connecting the MongoDB database",e);
@@ -134,6 +138,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 //			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 //					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
+			
 			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
 					.toJSON()));
 		} catch (MongoException e) {
