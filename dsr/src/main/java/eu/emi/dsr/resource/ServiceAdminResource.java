@@ -31,6 +31,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
+import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
@@ -315,7 +316,7 @@ public class ServiceAdminResource {
 	 *            contains a ..?SERVICE_ENDPOINT_URL=http://serviceurl
 	 * */
 	@DELETE
-	public Response deleteService(@Context UriInfo infos) {
+	public Response deleteService(@Context UriInfo infos) throws WebApplicationException{
 		String serviceurl = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
@@ -324,20 +325,24 @@ public class ServiceAdminResource {
 			logger.debug("deleting service by url: " + serviceurl
 					+ ", Owned by: " + owner);
 			if (owner != null && serviceAdmin.checkOwner(owner, serviceurl)) {
-				serviceAdmin.removeService(serviceurl);
+				
+					serviceAdmin.removeService(serviceurl);
+				
 			} else {
 				return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+serviceurl).build();
 			}
 
-		} catch (UnknownServiceException e) {
-			return Response.status(Status.NOT_FOUND).entity("Service with URL: "+serviceurl+" does not exist").build();
 		} catch (QueryException e) {
 			throw new WebApplicationException(e);
 		} catch (PersistentStoreFailureException e) {
 			throw new WebApplicationException(e);
 		} catch(IllegalArgumentException e){
 			return Response.status(Status.BAD_REQUEST).entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"+ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()+" = <SERVICE URL>").build();
-		}
+		} catch (MultipleResourceException e) {
+			throw new WebApplicationException(e);
+		} catch (NonExistingResourceException e) {
+			throw new WebApplicationException(e);
+		} 
 		return Response.ok().build();
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -36,6 +37,8 @@ import eu.emi.dsr.util.ServiceUtil;
  * 
  */
 public class ServiceAdminManager {
+	private static Logger log = Log.getLogger(Log.DSR, ServiceAdminManager.class);
+	
 	private ServiceDatabase serviceDB = null;
 
 	
@@ -79,6 +82,9 @@ public class ServiceAdminManager {
 			// default prop. value
 			if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName())) {
+				if (log.isDebugEnabled()) {
+					log.debug("The expiry attribute is missing from the updated service information. The information will be expired in 1 day from now");
+				}
 				DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer
 						.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
 								"1")));
@@ -100,19 +106,9 @@ public class ServiceAdminManager {
 	 * @throws NonExistingResourceException
 	 * @throws MultipleResourceException
 	 */
-	public void removeService(String url) throws UnknownServiceException {
-		try {
-			serviceDB.deleteByUrl(url);
-		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void removeService(String url) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException{
+		serviceDB.deleteByUrl(url);
+		 
 	}
 
 	/**
@@ -128,8 +124,17 @@ public class ServiceAdminManager {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes: serviceurl and servicetype");
 		}
-
-		// request should json should not update the creation time
+		
+		if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName())) {
+			if (log.isDebugEnabled()) {
+				log.debug("The expiry attribute is missing from the updated service information. The information will be expired in 1 day from now");
+			}
+			DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
+							"1")));
+		}
+		
+		// request json should not update the creation time
 		if (jo.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 				.getAttributeName())) {
 			jo.remove(ServiceBasicAttributeNames.SERVICE_CREATED_ON

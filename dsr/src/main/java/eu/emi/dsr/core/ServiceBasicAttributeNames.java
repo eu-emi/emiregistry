@@ -90,7 +90,7 @@ public enum ServiceBasicAttributeNames {
 	 */
 	public String getAttributeDesc() {
 		if (attributeDesc == null) {
-			return "Description Not Define";
+			return "Description Undefined";
 		}
 		return attributeDesc;
 	}

@@ -156,18 +156,30 @@ public class TestServiceAdminResource extends TestRegistryBase {
 				"sms");
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), "http://1");
+		//removing the expiry time
+		JSONObject j = getUpdatedServiceDesc().getJSONObject(0);
+		JSONArray ja = new JSONArray();
+		j.remove(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName());
+		ja.put(j);
 		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-				.put(getUpdatedServiceDesc());
+				.put(ja);
 		
-		
+		System.out.println("being updated json document: "+j.toString(2));
 		
 		DSRClient cr2 = new DSRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		JSONObject jo1 = cr2.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		System.out.println(jo1);
+		//asserting the type
 		assertEquals("sms", jo1.get(ServiceBasicAttributeNames.SERVICE_TYPE
 				.getAttributeName()));
+		//asserting the expiry time
+		assertTrue(jo1.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName()));
+		
+		System.out.println("updated json: "+jo1.toString(2));
+		
+		
 	}
 
 	@Test
