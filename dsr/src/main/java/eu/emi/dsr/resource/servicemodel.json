@@ -3,6 +3,7 @@
 		"Service_Name":"ComputingService",
 		"Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Type":"job-management",
+		"Service_ContactType":"sysadmin",
 		"Service_Capability":["capability1","capability2"],
 		"Service_QualityLevel":"production",
 		"Service_Complexity":"complexity",
@@ -27,12 +28,20 @@
 		"Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Endpoint_QualityLevel":"production",
+		"Service_Location_Address":"A Street 1",
+		"Service_Location_Place":"Bonn",
+		"Service_Location_Country":"Germany",
+		"Service_Location_PostCode":53119,
+		"Service_Location_Latitude":53.3,
+		"Service_Location_Longitude":4,		
 		"Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
+		
 	},
 	{
 		"Service_Name":"ComputingService",
 		"Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Type":"job-management",
+		"Service_ContactType":"sysadmin",
 		"Service_Capability":["capability1","capability2"],
 		"Service_QualityLevel":"production",
 		"Service_Complexity":"complexity",
@@ -57,6 +66,12 @@
 		"Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
 		"Service_Endpoint_QualityLevel":"production",
+		"Service_Location_Address":"A Street 1",
+		"Service_Location_Place":"Bonn",
+		"Service_Location_Country":"Germany",
+		"Service_Location_PostCode":53119,
+		"Service_Location_Latitude":53.3,
+		"Service_Location_Longitude":4,
 		"Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
 	},
 	
