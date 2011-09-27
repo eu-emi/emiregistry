@@ -27,6 +27,7 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
@@ -282,6 +283,13 @@ public class DSRServer {
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReciever(conf
 							.getProperty(ServerConstants.REGISTRY_PARENT_URL), conf));
+			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
+	                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
+				       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
+			RegistryThreadPool.getExecutorService().execute(
+					new ServiceCheckin(conf
+							.getProperty(ServerConstants.REGISTRY_PARENT_URL), myURL));
+
 		}
 
 	}
