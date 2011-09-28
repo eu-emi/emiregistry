@@ -36,7 +36,9 @@ public class ChildrenResource {
 	public Response checkin(@Context UriInfo infos){
 		System.out.println("checkin !!");
 		try {
-			addChildDSR(extractServiceUrlFromUri(infos));
+			if ( addChildDSR(extractServiceUrlFromUri(infos)) ) {
+				return Response.ok().entity(new String("First registration")).build();
+			}
 		} catch (IllegalArgumentException e) {
 			return Response.status(Status.BAD_REQUEST).entity("No endpoint given!").build();
 		} catch (EmptyIdentifierFailureException e) {
@@ -94,17 +96,22 @@ public class ChildrenResource {
 		return result;
 	}
 
-	public void addChildDSR(String identifier)
+	public boolean addChildDSR(String identifier)
 			throws EmptyIdentifierFailureException, NullPointerFailureException {
 		if (identifier == null)
 			throw new NullPointerFailureException();
 		if (identifier.isEmpty())
 			throw new EmptyIdentifierFailureException();
 
+		boolean retval = false;
 		if (childServices.containsKey(identifier)) {
 			childServices.remove(identifier);
+		} else {
+			// First time put the identifier into the list
+			retval = true;
 		}
         childServices.put(identifier, new Date());
+        return retval;
 	}
 
 }
