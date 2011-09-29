@@ -287,9 +287,14 @@ public class DSRServer {
 	                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
 				       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
 			Long max = Long.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
-			RegistryThreadPool.getExecutorService().execute(
-					new ServiceCheckin(conf
-							.getProperty(ServerConstants.REGISTRY_PARENT_URL), myURL, max));
+			try {
+				RegistryThreadPool.getExecutorService().execute(
+						new ServiceCheckin(conf
+								.getProperty(ServerConstants.REGISTRY_PARENT_URL), myURL, max));
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 

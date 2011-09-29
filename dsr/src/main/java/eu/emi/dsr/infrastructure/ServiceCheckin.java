@@ -4,10 +4,13 @@
 package eu.emi.dsr.infrastructure;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -36,14 +39,37 @@ public class ServiceCheckin implements Runnable {
 	private ServiceAdminManager sm;
 	
 	/**
+	 * @throws Throwable 
 	 * 
 	 */
-	public ServiceCheckin(String parentUrl, String url, Long maxmessage) {
+	public ServiceCheckin(String parentUrl, String url, Long maxmessage) throws Throwable {
 		DSRClient cc = new DSRClient(parentUrl + "/children");
 		childClient = cc.getClientResource();
 		DSRClient sc = new DSRClient(parentUrl + "/serviceadmin");
 		synchClient = sc.getClientResource();
 		sm = new ServiceAdminManager();
+		try {
+			URL tmp = new URL(url);
+			if (tmp.getProtocol().isEmpty()) {
+				logger.error("The registry.scheme element is empty in the configuration!");
+				this.finalize();
+			}
+			if (tmp.getHost().isEmpty()) {
+				logger.error("The registry.hostname element is empty in the configuration!");
+				this.finalize();
+			}
+			if (tmp.getHost().equals("localhost")) {
+				logger.error("You added 'localhost' value in the registry.hostname element. Please modified it to the real DNS name or IP address!");			
+				this.finalize();
+			}
+			if (tmp.getPort() == -1 ) {
+				logger.error("The registry.post element is empty in the configuration!");		
+				this.finalize();
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		myURL = url;
 		max = maxmessage;
 	}
@@ -64,6 +90,10 @@ public class ServiceCheckin implements Runnable {
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
 								myURL).post(ClientResponse.class);
+				if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ){
+					logger.error("Please modified the server's configuration, because the following error (" +res.getEntity(String.class) + ") given from the parent DSR. Checkin stopped!");
+					return;
+				}
 				if ( res.hasEntity() && 
 					 res.getEntity(String.class).equals("First registration")){
 					// Full DB need to be send
