@@ -51,7 +51,7 @@ public class TestChildrenManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#InfrastructureManager()}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.ChildrenManager#ChildrenManager()}.
 	 */
 	@Test
 	public void testChildrenManager() {
@@ -63,7 +63,7 @@ public class TestChildrenManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#GetChildDSRs()}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.ChildrenManager#GetChildDSRs()}.
 	 */
 	@Test
 	public void testGetChildDSRs() {
@@ -87,7 +87,7 @@ public class TestChildrenManager {
 	}
 
 	/**
-	 * Test method for {@link eu.emi.dsr.infrastructure.InfrastructureManager#addChildDSR(java.lang.String)}.
+	 * Test method for {@link eu.emi.dsr.infrastructure.ChildrenManager#addChildDSR(java.lang.String)}.
 	 */
 	@Test
 	public void testAddChildDSR() {
