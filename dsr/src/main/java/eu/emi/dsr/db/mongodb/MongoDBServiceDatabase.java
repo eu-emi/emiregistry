@@ -43,7 +43,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private static Mongo connection;
 	private DB database;
 	private DBCollection serviceCollection;
-
+	private static volatile MongoDBServiceDatabase s;
+	
+	public static MongoDBServiceDatabase getInstance(){
+		if (s == null) {
+			s = new MongoDBServiceDatabase();
+		}
+		return s;
+	}
+	
 	public MongoDBServiceDatabase() {
 		if (DSRServer.getConfiguration() == null) {
 			new DSRServer(new Configuration(new Properties()));

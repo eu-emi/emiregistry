@@ -143,7 +143,7 @@ public class ServiceAdminResource {
 	 * @throws InterruptedException 
 	 * TODO: polymorphic registrations: Supporting JSONObject as well as Array
 	 * */
-	
+	private static JSONArray j = new JSONArray();
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
@@ -169,7 +169,8 @@ public class ServiceAdminResource {
 						.getAttributeName(), c.getDistinguishedName());
 				JSONObject res = serviceAdmin.addService(serviceInfo);
 				arr.put(res);
-				Thread.sleep(10);
+				//why sleep for 10 ms???? its a big performance penalty
+				//Thread.sleep(10);
 				continue;
 				//return Response.ok(res).build();
 			} catch (JSONException e) {

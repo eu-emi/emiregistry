@@ -186,9 +186,6 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	public void testDeleteResource() throws JSONException {
 		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
 		
-
-		
-
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(getDummyServiceDesc());

@@ -135,10 +135,12 @@ public class ServiceAdminManager {
 		}
 		
 		// request json should not update the creation time
-		if (jo.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+		if (!jo.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 				.getAttributeName())) {
-			jo.remove(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName());
+			JSONObject date = new JSONObject();
+			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+					.getAttributeName(), date);
 		}
 
 		// setting the update time

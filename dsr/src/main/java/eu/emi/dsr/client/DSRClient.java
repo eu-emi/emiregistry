@@ -14,22 +14,32 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
+import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.Log;
+import eu.eu_emi.emiregistry.QueryResult;
 
 /**
  * Helper class to create the client resource instance
@@ -41,9 +51,9 @@ public class DSRClient {
 	/**
 	 * 
 	 */
-	
+
 	private String url;
-	
+
 	private static Logger logger = Log
 			.getLogger(Log.DSRCLIENT, DSRClient.class);
 	Client cr = null;
@@ -60,7 +70,7 @@ public class DSRClient {
 		logger.debug("creating default client");
 		this.url = url;
 		cr = Client.create();
-		
+
 	}
 
 	private void initSec() {
@@ -69,19 +79,18 @@ public class DSRClient {
 		SSLContext ctx;
 		try {
 			ctx = SSLContext.getInstance("SSL");
-			//setting keystore
+			// setting keystore
 			KeyStore ks = KeyStore.getInstance(sProps.getKeystoreType());
 			FileInputStream fis = new FileInputStream(new File(
 					sProps.getKeystore()));
 			ks.load(fis, sProps.getKeystorePassword().toCharArray());
 			fis.close();
 
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
-					.getDefaultAlgorithm());
+			KeyManagerFactory kmf = KeyManagerFactory
+					.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			kmf.init(ks, sProps.getKeystorePassword().toCharArray());
-			
-			
-			//setting truststore
+
+			// setting truststore
 			KeyStore ts = KeyStore.getInstance(sProps.getTruststoreType());
 			FileInputStream fis1 = new FileInputStream(new File(
 					sProps.getTruststore()));
@@ -90,7 +99,7 @@ public class DSRClient {
 			TrustManagerFactory tmf = TrustManagerFactory
 					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			tmf.init(ts);
-			
+
 			SecureRandom se = new SecureRandom();
 			ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), se);
 
@@ -101,7 +110,8 @@ public class DSRClient {
 				}
 			};
 
-			config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
+			config.getProperties().put(
+					HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
 					new HTTPSProperties(hv, ctx));
 
 			cr = Client.create(config);
@@ -126,14 +136,49 @@ public class DSRClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public WebResource getClientResource() {
 		return cr.resource(url);
 	}
-	
-	public Client getClient(){
+
+	public Client getClient() {
 		return cr;
+	}
+
+	public JSONArray register(JSONArray ja) {
+		ClientResponse res = getClientResource().path("serviceadmin").accept(
+				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, ja);
+		return res.getEntity(JSONArray.class);
+	}
+
+	public JSONArray update(JSONArray ja) {
+		ClientResponse res = getClientResource().path("serviceadmin").accept(
+				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, ja);
+		return res.getEntity(JSONArray.class);
+	}
+
+	public ClientResponse delete(String url) {
+		ClientResponse res = getClientResource()
+				.path("serviceadmin").queryParam(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName(),
+						url).delete(ClientResponse.class);
+		return res;
+	}
+
+	public JSONArray query(MultivaluedMap<String, String> attrMap) {
+		JSONArray ja = getClientResource()
+			.path("services/query").queryParams(attrMap).accept(MediaType.APPLICATION_JSON_TYPE)
+			.get(JSONArray.class);
+		return ja;
+	}
+	
+	public QueryResult queryXML(MultivaluedMap<String, String> attrMap, Integer skip, Integer limit) {
+		QueryResult ja = getClientResource()
+			.path("services/query.xml").queryParams(attrMap).accept(MediaType.APPLICATION_XML_TYPE)
+			.get(QueryResult.class);
+		return ja;
 	}
 }
