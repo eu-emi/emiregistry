@@ -56,7 +56,6 @@ public interface ServiceInfrastructure {
 	/**
 	 * Add child DSR service url
 	 * @param url of the child service
-	 * @throws AlreadyExistFailureException throws exception if child entry add before the collection
 	 * @throws EmptyIdentifierFailureException throws exception if identifier is empty
 	 * @throws NullPointerFailureException throws exception if identifier is a NULL pointer
 	 * @return None

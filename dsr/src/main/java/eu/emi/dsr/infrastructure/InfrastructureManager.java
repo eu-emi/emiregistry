@@ -45,12 +45,10 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	private String dbname = "emiregistry";
 
 	private List<String> parentsRoute;
-	private List<String> childServices;
 
 	public InfrastructureManager(Configuration config) {
 		conf = config;
 		parentsRoute = new ArrayList<String>();
-		childServices = new ArrayList<String>();
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException e) {
@@ -116,7 +114,9 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 */
 	@Override
 	public List<String> getChildDSRs() {
-		return childServices;
+		List<String> result = new ArrayList<String>();
+		logger.debug("Not implemented yet.");
+		return result;
 	}
 
 	/*
@@ -126,36 +126,16 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 */
 	@Override
 	public void addChildDSR(String identifier)
-			throws AlreadyExistFailureException,
-			EmptyIdentifierFailureException, NullPointerFailureException {
+			throws EmptyIdentifierFailureException, NullPointerFailureException {
 		if (identifier == null)
 			throw new NullPointerFailureException();
 		if (identifier.isEmpty())
 			throw new EmptyIdentifierFailureException();
 
-		if (childServices.contains(identifier))
-			throw new AlreadyExistFailureException();
-		childServices.add(identifier);
+        logger.debug("Not implemented yet.");
 	}
 
-	/**
-	 * Checked every child DSR with ping message.
-	 * If the child is not available, remove it from the list.
-	 * 
-	 * @param None
-	 * @return None
-	 */
-	public void childLiveCheck() {
-		for (int i=0; i<childServices.size(); i++ ) {
-			DSRClient c = new DSRClient(childServices.get(i) + "/ping");
-			WebResource client = c.getClientResource();
-			ClientResponse res = client.accept(MediaType.TEXT_PLAIN)
-					.get(ClientResponse.class);
-			if ( res.getStatus() != Status.OK.getStatusCode() ){
-				childServices.remove(i);
-			}
-		}
-	}
+
 	
 	/*
 	 * @see
