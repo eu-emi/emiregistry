@@ -50,6 +50,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		return arr;
 	}
 
+	@SuppressWarnings("unused")
 	private static JSONObject getOutdatedServiceDesc() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL

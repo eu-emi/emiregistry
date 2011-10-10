@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONArray;
 import org.junit.Test;
 
-import eu.emi.dsr.TestRegistryBase;
 import eu.emi.dsr.client.DSRClient;
 
 /**

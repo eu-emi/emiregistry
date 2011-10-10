@@ -41,7 +41,7 @@ public class TestRegistrationValidator {
 	public void testInvalidDateType() throws JSONException, IOException{
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		Calendar c = Calendar.getInstance();
-		c.add(c.MONTH,12);
+		c.add(Calendar.MONTH,12);
 		JSONObject d = new JSONObject();
 		d.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), d);

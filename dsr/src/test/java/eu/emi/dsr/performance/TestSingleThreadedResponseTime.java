@@ -5,7 +5,6 @@ package eu.emi.dsr.performance;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
 

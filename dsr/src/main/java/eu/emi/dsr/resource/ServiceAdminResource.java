@@ -146,7 +146,6 @@ public class ServiceAdminResource {
 	 * @throws InterruptedException 
 	 * TODO: polymorphic registrations: Supporting JSONObject as well as Array
 	 * */
-	private static JSONArray j = new JSONArray();
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
