@@ -334,18 +334,57 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			}
 		}
 		// Synchronization messages are sending
+		int maxMessageSize = Long.valueOf(conf
+				.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"))
+				.intValue();
 		JSONArray jos;
 		// Registration messages
 		boolean register = true;
 		jos = search(1, 0);
 		if (jos.length() > 0) {
-			register = send(jos, Method.REGISTER);
+			int i=0;
+			while (i<jos.length()) {
+				// Create message part from the original
+				JSONArray sended = new JSONArray();
+				for (int index = i;
+						(index<(i+maxMessageSize))&&(index<jos.length());
+						index++) {
+					try {
+						sended.put(jos.getJSONObject(index));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				// Send
+				register = register&&send(sended, Method.REGISTER);
+				// Next start index calculation
+				i+=maxMessageSize;
+			}
 		}
 		// Update messages
 		boolean update = true;
 		jos = search(0, 0);
 		if (jos.length() > 0) {
-			update = send(jos, Method.UPDATE);
+			int i=0;
+			while (i<jos.length()) {
+				// Create message part from the original
+				JSONArray sended = new JSONArray();
+				for (int index = i;
+						(index<(i+maxMessageSize))&&(index<jos.length());
+						index++) {
+					try {
+						sended.put(jos.getJSONObject(index));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				// Send
+				update = update&&send(sended, Method.UPDATE);
+				// Next start index calculation
+				i+=maxMessageSize;
+			}
 		}
 		// Remove messages
 		boolean delete = true;
