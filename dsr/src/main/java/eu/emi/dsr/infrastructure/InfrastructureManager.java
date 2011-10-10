@@ -169,58 +169,66 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsended registration message.
 	 * 
-	 * @param service
+	 * @param list of service
 	 *            identifier
 	 * @return None
 	 */
-	public void handleRegistration(String identifier) {
-		logger.debug("handleRegistration called with this ID: " + identifier);
-		try {
-			ResultSet rs;
-			rs = stat.executeQuery("select * from " + dbname + " where id = '"
-					+ identifier + "'");
-			if (!rs.first()) {
-				logger.debug(identifier
-						+ " is not in the list! Insert new record...");
-				stat.execute("insert into " + dbname + " values('" + identifier
-						+ "', 1, 0)");
-			} else {
-				logger.debug("The list contains this '" + identifier
-						+ "' ID! Update comming...");
-				stat.execute("update " + dbname + " set del=0 where id='"
+	public void handleRegistration(List<String> identifiers) {
+		logger.debug("handleRegistration called...");
+		for (int i=0; i<identifiers.size(); i++) {
+			String identifier = identifiers.get(i);
+			logger.debug("next ID by the Registration: " + identifier);
+			try {
+				ResultSet rs;
+				rs = stat.executeQuery("select * from " + dbname + " where id = '"
 						+ identifier + "'");
+				if (!rs.first()) {
+					logger.debug(identifier
+							+ " is not in the list! Insert new record...");
+					stat.execute("insert into " + dbname + " values('" + identifier
+							+ "', 1, 0)");
+				} else {
+					logger.debug("The list contains this '" + identifier
+							+ "' ID! Update comming...");
+					stat.execute("update " + dbname + " set del=0 where id='"
+							+ identifier + "'");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * Handle the unsended update message.
 	 * 
-	 * @param service
+	 * @param list of service
 	 *            identifier
 	 * @return None
 	 */
-	public void handleUpdate(String identifier) {
-		logger.debug("handleUpdate called with this ID: " + identifier);
-		try {
-			ResultSet rs;
-			rs = stat.executeQuery("select * from " + dbname + " where id = '"
-					+ identifier + "'");
-			if (!rs.first()) {
-				logger.debug(identifier
-						+ " is not in the list! Insert new record...");
-				stat.execute("insert into " + dbname + " values('" + identifier
-						+ "', 0, 0)");
-			} else {
-				logger.debug("The list contains this '" + identifier
-						+ "' ID! Everything correct.");
+	public void handleUpdate(List<String> identifiers) {
+		logger.debug("handleUpdate called...");
+		for (int i=0; i<identifiers.size(); i++) {
+			String identifier = identifiers.get(i);
+			logger.debug("next ID by the Update: " + identifier);
+			try {
+				ResultSet rs;
+				rs = stat.executeQuery("select * from " + dbname + " where id = '"
+						+ identifier + "'");
+				if (!rs.first()) {
+					logger.debug(identifier
+							+ " is not in the list! Insert new record...");
+					stat.execute("insert into " + dbname + " values('" + identifier
+							+ "', 0, 0)");
+				} else {
+					logger.debug("The list contains this '" + identifier
+							+ "' ID! Everything correct.");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -267,60 +275,63 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * 
 	 * @return True or False. It is depends from DB synchronization.
 	 */
-	public boolean dbSynchronization(String id, Method method,
+	public boolean dbSynchronization(List<String> ids, Method method,
 			int responsestatus) {
 		logger.debug("DB synchronization started.");
-		switch (method) {
-		case REGISTER:
-			logger.debug("REGISTRATION comming..., ID: " + id
-					+ ", response status: " + responsestatus);
-			if (responsestatus == Status.OK.getStatusCode()) {
-				try {
-					logger.debug("register, delete");
-					stat.execute("delete from " + dbname + " where id='" + id
-							+ "'");
-				} catch (SQLException e) {
+		for (int i=0; i<ids.size(); i++){
+			String id = ids.get(i);
+			switch (method) {
+			case REGISTER:
+				logger.debug("REGISTRATION comming..., ID: " + id
+						+ ", response status: " + responsestatus);
+				if (responsestatus == Status.OK.getStatusCode()) {
+					try {
+						logger.debug("register, delete");
+						stat.execute("delete from " + dbname + " where id='" + id
+								+ "'");
+					} catch (SQLException e) {
+					}
+				} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
+					try {
+						logger.debug("register, update");
+						stat.execute("update " + dbname
+								+ " set new=0, del=0 where id='" + id + "'");
+					} catch (SQLException e) {
+					}
 				}
-			} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
-				try {
-					logger.debug("register, update");
-					stat.execute("update " + dbname
-							+ " set new=0, del=0 where id='" + id + "'");
-				} catch (SQLException e) {
+				break;
+			case UPDATE:
+				logger.debug("UPDATE comming..., ID: " + id + ", response status: "
+						+ responsestatus);
+				if (responsestatus == Status.OK.getStatusCode()) {
+					try {
+						stat.execute("delete from " + dbname + " where id='" + id
+								+ "'");
+					} catch (SQLException e) {
+					}
+				} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
+					try {
+						stat.execute("update " + dbname
+								+ " set new=1, del=0 where id='" + id + "'");
+					} catch (SQLException e) {
+					}
 				}
+				break;
+			case DELETE:
+				logger.debug("DELETE comming..., ID: " + id + ", response status: "
+						+ responsestatus);
+				if (responsestatus == Status.OK.getStatusCode()) {
+					try {
+						stat.execute("delete from " + dbname + " where id='" + id
+								+ "'");
+					} catch (SQLException e) {
+					}
+				}
+				break;
+			default:
+				logger.debug("Bad method type, ID: " + id);
+				return false;
 			}
-			break;
-		case UPDATE:
-			logger.debug("UPDATE comming..., ID: " + id + ", response status: "
-					+ responsestatus);
-			if (responsestatus == Status.OK.getStatusCode()) {
-				try {
-					stat.execute("delete from " + dbname + " where id='" + id
-							+ "'");
-				} catch (SQLException e) {
-				}
-			} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
-				try {
-					stat.execute("update " + dbname
-							+ " set new=1, del=0 where id='" + id + "'");
-				} catch (SQLException e) {
-				}
-			}
-			break;
-		case DELETE:
-			logger.debug("DELETE comming..., ID: " + id + ", response status: "
-					+ responsestatus);
-			if (responsestatus == Status.OK.getStatusCode()) {
-				try {
-					stat.execute("delete from " + dbname + " where id='" + id
-							+ "'");
-				} catch (SQLException e) {
-				}
-			}
-			break;
-		default:
-			logger.debug("Bad method type, ID: " + id);
-			return false;
 		}
 		// Synchronization messages are sending
 		JSONArray jos;

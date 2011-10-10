@@ -35,6 +35,9 @@ import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
+import eu.emi.dsr.event.Event;
+import eu.emi.dsr.event.EventDispatcher;
+import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.security.Client;
@@ -183,6 +186,7 @@ public class ServiceAdminResource {
 				errorArray.put(serviceInfo);
 			}
 		}
+		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
 		if (errorArray.length()>0){
 			return Response.status(Status.CONFLICT).entity(errorArray).build();
 		}
@@ -295,6 +299,7 @@ public class ServiceAdminResource {
 					return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
 				}
 			}
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE, arr));
 			if (errorArray.length()>0){
 				return Response.status(Status.CONFLICT).entity(errorArray).build();
 			}

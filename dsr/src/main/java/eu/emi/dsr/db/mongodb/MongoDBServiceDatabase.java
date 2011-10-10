@@ -148,8 +148,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			database.requestDone();
-			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
-					.toJSON()));
+//			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
+//					.toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "
@@ -256,8 +256,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
 			// sending update event to the recievers
-			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
-					sObj.toJSON()));
+//			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
+//					sObj.toJSON()));
 		} catch (MongoException e) {
 			e.printStackTrace();
 		}
