@@ -28,7 +28,6 @@ import java.util.Set;
  * herself.  
  *  
  * @author golbi
- * @see IAttributeSource class in use-core
  */
 public class SubjectAttributesHolder implements Serializable
 {

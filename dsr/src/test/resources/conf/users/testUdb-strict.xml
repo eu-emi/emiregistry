@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileAttributeSource>
+	<entry key="EMAILADDRESS=emiregistry@user.eu, CN=EMIRegistry-Demo-User, OU=JSC, O=Forschungszentrum Juelich GmbH, L=Juelich, C=DE">
+		<attribute name="role">
+			<!-- serviceowner is allowed to change the services he owns -->
+			<value>serviceowner</value>
+		</attribute>				
+	</entry>
+	<entry key="EMAILADDRESS=emiregistry2@user.eu, CN=EMIRegistry-Demo-User-2, OU=JSC, O=Forschungszentrum Juelich GmbH, L=Juelich, C=DE">
+		<attribute name="role">
+		    <!-- admin can change all the services -->
+			<value>admin</value>
+		</attribute>				
+	</entry>		
+</fileAttributeSource>

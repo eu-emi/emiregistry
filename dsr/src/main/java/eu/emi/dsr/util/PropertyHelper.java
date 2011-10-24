@@ -44,7 +44,8 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unchecked")
 public class PropertyHelper {
-
+	
+	@SuppressWarnings("rawtypes")
 	private final Map properties;
 
 	private final String[] acceptedPatterns;

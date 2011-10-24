@@ -9,9 +9,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.AbstractConnector;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
@@ -117,10 +119,17 @@ public class JettyServer {
 		ServletContextHandler context = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
-		server.setHandler(context);
-
 		context.addServlet(sh, "/*");
-		server.addConnector(connector);
+
+		server.setHandler(context);
+		
+		QueuedThreadPool pool = new QueuedThreadPool();
+		pool.setMaxThreads(500);
+		pool.setMinThreads(50);
+		
+		server.setThreadPool(pool);
+				
+		server.setConnectors(new Connector[] { connector });
 
 	}
 
@@ -180,7 +189,6 @@ public class JettyServer {
 					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false")); // true
 			cf.setNeedClientAuth(conf.getBooleanProperty(
 					ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "false"));
-
 		} catch (Exception e) {
 			Log.logException("Error creating secure connectore", e, logger);
 		}
@@ -197,10 +205,10 @@ public class JettyServer {
 		SelectChannelConnector plain_connector = new SelectChannelConnector();
 		plain_connector.setHost(hostName);
 		plain_connector.setPort(portNumber);
-		plain_connector.setThreadPool(new QueuedThreadPool(Integer.valueOf(conf
-				.getProperty(ServerConstants.JETTY_MAXTHREADS))));
+		
 		plain_connector.setMaxIdleTime(Integer.valueOf(conf
 				.getProperty(ServerConstants.JETTY_MAXIDLETIME)));
+		
 		return plain_connector;
 	}
 

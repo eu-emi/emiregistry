@@ -21,7 +21,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.dsr.client.DSRClient;
+import eu.emi.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.DateUtil;
 

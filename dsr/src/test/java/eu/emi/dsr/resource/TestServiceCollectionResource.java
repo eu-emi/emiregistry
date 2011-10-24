@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.dsr.TestRegistryBase;
-import eu.emi.dsr.client.DSRClient;
+import eu.emi.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
@@ -172,14 +172,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 
 	}
 
-	@Test
-	public void testGetServicesByType() {
-		DSRClient cr = new DSRClient(BaseURI + "/services/type/jms");
-		JSONArray o = cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
-		assertNotNull(o);
-		assertTrue(o.length() == 50);
-	}
+	
 	
 	@Test
 	public void testGetSupportedTypes() throws JSONException {

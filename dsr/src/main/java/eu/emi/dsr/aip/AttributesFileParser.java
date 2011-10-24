@@ -24,6 +24,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 
+
 /**
  * Utility class to parse file with attributes. Format is described in {@link FileAttributeSource}.
  * StAX parser is used.
@@ -36,6 +37,7 @@ public class AttributesFileParser
 	private static final String ENTRY_EL = "entry";
 	private static final String ATTR_EL = "attribute";
 	private static final String VALUE_EL = "value";
+	private static final String KEY_EL = "key";
 	private static final QName KEY_AT = new QName("key");
 	private static final QName NAME_AT = new QName("name");
 	
@@ -67,12 +69,29 @@ public class AttributesFileParser
 			StartElement entry = getNextElement(reader, ENTRY_EL, MAIN_EL);
 			if (entry == null)
 				break;
+			
+			String key=null;
+			//check if key is given as attribute
 			javax.xml.stream.events.Attribute a = entry.getAttributeByName(KEY_AT);
-			if (a == null)
-				throw new IOException("Got entry without key attribute");
-			String key = a.getValue();
+			if (a != null)
+			{
+				key = a.getValue();
+			}else
+			{
+				//must have key as a sub-element
+				StartElement keyElement = getNextElement(reader, KEY_EL, ATTR_EL);
+				if(keyElement!=null){
+					key=readTextContent(reader).trim();
+				}
+			}
+
+			if(key==null){
+				throw new IOException("Got entry without key!");
+			}
+			
 			if (ret.containsKey(key))
 				throw new IOException("The same entry key used twice: " + key);
+			
 			List<Attribute> attributes = new ArrayList<Attribute>();
 			
 			//attributes loop

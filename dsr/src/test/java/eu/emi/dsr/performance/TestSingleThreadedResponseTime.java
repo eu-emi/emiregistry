@@ -5,7 +5,6 @@ package eu.emi.dsr.performance;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -18,7 +17,7 @@ import org.junit.Test;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import eu.emi.dsr.client.DSRClient;
+import eu.emi.client.DSRClient;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 
@@ -30,7 +29,7 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
  * 
  */
 public class TestSingleThreadedResponseTime {
-	DSRClient c = new DSRClient("http://localhost:54321");
+	DSRClient c = new DSRClient("http://zam1161v02.zam.kfa-juelich.de:54321");
 
 	// variables to hold the readings
 	Map<String, Object> regReadings = new HashMap<String, Object>();
@@ -47,7 +46,7 @@ public class TestSingleThreadedResponseTime {
 	
 	@Before
 	public void setUp() {
-		mdb = new MongoDBServiceDatabase("localhost", 27017, "emiregistry-loaddb", "services-loadcol");
+		mdb = new MongoDBServiceDatabase("zam1161v02.zam.kfa-juelich.de", 27017, "emiregistry-loaddb", "services-loadcol");
 	}
 
 	public JSONArray getDummyRegistration(int i) throws JSONException {

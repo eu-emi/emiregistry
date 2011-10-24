@@ -19,9 +19,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
+import eu.emi.client.ClientSecurityProperties;
+import eu.emi.client.DSRClient;
 import eu.emi.dsr.DSRServer;
-import eu.emi.dsr.client.ClientSecurityProperties;
-import eu.emi.dsr.client.DSRClient;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceBasicAttributeNames;

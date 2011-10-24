@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.client;
+package eu.emi.client;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.dsr.security.client.IClientProperties;
-import eu.emi.dsr.security.util.KeystoreChecker;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.security.IClientProperties;
+import eu.emi.client.security.utl.KeystoreChecker;
+import eu.emi.client.util.Log;
 
 /**
  * @author a.memon

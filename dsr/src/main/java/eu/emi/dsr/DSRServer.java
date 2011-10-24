@@ -205,6 +205,9 @@ public class DSRServer {
 
 	private void initLog4j() {
 		String path = conf.getProperty(ServerConstants.LOGGER_CONF_PATH);
+		if (path == null) {
+			return;
+		}
 		PropertyConfigurator.configure(path);
 		LogManager l = LogManager.getLogManager();
 		try {

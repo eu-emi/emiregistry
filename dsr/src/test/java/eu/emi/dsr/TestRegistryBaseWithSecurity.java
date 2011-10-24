@@ -18,12 +18,13 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import eu.emi.client.ClientSecurityProperties;
 import eu.emi.dsr.aip.FileAttributeSource;
-import eu.emi.dsr.client.ClientSecurityProperties;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.pdp.local.FlatFilePDP;
 import eu.emi.dsr.pdp.local.LocalHerasafPDP;
 import eu.emi.dsr.security.ISecurityProperties;
 
@@ -77,9 +78,10 @@ public class TestRegistryBaseWithSecurity {
 		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
 		p.put("registry.security.attributes.order", "FILE");
 		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
-		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUudb-strict.xml");
-		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
-		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
+		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUdb-strict.xml");
+		//p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
+//		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
+		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, FlatFilePDP.class.getName());
 	}
 
 	private static void setGeneralSettings(Properties p) {

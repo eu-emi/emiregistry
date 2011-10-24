@@ -49,7 +49,7 @@ public class ParentServer extends AbstractServer{
 	    }
 	    Configuration c = getConfiguration("localhost", 9001, "localhost",
 				27017, "emiregistry-parentdb", false, null,
-				h2FileName);
+				h2FileName);    
 		
 		client = new DSRServer(c);		
 		

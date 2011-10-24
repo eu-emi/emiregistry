@@ -204,8 +204,8 @@ public final class SecurityManager {
 	 */
 	public static synchronized RegistryPDP getPDP(){
 		if(pdp==null){
-			String conf=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG).toString();
-			String pdpClass=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP).toString();
+			String conf=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null);
+			String pdpClass=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP);
 			String def=LocalHerasafPDP.class.getName();
 			if(pdpClass==null)
 			{
@@ -222,8 +222,16 @@ public final class SecurityManager {
 			
 			try {
 				Class<?> pdpClazz = Class.forName(pdpClass);
-				Constructor<?> constructor = pdpClazz.getConstructor(String.class);
-				pdp = (RegistryPDP)constructor.newInstance(conf);
+				Constructor<?> constructor = null;
+				if (conf != null) {
+					constructor = pdpClazz.getConstructor(String.class);
+					pdp = (RegistryPDP)constructor.newInstance(conf);
+				} else {
+					constructor = pdpClazz.getConstructor();
+					pdp = (RegistryPDP)constructor.newInstance();
+				}
+
+				
 				logger.info("Using PDP class <"+pdpClass+"> and config file <"+conf+">");	
 			}catch(Exception e){
 				logger.fatal("Can't create PDP.", e);
@@ -427,8 +435,8 @@ public final class SecurityManager {
 //			handleXlogin(client, preferences, validAttributes, defaultAttributes);
 			handleRole(client, preferences, validAttributes, defaultAttributes);
 //			handleQueue(client, preferences, validAttributes, defaultAttributes);
-			@SuppressWarnings("unused")
-			String[] vos = validAttributes.get(IAttributeSource.ATTRIBUTE_VOS);
+//			@SuppressWarnings("unused")
+//			String[] vos = validAttributes.get(IAttributeSource.ATTRIBUTE_VOS);
 //			if (vos != null)
 //				client.setVos(vos);
 		}

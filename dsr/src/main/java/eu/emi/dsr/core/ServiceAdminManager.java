@@ -48,6 +48,7 @@ public class ServiceAdminManager {
 	 */
 	public ServiceAdminManager() {
 		serviceDB = new MongoDBServiceDatabase();
+//		serviceDB = MongoDBServiceDatabase.getInstance();
 	}
 
 	/**

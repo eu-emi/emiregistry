@@ -13,7 +13,8 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.dsr.client.DSRClient;
+import eu.emi.client.DSRClient;
+
 
 public class ChildrenManager {
 	private static ChildrenManager instance = null;

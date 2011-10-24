@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.client;
+package eu.emi.client;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +37,9 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
+
 
 /**
  * Helper class to create the client resource instance
@@ -169,9 +169,17 @@ public class DSRClient {
 	}
 
 	public JSONArray query(MultivaluedMap<String, String> attrMap) {
-		JSONArray ja = getClientResource()
-			.path("services/query").queryParams(attrMap).accept(MediaType.APPLICATION_JSON_TYPE)
-			.get(JSONArray.class);
+		JSONArray ja = null;
+		if (attrMap != null) {
+			ja = getClientResource()
+					.path("services/query").queryParams(attrMap).accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONArray.class);	
+		}
+		else {
+			ja = getClientResource()
+					.path("services/query").accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONArray.class);
+		}
 		return ja;
 	}
 	

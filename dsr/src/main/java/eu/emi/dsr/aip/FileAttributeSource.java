@@ -122,7 +122,6 @@ public class FileAttributeSource implements IAttributeSource {
 		parseIfNeeded();
 		String subject = tokens.getUserName().getName(
 				X500Principal.CANONICAL);
-//		String subject = "cn=emiregistry-demo-user,ou=jsc,o=forschungszentrum juelich gmbh,l=juelich,c=de";
 		List<Attribute> attrs = searchFor(subject);
 		Map<String, String[]> retAll = new HashMap<String, String[]>();
 		Map<String, String[]> retFirst = new HashMap<String, String[]>();
