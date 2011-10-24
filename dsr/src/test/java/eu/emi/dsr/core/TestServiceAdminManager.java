@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;

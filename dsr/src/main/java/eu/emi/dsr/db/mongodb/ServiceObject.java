@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 

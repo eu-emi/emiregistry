@@ -10,7 +10,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
+
 import static org.junit.Assert.*;
 /**
  * @author a.memon

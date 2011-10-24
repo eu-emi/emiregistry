@@ -8,7 +8,8 @@ import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 
 /**

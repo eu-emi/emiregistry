@@ -14,8 +14,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.TestRegistryBase;
-import eu.emi.dsr.client.DSRClient;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.DSRClient;
+import eu.emi.client.ServiceBasicAttributeNames;
 
 /**
  * @author g.szigeti

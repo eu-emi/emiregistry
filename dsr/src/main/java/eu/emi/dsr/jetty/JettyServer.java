@@ -21,10 +21,10 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.security.ISecurityProperties;
 import eu.emi.dsr.util.Log;
 
 /**

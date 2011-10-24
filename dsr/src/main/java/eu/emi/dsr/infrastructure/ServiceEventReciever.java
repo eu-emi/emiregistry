@@ -17,8 +17,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.client.DSRClient;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventListener;

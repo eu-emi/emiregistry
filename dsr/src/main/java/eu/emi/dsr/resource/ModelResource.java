@@ -19,7 +19,8 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
+
 
 /**
  * The web resource to view the registry model

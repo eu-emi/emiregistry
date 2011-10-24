@@ -20,7 +20,7 @@ import java.util.TimeZone;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.validator.ValidatorFactory;
 
 /**

@@ -15,7 +15,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 

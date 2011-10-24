@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 
 import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.client.DSRClient;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**

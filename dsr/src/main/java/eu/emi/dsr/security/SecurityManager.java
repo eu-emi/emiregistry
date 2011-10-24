@@ -54,6 +54,9 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
+import eu.emi.client.security.AuthSSLProtocolSocketFactory;
+import eu.emi.client.security.ISecurityProperties;
+import eu.emi.client.security.utl.KeystoreUtil;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.pdp.PDPResult;
 import eu.emi.dsr.pdp.PDPResult.Decision;

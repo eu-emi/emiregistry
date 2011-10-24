@@ -20,7 +20,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.client.DSRClient;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 
 /**
  * @author a.memon

@@ -20,8 +20,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.client.DSRClient;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.ServiceAdminManager;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.util.Log;
 

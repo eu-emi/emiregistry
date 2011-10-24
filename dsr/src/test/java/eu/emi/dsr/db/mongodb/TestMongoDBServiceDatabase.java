@@ -12,9 +12,9 @@ import org.junit.rules.ExpectedException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.MultipleResourceException;
 import eu.emi.dsr.db.NonExistingResourceException;

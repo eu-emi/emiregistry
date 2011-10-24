@@ -13,7 +13,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.infrastructure.ChildrenManager;
 import eu.emi.dsr.infrastructure.EmptyIdentifierFailureException;
 import eu.emi.dsr.infrastructure.NullPointerFailureException;

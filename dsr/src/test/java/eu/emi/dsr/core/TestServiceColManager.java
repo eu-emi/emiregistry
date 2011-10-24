@@ -11,6 +11,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBTestBase;
 import static org.junit.Assert.*;
 /**

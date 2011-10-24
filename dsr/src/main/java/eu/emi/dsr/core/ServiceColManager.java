@@ -14,6 +14,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.MongoException;
 
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;

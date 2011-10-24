@@ -21,12 +21,11 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.client.DSRClient;
-import eu.emi.dsr.core.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
-
+import eu.emi.client.ServiceBasicAttributeNames;
 import static org.junit.Assert.*;
 
 /**
