@@ -70,9 +70,16 @@ public class TestDBSyncTestPart1 {
 		jo = DateUtil.setExpiryTime(jo, 12);
 		JSONArray jos = new JSONArray();
 		jos.put(jo);
-		System.out.println("registering: " + jo);
-		ClientResponse res = getChildClient("/serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, jos);
+
+		Thread.sleep(1000);
+
+		// 2nd registration to the child server
+		JSONObject jo2 = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
+		jo2 = DateUtil.setExpiryTime(jo2, 12);
+		jos.put(jo2);
+		System.out.println("registering: " + jos.toString());
+		ClientResponse res = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(ClientResponse.class, jos);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
 		Thread.sleep(1000);
@@ -86,20 +93,6 @@ public class TestDBSyncTestPart1 {
 				.getAttributeName()),
 				childJO.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
-		
-		Thread.sleep(1000);
-
-		// 2nd registration to the child server
-		JSONObject jo2 = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
-		jo2 = DateUtil.setExpiryTime(jo2, 12);
-		JSONArray jos2 = new JSONArray();
-		jos2.put(jo2);
-		System.out.println("registering2: " + jo2);
-		ClientResponse res2 = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(ClientResponse.class, jos2);
-		assertTrue(res2.getStatus() == Status.OK.getStatusCode());
-
-		Thread.sleep(1000);
 
 		// 2nd Registration check
 		JSONObject childJO2 = getChildClient(

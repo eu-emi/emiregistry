@@ -3,13 +3,14 @@
  */
 package eu.emi.dsr.infrastructure;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -62,17 +63,19 @@ public class ServiceEventReciever implements EventListener, Runnable {
 	 */
 	@Override
 	public void recieve(Event event) {
-		String ID = null;
-		JSONObject jo = new JSONObject();
+		List<String> IDs = new ArrayList<String>();
+		JSONArray jos = new JSONArray();
 		try {
-			jo = (JSONObject) event.getData();
+			jos = (JSONArray) event.getData();
 		} catch (ClassCastException e) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("event.data to JSONObject cast problem. May be delete message.");
 			}
 		}
 		try {
-			ID = jo.getString("Service_Endpoint_URL");
+			for (int i=0; i<jos.length(); i++){
+				IDs.add(jos.getJSONObject(i).getString("Service_Endpoint_URL"));
+			}
 		} catch (JSONException e1) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(e1);
@@ -84,20 +87,30 @@ public class ServiceEventReciever implements EventListener, Runnable {
 				logger.debug("service added event fired");
 			}
 			try{
-				JSONArray job = new JSONArray();
-				job.put(event.getData());
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-					    .post(ClientResponse.class, job);
+					    .post(ClientResponse.class, jos);
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
 					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){
+						// remove the wrong IDs from the ID list
+						if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
+							JSONArray errors = res.getEntity(JSONArray.class);
+							for (int i=0; i<errors.length(); i++){
+								try {
+									IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_URL"));
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
 						// DB sync
-						parent_lost = !infrastructure.dbSynchronization(ID, Method.REGISTER, res.getStatus());
+						parent_lost = !infrastructure.dbSynchronization(IDs, Method.REGISTER, res.getStatus());
 					}
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
-				infrastructure.handleRegistration(ID);
+				infrastructure.handleRegistration(IDs);
 			} 
 		}
 		if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_UPDATE)) {
@@ -105,20 +118,25 @@ public class ServiceEventReciever implements EventListener, Runnable {
 				logger.debug("service update event fired");
 			}
 			try {
-				JSONArray job = new JSONArray();
-				job.put(event.getData());
 				ClientResponse res = client.accept(MediaType.APPLICATION_JSON_TYPE)
-						.put(ClientResponse.class, job);
+						.put(ClientResponse.class, jos);
 				if ( res.getStatus() == Status.OK.getStatusCode() ||
 					 res.getStatus() == Status.CONFLICT.getStatusCode() ){
 					if (parent_lost){
+						// remove the wrong IDs from the ID list
+						if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
+							JSONArray errors = res.getEntity(JSONArray.class);
+							for (int i=0; i<errors.length(); i++){
+								IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_URL"));
+							}
+						}
 						// DB sync
-						parent_lost = !infrastructure.dbSynchronization(ID, Method.UPDATE, res.getStatus());
+						parent_lost = !infrastructure.dbSynchronization(IDs, Method.UPDATE, res.getStatus());
 					}
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
-				infrastructure.handleUpdate(ID);
+				infrastructure.handleUpdate(IDs);
 			} catch (Exception e) {
 				Log.logException("Error making update on the parent dsr",e);
 			}
@@ -135,7 +153,9 @@ public class ServiceEventReciever implements EventListener, Runnable {
 				if ( res.getStatus() == Status.OK.getStatusCode() ){
 					if (parent_lost){
 						// DB sync
-						parent_lost = !infrastructure.dbSynchronization(event.getData().toString(), Method.DELETE, res.getStatus());
+						List<String> ID = new ArrayList<String>();
+						ID.add(event.getData().toString());
+						parent_lost = !infrastructure.dbSynchronization(ID, Method.DELETE, res.getStatus());
 					}
 				}
 			} catch(ClientHandlerException e){

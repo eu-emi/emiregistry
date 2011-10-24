@@ -16,6 +16,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import eu.emi.client.DSRClient;
 
 
+
 public class ChildrenManager {
 	private static ChildrenManager instance = null;
 	private Map<String, Date> childServices;

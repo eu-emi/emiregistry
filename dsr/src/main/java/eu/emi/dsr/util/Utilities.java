@@ -40,9 +40,9 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlCursor.TokenType;
 
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.security.ISecurityProperties;
 
 
 /**

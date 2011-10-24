@@ -59,8 +59,6 @@ import eu.emi.dsr.pdp.PDPResult;
 import eu.emi.dsr.pdp.PDPResult.Decision;
 import eu.emi.dsr.pdp.RegistryPDP;
 import eu.emi.dsr.pdp.local.LocalHerasafPDP;
-import eu.emi.dsr.security.client.AuthSSLProtocolSocketFactory;
-import eu.emi.dsr.security.util.KeystoreUtil;
 import eu.emi.dsr.security.util.ResourceDescriptor;
 import eu.emi.dsr.util.Log;
 

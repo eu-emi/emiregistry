@@ -10,8 +10,12 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONArray;
 import org.junit.Test;
 
+<<<<<<< HEAD
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.client.DSRClient;
+=======
+import eu.emi.dsr.client.DSRClient;
+>>>>>>> branch 'master' of git@amemon-github:eu-emi/emiregistry.git
 
 /**
  * @author a.memon

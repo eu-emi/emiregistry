@@ -19,14 +19,13 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 import eu.emi.client.ClientSecurityProperties;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.dsr.aip.FileAttributeSource;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.pdp.local.FlatFilePDP;
-import eu.emi.dsr.pdp.local.LocalHerasafPDP;
-import eu.emi.dsr.security.ISecurityProperties;
 
 /**
  * @author a.memon
