@@ -193,9 +193,7 @@
 	</dependencyManagement>
 	<modules>
 		<module>dsr</module>
-		<module>gsr</module>
-		<module>xmltypes</module>
-		<module>emiregistry-dist</module>
+		<module>xmltypes</module>		
 		<module>emir-client</module>
 	</modules>
 	<build>
@@ -257,7 +255,6 @@
 								<argument>export</argument>
 								<argument>https://unicore.svn.sourceforge.net/svnroot/unicore/tools/docman/trunk</argument>
 								<argument>target/docman</argument>
-
 							</arguments>
 						</configuration>
 						<goals>
@@ -304,7 +301,7 @@
 			<id>maven-repository.java.net</id>
 			<name>Java.net Maven 1 Repository (legacy)</name>
 			<url>http://download.java.net/maven/1</url>
-			<layout>legacy</layout>
+<!-- 			<layout>legacy</layout> -->
 		</repository>
 		<repository>
 			<id>emiregistry</id>
