@@ -3,7 +3,16 @@
  */
 package eu.emi.dsr.resource;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -55,6 +64,7 @@ public class ServiceAdminResource {
 			ServiceAdminResource.class);
 
 	private final ServiceAdminManager serviceAdmin;
+	private static HashMap<String, String> filters;
 	@Context
 	HttpServletRequest req;
 
@@ -158,9 +168,10 @@ public class ServiceAdminResource {
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
 		JSONArray errorArray = new JSONArray();
-		for ( int i=0; i< serviceInfos.length(); i++ ) {
+		JSONArray filteredServiceInfos = IncomingFilter(serviceInfos);
+		for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
 			try {
-				serviceInfo = serviceInfos.getJSONObject(i);
+				serviceInfo = filteredServiceInfos.getJSONObject(i);
 				Integer length = serviceInfo.length();
 				if (length <= 0 || length > 100) {
 					throw new WebApplicationException(Status.FORBIDDEN);
@@ -171,8 +182,6 @@ public class ServiceAdminResource {
 						.getAttributeName(), c.getDistinguishedName());
 				JSONObject res = serviceAdmin.addService(serviceInfo);
 				arr.put(res);
-				//why sleep for 10 ms???? its a big performance penalty
-				//Thread.sleep(10);
 				continue;
 				//return Response.ok(res).build();
 			} catch (JSONException e) {
@@ -190,6 +199,93 @@ public class ServiceAdminResource {
 			return Response.status(Status.CONFLICT).entity(errorArray).build();
 		}
 		return Response.ok(arr).build();
+	}
+
+	private JSONArray IncomingFilter(JSONArray serviceInfos) {
+		if (filters == null){
+			// Initialized the filter object
+			// Filled the filters from the input file
+			filters = LoadFromFile("conf/inputfilters");
+		}
+		JSONArray filteredArray = new JSONArray();
+		//Get Map in Set interface to get key and value
+		Set<Entry<String, String>> s=filters.entrySet();
+
+		for (int i=0; i<serviceInfos.length(); i++){
+			boolean found = false;
+	        //Move next key and value of Map by iterator
+	        Iterator<Entry<String, String>> it=s.iterator();
+	        while(it.hasNext())
+	        {
+	            // key=value separator this by Map.Entry to get key and value
+	            Map.Entry m =(Map.Entry)it.next();
+
+	            try {
+	            	if (serviceInfos.getJSONObject(i).has((String)m.getKey()) &&
+	            			serviceInfos.getJSONObject(i).getString((String)m.getKey()).
+	            			equals((String)m.getValue())) {
+	            		// Match to the filter entry
+	            		found = true;
+	            		if (logger.isDebugEnabled()) {
+	            			logger.debug("Positive filter matching!  "
+	            					+ serviceInfos.getJSONObject(i).
+	            					    getString("SERVICE_ENDPOINT_URL")+ ", Attribute:"
+	            					    + (String)m.getKey() + ", Value: "
+	            					    + (String)m.getValue());
+	            		}
+	            		break;
+	            	}
+	            } catch (JSONException e) {
+	            	// TODO Auto-generated catch block
+	            	e.printStackTrace();
+	            }
+	        }
+	        if (!found){
+	        	// Add this entry to the output array
+	        	try {
+	        		filteredArray.put(serviceInfos.getJSONObject(i));
+	        	} catch (JSONException e) {
+	        		// TODO Auto-generated catch block
+	        		e.printStackTrace();
+	        	}
+	        }
+		}
+		return filteredArray;
+	}
+
+	private HashMap<String, String> LoadFromFile(String path) {
+		HashMap<String, String> filters = new HashMap<String, String>();
+		try {
+			// Open the input filter file
+			FileInputStream fstream = new FileInputStream(path);
+			
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			
+			String strLine;
+			String[] temp;
+			String delimiter = "=";
+			//Read File Line By Line
+			while ((strLine = br.readLine()) != null) {
+				//#comment
+				if(strLine.trim().substring(0, 1).endsWith("#")){
+					continue;
+				}
+
+				temp = strLine.trim().split(delimiter);
+				if (temp.length == 2) {
+					filters.put(temp[0], temp[1]);
+				}
+			}
+			//Close the input stream
+			in.close();
+			//TODO: non exist file handling
+		} catch (Exception e){
+			// TODO Auto-generated catch block
+        	e.printStackTrace();
+		}
+		return filters;
 	}
 
 	/**
@@ -257,8 +353,9 @@ public class ServiceAdminResource {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
-			for ( int i=0; i< serviceInfos.length(); i++ ) {
-				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
+			JSONArray filteredServiceInfos = IncomingFilter(serviceInfos);
+			for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
+				JSONObject serviceInfo = filteredServiceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
 				String owner = c.getDistinguishedName();
 				String url = serviceInfo
