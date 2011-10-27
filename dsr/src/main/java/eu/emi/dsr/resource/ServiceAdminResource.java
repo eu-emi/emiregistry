@@ -273,7 +273,7 @@ public class ServiceAdminResource {
 					continue;
 				}
 
-				temp = strLine.trim().split(delimiter);
+				temp = strLine.trim().split(delimiter,2);
 				if (temp.length == 2) {
 					filters.put(temp[0], temp[1]);
 				}
