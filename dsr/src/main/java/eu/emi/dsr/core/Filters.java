@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -40,15 +41,23 @@ public class Filters extends ServerConstants {
 	 * 
 	 */
 	public Filters() {
-		inputFilterPath = "src/main/resources/conf/inputfilters";
-		outputFilterPath = "src/main/resources/conf/outputfilters";
+		inputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_INPUTFILEPATH);
+		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);
 	}
 
 	public JSONArray IncomingFilter(JSONArray serviceInfos) {
+		if (inputFilterPath == null) {
+			logger.warn("registry.filters.input file path is empty in the configuration! Input filter turned OFF!");
+			return serviceInfos;
+		}
 		return Filter(serviceInfos, inputFilterPath, inputfilters);
 	}
 
 	public JSONArray OutputFilter(JSONArray serviceInfos) {
+		if (outputFilterPath == null) {
+			logger.warn("registry.filters.output file path is empty in the configuration! Output filter turned OFF!");
+			return serviceInfos;
+		}
 		return Filter(serviceInfos, outputFilterPath, outputfilters);
 	}
 	
