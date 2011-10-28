@@ -19,6 +19,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.Configuration;
+import eu.emi.dsr.core.Filters;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventListener;
@@ -37,6 +38,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 	private final WebResource client;
 	private static InfrastructureManager infrastructure;
 	private static boolean parent_lost;
+	private Filters filter;
 
 	/**
 	 * @param property
@@ -54,6 +56,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
 		client = c.getClientResource();
 		parent_lost = false;
+		filter = new Filters();
 	}
 	
 	/*
@@ -66,7 +69,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 		List<String> IDs = new ArrayList<String>();
 		JSONArray jos = new JSONArray();
 		try {
-			jos = (JSONArray) event.getData();
+			jos = filter.OutputFilter((JSONArray) event.getData());
 		} catch (ClassCastException e) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("event.data to JSONObject cast problem. May be delete message.");
