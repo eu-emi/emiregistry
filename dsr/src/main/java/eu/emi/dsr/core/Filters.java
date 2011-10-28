@@ -5,6 +5,7 @@ package eu.emi.dsr.core;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -18,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
-import eu.emi.dsr.resource.ServiceAdminResource;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -28,24 +28,61 @@ import eu.emi.dsr.util.Log;
 public class Filters extends ServerConstants {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			Filters.class);
-	private static HashMap<String, String> filters;
-	private static HashMap<String, String> outpufilters;
+	private static HashMap<String, String> inputfilters;
+	private static HashMap<String, String> outputfilters;
 	private String inputFilterPath;
+	private long lastModificationInput;
+	
 	private String outputFilterPath;
+	private long lastModificationOutput;
 	
 	/**
 	 * 
 	 */
 	public Filters() {
 		inputFilterPath = "src/main/resources/conf/inputfilters";
+		outputFilterPath = "src/main/resources/conf/outputfilters";
 	}
 
 	public JSONArray IncomingFilter(JSONArray serviceInfos) {
+		return Filter(serviceInfos, inputFilterPath, inputfilters);
+	}
+
+	public JSONArray OutputFilter(JSONArray serviceInfos) {
+		return Filter(serviceInfos, outputFilterPath, outputfilters);
+	}
+	
+	private JSONArray Filter(JSONArray serviceInfos, String path, HashMap<String, String> filters) {
+		long lastModification = new File(path).lastModified();
 		if (filters == null){
 			// Initialized the filter object
 			// Filled the filters from the input file
-			filters = LoadFromFile(inputFilterPath);
+			filters = LoadFromFile(path);
+			// Set the date of the last modification
+			if (path.equals(inputFilterPath)) {
+				lastModificationInput = lastModification;
+			} else {
+				lastModificationOutput = lastModification;
+			}
 		}
+		
+		// Changed the file since the last usage
+		if ( path.equals(inputFilterPath) && lastModificationInput < lastModification ) {
+			filters.clear();
+			// Filled the filters from the input file
+			filters = LoadFromFile(path);
+			lastModificationInput = lastModification;
+			logger.debug("Input filters updated!");
+		}
+		if ( path.equals(outputFilterPath) && lastModificationOutput < lastModification ) {
+			filters.clear();
+			// Filled the filters from the input file
+			filters = LoadFromFile(path);
+			lastModificationOutput = lastModification;
+			logger.debug("Output filters updated!");
+
+		}
+		
 		JSONArray filteredArray = new JSONArray();
 		//Get Map in Set interface to get key and value
 		Set<Entry<String, String>> s=filters.entrySet();
