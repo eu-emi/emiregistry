@@ -84,7 +84,7 @@ public class ServiceAdminResource {
 	}
 
 	@GET
-	@Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
 			throws WebApplicationException {
 		logger.debug("getting service by url");
@@ -152,7 +152,7 @@ public class ServiceAdminResource {
 	 * */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException{
 		Long max = Long.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
@@ -255,7 +255,7 @@ public class ServiceAdminResource {
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
 	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException {
 		try {
