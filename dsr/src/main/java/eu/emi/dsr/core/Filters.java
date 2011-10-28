@@ -51,7 +51,7 @@ public class Filters extends ServerConstants {
 	 * @param Array of incoming messages
 	 * @return Filtered messages
 	 */
-	public JSONArray IncomingFilter(JSONArray serviceInfos) {
+	public JSONArray InputFilter(JSONArray serviceInfos) {
 		if (inputFilterPath == null) {
 			logger.warn("registry.filters.input file path is empty in the configuration! Input filter turned OFF!");
 			return serviceInfos;

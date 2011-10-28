@@ -162,7 +162,7 @@ public class ServiceAdminResource {
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
 		JSONArray errorArray = new JSONArray();
-		JSONArray filteredServiceInfos = filter.IncomingFilter(serviceInfos);
+		JSONArray filteredServiceInfos = filter.InputFilter(serviceInfos);
 		for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
 			try {
 				serviceInfo = filteredServiceInfos.getJSONObject(i);
@@ -261,7 +261,7 @@ public class ServiceAdminResource {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
-			JSONArray filteredServiceInfos = filter.IncomingFilter(serviceInfos);
+			JSONArray filteredServiceInfos = filter.InputFilter(serviceInfos);
 			for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
 				JSONObject serviceInfo = filteredServiceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
