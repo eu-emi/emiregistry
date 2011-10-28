@@ -104,7 +104,7 @@ public class Filters extends ServerConstants {
 	            		// Match to the filter entry
 	            		found = true;
 	            		if (logger.isDebugEnabled()) {
-	            			logger.debug("Positive filter matching!  "
+	            			logger.debug("Positive "+ ((path.equals(inputFilterPath)) ? "input" : "output") + " filter matching!  "
 	            					+ serviceInfos.getJSONObject(i).
 	            					    getString("Service_Endpoint_URL")+ ", Name of attribute: "
 	            					    + (String)m.getKey() + ", Value: "
@@ -159,7 +159,8 @@ public class Filters extends ServerConstants {
 			//Close the input stream
 			in.close();
 		} catch (FileNotFoundException e) {
-			logger.warn("Filter file (" + path + ") not found! Filter turned OFF!");
+			logger.warn("Filter file (" + path + ") not found! "
+					+ ((path.equals(inputFilterPath)) ? "Input" : "Output") + " filter turned OFF!");
 		} catch (Exception e){
 			// TODO Auto-generated catch block
         	e.printStackTrace();
