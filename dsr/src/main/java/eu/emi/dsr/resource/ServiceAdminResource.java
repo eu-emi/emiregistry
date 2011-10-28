@@ -6,6 +6,7 @@ package eu.emi.dsr.resource;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -205,7 +206,7 @@ public class ServiceAdminResource {
 		if (filters == null){
 			// Initialized the filter object
 			// Filled the filters from the input file
-			filters = LoadFromFile("conf/inputfilters");
+			filters = LoadFromFile("src/main/resources/conf/inputfilters");
 		}
 		JSONArray filteredArray = new JSONArray();
 		//Get Map in Set interface to get key and value
@@ -229,7 +230,7 @@ public class ServiceAdminResource {
 	            		if (logger.isDebugEnabled()) {
 	            			logger.debug("Positive filter matching!  "
 	            					+ serviceInfos.getJSONObject(i).
-	            					    getString("SERVICE_ENDPOINT_URL")+ ", Attribute:"
+	            					    getString("Service_Endpoint_URL")+ ", Name of attribute: "
 	            					    + (String)m.getKey() + ", Value: "
 	            					    + (String)m.getValue());
 	            		}
@@ -273,14 +274,16 @@ public class ServiceAdminResource {
 					continue;
 				}
 
-				temp = strLine.trim().split(delimiter,2);
+				// Replace all space characters with empty string
+				temp = strLine.replaceAll(" ","").split(delimiter,2);
 				if (temp.length == 2) {
 					filters.put(temp[0], temp[1]);
 				}
 			}
 			//Close the input stream
 			in.close();
-			//TODO: non exist file handling
+		} catch (FileNotFoundException e) {
+			logger.warn("Filter file (" + path + ") not found! Filter turned OFF!");
 		} catch (Exception e){
 			// TODO Auto-generated catch block
         	e.printStackTrace();
