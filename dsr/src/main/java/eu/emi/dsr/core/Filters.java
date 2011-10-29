@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -29,8 +31,8 @@ import eu.emi.dsr.util.Log;
 public class Filters extends ServerConstants {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			Filters.class);
-	private static HashMap<String, String> inputfilters;
-	private static HashMap<String, String> outputfilters;
+	private static HashMap<String, List<String>> inputfilters;
+	private static HashMap<String, List<String>> outputfilters;
 	private String inputFilterPath;
 	private long lastModificationInput;
 	
@@ -38,14 +40,18 @@ public class Filters extends ServerConstants {
 	private long lastModificationOutput;
 	
 	/**
-	 * 
+	 * Constructor
 	 */
 	public Filters() {
 		inputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_INPUTFILEPATH);
 		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);
 	}
 
-	public JSONArray IncomingFilter(JSONArray serviceInfos) {
+	/**
+	 * @param Array of incoming messages
+	 * @return Filtered messages
+	 */
+	public JSONArray InputFilter(JSONArray serviceInfos) {
 		if (inputFilterPath == null) {
 			logger.warn("registry.filters.input file path is empty in the configuration! Input filter turned OFF!");
 			return serviceInfos;
@@ -53,6 +59,10 @@ public class Filters extends ServerConstants {
 		return Filter(serviceInfos, inputFilterPath, inputfilters);
 	}
 
+	/**
+	 * @param Array of outgoing messages
+	 * @return Filtered messages
+	 */
 	public JSONArray OutputFilter(JSONArray serviceInfos) {
 		if (outputFilterPath == null) {
 			logger.warn("registry.filters.output file path is empty in the configuration! Output filter turned OFF!");
@@ -61,7 +71,15 @@ public class Filters extends ServerConstants {
 		return Filter(serviceInfos, outputFilterPath, outputfilters);
 	}
 	
-	private JSONArray Filter(JSONArray serviceInfos, String path, HashMap<String, String> filters) {
+	/**
+	 * General function for filtering the incoming and outgoing message
+	 * @param Array of incoming/outgoing messages
+	 * @param Path of the filter file
+	 * @param filter object
+	 * @return Filtered messages
+	 */
+	@SuppressWarnings("unchecked")
+	private JSONArray Filter(JSONArray serviceInfos, String path, HashMap<String, List<String>> filters) {
 		long lastModification = new File(path).lastModified();
 		if (filters == null){
 			// Initialized the filter object
@@ -94,12 +112,12 @@ public class Filters extends ServerConstants {
 		
 		JSONArray filteredArray = new JSONArray();
 		//Get Map in Set interface to get key and value
-		Set<Entry<String, String>> s=filters.entrySet();
+		Set<Entry<String, List<String>>> s=filters.entrySet();
 
 		for (int i=0; i<serviceInfos.length(); i++){
 			boolean found = false;
 	        //Move next key and value of Map by iterator
-	        Iterator<Entry<String, String>> it=s.iterator();
+	        Iterator<Entry<String, List<String>>> it=s.iterator();
 	        while(it.hasNext())
 	        {
 	            // key=value separator this by Map.Entry to get key and value
@@ -108,8 +126,8 @@ public class Filters extends ServerConstants {
 
 	            try {
 	            	if (serviceInfos.getJSONObject(i).has((String)m.getKey()) &&
-	            			serviceInfos.getJSONObject(i).getString((String)m.getKey()).
-	            			equals((String)m.getValue())) {
+	            		((List<String>)m.getValue()).
+	            			contains(serviceInfos.getJSONObject(i).getString((String)m.getKey()))) {
 	            		// Match to the filter entry
 	            		found = true;
 	            		if (logger.isDebugEnabled()) {
@@ -117,7 +135,7 @@ public class Filters extends ServerConstants {
 	            					+ serviceInfos.getJSONObject(i).
 	            					    getString("Service_Endpoint_URL")+ ", Name of attribute: "
 	            					    + (String)m.getKey() + ", Value: "
-	            					    + (String)m.getValue());
+	            					    + serviceInfos.getJSONObject(i).getString((String)m.getKey()));
 	            		}
 	            		break;
 	            	}
@@ -139,8 +157,13 @@ public class Filters extends ServerConstants {
 		return filteredArray;
 	}
 
-	private HashMap<String, String> LoadFromFile(String path) {
-		HashMap<String, String> filters = new HashMap<String, String>();
+	/**
+	 * Parsing the filter file
+	 * @param Path of the filters
+	 * @return Map of the parsed filters
+	 */
+	private HashMap<String, List<String>> LoadFromFile(String path) {
+		HashMap<String, List<String>> filters = new HashMap<String, List<String>>();
 		try {
 			// Open the input filter file
 			FileInputStream fstream = new FileInputStream(path);
@@ -152,9 +175,9 @@ public class Filters extends ServerConstants {
 			String strLine;
 			String[] temp;
 			String delimiter = "=";
-			//Read File Line By Line
+			// Read File Line By Line
 			while ((strLine = br.readLine()) != null) {
-				//#comment
+				// #comment
 				if(strLine.trim().substring(0, 1).endsWith("#")){
 					continue;
 				}
@@ -162,10 +185,21 @@ public class Filters extends ServerConstants {
 				// Replace all space characters with empty string
 				temp = strLine.replaceAll(" ","").split(delimiter,2);
 				if (temp.length == 2) {
-					filters.put(temp[0], temp[1]);
+					List<String> values = new ArrayList<String>();
+					// key and value check
+					if (filters.containsKey(temp[0])) {
+						values = filters.get(temp[0]);
+					}
+					
+					// unique value condition
+					if (!values.contains(temp[1])) {
+						values.add(temp[1]);
+						// put into the Map
+						filters.put(temp[0], values);
+					}
 				}
 			}
-			//Close the input stream
+			// Close the input stream
 			in.close();
 		} catch (FileNotFoundException e) {
 			logger.warn("Filter file (" + path + ") not found! "
@@ -173,6 +207,9 @@ public class Filters extends ServerConstants {
 		} catch (Exception e){
 			// TODO Auto-generated catch block
         	e.printStackTrace();
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Parsed filters: " + filters.toString());
 		}
 		return filters;
 	}
