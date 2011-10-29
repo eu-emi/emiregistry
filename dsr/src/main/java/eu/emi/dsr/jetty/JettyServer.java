@@ -160,8 +160,10 @@ public class JettyServer {
 	 */
 	private AbstractConnector createSecureConnector() {
 		SslSelectChannelConnector ssl_connector = null;
+//		SslSocketConnector ssl_connector = null;
 		try {
 			ssl_connector = new SslSelectChannelConnector();
+//			ssl_connector = new SslSocketConnector();
 			ssl_connector.setHost(conf
 					.getProperty(ServerConstants.REGISTRY_HOSTNAME));
 			ssl_connector.setPort(Integer.valueOf(conf
