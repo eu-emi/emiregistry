@@ -52,11 +52,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
-		MultivaluedMap<String, String> map;
-		Map<String, Object> m;
 		try {
-				map = request.getRequestHeaders();
-                m = request.getProperties();
 			checkAccess();
 		} catch (AuthorisationException e) {
 			throw new WebApplicationException(e,
@@ -86,7 +82,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 				tokens.setUserName(certArr[0].getSubjectX500Principal());
 			}
 
-			client = SecurityManager.createAndAuthoriseClient(tokens);
+			client = SecurityManager.createAndAuthoriseClient( tokens);
 			httpRequest.setAttribute(ServerConstants.CLIENT, client);
 
 			if ("true".equalsIgnoreCase(DSRServer.getProperty(
