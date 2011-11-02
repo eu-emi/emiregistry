@@ -20,11 +20,16 @@ public class FlatFilePDP implements RegistryPDP{
 	@Override
 	public PDPResult checkAuthorisation(Client c, String action,
 			ResourceDescriptor d) throws Exception {
-		if (c.getRole().getName().equalsIgnoreCase("admin") || c.getRole().getName().equalsIgnoreCase("serviceowner")) {
-			return new PDPResult(PDPResult.Decision.PERMIT, "");
+		//checks if the resource being accessed is serviceadmin followed by the role matching
+		if (d.getServiceName().equalsIgnoreCase("serviceadmin")) {
+			if (c.getRole().getName().equalsIgnoreCase("admin") || c.getRole().getName().equalsIgnoreCase("serviceowner")) {
+				return new PDPResult(PDPResult.Decision.PERMIT, "");
+			} else {
+				return new PDPResult(PDPResult.Decision.DENY, "");
+			}
 		}
 		
-		return new PDPResult(PDPResult.Decision.DENY, "");
+		return new PDPResult(PDPResult.Decision.PERMIT, "");
 	}
 
 }
