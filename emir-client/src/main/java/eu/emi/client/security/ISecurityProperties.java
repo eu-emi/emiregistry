@@ -56,7 +56,7 @@ public interface ISecurityProperties extends IClientProperties {
 	/**
 	 * property defining whether SSL is client authenticated
 	 */
-	public static final String REGISTRY_SSL_CLIENTAUTH = "registry.ssl.clientauth";
+	public static final String REGISTRY_SSL_CLIENTAUTH = "registry.ssl.clientauthentication";
 
 	/**
 	 * property defining the SSL keystore

@@ -11,6 +11,7 @@ import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
@@ -205,6 +206,7 @@ public class JettyServer {
 	 */
 	private AbstractConnector createConnector() {
 		SelectChannelConnector plain_connector = new SelectChannelConnector();
+//		SocketConnector plain_connector = new SocketConnector();
 		plain_connector.setHost(hostName);
 		plain_connector.setPort(portNumber);
 		

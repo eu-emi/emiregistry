@@ -1,0 +1,95 @@
+Buildroot: %{_builddir}/%{name}-root
+Name: @component-prefix@@component-name@
+Version: @component-version@
+Release: @component-release@
+Summary: EMIR Server
+License: APL 2.0
+Distribution: RedHat
+Group: Infrastructure Services
+URL: https://github.com/eu-emi/emiregistry
+Requires: java-1.6.0-openjdk
+BuildArch: noarch
+Packager: EMI emir@niif.hu
+@preamble@
+
+%description
+A Service Registry conceived during the EMI project. 
+Its main goals to discover all the Service endpoints that 
+exist and hence obtain future information about them. The key 
+part to the service registry is the management procedures and 
+policies which it implements. These are dictated by the stakeholders 
+of the various infrastructures and have been implemented in the registry.
+
+This package contains the EMIR server.
+
+%changelog
+* Fri Nov 02 2011 Shiraz Memon <emir@niif.hu> 
+-Initial rpm package
+
+@install_command@
+
+%files
+%defattr(755, emi, emi, -)
+#
+# Config files
+#
+%dir %attr(755 emi emi) "/etc/emi/emir"
+%dir %attr(755 emi emi) "/etc/emi/emir/users"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/log4j.properties"
+%config(noreplace) %attr(0644 emi emi)"/etc/emi/emir/users/rudb.xml"
+%config(noreplace) %attr(0600 emi emi) "/etc/emi/emir/dsr.config"
+%config(noreplace) %attr(0755 emi emi) "/etc/rc.d/init.d/emi-emir"
+
+
+%attr(0755 emi emi) "/usr/sbin/emir-start.sh"
+%attr(0755 emi emi) "/usr/sbin/emir-stop.sh"
+%attr(0755 emi emi) "/usr/sbin/emir-status.sh"
+#
+# Documentation
+#
+%docdir %attr(755 root root) "/usr/share/doc/emi/emir/"
+%attr(644 root root) "/usr/share/doc/emi/emir/*"
+
+#
+# jar files
+#
+%attr(755 root root) %dir "/usr/share/emi/emir/lib"
+%attr(644 root root) "/usr/share/emi/emir/lib/*.jar"
+
+#
+# logs
+#
+%dir %attr(0700 emi emi) "/var/log/emi/emir"
+%dir %attr(0700 emi emi) "/var/run/emi/emir"
+%dir %attr(0700 emi emi) "/var/lib/emi"
+
+
+#
+# dir %attr(0700 emi emi) "/var/lib/emir"
+#
+
+%pre
+/usr/sbin/groupadd -r emir 2>/dev/null || :
+/usr/sbin/useradd -c "UNICORE" -g unicore \
+    -s /sbin/nologin -r -d /usr/share/unicore unicore 2>/dev/null || :
+	
+%post
+if [ -e /sbin/chkconfig ]; then
+    /sbin/chkconfig --add unicore-unicorex
+elif [ -e /sbin/insserv ]; then
+    /sbin/insserv unicore-unicorex
+fi
+
+
+%preun
+if [ -e /sbin/chkconfig ]; then
+  if [ "$1" = "0" ]; then 
+      /etc/init.d/unicore-unicorex stop >/dev/null 2>&1
+      /sbin/chkconfig --del unicore-unicorex
+  fi
+elif [ -e /sbin/insserv ]; then
+  if [ "$1" = "0" ]; then 
+      /etc/init.d/unicore-unicorex stop >/dev/null 2>&1
+      /sbin/insserv -r unicore-unicorex
+  fi
+fi

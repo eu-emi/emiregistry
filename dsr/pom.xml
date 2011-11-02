@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>emiregistry</artifactId>
 		<groupId>eu.emi</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>dsr</artifactId>
 	<name>Domain Service Registry</name>
