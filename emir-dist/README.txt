@@ -1,6 +1,5 @@
 #
-# UNICORE/X
+# EMIR
 # 
 
-UNICORE/X is the central server in a UNICORE site.
-For documentation, please visit www.unicore.eu
+For documentation, please visit https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry
