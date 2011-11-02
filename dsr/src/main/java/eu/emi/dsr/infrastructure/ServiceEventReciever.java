@@ -19,7 +19,6 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.core.Configuration;
-import eu.emi.dsr.core.Filters;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventListener;
@@ -69,7 +68,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 		List<String> IDs = new ArrayList<String>();
 		JSONArray jos = new JSONArray();
 		try {
-			jos = filter.OutputFilter((JSONArray) event.getData());
+			jos = filter.outputFilter((JSONArray) event.getData());
 		} catch (ClassCastException e) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("event.data to JSONObject cast problem. May be delete message.");

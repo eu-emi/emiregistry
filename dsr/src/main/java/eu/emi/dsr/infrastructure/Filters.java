@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.core;
+package eu.emi.dsr.infrastructure;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -22,6 +22,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.util.Log;
 
 /**
@@ -51,24 +52,24 @@ public class Filters extends ServerConstants {
 	 * @param Array of incoming messages
 	 * @return Filtered messages
 	 */
-	public JSONArray InputFilter(JSONArray serviceInfos) {
+	public JSONArray inputFilter(JSONArray serviceInfos) {
 		if (inputFilterPath == null) {
 			logger.warn("registry.filters.input file path is empty in the configuration! Input filter turned OFF!");
 			return serviceInfos;
 		}
-		return Filter(serviceInfos, inputFilterPath, inputfilters);
+		return filter(serviceInfos, inputFilterPath, inputfilters);
 	}
 
 	/**
 	 * @param Array of outgoing messages
 	 * @return Filtered messages
 	 */
-	public JSONArray OutputFilter(JSONArray serviceInfos) {
+	public JSONArray outputFilter(JSONArray serviceInfos) {
 		if (outputFilterPath == null) {
 			logger.warn("registry.filters.output file path is empty in the configuration! Output filter turned OFF!");
 			return serviceInfos;
 		}
-		return Filter(serviceInfos, outputFilterPath, outputfilters);
+		return filter(serviceInfos, outputFilterPath, outputfilters);
 	}
 	
 	/**
@@ -79,12 +80,12 @@ public class Filters extends ServerConstants {
 	 * @return Filtered messages
 	 */
 	@SuppressWarnings("unchecked")
-	private JSONArray Filter(JSONArray serviceInfos, String path, HashMap<String, List<String>> filters) {
+	private JSONArray filter(JSONArray serviceInfos, String path, HashMap<String, List<String>> filters) {
 		long lastModification = new File(path).lastModified();
 		if (filters == null){
 			// Initialized the filter object
 			// Filled the filters from the input file
-			filters = LoadFromFile(path);
+			filters = loadFromFile(path);
 			// Set the date of the last modification
 			if (path.equals(inputFilterPath)) {
 				lastModificationInput = lastModification;
@@ -97,14 +98,14 @@ public class Filters extends ServerConstants {
 		if ( path.equals(inputFilterPath) && lastModificationInput < lastModification ) {
 			filters.clear();
 			// Filled the filters from the input file
-			filters = LoadFromFile(path);
+			filters = loadFromFile(path);
 			lastModificationInput = lastModification;
 			logger.debug("Input filters updated!");
 		}
 		if ( path.equals(outputFilterPath) && lastModificationOutput < lastModification ) {
 			filters.clear();
 			// Filled the filters from the input file
-			filters = LoadFromFile(path);
+			filters = loadFromFile(path);
 			lastModificationOutput = lastModification;
 			logger.debug("Output filters updated!");
 
@@ -162,7 +163,7 @@ public class Filters extends ServerConstants {
 	 * @param Path of the filters
 	 * @return Map of the parsed filters
 	 */
-	private HashMap<String, List<String>> LoadFromFile(String path) {
+	private HashMap<String, List<String>> loadFromFile(String path) {
 		HashMap<String, List<String>> filters = new HashMap<String, List<String>>();
 		try {
 			// Open the input filter file

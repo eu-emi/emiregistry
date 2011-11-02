@@ -28,7 +28,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.DSRServer;
-import eu.emi.dsr.core.Filters;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.db.ExistingResourceException;
@@ -41,6 +40,7 @@ import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
+import eu.emi.dsr.infrastructure.Filters;
 import eu.emi.dsr.security.Client;
 import eu.emi.dsr.util.Log;
 
@@ -162,7 +162,7 @@ public class ServiceAdminResource {
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
 		JSONArray errorArray = new JSONArray();
-		JSONArray filteredServiceInfos = filter.InputFilter(serviceInfos);
+		JSONArray filteredServiceInfos = filter.inputFilter(serviceInfos);
 		for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
 			try {
 				serviceInfo = filteredServiceInfos.getJSONObject(i);
@@ -261,7 +261,7 @@ public class ServiceAdminResource {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
-			JSONArray filteredServiceInfos = filter.InputFilter(serviceInfos);
+			JSONArray filteredServiceInfos = filter.inputFilter(serviceInfos);
 			for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
 				JSONObject serviceInfo = filteredServiceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
