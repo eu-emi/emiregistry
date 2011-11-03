@@ -25,6 +25,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -35,7 +36,6 @@ import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
 import eu.emi.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
-
 
 /**
  * Helper class to create the client resource instance
@@ -144,20 +144,23 @@ public class DSRClient {
 	}
 
 	public JSONArray register(JSONArray ja) {
-		ClientResponse res = getClientResource().path("serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, ja);
+		ClientResponse res = getClientResource().path("serviceadmin")
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(ClientResponse.class, ja);
 		return res.getEntity(JSONArray.class);
 	}
 
 	public JSONArray update(JSONArray ja) {
-		ClientResponse res = getClientResource().path("serviceadmin").accept(
-				MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, ja);
+		ClientResponse res = getClientResource().path("serviceadmin")
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(ClientResponse.class, ja);
 		return res.getEntity(JSONArray.class);
 	}
 
 	public ClientResponse delete(String url) {
 		ClientResponse res = getClientResource()
-				.path("serviceadmin").queryParam(
+				.path("serviceadmin")
+				.queryParam(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName(),
 						url).delete(ClientResponse.class);
@@ -167,22 +170,27 @@ public class DSRClient {
 	public JSONArray query(MultivaluedMap<String, String> attrMap) {
 		JSONArray ja = null;
 		if (attrMap != null) {
-			ja = getClientResource()
-					.path("services/query").queryParams(attrMap).accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);	
-		}
-		else {
-			ja = getClientResource()
-					.path("services/query").accept(MediaType.APPLICATION_JSON_TYPE)
+			ja = getClientResource().path("services").queryParams(attrMap)
+					.accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONArray.class);
+		} else {
+			ja = getClientResource().path("services")
+					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JSONArray.class);
 		}
 		return ja;
 	}
-	
-	public QueryResult queryXML(MultivaluedMap<String, String> attrMap, Integer skip, Integer limit) {
-		QueryResult ja = getClientResource()
-			.path("services/query.xml").queryParams(attrMap).accept(MediaType.APPLICATION_XML_TYPE)
-			.get(QueryResult.class);
+
+	public JSONArray queryJSON(JSONObject queryDocument) {
+		return getClientResource().path("services").accept(MediaType.APPLICATION_JSON_TYPE).post(
+				JSONArray.class, queryDocument);
+	}
+
+	public QueryResult queryXML(MultivaluedMap<String, String> attrMap,
+			Integer skip, Integer limit) {
+		QueryResult ja = getClientResource().path("services")
+				.queryParams(attrMap).accept(MediaType.APPLICATION_XML_TYPE)
+				.get(QueryResult.class);
 		return ja;
 	}
 }

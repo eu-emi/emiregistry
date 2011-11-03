@@ -73,30 +73,7 @@ public class ServiceColManager {
 		return arr;
 	}
 
-	/**
-	 * @param jo
-	 * @throws JSONException
-	 */
-	public JSONObject queryServiceCollection(JSONObject jo)
-			throws JSONException {
-		JSONArray ja = new JSONArray();
-		JSONObject resultSet = new JSONObject();
-		for (int i = 0; i < 50; i++) {
-			JSONObject j = new JSONObject();
-			j.put("serviceurl", "http://url-" + i);
-			j.put("servicetype", "type-" + i);
-			j.put("servicetype", "1type-" + i);
-			j.put("servicetype", "2type-" + i);
-			j.put("servicetype", "3type-" + i);
-			j.put("servicetype", "4type-" + i);
-			j.put("servicetype", "5type-" + i);
-			j.put("servicetype", "6type-" + i);
-			j.put("servicetype", "7type-" + i);
-			ja.put(j);
-		}
-		resultSet.put("result", ja);
-		return resultSet;
-	}
+	
 
 	/**
 	 * @param m
@@ -134,6 +111,19 @@ public class ServiceColManager {
 		}
 
 		return jArr;
+	}
+	
+	/**
+	 * @param m
+	 * @return {@link JSONArray}
+	 * @throws PersistentStoreFailureException
+	 * @throws QueryException
+	 * @throws JSONException 
+	 * @throws MongoException 
+	 */
+	public JSONArray query(JSONObject queryDoc) throws QueryException,
+			PersistentStoreFailureException, MongoException, JSONException {
+		return serviceDB.queryJSON(queryDoc.toString());
 	}
 	
 	/**
