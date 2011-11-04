@@ -28,6 +28,8 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.infrastructure.InputFilter;
+import eu.emi.dsr.infrastructure.OutputFilter;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.jetty.JettyServer;
@@ -145,7 +147,8 @@ public class DSRServer {
 	private void addResponseFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
-		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		sb.append(InputFilter.class.getName()).append(",").
+		   append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE, sb.toString());
 		
 	}
@@ -156,7 +159,9 @@ public class DSRServer {
 	private void addRequestFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		sb.append(AccessControlFilter.class.getName()).append(",").append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		sb.append(OutputFilter.class.getName()).append(",").
+		   append(AccessControlFilter.class.getName()).append(",").
+		   append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
 		
 	}
