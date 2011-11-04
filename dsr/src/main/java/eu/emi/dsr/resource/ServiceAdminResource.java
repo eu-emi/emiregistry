@@ -40,7 +40,6 @@ import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
-import eu.emi.dsr.infrastructure.Filters;
 import eu.emi.dsr.security.Client;
 import eu.emi.dsr.util.Log;
 
@@ -56,7 +55,6 @@ public class ServiceAdminResource {
 			ServiceAdminResource.class);
 
 	private final ServiceAdminManager serviceAdmin;
-	private final Filters filter;
 
 	@Context
 	HttpServletRequest req;
@@ -67,7 +65,6 @@ public class ServiceAdminResource {
 	public ServiceAdminResource() {
 		// serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
 		serviceAdmin = new ServiceAdminManager();
-		filter = new Filters();
 	}
 
 	protected String getUserPrincipalName() {
@@ -162,10 +159,9 @@ public class ServiceAdminResource {
 		JSONObject serviceInfo = null;
 		JSONArray arr = new JSONArray();
 		JSONArray errorArray = new JSONArray();
-		JSONArray filteredServiceInfos = filter.inputFilter(serviceInfos);
-		for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
+		for ( int i=0; i< serviceInfos.length(); i++ ) {
 			try {
-				serviceInfo = filteredServiceInfos.getJSONObject(i);
+				serviceInfo = serviceInfos.getJSONObject(i);
 				Integer length = serviceInfo.length();
 				if (length <= 0 || length > 100) {
 					throw new WebApplicationException(Status.FORBIDDEN);
@@ -261,9 +257,8 @@ public class ServiceAdminResource {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
-			JSONArray filteredServiceInfos = filter.inputFilter(serviceInfos);
-			for ( int i=0; i< filteredServiceInfos.length(); i++ ) {
-				JSONObject serviceInfo = filteredServiceInfos.getJSONObject(i);
+			for ( int i=0; i< serviceInfos.length(); i++ ) {
+				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
 				Client c = (Client) req.getAttribute("client");
 				String owner = c.getDistinguishedName();
 				String url = serviceInfo
