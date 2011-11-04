@@ -23,17 +23,15 @@ import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.util.Log;
 
 /**
  * @author g.szigeti
  *
  */
 public class Filters extends ServerConstants {
-	private static Logger logger = Log.getLogger(Log.DSR,
-			Filters.class);
-	private static HashMap<String, List<String>> inputfilters;
-	private static HashMap<String, List<String>> outputfilters;
+	private Logger logger = null;
+	private HashMap<String, List<String>> inputfilters;
+	private HashMap<String, List<String>> outputfilters;
 	private String inputFilterPath;
 	private long lastModificationInput;
 	
@@ -43,9 +41,10 @@ public class Filters extends ServerConstants {
 	/**
 	 * Constructor
 	 */
-	public Filters() {
+	public Filters(Logger log) {
 		inputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_INPUTFILEPATH);
 		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);
+		logger = log;
 	}
 
 	/**
@@ -88,8 +87,10 @@ public class Filters extends ServerConstants {
 			filters = loadFromFile(path);
 			// Set the date of the last modification
 			if (path.equals(inputFilterPath)) {
+				inputfilters = filters;
 				lastModificationInput = lastModification;
 			} else {
+				outputfilters = filters;
 				lastModificationOutput = lastModification;
 			}
 		}
@@ -98,14 +99,14 @@ public class Filters extends ServerConstants {
 		if ( path.equals(inputFilterPath) && lastModificationInput < lastModification ) {
 			filters.clear();
 			// Filled the filters from the input file
-			filters = loadFromFile(path);
+			filters = inputfilters =loadFromFile(path);
 			lastModificationInput = lastModification;
 			logger.debug("Input filters updated!");
 		}
 		if ( path.equals(outputFilterPath) && lastModificationOutput < lastModification ) {
 			filters.clear();
 			// Filled the filters from the input file
-			filters = loadFromFile(path);
+			filters = outputfilters = loadFromFile(path);
 			lastModificationOutput = lastModification;
 			logger.debug("Output filters updated!");
 
