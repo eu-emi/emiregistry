@@ -75,6 +75,7 @@ public class TestServiceAdminResourceWithSecurity extends
 						.getAttributeName()));
 	}
 	
+	
 	@Test
 	public void testUnAuthzRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,

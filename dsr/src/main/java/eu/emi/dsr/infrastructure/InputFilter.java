@@ -20,7 +20,7 @@ import eu.emi.dsr.util.Log;
  * 
  */
 public class InputFilter implements ContainerRequestFilter {
-	private Logger logger = Log.getLogger(Log.FILTER,
+	private Logger logger = Log.getLogger(Log.DSR,
 			InputFilter.class);
 	private Filters filter = null;
 
@@ -37,15 +37,15 @@ public class InputFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
-		logger.debug("INPUTFILTER called"); // TODO: remove this line after the debugging
+		//why the filter is shared variable?
 		if (filter == null) {
-			filter = new Filters(logger);
+			filter = new Filters();
 		}
-		if (request.getMediaType() != null && 
-				request.getMediaType().toString().equals(MediaType.APPLICATION_JSON)) {
+		
+		if (request.getHeaderValue("Accept").equalsIgnoreCase(MediaType.APPLICATION_JSON)) {
 			JSONArray entity = filter.inputFilter(request.getEntity(JSONArray.class));
 			request.setEntityInputStream(new ByteArrayInputStream(entity.toString().getBytes()));
-		}
+		}		
 		return request;
 	}
 

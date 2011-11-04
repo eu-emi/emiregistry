@@ -3,17 +3,15 @@
  */
 package eu.emi.dsr.core;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBTestBase;
-import static org.junit.Assert.*;
 /**
  * @author a.memon
  * 
@@ -40,18 +38,6 @@ public class TestServiceColManager extends MongoDBTestBase{
 	
 	
 	
-	@Test
-	public void testQueryServiceCollection(){
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "jms");
-		JSONObject j = new JSONObject(map);
-		try {
-			mgr.queryServiceCollection(j);
-		} catch (JSONException e) {
-			fail();
-			e.printStackTrace();
-		}
-	}
+	
 
 }

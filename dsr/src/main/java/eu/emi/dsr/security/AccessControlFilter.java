@@ -9,9 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
@@ -55,8 +53,9 @@ public class AccessControlFilter implements ContainerRequestFilter {
 		try {
 			checkAccess();
 		} catch (AuthorisationException e) {
-			throw new WebApplicationException(e,
-					Response.status(Status.UNAUTHORIZED).entity("Error performing access control: \n"+e).build());
+			throw new WebApplicationException(e, Response
+					.status(Status.UNAUTHORIZED)
+					.entity("Error performing access control: \n" + e).build());
 		}
 
 		return request;
@@ -72,7 +71,7 @@ public class AccessControlFilter implements ContainerRequestFilter {
 			Boolean b = Boolean.valueOf(DSRServer.getProperty(
 					ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
 			// dealing with the principal
-			if (b) {
+			if (b || DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).equalsIgnoreCase("https")) {
 				X509Certificate[] certArr = (X509Certificate[]) httpRequest
 						.getAttribute("javax.servlet.request.X509Certificate");
 				tokens = new SecurityTokens();
@@ -80,20 +79,21 @@ public class AccessControlFilter implements ContainerRequestFilter {
 						.generateCertPath(Arrays.asList(certArr));
 				tokens.setUser(cp);
 				tokens.setUserName(certArr[0].getSubjectX500Principal());
-			}
 
-			client = SecurityManager.createAndAuthoriseClient( tokens);
-			httpRequest.setAttribute(ServerConstants.CLIENT, client);
-
-			if ("true".equalsIgnoreCase(DSRServer.getProperty(
-					ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
-				AuthZAttributeStore.setTokens(tokens);
-				AuthZAttributeStore.setClient(client);
-				action = httpRequest.getMethod();
-				String owner = SecurityManager.getServerIdentity().getName();
-				resourceDescriptor = new ResourceDescriptor(uriInfo.getPath(),
-						null, owner);
-				doCheck(tokens, client, action, resourceDescriptor);
+				client = SecurityManager.createAndAuthoriseClient(tokens);
+				httpRequest.setAttribute(ServerConstants.CLIENT, client);
+				
+				if ("true".equalsIgnoreCase(DSRServer.getProperty(
+						ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
+					AuthZAttributeStore.setTokens(tokens);
+					AuthZAttributeStore.setClient(client);
+					action = httpRequest.getMethod();
+					String owner = SecurityManager.getServerIdentity()
+							.getName();
+					resourceDescriptor = new ResourceDescriptor(
+							uriInfo.getPath(), null, owner);
+					doCheck(tokens, client, action, resourceDescriptor);
+				}
 			}
 
 		} catch (Exception e) {

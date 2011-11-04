@@ -147,8 +147,7 @@ public class DSRServer {
 	private void addResponseFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
-		sb.append(InputFilter.class.getName()).append(",").
-		   append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE, sb.toString());
 		
 	}
@@ -159,8 +158,7 @@ public class DSRServer {
 	private void addRequestFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		sb.append(OutputFilter.class.getName()).append(",").
-		   append(AccessControlFilter.class.getName()).append(",").
+		sb.append(AccessControlFilter.class.getName()).append(",").
 		   append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
 		

@@ -31,8 +31,6 @@ public class Log {
 
 	public static final String CLIENT = "emiregistry.dsr.client";
 
-	public static final String FILTER = "emiregistry.dsr.infrastructure";
-	
 	/**
 	 * returns a logger name, using the given prefix and the simple name
 	 * of the given class

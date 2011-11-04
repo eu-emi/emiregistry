@@ -20,7 +20,7 @@ import eu.emi.dsr.util.Log;
  * 
  */
 public class OutputFilter implements ContainerResponseFilter {
-	private Logger logger = Log.getLogger(Log.FILTER,
+	private Logger logger = Log.getLogger(Log.DSR,
 			OutputFilter.class);
 	private Filters filter = null;
 
@@ -43,7 +43,7 @@ public class OutputFilter implements ContainerResponseFilter {
 			return response;
 		}
 		if (filter == null) {
-			filter = new Filters(logger);
+			filter = new Filters();
 		}
 		if (response.getMediaType() != null && 
 				response.getMediaType().toString().equals(MediaType.APPLICATION_JSON)) {

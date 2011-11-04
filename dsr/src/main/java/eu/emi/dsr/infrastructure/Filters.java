@@ -23,13 +23,14 @@ import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.util.Log;
 
 /**
  * @author g.szigeti
  *
  */
 public class Filters extends ServerConstants {
-	private Logger logger = null;
+	private static Logger logger = Log.getLogger(Log.DSR, Filters.class);
 	private HashMap<String, List<String>> inputfilters;
 	private HashMap<String, List<String>> outputfilters;
 	private String inputFilterPath;
@@ -41,10 +42,9 @@ public class Filters extends ServerConstants {
 	/**
 	 * Constructor
 	 */
-	public Filters(Logger log) {
+	public Filters() {
 		inputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_INPUTFILEPATH);
-		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);
-		logger = log;
+		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);		
 	}
 
 	/**
