@@ -1,1 +1,17 @@
+###############################################################################
+#                    Output message filters
+# 
+# In this file can you add the elements of the filter.
+# Each line contains one filter element and the elements are in 'or' context.
+# 
+# Filter element is a key-value pair in the following syntax:
+#   <name of the filter attribute> = <filter value for this attribute>
+#
+# You can ignore one attribute if you put # character to the begining of
+# the line.
+#
+# When you modified this filter's file the server will reload it before
+# use it next time.
+#
+###############################################################################
 Service_Name = ComputingService
