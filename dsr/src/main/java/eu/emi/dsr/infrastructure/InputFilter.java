@@ -2,9 +2,7 @@ package eu.emi.dsr.infrastructure;
 
 import java.io.ByteArrayInputStream;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
