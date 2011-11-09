@@ -25,6 +25,7 @@ import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
+import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start
@@ -55,6 +56,7 @@ public class TestDBSyncTestPart1 {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+    	ServiceUtil.initLogger("src/test/resources/conf/log4j.properties");
  		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
 				"localhost", 27017, "emiregistry-parentdb", "services-test");
 		parentDB.deleteAll();

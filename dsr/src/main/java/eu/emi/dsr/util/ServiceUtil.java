@@ -4,6 +4,9 @@
 package eu.emi.dsr.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,11 +19,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.LogManager;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.validator.ValidatorFactory;
 
 /**
@@ -46,7 +52,6 @@ public class ServiceUtil {
 	public static SimpleDateFormat ISODateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ssZ");
 	private static List<String> lstNames;
-	
 
 	/**
 	 * Checks the service description being registered contains the mandatory
@@ -103,22 +108,44 @@ public class ServiceUtil {
 			return "";
 		}
 	}
-	
-	private static void initList(){
+
+	private static void initList() {
 		if (lstNames == null) {
 			lstNames = new ArrayList<String>();
-			for(ServiceBasicAttributeNames s : ServiceBasicAttributeNames.values()){
+			for (ServiceBasicAttributeNames s : ServiceBasicAttributeNames
+					.values()) {
 				lstNames.add(s.getAttributeName());
-			}	
+			}
 		}
-		
+
 	}
-	
-	public static List<String> getAttributeNames(){
+
+	public static List<String> getAttributeNames() {
 		initList();
 		return lstNames;
 	}
-	
-	
+
+	/**
+	 * Initialise log4j
+	 * 
+	 * @param path
+	 */
+	public static void initLogger(String path) {
+		if (path == null) {
+			return;
+		}
+		PropertyConfigurator.configure(path);
+		LogManager l = LogManager.getLogManager();
+		try {
+			l.readConfiguration(new FileInputStream(new File(path)));
+		} catch (SecurityException e) {
+			Log.logException("", e);
+		} catch (FileNotFoundException e) {
+			Log.logException("", e);
+		} catch (IOException e) {
+			Log.logException("", e);
+		}
+
+	}
 
 }

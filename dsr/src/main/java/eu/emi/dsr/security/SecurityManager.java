@@ -130,7 +130,7 @@ public final class SecurityManager {
 	/**
 	 * get the server's identity, or <code>null</code> if 
 	 * no server keystore has been configured
-
+makeAnonymousClient
 	 * @see #getServerCert()
 	 * @return an {@link X500Principal} or <code>null</code>
 	 */
@@ -513,13 +513,12 @@ public final class SecurityManager {
 	 */
 	public static Client createAndAuthoriseClient(final SecurityTokens tokens){
 		Client client=new Client();
-		
 		// 4 cases: local call, no authorisation material, security is ON and security is OFF
 		if(isLocalCall())
 			client = makeAnonymousClient("CN=Local_call");
 		else if (tokens == null)
 			client = makeAnonymousClient(null);
-		else if(!DSRServer.getConfiguration().getBooleanProperty(SecurityManager.DISABLE_SECURITY_AND_ACCESS_CONTROL, false))
+		else if(!DSRServer.getConfiguration().getBooleanProperty(SecurityManager.DISABLE_SECURITY_AND_ACCESS_CONTROL,false))
 			client = createSecureClient(tokens);
 		else
 			client = makeAnonymousClient("CN=Security_is_disabled");

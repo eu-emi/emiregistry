@@ -104,7 +104,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			String colName) {
 		try {
 			if (DSRServer.getConfiguration() == null) {
-				new DSRServer(new Configuration(new Properties()));
+				Properties serverProps = new Properties();
+				serverProps.put(ServerConstants.MONGODB_HOSTNAME, hostname);
+				serverProps.put(ServerConstants.MONGODB_PORT, port);
+				serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, colName);
+				serverProps.put(ServerConstants.MONGODB_DB_NAME, dbName);
+				new DSRServer(new Configuration(serverProps));
 			}
 			if (connection == null) {
 				connection = new Mongo(hostname, port);

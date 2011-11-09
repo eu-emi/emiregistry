@@ -77,7 +77,7 @@ public class DSRServer {
 	
 	private void setSecurityProperties() {
 		try {
-			if (getProperty(ServerConstants.REGISTRY_SCHEME).equalsIgnoreCase("https")) {
+			if (getProperty(ServerConstants.REGISTRY_SCHEME, "http").equalsIgnoreCase("https")) {
 				conf.setProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "true");
 			}
 			if ("true".equalsIgnoreCase(getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
