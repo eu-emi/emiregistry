@@ -41,9 +41,9 @@ class EMIRConfiguration:
         setattr(self,attr,attributes[attr][1])
 
     # Verification 
-    # //TODO
+    # TODO: verification pattern and logic here
 
-    # Derived attributes
+    # Extract derived attributes from the original ones from ini config
     other_url = 'https://bla.bla.hu:54321'
     url_derivator = re.compile("^(http[s]?://)?([^:/]+)(:(\d*))?$")
     m = url_derivator.match(self.url)
@@ -170,14 +170,23 @@ class EMIRClient:
     for entry in self.config.getServiceEntries():
       try:
         service_entry = self.config.getServiceEntry(entry)
-        #service_entry['Service_CreationTime']={'$date': datetime.datetime.utcnow().isoformat()+'Z'}
-        #service_entry['Service_ExpireOn']={'$date': (datetime.datetime.utcnow()+datetime.timedelta(minutes=self.config.validity)).isoformat()+'Z'}
+        # Service creation time and expire on timestamp hacking because the too strict
+        # java requirements that aren't really following the iso standards.
+        # Instead of these:
+        # service_entry['Service_CreationTime']={
+        #   '$date': datetime.datetime.utcnow().isoformat()+'Z'
+        # }
+        # service_entry['Service_ExpireOn']={
+        #   '$date': (datetime.datetime.utcnow()+datetime.timedelta(minutes=self.config.validity)).isoformat()+'Z'
+        # }
+        # Doing these:
         service_entry['Service_CreationTime'] = {
           '$date': datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
         }
         service_entry['Service_ExpireOn'] = {
           '$date': (datetime.datetime.utcnow()+datetime.timedelta(minutes=self.config.validity)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
         }
+        # -- End of hack ;-)
 	service_entries.append(service_entry)
       except Exception, ex:
         print ex
@@ -185,16 +194,19 @@ class EMIRClient:
     return service_entries
 
   def update(self):
+    # Composing and sending update message
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
     print self.communicate('PUT', '/serviceadmin', parameters, headers)
 
   def register(self):
+    # Composing and sending registration message
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
     print self.communicate('POST', '/serviceadmin', parameters, headers)
 
   def delete(self):
+    # Composing and sending delete message
     for entry in self.config.getServiceEntries():
       self.communicate('DELETE', '/serviceadmin?Service_Endpoint_URL='+self.config.getServiceEntry(entry)['Service_Endpoint_URL'])
 

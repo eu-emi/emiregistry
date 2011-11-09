@@ -42,13 +42,18 @@ class emird(Daemon):
 
   def stop(self):
     # Delete registered entries
-    self.client.delete()
+    try:
+      self.client.delete()
+    except Exception, ex:
+      print ex
+      exit(1)
     # Call parents stop() function to stop the daemon itself
     super(emird,self).stop()
 
   def run(self):
-    print self.config.verbosity
-    exit(0)
+    # Try to send registration message. If do not manage to fall back
+    # to update. For example because of already existing registration
+    # entries.
     try:
       self.client.register()
     except Exception, ex:
@@ -59,9 +64,10 @@ class emird(Daemon):
         exit(1)
     
     while True:
-      # TODO: Swap these lines. This is just for testing
-      #sleep(self.config.period * 60)
-      sleep(self.config.period)
+      # After the successful initial registration wait the selected time
+      # (where the configured period is given in minutes so have to be
+      # multiplied by 60) then try to send an update message.
+      sleep(self.config.period * 60)
       try:
         self.client.update()
       except Exception, ex:
@@ -70,9 +76,15 @@ class emird(Daemon):
 
 if __name__ == "__main__":
 
-  foreground = 1
+  # The daemon is started in foreground mode ( = 1) or in the
+  # background ( = 0 )
+  foreground = 0
+  
+  # Location of the configuration file. TODO: Should be turn into a
+  # configurable option.
   config_file = 'emird.ini'
 
+  # Creating and starting the daemon class and process
   myDaemon = emird('/tmp/emird.pid', config_file)
 
   if foreground:
