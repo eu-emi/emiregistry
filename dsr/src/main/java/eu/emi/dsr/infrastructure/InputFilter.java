@@ -24,9 +24,6 @@ public class InputFilter implements ContainerRequestFilter {
 			InputFilter.class);
 	private Filters filter = null;
 
-	@Context
-	HttpServletRequest httpRequest;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -37,7 +34,16 @@ public class InputFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
-		//why the filter is shared variable?
+		// Use this filter for only the serviceadmin resource
+		if(!request.getPath().equals("serviceadmin")){ 
+			// Don't need filtering this message because it is not use a serviceadmin resource.
+			return request;
+		}
+		
+		if (logger.isDebugEnabled()){
+			logger.debug("OUTPUTFILTER called");
+		}
+		
 		if (filter == null) {
 			filter = new Filters();
 		}
