@@ -85,7 +85,7 @@ public class ServiceCollectionResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response query(@Context UriInfo ui) throws WebApplicationException {
+	public Response queryWithParams(@Context UriInfo ui) throws WebApplicationException {
 
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
@@ -112,6 +112,7 @@ public class ServiceCollectionResource {
 	}
 
 	/**
+	 * Query using the advanced MongoDB queries
 	 * @param queryDocument
 	 *            the JSON document defining the query according to the MongoDB
 	 *            Syntax
@@ -119,7 +120,7 @@ public class ServiceCollectionResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response queryJSON(JSONObject queryDocument)
+	public Response queryWithJSON(JSONObject queryDocument)
 			throws WebApplicationException {
 
 		JSONArray jArr = null;
@@ -135,6 +136,33 @@ public class ServiceCollectionResource {
 
 		return Response.ok(jArr).build();
 	}
+	
+	/**
+	 * @param queryDocument
+	 *            the JSON document defining the query according to the MongoDB
+	 *            Syntax
+	 * */
+	@POST
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response queryXMLWithJSON(JSONObject queryDocument)
+			throws WebApplicationException {
+
+		QueryResult jArr = null;
+		try {
+			jArr = col.queryGlue2(queryDocument);
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
+		}
+
+		if (jArr.getCount() == BigInteger.ZERO) {
+			return Response.ok(jArr).status(Status.NO_CONTENT).build();
+		} else if (jArr == null) {
+			return Response.ok().status(Status.NO_CONTENT).build();
+		}
+
+		return Response.ok(jArr).build();
+	}
 
 	/**
 	 * Invoked only if the MIME type is defineds as application/xml
@@ -143,7 +171,7 @@ public class ServiceCollectionResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML })
-	public Response queryXmlWithMIME(@Context UriInfo ui)
+	public Response queryXMLWithParams(@Context UriInfo ui)
 			throws WebApplicationException {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
