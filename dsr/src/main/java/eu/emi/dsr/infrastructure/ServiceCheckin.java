@@ -38,6 +38,7 @@ public class ServiceCheckin implements Runnable {
 	private String myURL;
 	private Long max;
 	private ServiceAdminManager sm;
+	private Filters filters;
 	
 	/**
 	 * @throws Throwable 
@@ -73,6 +74,7 @@ public class ServiceCheckin implements Runnable {
 		}
 		myURL = url;
 		max = maxmessage;
+		filters = new Filters();
 	}
 
 	/*
@@ -110,7 +112,7 @@ public class ServiceCheckin implements Runnable {
 								  i+1 == dbList.size()){
 								// message sending
 								synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
-											.post(ClientResponse.class, message);
+											.post(ClientResponse.class, filters.outputFilter(message));
 								// message cleaning
 								message = new JSONArray();
 							}
