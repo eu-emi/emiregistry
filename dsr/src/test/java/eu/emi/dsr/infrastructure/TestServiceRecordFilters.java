@@ -44,8 +44,8 @@ public class TestServiceRecordFilters {
 		serverProps.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		serverProps.put(ServerConstants.MONGODB_COL_CREATE, "true");
 		serverProps.put(ServerConstants.REGISTRY_FILTERS_REQUEST, InputFilter.class.getName());
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/main/resources/conf/inputfilters");
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/main/resources/conf/outputfilters");
+		serverProps.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/test/resources/conf/inputfilters");
+		serverProps.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/test/resources/conf/outputfilters");
 		Configuration c = new Configuration(serverProps);
 		s = new DSRServer(c);
 		s.startJetty();
