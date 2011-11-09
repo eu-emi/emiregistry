@@ -41,7 +41,7 @@ public class InputFilter implements ContainerRequestFilter {
 		}
 		
 		if (logger.isDebugEnabled()){
-			logger.debug("OUTPUTFILTER called");
+			logger.debug("INPUTFILTER called");
 		}
 		
 		if (filter == null) {
