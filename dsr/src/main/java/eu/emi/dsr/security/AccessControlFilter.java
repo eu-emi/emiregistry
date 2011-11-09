@@ -71,7 +71,9 @@ public class AccessControlFilter implements ContainerRequestFilter {
 			Boolean b = Boolean.valueOf(DSRServer.getProperty(
 					ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
 			// dealing with the principal
-			if (b || DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).equalsIgnoreCase("https")) {
+			if (b
+					|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
+							.equalsIgnoreCase("https")) {
 				X509Certificate[] certArr = (X509Certificate[]) httpRequest
 						.getAttribute("javax.servlet.request.X509Certificate");
 				tokens = new SecurityTokens();
@@ -79,21 +81,19 @@ public class AccessControlFilter implements ContainerRequestFilter {
 						.generateCertPath(Arrays.asList(certArr));
 				tokens.setUser(cp);
 				tokens.setUserName(certArr[0].getSubjectX500Principal());
+			}
+			client = SecurityManager.createAndAuthoriseClient(tokens);
+			httpRequest.setAttribute(ServerConstants.CLIENT, client);
 
-				client = SecurityManager.createAndAuthoriseClient(tokens);
-				httpRequest.setAttribute(ServerConstants.CLIENT, client);
-				
-				if ("true".equalsIgnoreCase(DSRServer.getProperty(
-						ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
-					AuthZAttributeStore.setTokens(tokens);
-					AuthZAttributeStore.setClient(client);
-					action = httpRequest.getMethod();
-					String owner = SecurityManager.getServerIdentity()
-							.getName();
-					resourceDescriptor = new ResourceDescriptor(
-							uriInfo.getPath(), null, owner);
-					doCheck(tokens, client, action, resourceDescriptor);
-				}
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(
+					ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
+				AuthZAttributeStore.setTokens(tokens);
+				AuthZAttributeStore.setClient(client);
+				action = httpRequest.getMethod();
+				String owner = SecurityManager.getServerIdentity().getName();
+				resourceDescriptor = new ResourceDescriptor(uriInfo.getPath(),
+						null, owner);
+				doCheck(tokens, client, action, resourceDescriptor);
 			}
 
 		} catch (Exception e) {
@@ -103,7 +103,6 @@ public class AccessControlFilter implements ContainerRequestFilter {
 			throw new AuthorisationException("Authorisation failed. Reason: "
 					+ e.getMessage());
 		}
-
 	}
 
 	/**
