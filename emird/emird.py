@@ -4,6 +4,7 @@
 #   sudo yum install python-simplejson
 
 import signal
+import logging
 
 from daemon import Daemon
 from time   import sleep
@@ -12,7 +13,7 @@ from sys    import exit
 from EMIR import EMIRConfiguration, EMIRClient
 
 class emird(Daemon):
-  def __init__(self, pidfile, config_file):
+  def __init__(self, pid_file, config_file, log_file):
 
     # Initialize EMIR related components
     try: 
@@ -22,30 +23,39 @@ class emird(Daemon):
       exit(1) 
     self.client = EMIRClient(self.config)
 
+    # Initialize 'emird' logger object
+    self.logger = logging.getLogger('emird')
+    logger_handler = logging.FileHandler(log_file)
+    logger_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    logger_handler.setFormatter(logger_formatter)
+    self.logger.addHandler(logger_handler)
+    self.logger.setLevel(self.config.loglevel)
+
     # Check wether there is any service entry to be registered
     if not self.config.getServiceEntries():
-      print "No service entries has been defined"
+      self.logger.info("No service entries has been defined")
       exit(0)
 
     # Check whether the EMIR is URL is valid and the service is available
     try:
-      print "EMIR service on url '%s://%s:%s' is running since %s" % (self.config.protocol, self.config.host, self.config.port, self.client.ping())
+      self.logger.debug("EMIR service on url '%s://%s:%s' is running since %s" % (self.config.protocol, self.config.host, self.config.port, self.client.ping()))
     except IOError, err:
-      print "EMIR service on url '%s://%s:%s' is not available" % (self.config.protocol, self.config.host, self.config.port)
+      self.logger.error("EMIR service on url '%s://%s:%s' is not available" % (self.config.protocol, self.config.host, self.config.port))
       exit(1)
     except Exception, ex:
-      print ex
+      self.logger.error(ex)
       exit(1)
 
     # Call parent's constructor to daemonize the process
-    super(emird,self).__init__(pidfile)
+    super(emird,self).__init__(pid_file)
 
   def stop(self):
     # Delete registered entries
     try:
+      self.logger.debug('Deleting reqistered entries')
       self.client.delete()
     except Exception, ex:
-      print ex
+      self.logger.error(ex)
       exit(1)
     # Call parents stop() function to stop the daemon itself
     super(emird,self).stop()
@@ -55,23 +65,26 @@ class emird(Daemon):
     # to update. For example because of already existing registration
     # entries.
     try:
+      self.logger.debug('Registering service entries')
       self.client.register()
     except Exception, ex:
       try:
+        self.logger.debug('Falling back to initial service entry update')
         self.client.update()
       except Exception, ex:
-        print ex
+        self.logger.error("Registration failed: %s" % ex)
         exit(1)
     
     while True:
       # After the successful initial registration wait the selected time
       # (where the configured period is given in minutes so have to be
       # multiplied by 60) then try to send an update message.
-      sleep(self.config.period * 60)
+      sleep(self.config.period)
       try:
+        self.logger.debug('Periodical registration update')
         self.client.update()
       except Exception, ex:
-        print ex
+        self.logger.error("Update failed: %s" % ex)
         exit(1)
 
 if __name__ == "__main__":
@@ -84,8 +97,16 @@ if __name__ == "__main__":
   # configurable option.
   config_file = 'emird.ini'
 
+  # Location of the log file. TODO: Should be turn into a
+  # configurable option.
+  log_file = '/tmp/emird.log'
+
+  # Location of the pid file. TODO: Should be turn into a
+  # configurable option.
+  pid_file = '/tmp/emird.pid'
+
   # Creating and starting the daemon class and process
-  myDaemon = emird('/tmp/emird.pid', config_file)
+  myDaemon = emird(pid_file, config_file, log_file)
 
   if foreground:
     myDaemon.run()

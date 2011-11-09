@@ -1,5 +1,7 @@
 #Verification and attribute derivation
 import re
+# Logging facility
+import logging
 # JSON encoding
 import simplejson as json
 # File checking
@@ -71,13 +73,13 @@ class EMIRConfiguration:
     # Mapping verbosity string to integer level
     default_verbosity = attributes['verbosity'][1]
     verbosity_map = {
-      'error': 0,
-      'info':  1,
-      'debug': 2,
+      'error': logging.ERROR,
+      'info':  logging.INFO,
+      'debug': logging.DEBUG,
     }
 
     if not self.verbosity in verbosity_map.keys():
-      print "Configuration error. '%s' is an invalid value for verbosity configuration option '%s' used instead" % (self.verbosity, default_verbosity)
+      logging.getLogger('emird').error("Configuration error. '%s' is an invalid value for verbosity configuration option '%s' used instead" % (self.verbosity, default_verbosity))
       self.verbosity = default_verbosity
 
     self.loglevel = verbosity_map[self.verbosity]
@@ -189,7 +191,7 @@ class EMIRClient:
         # -- End of hack ;-)
 	service_entries.append(service_entry)
       except Exception, ex:
-        print ex
+        logging.getLogger('emird').error(ex)
         exit(1)
     return service_entries
 
@@ -197,13 +199,13 @@ class EMIRClient:
     # Composing and sending update message
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
-    print self.communicate('PUT', '/serviceadmin', parameters, headers)
+    self.communicate('PUT', '/serviceadmin', parameters, headers)
 
   def register(self):
     # Composing and sending registration message
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
-    print self.communicate('POST', '/serviceadmin', parameters, headers)
+    self.communicate('POST', '/serviceadmin', parameters, headers)
 
   def delete(self):
     # Composing and sending delete message

@@ -28,6 +28,8 @@ import sys
 import time
 import signal
 
+# Import for logging
+import logging
 
 class Daemon(object):
 	"""
@@ -35,13 +37,12 @@ class Daemon(object):
 	
 	Usage: subclass the Daemon class and override the run() method
 	"""
-	def __init__(self, pidfile, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
+	def __init__(self, pidfile, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022):
 		self.stdin = stdin
 		self.stdout = stdout
 		self.stderr = stderr
 		self.pidfile = pidfile
 		self.home_dir = home_dir
-		self.verbose = verbose
 		self.umask = umask
 		self.daemon_alive = True
 	
@@ -57,7 +58,7 @@ class Daemon(object):
 				# Exit first parent
 				sys.exit(0) 
 		except OSError, e: 
-			sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+			logging.getLogger('emird').error("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1)
 		
 		# Decouple from parent environment
@@ -72,7 +73,7 @@ class Daemon(object):
 				# Exit from second parent
 				sys.exit(0) 
 		except OSError, e: 
-			sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
+			logging.getLogger('emird').error("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1) 
 	
 		if sys.platform != 'darwin': # This block breaks on OS X
@@ -94,8 +95,7 @@ class Daemon(object):
 		signal.signal(signal.SIGTERM, sigtermhandler)
 		signal.signal(signal.SIGINT, sigtermhandler)
 
-		if self.verbose >= 1:
-			print "Started"
+                logging.getLogger('emird').debug('Daemon started')
 		
 		# Write pidfile
 		atexit.register(self.delpid) # Make sure pid file is removed if we quit
@@ -110,8 +110,7 @@ class Daemon(object):
 		Start the daemon
 		"""
 		
-		if self.verbose >= 1:
-			print "Starting..."
+                logging.getLogger('emird').debug('Daemon starting...')
 		
 		# Check for a pidfile to see if the daemon already runs
 		try:
@@ -125,7 +124,7 @@ class Daemon(object):
 	
 		if pid:
 			message = "pidfile %s already exists. Is it already running?\n"
-			sys.stderr.write(message % self.pidfile)
+			logging.getLogger('emird').error(message % self.pidfile)
 			sys.exit(1)
 
 		# Start the daemon
@@ -137,8 +136,7 @@ class Daemon(object):
 		Stop the daemon
 		"""
 		
-		if self.verbose >= 1:
-			print "Stopping..."
+		logging.getLogger('emird').debug('Daemon stopping...')
 		
 		# Get the pid from the pidfile
 		try:
@@ -152,7 +150,7 @@ class Daemon(object):
 	
 		if not pid:
 			message = "pidfile %s does not exist. Not running?\n"
-			sys.stderr.write(message % self.pidfile)
+			logging.getLogger('emird').error(message % self.pidfile)
 			
 			# Just to be sure. A ValueError might occur if the PID file is empty but does actually exist
 			if os.path.exists(self.pidfile):
@@ -174,8 +172,7 @@ class Daemon(object):
 				print str(err)
 				sys.exit(1)
 		
-		if self.verbose >= 1:
-			print "Stopped"
+		logging.getLogger('emird').debug('Daemon stopped')
 
 	def restart(self):
 		"""
