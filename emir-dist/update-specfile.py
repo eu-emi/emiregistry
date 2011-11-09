@@ -20,11 +20,11 @@ release=sys.argv[2]
 #
 # spec file to produce
 #
-specfile="unicore-unicorex.spec"
+specfile="emi-emir.spec"
 
 jarsource="rpm/usr/share/unicore/unicorex/lib"
 
-jarbase="/usr/share/unicore/unicorex/lib"
+jarbase="/usr/share/emi/emir/lib"
 
 #
 #loop over list of config files and do the substitution
