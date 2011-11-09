@@ -58,9 +58,8 @@ public abstract class AbstractServer {
 		
 		p.put(ServerConstants.H2_DBFILE_PATH, h2path);
 		p.put(ServerConstants.REGISTRY_FILTERS_REQUEST, "eu.emi.dsr.infrastructure.InputFilter");
-		p.put(ServerConstants.REGISTRY_FILTERS_RESPONSE, "eu.emi.dsr.infrastructure.OutputFilter");
-		p.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/main/resources/conf/inputfilters");
-		p.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/main/resources/conf/outputfilters");
+		p.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/test/resources/conf/inputfilters");
+		p.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/test/resources/conf/outputfilters");
 
 		Configuration c = new Configuration(p);
 		return c;
