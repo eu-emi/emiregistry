@@ -145,6 +145,13 @@ public class ServiceColManager {
 	}
 	
 	
+	public QueryResult queryGlue2(JSONObject queryDoc) throws QueryException, PersistentStoreFailureException, JSONException, DatatypeConfigurationException, ParseException, JSONToGlue2MappingException {
+		Glue2Mapper gm = new Glue2Mapper();
+		QueryResult qr = gm.toQueryResult(serviceDB.queryJSON(queryDoc.toString()));
+		return qr;
+	}
+	
+	
 
 	public JSONObject pagedQuery(Map<String, Object> m) throws JSONException {
 		Integer pageSize = 0;
