@@ -301,8 +301,7 @@ public class DSRServer {
 						new ServiceCheckin(conf
 								.getProperty(ServerConstants.REGISTRY_PARENT_URL), myURL, max));
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("The parent DSR is not available.");
 			}
 
 		}
