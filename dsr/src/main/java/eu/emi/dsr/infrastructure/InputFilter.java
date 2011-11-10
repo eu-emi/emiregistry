@@ -45,8 +45,8 @@ public class InputFilter implements ContainerRequestFilter {
 		if (filter == null) {
 			filter = new Filters();
 		}
-		
-		if (request.getHeaderValue("Accept").equalsIgnoreCase(MediaType.APPLICATION_JSON)) {
+		if (request.getMediaType() != null && 
+				request.getMediaType().toString().equals(MediaType.APPLICATION_JSON)) {
 			JSONArray entity = filter.inputFilter(request.getEntity(JSONArray.class));
 			request.setEntityInputStream(new ByteArrayInputStream(entity.toString().getBytes()));
 		}
