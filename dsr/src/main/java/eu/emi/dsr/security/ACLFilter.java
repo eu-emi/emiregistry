@@ -12,7 +12,9 @@ import java.security.cert.CertPath;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +48,14 @@ public class ACLFilter implements ContainerRequestFilter {
 	private final File aclFile;
 	private final FileWatcher watchDog;
 	private final boolean active;
-	private final Set<String> acceptedDNs = new HashSet<String>();
+	// private final Set<String> acceptedDNs = new HashSet<String>();
+	private final Map<String, String> acceptedDNs = new HashMap<String, String>();
+	private static Set<String> roles = new HashSet<String>();
+
+	static {
+		roles.add("serviceowner");
+		roles.add("admin");
+	}
 
 	@Context
 	HttpServletRequest httpRequest;
@@ -92,53 +101,75 @@ public class ACLFilter implements ContainerRequestFilter {
 	 * .spi.container.ContainerRequest)
 	 */
 	@Override
-	public ContainerRequest filter(ContainerRequest request) throws WebApplicationException{
-		Client client = new Client();
+	public ContainerRequest filter(ContainerRequest request)
+			throws WebApplicationException {
+		Client client = null;
+		Role role = new Role();
 		Boolean b = Boolean.valueOf(DSRServer.getProperty(
 				ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
-			String path = request.getPath();
+		String path = request.getPath();
 
-			if (b
-					|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
-							.equalsIgnoreCase("https")) {
-				if (path.equalsIgnoreCase("serviceadmin")) {
-					X509Certificate[] certArr = (X509Certificate[]) httpRequest
-							.getAttribute("javax.servlet.request.X509Certificate");
-					String userName = certArr[0].getSubjectX500Principal()
-							.getName();
-					// setting the client to send it to the serviceadmin
-					// resource
-					client.setDistinguishedName(userName);
-					checkAccess(userName);
+		if (b
+				|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
+						.equalsIgnoreCase("https")) {
+			if (path.equalsIgnoreCase("serviceadmin")) {
+				X509Certificate[] certArr = (X509Certificate[]) httpRequest
+						.getAttribute("javax.servlet.request.X509Certificate");
+				String userName = certArr[0].getSubjectX500Principal()
+						.getName();
+				// setting the client to send it to the serviceadmin
+				// resource
 
-				}
-			} else {
-				client.setDistinguishedName("CN=ANONYMOUS,O=UNKNOWN,OU=UNKNOWN");
+				client = checkAccess(userName);
+
 			}
+		} else {
+			client = new Client();
+			client.setDistinguishedName("CN=ANONYMOUS,O=UNKNOWN,OU=UNKNOWN");
+			// in non-protected access the role by default is "admin", this is
+			// mainly for testing purpose
+			role.setName("admin");
+			client.setRole(role);
+		}
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Accessing resource: '" + request.getPath()
-						+ "' with DN: " + client.getDistinguishedName());
-			}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Accessing resource: '" + request.getPath()
+					+ "' with DN: " + client.getDistinguishedName());
+		}
 
-			httpRequest.setAttribute(ServerConstants.CLIENT, client);
-		
+		httpRequest.setAttribute(ServerConstants.CLIENT, client);
 
 		return request;
 	}
 
-	protected void checkAccess(String userName) throws WebApplicationException {
+	protected Client checkAccess(String userName)
+			throws WebApplicationException {
+		Client client = null;
+		String msg = "Admin access denied!\n\nTo allow access for this "
+				+ "certificate, the distinguished name \n\"" + userName
+				+ "\nneeds to be entered into the ACL file."
+				+ "\nPlease check the EMIR's ACL file!\n\n";
 		synchronized (acceptedDNs) {
-			if (!acceptedDNs.contains(userName)) {
-				String msg = "Admin access denied!\n\nTo allow access for this "
-						+ "certificate, the distinguished name \n\""
-						+ userName
-						+ "\nneeds to be entered into the ACL file."
-						+ "\nPlease check the XUUDB's ACL file!\n\n";
+			// if (!acceptedDNs.get(userName)) {
+			if (!(acceptedDNs.containsKey(userName))) {
 				throw new WebApplicationException(Response
 						.status(Status.UNAUTHORIZED).entity(msg).build());
+			} else {
+				client = new Client();
+				client.setDistinguishedName(userName);
+				String roleName = acceptedDNs.get(userName);
+				logger.debug(roles.contains(roleName));
+				if ((roleName != null) && roles.contains(roleName)) {
+					client.setRole(new Role(roleName, ""));
+				} else {
+					// if the role is not present hence throw the exception
+					throw new WebApplicationException(Response
+							.status(Status.UNAUTHORIZED).entity(msg).build());
+				}
 			}
+
 		}
+		return client;
 	}
 
 	protected void readACL() {
@@ -157,10 +188,14 @@ public class ACLFilter implements ContainerRequestFilter {
 						continue;
 					if (!line.trim().equals("")) {
 						try {
-							X500Principal p = new X500Principal(line);
-							acceptedDNs.add(p.getName());
+							String[] pair = line.split("::");
+							X500Principal p = new X500Principal(pair[0].trim());
+							// X500Principal p = new X500Principal(line);
+							// acceptedDNs.add(p.getName());
+							acceptedDNs.put(p.getName(), pair[1].trim());
 							logger.info("Allowing admin access for <" + line
 									+ ">");
+
 						} catch (Exception ex) {
 							logger.warn("Invalid entry <" + line + ">", ex);
 						}

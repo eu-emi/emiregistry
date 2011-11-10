@@ -44,6 +44,8 @@ public class Role implements Serializable {
 		
 	private static final long serialVersionUID = 1L;
 	
+	
+	
 	private String name,description;
 	
 	public Role(){}
@@ -76,5 +78,23 @@ public class Role implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+}
+
+enum RoleNames{
+	
+	SERVICE_OWNER("serviceowner"),SERVICE_USER("user"),ADMIN("admin");
+		
+	private String name;
+	
+	/**
+	 * 
+	 */
+	private RoleNames(String name) {
+		this.name = name;
+	}
+	
+	public String getNames(){
+		return this.name;
 	}
 }
