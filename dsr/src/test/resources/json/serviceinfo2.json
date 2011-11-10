@@ -2,7 +2,7 @@
     "Service_CreationTime":{"$date":"2011-07-21T11:47:24.111Z"},
     "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
     "Service_Type":"job-management",
-	"Service_Capability":["capability1","capability2"],
+	"Service_Capability":["capability1","capability2","capability3"],
 	"Service_QualityLevel":"production",
 	"Service_Complexity":"complexity",
 	"Service_Validity": 12313,

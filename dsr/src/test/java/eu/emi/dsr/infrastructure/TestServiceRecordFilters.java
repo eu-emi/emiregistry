@@ -3,28 +3,60 @@
  */
 package eu.emi.dsr.infrastructure;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.ws.rs.core.MediaType;
 
+
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.ClientResponse.Status;
+
 import eu.emi.client.DSRClient;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.TestRegistryBase;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.dsr.util.DateUtil;
+import eu.emi.dsr.util.ServiceUtil;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  *
  */
 public class TestServiceRecordFilters {
 	DSRServer s = null;
 	private static String URL = "http://localhost:54321";
+	private static String dbHostname = "localhost";
+	private static int    dbPort = 27017;
+	private static String dbName = "emiregistry";
+	private static String dbCollectionName = "services-test";
+	
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    	ServiceUtil.initLogger("src/test/resources/conf/log4j.properties");
+ 		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
+ 				dbHostname, dbPort, dbName, dbCollectionName);
+		parentDB.deleteAll();
+	}
+    
 	@Before
 	public void setup() throws IOException{
 		TestRegistryBase.startMongoDB();
@@ -38,14 +70,14 @@ public class TestServiceRecordFilters {
 		serverProps.put(ServerConstants.JETTY_MAXTHREADS, "1000");
 		serverProps.put(ServerConstants.LOGGER_CONF_PATH,
 				"src/test/resources/conf/log4j.properties");
-		serverProps.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
-		serverProps.put(ServerConstants.MONGODB_PORT, "27017");
-		serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
-		serverProps.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
+		serverProps.put(ServerConstants.MONGODB_HOSTNAME, dbHostname);
+		serverProps.put(ServerConstants.MONGODB_PORT, dbPort);
+		serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, dbCollectionName);
+		serverProps.put(ServerConstants.MONGODB_DB_NAME, dbName);
 		serverProps.put(ServerConstants.MONGODB_COL_CREATE, "true");
 		serverProps.put(ServerConstants.REGISTRY_FILTERS_REQUEST, InputFilter.class.getName());
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/test/resources/conf/inputfilters");
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/test/resources/conf/outputfilters");
+		serverProps.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/test/resources/conf/inputfilters_for_test");
+		serverProps.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/test/resources/conf/outputfilters_for_test");
 		Configuration c = new Configuration(serverProps);
 		s = new DSRServer(c);
 		s.startJetty();
@@ -53,12 +85,82 @@ public class TestServiceRecordFilters {
 	
 	
 	@Test
-	public void testInputFilter(){
-		//TODO add more functional code here
-		DSRClient c = new DSRClient(URL+"/ping");
-		System.out.println(c.getClientResource().get(JSONObject.class));
+	public void testInputFilterSimpleValue() throws JSONException, IOException{
+		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		
+		// simple value filter test
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
+		jo = DateUtil.setExpiryTime(jo, 12);
+		jo.remove("Service_Endpoint_URL");
+		jo.put("Service_Endpoint_URL", "http://url_from_black_list.no");
+		JSONArray jos = new JSONArray();
+		jos.put(jo);
+		
+		ClientResponse res = c.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(ClientResponse.class, jos);
+		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+		
+		//Registration check
+		try {
+			@SuppressWarnings("unused")
+			JSONObject responseJO = c.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://url_from_black_list.no")
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+			fail("Filter is not working because the server returned with a valid entry.");
+		} catch (UniformInterfaceException e) {
+			assertTrue("Filter is working.",true);
+		}
 	}
-	
+
+	@Test
+	public void testInputFilterJSONArrayValue() throws JSONException, IOException{
+		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		
+		// simple JSONArray value filter test
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
+		jo = DateUtil.setExpiryTime(jo, 12);
+		JSONArray jos = new JSONArray();
+		jos.put(jo);
+		
+		ClientResponse res = c.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(ClientResponse.class, jos);
+		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+		
+		//Registration check
+		try {
+			@SuppressWarnings("unused")
+			JSONObject responseJO = c.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1")
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+			fail("Filter is not working because the server returned with a valid entry.");
+		} catch (UniformInterfaceException e) {
+			assertTrue("Filter is working.",true);
+		}
+	}
+
+	@Test
+	public void testInputFilterArrayValue() throws JSONException, IOException{
+		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		
+		// simple JSONArray value filter test
+		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
+		jo = DateUtil.setExpiryTime(jo, 12);
+		JSONArray jos = new JSONArray();
+		jos.put(jo);
+		
+		ClientResponse res = c.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(ClientResponse.class, jos);
+		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+		
+		//Registration check
+		try {
+			@SuppressWarnings("unused")
+			JSONObject responseJO = c.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2")
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+			fail("Filter is not working because the server returned with a valid entry.");
+		} catch (UniformInterfaceException e) {
+			assertTrue("Filter is working.",true);
+		}
+	}
+
 	@Test
 	public void testOutputFilter(){
 		//TODO add more functional code here
@@ -71,9 +173,5 @@ public class TestServiceRecordFilters {
 		s.stopJetty();
 		TestRegistryBase.stopMongoDB();
 	}
-	
-	
-	
-	
 	
 }
