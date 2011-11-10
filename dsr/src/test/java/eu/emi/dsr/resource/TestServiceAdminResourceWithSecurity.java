@@ -20,6 +20,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
@@ -85,8 +86,8 @@ public class TestServiceAdminResourceWithSecurity extends
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {
-			cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(jo);
+			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+					.post(ClientResponse.class,jo).getStatus());
 		} catch (UniformInterfaceException e) {
 			e.printStackTrace();
 			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
@@ -98,9 +99,9 @@ public class TestServiceAdminResourceWithSecurity extends
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {
-			cr1.getClientResource()
+			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr1.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONObject.class);
+					.get(ClientResponse.class));
 		} catch (UniformInterfaceException e) {
 			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
 					.compareTo(e.getResponse().getStatus()) == 0);
