@@ -364,36 +364,12 @@ public class SecurityTokens implements Serializable
 		@SuppressWarnings("unused")
 		SecurityTokens other = (SecurityTokens) otherO;
 		
-//		if (!other.getMessageSignatureStatus().equals(getMessageSignatureStatus()))
-//			return false;
-//		if (other.isConsignorTrusted() != isConsignorTrusted())
-//			return false;
-//		if (other.isTrustDelegationValidated() != isTrustDelegationValidated())
-//			return false;
-		
-//		if (other.getConsignorCertificate() == null)
-//		{
-//			if (getConsignorCertificate() != null)
-//				return false;
-//		} else if (!other.getConsignorCertificate().equals(getConsignorCertificate()))
-//			return false;
-		
-//		if (other.getEffectiveUserName() == null)
-//		{
-//			if (getEffectiveUserName() != null)
-//				return false;
-//		} else if (!other.getEffectiveUserName().equals(getEffectiveUserName()))
-//			return false;
-		return true;
+     	return true;
 	}
 
-//	public int hashCode(){
-//		return getMessageSignatureStatus().hashCode()
-//				^ (isConsignorTrusted()?0x1:0x0)
-//				^ (isTrustDelegationValidated()?0x2:0x0)
-//				^ getConsignorCertificate().hashCode()
-//				^ getEffectiveUserName().hashCode();
-//	}
+	public int hashCode(){
+		 return super.hashCode()^0x36593265;
+	}
 }
 
 

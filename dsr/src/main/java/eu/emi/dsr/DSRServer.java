@@ -32,6 +32,7 @@ import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
+import eu.emi.dsr.security.ACLFilter;
 import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.DSRSecurityProperties;
 import eu.emi.dsr.util.Log;
@@ -156,8 +157,13 @@ public class DSRServer {
 	private void addRequestFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		sb.append(AccessControlFilter.class.getName()).append(",").
-		   append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
+		if (getProperty(ISecurityProperties.REGISTRY_ACL_FILE) == null) {
+			//make sure all the properties for xacml are set
+			sb.append(AccessControlFilter.class.getName()).append(",");
+		} else {
+			sb.append(ACLFilter.class.getName()).append(",");				
+		}
+		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
 		
 	}

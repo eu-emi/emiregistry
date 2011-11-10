@@ -55,6 +55,18 @@ public class Log {
 		return Logger.getLogger(prefix+"."+clazz.getSimpleName());
 	}
 	
+	/**
+	 * returns a logger, using the given prefix and the simple name
+	 * of the given class
+	 * 
+	 * @param prefix - the prefix to use
+	 * @param clazz - the class
+	 * @return logger
+	 */
+	public static Logger getLogger(Class<?>clazz){
+		return Logger.getLogger(clazz.getSimpleName());
+	}
+	
 	/** 
 	 * log an error message to the default logger ("unicore.wsrflite")
 	 * A human-friendly message is constructed and logged at "INFO" level.
