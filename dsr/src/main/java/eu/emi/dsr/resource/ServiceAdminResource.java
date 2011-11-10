@@ -143,7 +143,7 @@ public class ServiceAdminResource {
 	}
 	
 	/**
-	 * adding array of entries
+	 * adding an array of json documents, where each item in the array is service endpoint information
 	 * @throws InterruptedException 
 	 * TODO: polymorphic registrations: Supporting JSONObject as well as Array
 	 * */
@@ -168,9 +168,18 @@ public class ServiceAdminResource {
 				}
 		
 				Client c = (Client) req.getAttribute("client");
-				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
-						.getAttributeName(), c.getDistinguishedName());
-				JSONObject res = serviceAdmin.addService(serviceInfo);
+				JSONObject res = null;
+				//let the admin add entries from others
+				if (c.getRole().getName().equalsIgnoreCase("admin") && serviceInfo.has(ServiceBasicAttributeNames.SERVICE_OWNER
+						.getAttributeName())) {
+					//add directly to the mongodb
+					res = serviceAdmin.addService(serviceInfo);
+				} else {
+					//add if the owner is missing 
+					serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+							.getAttributeName(), c.getDistinguishedName());
+					res = serviceAdmin.addService(serviceInfo);
+				}
 				arr.put(res);
 				continue;
 				//return Response.ok(res).build();
@@ -273,7 +282,20 @@ public class ServiceAdminResource {
 							+ owner);
 				}
 
-				if (owner != null
+				if(c.getRole().getName().equalsIgnoreCase("admin")){
+					//let the admin update any service
+					JSONObject res;
+					try {
+						res = serviceAdmin.updateService(serviceInfo);
+						arr.put(res);
+					} catch (UnknownServiceException e) {
+						return Response.status(Status.NOT_FOUND).build();
+					} catch (WebApplicationException e) {
+						errorArray.put(serviceInfo);
+					}
+					continue;
+					
+				} else if (owner != null
 						&& serviceAdmin
 							.checkOwner(
 										owner,
@@ -291,7 +313,7 @@ public class ServiceAdminResource {
 					}
 					continue;
 					//return Response.ok(res).build();
-				} else {
+				}  else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Service with url: "+serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName())+" does not exist.");
 					}
@@ -329,7 +351,10 @@ public class ServiceAdminResource {
 			serviceurl = extractServiceUrlFromUri(infos);
 			logger.debug("deleting service by url: " + serviceurl
 					+ ", Owned by: " + owner);
-			if (owner != null && serviceAdmin.checkOwner(owner, serviceurl)) {
+			if (c.getRole().getName().equalsIgnoreCase("admin")) {
+				//let the admin delete everything
+				serviceAdmin.removeService(serviceurl);
+			} else if ((owner != null) && (serviceAdmin.checkOwner(owner, serviceurl))) {
 				
 					serviceAdmin.removeService(serviceurl);
 				
