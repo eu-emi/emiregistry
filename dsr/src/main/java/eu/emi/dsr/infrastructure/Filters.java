@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
@@ -78,7 +79,6 @@ public class Filters extends ServerConstants {
 	 * @param filter object
 	 * @return Filtered messages
 	 */
-	@SuppressWarnings("unchecked")
 	private JSONArray filter(JSONArray serviceInfos, String path, HashMap<String, List<String>> filters) {
 		long lastModification = new File(path).lastModified();
 		if (filters == null){
@@ -128,13 +128,12 @@ public class Filters extends ServerConstants {
 
 	            try {
 	            	if (serviceInfos.getJSONObject(i).has((String)m.getKey()) &&
-	            		((List<String>)m.getValue()).
-	            			contains(serviceInfos.getJSONObject(i).getString((String)m.getKey()))) {
+	            			valueMatch(serviceInfos.getJSONObject(i), m)) {
 	            		// Match to the filter entry
 	            		found = true;
 	            		if (logger.isDebugEnabled()) {
 	            			logger.debug("Positive "+ ((path.equals(inputFilterPath)) ? "input" : "output") + " filter matching!  "
-	            					+ serviceInfos.getJSONObject(i).
+	            					+ "Service_Endpoint_URL: " + serviceInfos.getJSONObject(i).
 	            					    getString("Service_Endpoint_URL")+ ", Name of attribute: "
 	            					    + (String)m.getKey() + ", Value: "
 	            					    + serviceInfos.getJSONObject(i).getString((String)m.getKey()));
@@ -214,6 +213,67 @@ public class Filters extends ServerConstants {
 			logger.debug("Parsed filters: " + filters.toString());
 		}
 		return filters;
+	}
+
+	/**
+	 * Matching the filter's value with the entry value
+	 * @param filter value
+	 * @param entry value(s)
+	 * @return Map of the parsed filters
+	 */
+	@SuppressWarnings("unchecked")
+	private boolean valueMatch(JSONObject entry, @SuppressWarnings("rawtypes") Map.Entry m) {
+		// simple value
+		try {
+			if (((List<String>)m.getValue()).
+					contains(entry.getString((String)m.getKey()))){
+				return true;
+			}
+		} catch (JSONException e) {
+			if (logger.isDebugEnabled()){
+				logger.warn("entry.getString trow exception in the valueMatch function: " + e);
+			}
+		}
+
+		// JSONArray with JSONObject value type
+		try {
+			JSONArray entryValues =  (JSONArray)entry.get((String)m.getKey());
+			for (int i=0; i< entryValues.length(); i++) {
+				if (((List<String>)m.getValue()).
+						contains(entryValues.getJSONObject(i).toString())){
+					return true;
+				}
+			}
+		} catch (JSONException e) {
+			if (logger.isDebugEnabled()){
+				logger.debug("This key (" + (String)m.getKey() + ") not exist in this entry or the values of JSONArray are not JSONObject.");
+			}
+		} catch (ClassCastException e) {
+			if (logger.isDebugEnabled()){
+				logger.debug("The value (" + (String)m.getKey() +") was not JSONArray.");
+			}
+		}
+
+
+		// JSONArray with String value type
+		try {
+			JSONArray entryValues =  (JSONArray)entry.get((String)m.getKey());
+			for (int i=0; i< entryValues.length(); i++) {
+				if (((List<String>)m.getValue()).
+						contains(entryValues.get(i).toString())){
+					return true;
+				}
+			}
+		} catch (JSONException e) {
+			if (logger.isDebugEnabled()){
+				logger.debug("This key(" + (String)m.getKey() + ") not exist in this entry.");
+			}
+		} catch (ClassCastException e) {
+			if (logger.isDebugEnabled()){
+				logger.debug("The value (" + (String)m.getKey() +") was not simple Array.");
+			}
+		}
+		return false;
 	}
 
 }
