@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileAttributeSource>
+   <entry key="CN=Stanisław Lem,O=I[^.]*,C=PL">
+      <attribute name="role"><value>user</value></attribute>
+      <attribute name="empty"/>      
+   </entry>
+   <entry key=".*">
+      <attribute name="role"><value>banned</value></attribute>
+   </entry>
+</fileAttributeSource>

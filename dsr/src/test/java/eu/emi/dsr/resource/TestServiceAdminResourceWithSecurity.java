@@ -88,6 +88,7 @@ public class TestServiceAdminResourceWithSecurity extends
 			cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
 					.post(jo);
 		} catch (UniformInterfaceException e) {
+			e.printStackTrace();
 			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
 					.compareTo(e.getResponse().getStatus()) == 0);
 		}

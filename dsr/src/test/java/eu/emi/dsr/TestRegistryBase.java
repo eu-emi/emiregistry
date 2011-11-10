@@ -5,9 +5,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
@@ -48,7 +48,7 @@ public abstract class TestRegistryBase {
 		serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		serverProps.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
 		serverProps.put(ServerConstants.MONGODB_COL_CREATE, "true");
-		
+		serverProps.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
 		Configuration conf = new Configuration(serverProps);
 		server = new DSRServer(conf);
 		server.startJetty();

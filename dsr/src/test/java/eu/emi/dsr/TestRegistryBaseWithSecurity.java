@@ -26,6 +26,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.pdp.local.FlatFilePDP;
+import eu.emi.dsr.security.SecurityTokens;
 
 /**
  * @author a.memon
@@ -80,7 +81,8 @@ public class TestRegistryBaseWithSecurity {
 		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUdb-strict.xml");
 		//p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 //		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
-		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, FlatFilePDP.class.getName());
+//      p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, FlatFilePDP.class.getName());
+		p.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
 	}
 
 	private static void setGeneralSettings(Properties p) {

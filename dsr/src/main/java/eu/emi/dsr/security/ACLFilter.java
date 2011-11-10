@@ -1,0 +1,181 @@
+/**
+ * 
+ */
+package eu.emi.dsr.security;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.security.cert.CertPath;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.security.auth.x500.X500Principal;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
+
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
+
+import eu.emi.client.security.ISecurityProperties;
+import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.util.FileWatcher;
+import eu.emi.dsr.util.Log;
+
+/**
+ * It checks incoming requests, trying to access the <b>serviceadmin<b> resource
+ * for the valid/authorized DNs
+ * 
+ * @author a.memon
+ * 
+ */
+public class ACLFilter implements ContainerRequestFilter {
+	private static Logger logger = Log.getLogger(Log.SECURITY, ACLFilter.class);
+	private final File aclFile;
+	private final FileWatcher watchDog;
+	private final boolean active;
+	private final Set<String> acceptedDNs = new HashSet<String>();
+
+	@Context
+	HttpServletRequest httpRequest;
+
+	/**
+	 * 
+	 */
+	public ACLFilter() throws IOException {
+		// this(new File("conf", "emir.acl"));
+		this(new File(
+				DSRServer.getProperty(ISecurityProperties.REGISTRY_ACL_FILE)));
+	}
+
+	/**
+	 * @param file
+	 * @throws IOException
+	 */
+	public ACLFilter(File aclFile) throws IOException {
+		this.aclFile = aclFile;
+		if (!aclFile.exists()) {
+			logger.warn("ACL not active: file <" + aclFile + "> does not exist");
+			active = false;
+			watchDog = null;
+			return;
+		} else {
+			active = true;
+			logger.info("EMIR using ACL file " + aclFile);
+			readACL();
+			watchDog = new FileWatcher(aclFile, new Runnable() {
+				public void run() {
+					readACL();
+				}
+			});
+			watchDog.schedule(3000, TimeUnit.MILLISECONDS);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.sun.jersey.spi.container.ContainerRequestFilter#filter(com.sun.jersey
+	 * .spi.container.ContainerRequest)
+	 */
+	@Override
+	public ContainerRequest filter(ContainerRequest request) throws WebApplicationException{
+		Client client = new Client();
+		Boolean b = Boolean.valueOf(DSRServer.getProperty(
+				ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
+			String path = request.getPath();
+
+			if (b
+					|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
+							.equalsIgnoreCase("https")) {
+				if (path.equalsIgnoreCase("serviceadmin")) {
+					X509Certificate[] certArr = (X509Certificate[]) httpRequest
+							.getAttribute("javax.servlet.request.X509Certificate");
+					String userName = certArr[0].getSubjectX500Principal()
+							.getName();
+					// setting the client to send it to the serviceadmin
+					// resource
+					client.setDistinguishedName(userName);
+					checkAccess(userName);
+
+				}
+			} else {
+				client.setDistinguishedName("CN=ANONYMOUS,O=UNKNOWN,OU=UNKNOWN");
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Accessing resource: '" + request.getPath()
+						+ "' with DN: " + client.getDistinguishedName());
+			}
+
+			httpRequest.setAttribute(ServerConstants.CLIENT, client);
+		
+
+		return request;
+	}
+
+	protected void checkAccess(String userName) throws WebApplicationException {
+		synchronized (acceptedDNs) {
+			if (!acceptedDNs.contains(userName)) {
+				String msg = "Admin access denied!\n\nTo allow access for this "
+						+ "certificate, the distinguished name \n\""
+						+ userName
+						+ "\nneeds to be entered into the ACL file."
+						+ "\nPlease check the XUUDB's ACL file!\n\n";
+				throw new WebApplicationException(Response
+						.status(Status.UNAUTHORIZED).entity(msg).build());
+			}
+		}
+	}
+
+	protected void readACL() {
+		synchronized (acceptedDNs) {
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new FileReader(aclFile));
+				String theLine;
+				acceptedDNs.clear();
+				while (true) {
+					theLine = br.readLine();
+					if (theLine == null)
+						break;
+					String line = theLine.trim();
+					if (line.startsWith("#"))
+						continue;
+					if (!line.trim().equals("")) {
+						try {
+							X500Principal p = new X500Principal(line);
+							acceptedDNs.add(p.getName());
+							logger.info("Allowing admin access for <" + line
+									+ ">");
+						} catch (Exception ex) {
+							logger.warn("Invalid entry <" + line + ">", ex);
+						}
+					}
+				}
+			} catch (Exception ex) {
+				logger.fatal("ACL file read error!", ex);
+			} finally {
+				try {
+					if (br != null)
+						br.close();
+				} catch (IOException ioex) {
+				}
+			}
+		}
+	}
+
+}
