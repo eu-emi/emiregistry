@@ -193,12 +193,44 @@
 	</dependencyManagement>
 	<modules>
 		<module>dsr</module>
-		<module>xmltypes</module>		
+		<module>xmltypes</module>
 		<module>emir-client</module>
 	</modules>
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<inherited>true</inherited>
+					<executions>
+						<execution>
+							<id>build-source-jar</id>
+							<phase>verify</phase>
+							<!-- makes sure the source jar is build before install or compile -->
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<inherited>true</inherited>
+						</execution>
+					</executions>
+					<configuration>
+						<attach>true</attach>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<inherited>true</inherited>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
@@ -301,7 +333,7 @@
 			<id>maven-repository.java.net</id>
 			<name>Java.net Maven 1 Repository (legacy)</name>
 			<url>http://download.java.net/maven/1</url>
-<!-- 			<layout>legacy</layout> -->
+			<!-- <layout>legacy</layout> -->
 		</repository>
 		<repository>
 			<id>emiregistry</id>
