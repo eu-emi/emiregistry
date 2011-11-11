@@ -20,7 +20,7 @@ The registry provides following features:
 *	the service registration includes the management of the services' information.
 *	Powerful data back-end based on MongoDB
 *	Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
-*	Seam-less access: Plain HTTP interface to browse the service registrations
+*	REST-ful API to browse the service registrations
 *	Security
 **	PKI governed authentication
 **	Distinguished Name based authorization using XACML driven PDP
