@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="UNICORE/X Server">
+<project name="EMI Registry">
   <bannerLeft>
-    <name>UNICORE</name>
-    <src>images/unicorelogo.gif</src>
-    <href>http://www.unicore.eu/</href>
+    <name>EMI Registry</name>
+    <src>images/EMI-logo.png</src>
+    <href>http://www.emi-eu.eu/</href>
   </bannerLeft>
   <version/>
   <body>
     <links>
-      <item name="UNICORE" href="http://www.unicore.eu" />
+      <item name="EMI" href="http://www.emi-eu.eu" />
     </links> 
-    <menu name="UNICORE/X Server">
+    <menu name="EMI Registry">
       <item name="Main" href="index.html"/>
-      <item name="FAQ" href="faq.html"/>
     </menu>
-    <menu ref="reports"/>
+    <!-- <menu ref="reports"/> -->
   </body>
 </project>

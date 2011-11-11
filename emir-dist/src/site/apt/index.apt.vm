@@ -1,26 +1,33 @@
    ------
-UNICORE/X
+EMI Registry: Introduction
    ------
-   
-UNICORE/X version ${releaseVersion}
 
-  The UNICORE/X server is the central component of a UNICORE site.
-It hosts the services such as job submission, job management, 
-storage access, and provides the bridge to the functionality 
-of the target resources, e.g. batch systems or file systems.
+Overview
 
-  For more information about UNICORE visit http://www.unicore.eu
-
-Prerequisites for running UNICORE/X
-    
- * Java 6 (or later) runtime environment or SDK
+ The EMI Registry is a federated service registry based on REST-ful interfaces. The major functionalities of the registry includes 
  
- * To interface to a resource management system such as Torque or SGE,
-   you'll need to install the UNICORE TSI
+ * the service registration includes the management of the services' information.
+ 
+ * Powerful data back-end based on MongoDB
+ 
+ * Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
+ 
+ * Seam-less access: Plain HTTP interface to browse the service registrations
+ 
+ * Security
+ 
+ 	* PKI governed authentication
+ 
+ 	* Distinguished Name based authorization using XACML driven PDP
+   
+Prerequisites for installing the Registry Server
 
-Full manual
+	* Java 6 Runtime Environment or SDK
 
- * {{{./unicorex-manual.html}HTML format}} 
+	* MongoDB (version > 1.8.1) 
 
- * {{{./unicorex-manual.pdf}PDF format}} 
+User manual
 
+	* {{{./emir-manual.html}HTML format}} 
+
+	* {{{./emir-manual.pdf}PDF format}} 
