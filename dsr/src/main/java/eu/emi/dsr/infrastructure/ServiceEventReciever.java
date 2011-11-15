@@ -71,7 +71,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 			jos = filter.outputFilter((JSONArray) event.getData());
 		} catch (ClassCastException e) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("event.data to JSONObject cast problem. May be delete message.");
+				logger.debug("event.data to JSONArray cast problem. May be delete message.");
 			}
 		}
 		try {
