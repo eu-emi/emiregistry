@@ -28,6 +28,7 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.infrastructure.SelfRegistration;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
 import eu.emi.dsr.jetty.JettyServer;
@@ -329,8 +330,8 @@ public class DSRServer {
                    conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
 			       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
 		try {
-			//RegistryThreadPool.getExecutorService().execute(
-			//		new SelfRegistration(myURL);
+			RegistryThreadPool.getExecutorService().execute(
+					new SelfRegistration(myURL));
 		} catch (Throwable e) {
 			logger.warn("Has a problem with the self-registration.");
 		}
