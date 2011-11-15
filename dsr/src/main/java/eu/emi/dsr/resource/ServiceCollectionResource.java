@@ -37,25 +37,28 @@ import eu.eu_emi.emiregistry.QueryResult;
 @Path("/services")
 public class ServiceCollectionResource {
 	Logger logger = Log.getLogger(Log.DSR, ServiceCollectionResource.class);
-	ServiceColManager col;
+	private ServiceColManager col;
 
 	/**
 	 * 
 	 */
 	public ServiceCollectionResource() {
-		col = new ServiceColManager();
+			col = new ServiceColManager();
 	}
 
-	/** query method */
+	/** query method 
+	 * @throws JSONException */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/urls")
-	public Response getServiceEndPoints() throws WebApplicationException {
+	public Response getServiceEndPoints() throws WebApplicationException, JSONException {
 		JSONObject o = null;
 		try {
 			o = col.getServiceReferences();
 		} catch (JSONException e) {
-			throw new WebApplicationException(e);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 		if (o.length() == 0) {
 			return Response.ok(o).status(Status.NO_CONTENT).build();
@@ -64,16 +67,19 @@ public class ServiceCollectionResource {
 		return Response.ok(o).build();
 	}
 
-	/** query method */
+	/** query method 
+	 * @throws JSONException */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/types")
-	public Response getServiceTypes() throws WebApplicationException {
+	public Response getServiceTypes() throws WebApplicationException, JSONException {
 		JSONArray jArr = null;
 		try {
 			jArr = col.getDistinctTypes();
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -85,7 +91,7 @@ public class ServiceCollectionResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryWithParams(@Context UriInfo ui) throws WebApplicationException {
+	public Response queryWithParams(@Context UriInfo ui) throws WebApplicationException, JSONException {
 
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
@@ -101,7 +107,9 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.query(m);
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 
 		if (jArr.length() == 0) {
@@ -116,18 +124,21 @@ public class ServiceCollectionResource {
 	 * @param queryDocument
 	 *            the JSON document defining the query according to the MongoDB
 	 *            Syntax
+	 * @throws JSONException 
 	 * */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response queryWithJSON(JSONObject queryDocument)
-			throws WebApplicationException {
+			throws WebApplicationException, JSONException {
 
 		JSONArray jArr = null;
 		try {
 			jArr = col.query(queryDocument);
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 
 		if (jArr.length() == 0) {
@@ -152,7 +163,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.queryGlue2(queryDocument);
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 
 		if (jArr.getCount() == BigInteger.ZERO) {
@@ -185,7 +196,7 @@ public class ServiceCollectionResource {
 		try {
 			qr = col.queryGlue2(m);
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 		if (qr.getCount() == BigInteger.ZERO) {
 			return Response.ok(qr).status(Status.NO_CONTENT).build();
@@ -227,7 +238,7 @@ public class ServiceCollectionResource {
 	@GET
 	@Path("/pagedquery")
 	public Response pagedQuery(@Context UriInfo ui)
-			throws WebApplicationException {
+			throws WebApplicationException, JSONException {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 		Set<String> s = queryParams.keySet();
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -241,7 +252,9 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.pagedQuery(m);
 		} catch (Exception e) {
-			throw new WebApplicationException(e);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();

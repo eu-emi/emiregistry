@@ -54,7 +54,7 @@ public class ServiceAdminResource {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
 
-	private final ServiceAdminManager serviceAdmin;
+	private ServiceAdminManager serviceAdmin;
 
 	@Context
 	HttpServletRequest req;
@@ -64,7 +64,7 @@ public class ServiceAdminResource {
 	 */
 	public ServiceAdminResource() {
 		// serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
-		serviceAdmin = new ServiceAdminManager();
+			serviceAdmin = new ServiceAdminManager();
 	}
 
 	protected String getUserPrincipalName() {

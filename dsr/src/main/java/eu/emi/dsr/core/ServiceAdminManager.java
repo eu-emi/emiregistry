@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.db.ExistingResourceException;
@@ -45,9 +46,10 @@ public class ServiceAdminManager {
 	
 
 	/**
+	 * @throws DatabaseUnavilableException 
 	 * 
 	 */
-	public ServiceAdminManager() {
+	public ServiceAdminManager(){
 		serviceDB = new MongoDBServiceDatabase();
 //		serviceDB = MongoDBServiceDatabase.getInstance();
 	}
@@ -197,7 +199,7 @@ public class ServiceAdminManager {
 	 * @throws QueryException
 	 * */
 	public void removeExpiredEntries() throws JSONException, QueryException,
-			PersistentStoreFailureException {
+			PersistentStoreFailureException{
 		JSONObject date = new JSONObject();
 
 		JSONObject predicate = new JSONObject();
@@ -210,7 +212,8 @@ public class ServiceAdminManager {
 		query.put(
 				ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
 				predicate);
-		serviceDB.findAndDelete(query.toString());
+			serviceDB.findAndDelete(query.toString());	
+		
 		// j.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
 		// quer)
 
