@@ -125,9 +125,16 @@ public class DSRServer {
 
 		startLog4jFileListener();
 		startServiceExpiryCheckcer();
-		addParentDSR();
-		System.out.println("DSR server started");
-		logger.info("DSR server started");
+		addParentDSR(); // TODO: where is the right place of this function call? 
+		
+		String type = "DSR";
+		String registryType = conf.getProperty(ServerConstants.REGISTRY_TYPE);
+		if (registryType != null && registryType.equals("global")) {
+			type = "GSR";
+			startGSRFunctions();
+		}
+		System.out.println(type + " server started");
+		logger.info(type + " server started");
 	}
 
 	
@@ -312,7 +319,22 @@ public class DSRServer {
 
 	}
 	
-	
+	public void startGSRFunctions() {
+		// Neighbors event receiver start
+		//RegistryThreadPool.getExecutorService().execute(
+		//		new NeighborsEventReciever();
+
+		// Self registration start
+		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
+                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
+			       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		try {
+			//RegistryThreadPool.getExecutorService().execute(
+			//		new SelfRegistration(myURL);
+		} catch (Throwable e) {
+			logger.warn("Has a problem with the self-registration.");
+		}
+	}
 	
 
 }

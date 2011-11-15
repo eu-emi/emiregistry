@@ -10,6 +10,7 @@ package eu.emi.dsr.core;
 public class ServerConstants {
 	public static final String CLIENT_AUTHN = "registry.security.clientauthentication";
 
+	public static String REGISTRY_TYPE = "registry.type";
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
