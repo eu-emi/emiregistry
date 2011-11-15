@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.infrastructure;
+package eu.emi.dsr.p2p;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
