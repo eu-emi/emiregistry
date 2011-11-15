@@ -28,6 +28,7 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.infrastructure.NeighborsEventReciever;
 import eu.emi.dsr.infrastructure.SelfRegistration;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReciever;
@@ -322,8 +323,8 @@ public class DSRServer {
 	
 	public void startGSRFunctions() {
 		// Neighbors event receiver start
-		//RegistryThreadPool.getExecutorService().execute(
-		//		new NeighborsEventReciever();
+		RegistryThreadPool.getExecutorService().execute(
+				new NeighborsEventReciever());
 
 		// Self registration start
 		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
