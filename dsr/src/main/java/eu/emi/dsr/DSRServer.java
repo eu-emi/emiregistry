@@ -127,13 +127,14 @@ public class DSRServer {
 
 		startLog4jFileListener();
 		startServiceExpiryCheckcer();
-		addParentDSR(); // TODO: where is the right place of this function call? 
 		
 		String type = "DSR";
 		String registryType = conf.getProperty(ServerConstants.REGISTRY_TYPE);
 		if (registryType != null && registryType.equals("global")) {
 			type = "GSR";
 			startGSRFunctions();
+		} else {
+			addParentDSR();
 		}
 		System.out.println(type + " server started");
 		logger.info(type + " server started");
