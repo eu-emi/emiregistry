@@ -5,13 +5,9 @@ package eu.emi.dsr.security;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.cert.CertPath;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -112,16 +108,19 @@ public class ACLFilter implements ContainerRequestFilter {
 		if (b
 				|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
 						.equalsIgnoreCase("https")) {
+			X509Certificate[] certArr = (X509Certificate[]) httpRequest
+					.getAttribute("javax.servlet.request.X509Certificate");
+			String userName = certArr[0].getSubjectX500Principal()
+					.getName();
 			if (path.equalsIgnoreCase("serviceadmin")) {
-				X509Certificate[] certArr = (X509Certificate[]) httpRequest
-						.getAttribute("javax.servlet.request.X509Certificate");
-				String userName = certArr[0].getSubjectX500Principal()
-						.getName();
+				
 				// setting the client to send it to the serviceadmin
 				// resource
-
 				client = checkAccess(userName);
-
+			} else {
+				//setting the dn regardless of the resource 
+				client = new Client();
+				client.setDistinguishedName(userName);
 			}
 		} else {
 			client = new Client();
