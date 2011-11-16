@@ -1,4 +1,4 @@
-package eu.emi.client.security.utl;
+package eu.emi.client.security.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;

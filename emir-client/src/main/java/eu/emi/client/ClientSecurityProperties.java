@@ -23,7 +23,7 @@ import javax.net.ssl.SSLContext;
 import org.apache.log4j.Logger;
 
 import eu.emi.client.security.IClientProperties;
-import eu.emi.client.security.utl.KeystoreChecker;
+import eu.emi.client.security.util.KeystoreChecker;
 import eu.emi.client.util.Log;
 
 /**
