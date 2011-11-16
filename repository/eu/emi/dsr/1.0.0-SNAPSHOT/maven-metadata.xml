@@ -2,12 +2,12 @@
 <metadata>
   <groupId>eu.emi</groupId>
   <artifactId>dsr</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <versioning>
-    <versions>
-      <version>1.0-SNAPSHOT</version>
-      <version>1.0.0-SNAPSHOT</version>
-    </versions>
+    <snapshot>
+      <timestamp>20111116.150146</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
     <lastUpdated>20111116150146</lastUpdated>
   </versioning>
 </metadata>
