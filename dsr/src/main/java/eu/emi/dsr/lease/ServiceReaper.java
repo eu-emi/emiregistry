@@ -3,7 +3,6 @@
  */
 package eu.emi.dsr.lease;
 
-
 import org.apache.log4j.Logger;
 
 import eu.emi.dsr.core.ServiceAdminManager;
@@ -18,12 +17,14 @@ import eu.emi.dsr.util.Log;
 public class ServiceReaper implements Runnable {
 	private static Logger logger = Log.getLogger(Log.DSR, ServiceReaper.class);
 	private ServiceAdminManager sm;
-	
+
 	/**
 	 * 
 	 */
 	public ServiceReaper() {
+
 		sm = new ServiceAdminManager();
+
 	}
 
 	/*
@@ -37,12 +38,11 @@ public class ServiceReaper implements Runnable {
 			if (logger.isTraceEnabled()) {
 				logger.trace("purging service entry");
 			}
+			
 			sm.removeExpiredEntries();
 		} catch (Exception e) {
-			Log.logException(e);
-		} 
+			logger.warn(e.getCause());
+		}
 	}
-	
-	
 
 }

@@ -135,7 +135,7 @@ public class RegistryThreadPool {
 
 			public Thread newThread(Runnable r) {
 				Thread t = new Thread(r);
-				t.setName("wsrflite-sched-" + threadNumber.getAndIncrement());
+				t.setName("emir-sched-" + threadNumber.getAndIncrement());
 				return t;
 			}
 		});

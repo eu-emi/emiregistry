@@ -31,14 +31,9 @@ import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.db.ExistingResourceException;
-import eu.emi.dsr.db.MultipleResourceException;
-import eu.emi.dsr.db.NonExistingResourceException;
-import eu.emi.dsr.db.PersistentStoreFailureException;
-import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
-import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.security.Client;
 import eu.emi.dsr.util.Log;
@@ -54,7 +49,7 @@ public class ServiceAdminResource {
 	private static Logger logger = Log.getLogger(Log.DSR,
 			ServiceAdminResource.class);
 
-	private final ServiceAdminManager serviceAdmin;
+	private ServiceAdminManager serviceAdmin;
 
 	@Context
 	HttpServletRequest req;
@@ -64,7 +59,7 @@ public class ServiceAdminResource {
 	 */
 	public ServiceAdminResource() {
 		// serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
-		serviceAdmin = new ServiceAdminManager();
+			serviceAdmin = new ServiceAdminManager();
 	}
 
 	protected String getUserPrincipalName() {
@@ -83,17 +78,17 @@ public class ServiceAdminResource {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public JSONObject getServicebyUrl(@Context UriInfo infos)
-			throws WebApplicationException {
+			throws WebApplicationException, JSONException {
 		logger.debug("getting service by url");
 		final JSONObject result;
 		try {
 			result = serviceAdmin
 					.findServiceByUrl(extractServiceUrlFromUri(infos));
-		} catch (NonExistingResourceException e) {
-			return null;
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
-		}
+		} catch (Exception e){
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+		} 
 
 		return result;
 	}
@@ -114,11 +109,12 @@ public class ServiceAdminResource {
 
 	/**
 	 * adding only one entry
+	 * @throws JSONException 
 	 * */
 	
 	
 	public Response registerService(JSONObject serviceInfo)
-			throws WebApplicationException{
+			throws WebApplicationException, JSONException{
 		Integer length = serviceInfo.length();
 		if (length <= 0 || length > 100) {
 			throw new WebApplicationException(Status.FORBIDDEN);
@@ -131,27 +127,26 @@ public class ServiceAdminResource {
 					.getAttributeName(), c.getDistinguishedName());
 			JSONObject res = serviceAdmin.addService(serviceInfo);
 			return Response.ok(res).build();
-		} catch (JSONException e) {
-			throw new WebApplicationException(e);
-		} catch (InvalidServiceDescriptionException e) {
-			throw new WebApplicationException(e);
-		} catch (NullPointerException e){
-			throw new WebApplicationException(e);
 		} catch (ExistingResourceException e) {
 			return Response.status(Status.CONFLICT).entity(serviceInfo).build();
-		}
+		} catch (Exception e){
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+		} 
 	}
 	
 	/**
 	 * adding an array of json documents, where each item in the array is service endpoint information
 	 * @throws InterruptedException 
 	 * TODO: polymorphic registrations: Supporting JSONObject as well as Array
+	 * @throws JSONException 
 	 * */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response registerServices(JSONArray serviceInfos)
-			throws WebApplicationException, InterruptedException{
+			throws WebApplicationException, InterruptedException, JSONException{
 		Long max = Long.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
 		if (serviceInfos.length() > max) {
 			return Response.status(Status.FORBIDDEN).entity(new String("Number of entries/json objects in the array must not exceed: "+max)).build();
@@ -183,15 +178,14 @@ public class ServiceAdminResource {
 				arr.put(res);
 				continue;
 				//return Response.ok(res).build();
-			} catch (JSONException e) {
-				throw new WebApplicationException(e);
-			} catch (InvalidServiceDescriptionException e) {
-				throw new WebApplicationException(e);
-			} catch (NullPointerException e){
-				throw new WebApplicationException(e);
 			} catch (ExistingResourceException e) {
 				errorArray.put(serviceInfo);
+			} catch (Exception e){
+				JSONObject jErr = new JSONObject();
+				jErr.put("error", e.getCause());
+				throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 			}
+			
 		}
 		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
 		if (errorArray.length()>0){
@@ -203,10 +197,11 @@ public class ServiceAdminResource {
 
 	/**
 	 * updating only one entry
+	 * @throws JSONException 
 	 * */
 
 	public Response updateService(JSONObject serviceInfo)
-			throws WebApplicationException {
+			throws WebApplicationException, JSONException {
 		try {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
@@ -243,26 +238,23 @@ public class ServiceAdminResource {
 				return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+url).build();
 			}
 
-		} catch (InvalidServiceDescriptionException e) {
-			throw new WebApplicationException(e);
-		} catch (JSONException e) {
-			throw new WebApplicationException(e);
-		} catch (QueryException e) {
-			throw new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
-		}
+		} catch (Exception e){
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+		} 
 	}
 
 	/**
 	 * updating array of entries
+	 * @throws JSONException 
 	 * */
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response updateServices(JSONArray serviceInfos)
-			throws WebApplicationException {
+			throws WebApplicationException, JSONException {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
@@ -325,15 +317,11 @@ public class ServiceAdminResource {
 				return Response.status(Status.CONFLICT).entity(errorArray).build();
 			}
 			return Response.ok(arr).build();
-		} catch (InvalidServiceDescriptionException e) {
-			throw new WebApplicationException(e);
-		} catch (JSONException e) {
-			throw new WebApplicationException(e);
-		} catch (QueryException e) {
-			throw new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
-		}
+		} catch (Exception e){
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+		} 
 	}
 	
 	/**
@@ -341,9 +329,10 @@ public class ServiceAdminResource {
 	 * 
 	 * @param infos
 	 *            contains a ..?SERVICE_ENDPOINT_URL=http://serviceurl
+	 * @throws JSONException 
 	 * */
 	@DELETE
-	public Response deleteService(@Context UriInfo infos) throws WebApplicationException{
+	public Response deleteService(@Context UriInfo infos) throws WebApplicationException, JSONException{
 		String serviceurl = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
@@ -362,16 +351,12 @@ public class ServiceAdminResource {
 				return Response.status(Status.UNAUTHORIZED).entity("Access denied for DN - "+owner+" to update service with the URL - "+serviceurl).build();
 			}
 
-		} catch (QueryException e) {
-			throw new WebApplicationException(e);
-		} catch (PersistentStoreFailureException e) {
-			throw new WebApplicationException(e);
 		} catch(IllegalArgumentException e){
 			return Response.status(Status.BAD_REQUEST).entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"+ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()+" = <SERVICE URL>").build();
-		} catch (MultipleResourceException e) {
-			throw new WebApplicationException(e);
-		} catch (NonExistingResourceException e) {
-			throw new WebApplicationException(e);
+		} catch (Exception e){
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		} 
 		return Response.ok().build();
 	}

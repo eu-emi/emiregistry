@@ -34,9 +34,10 @@ public class ServiceColManager {
 	private ServiceDatabase serviceDB = null;
 
 	/**
+	 * @throws DatabaseUnavilableException 
 	 * 
 	 */
-	public ServiceColManager() {
+	public ServiceColManager(){
 		serviceDB = new MongoDBServiceDatabase();
 	}
 

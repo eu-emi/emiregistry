@@ -198,7 +198,7 @@ public class DSRServer {
 	 */
 	private void startServiceExpiryCheckcer() {
 		RegistryThreadPool.getScheduledExecutorService()
-				.scheduleWithFixedDelay(new ServiceReaper(), 10, 1,
+				.scheduleWithFixedDelay(new ServiceReaper(), 10, 5,
 						TimeUnit.SECONDS);
 	}
 

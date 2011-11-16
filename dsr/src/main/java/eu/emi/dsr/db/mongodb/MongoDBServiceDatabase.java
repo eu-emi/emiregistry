@@ -43,16 +43,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private static Mongo connection;
 	private DB database;
 	private DBCollection serviceCollection;
-	private static volatile MongoDBServiceDatabase s;
-	
-	public static MongoDBServiceDatabase getInstance(){
-		if (s == null) {
-			s = new MongoDBServiceDatabase();
-		}
-		return s;
-	}
-	
-	public MongoDBServiceDatabase() {
+
+	public MongoDBServiceDatabase(){
 		if (DSRServer.getConfiguration() == null) {
 			new DSRServer(new Configuration(new Properties()));
 		}
@@ -68,7 +60,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			// connection = MongoConnection.get(hostname,
 			// Integer.valueOf(port));
 			if (connection == null) {
-				connection = new Mongo(hostname, Integer.valueOf(port));	
+				connection = new Mongo(hostname, Integer.valueOf(port));
 			}
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
@@ -78,15 +70,18 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
 					"1");
-			
-			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), "1");
-			
+
+			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
+					"1");
+
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
+		} catch (MongoException e) {
+			logger.warn(e.getCause());
 		} catch (Exception e) {
-			logger.error("Error in connecting the MongoDB database",e);
-		} 
+			logger.error("Error in connecting the MongoDB database", e);
+		}
 
 	}
 
@@ -107,14 +102,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				Properties serverProps = new Properties();
 				serverProps.put(ServerConstants.MONGODB_HOSTNAME, hostname);
 				serverProps.put(ServerConstants.MONGODB_PORT, port);
-				serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, colName);
+				serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME,
+						colName);
 				serverProps.put(ServerConstants.MONGODB_DB_NAME, dbName);
 				new DSRServer(new Configuration(serverProps));
 			}
 			if (connection == null) {
 				connection = new Mongo(hostname, port);
 			}
-			
+
 			database = connection.getDB(dbName);
 
 			serviceCollection = database.getCollection(colName);
@@ -132,9 +128,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				logger.debug("Unique index created: " + obj);
 			}
 		} catch (Exception e) {
-			logger.error("Error in connecting the MongoDB database",e);
-			
-		} 
+			logger.error("Error in connecting the MongoDB database", e);
+
+		}
 	}
 
 	@Override
@@ -148,13 +144,14 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			database.requestStart();
 			DBObject db = item.toDBObject();
-//			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-//					.getAttributeName(), new Date());
-			
+			// db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+			// .getAttributeName(), new Date());
+
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			database.requestDone();
-//			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
-//					.toJSON()));
+			// EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
+			// item
+			// .toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException("Service with URL: "
@@ -181,8 +178,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			database.requestDone();
-//			EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD, item
-//					.toJSON()));
+			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
+			// item
+			// .toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
 				throw new ExistingResourceException(e);
@@ -226,7 +224,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 				.getAttributeName(), url);
 		DBObject d = serviceCollection.findAndRemove(query);
-		
+
 		database.requestDone();
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
@@ -238,7 +236,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					"No service description with the URL:" + url + " exists");
 		}
 		// sending update event to the recievers
-		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE, url));
+		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE,
+				url));
 	}
 
 	@Override
@@ -252,8 +251,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			database.requestStart();
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
-//			dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-//					.getAttributeName(), new Date());
+			// dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+			// .getAttributeName(), new Date());
 			BasicDBObject query = new BasicDBObject();
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), sObj.getUrl());
@@ -261,8 +260,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
 			// sending update event to the recievers
-//			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_UPDATE,
-//					sObj.toJSON()));
+			// EventDispatcher.notifyRecievers(new
+			// Event(EventTypes.SERVICE_UPDATE,
+			// sObj.toJSON()));
 		} catch (MongoException e) {
 			e.printStackTrace();
 		}
@@ -514,13 +514,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 * @see eu.emi.dsr.db.ServiceDatabase#findAndDelete(java.lang.String)
 	 */
 	@Override
-	public void findAndDelete(String query) {
+	public void findAndDelete(String query){
 		DBObject db = (DBObject) JSON.parse(query);
 		if (logger.isTraceEnabled()) {
 			logger.debug("delete by query: " + db.toString());
 		}
-
-		serviceCollection.remove(db);
+			serviceCollection.remove(db);	
+		
 	}
 
 	public void dropCollection() {
@@ -529,8 +529,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 		serviceCollection.drop();
 	}
-	
-	public void dropDB(){
+
+	public void dropDB() {
 		database.dropDatabase();
 	}
 
