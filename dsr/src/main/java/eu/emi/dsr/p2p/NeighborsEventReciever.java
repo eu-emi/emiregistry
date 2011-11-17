@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventListener;
 import eu.emi.dsr.event.EventTypes;
-import eu.emi.dsr.util.Log;
 
 /**
  * @author g.szigeti

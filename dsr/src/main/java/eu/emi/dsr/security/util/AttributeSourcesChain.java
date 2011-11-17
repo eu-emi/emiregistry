@@ -51,7 +51,7 @@ import eu.emi.dsr.security.AuthorisationException;
 import eu.emi.dsr.security.IAttributeSource;
 import eu.emi.dsr.security.SecurityTokens;
 import eu.emi.dsr.security.SubjectAttributesHolder;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * IAttributeSource implementation that combines the results from a chain of attribute sources using

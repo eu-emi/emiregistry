@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.util.Utilities;
 
 /**

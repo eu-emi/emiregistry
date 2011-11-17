@@ -23,7 +23,7 @@ import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.security.util.AuthZAttributeStore;
 import eu.emi.dsr.security.util.ResourceDescriptor;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * @author a.memon

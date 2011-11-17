@@ -36,7 +36,7 @@ import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.security.Client;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * Resource for the service providers (privileged) to manage their services

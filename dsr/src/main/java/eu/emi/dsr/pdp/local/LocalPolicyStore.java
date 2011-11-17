@@ -33,9 +33,9 @@ import org.herasaf.xacml.core.simplePDP.SimplePDPFactory;
 import org.herasaf.xacml.core.utils.JAXBMarshallerConfiguration;
 import org.xml.sax.SAXException;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.util.FileWatcher;
-import eu.emi.dsr.util.Log;
 
 
 

@@ -12,7 +12,7 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**

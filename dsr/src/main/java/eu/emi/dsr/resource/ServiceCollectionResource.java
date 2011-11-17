@@ -28,7 +28,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.dsr.core.ServiceColManager;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**

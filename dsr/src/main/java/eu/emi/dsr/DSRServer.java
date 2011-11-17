@@ -24,6 +24,7 @@ import org.eclipse.jetty.server.Server;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 
 import eu.emi.client.security.ISecurityProperties;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
@@ -37,7 +38,6 @@ import eu.emi.dsr.p2p.NeighborsEventReciever;
 import eu.emi.dsr.security.ACLFilter;
 import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.DSRSecurityProperties;
-import eu.emi.dsr.util.Log;
 
 /**
  * The main class for starting the server

@@ -19,10 +19,10 @@ import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.util.DateUtil;
-import eu.emi.dsr.util.Log;
 import eu.emi.dsr.util.ServiceUtil;
 
 /**

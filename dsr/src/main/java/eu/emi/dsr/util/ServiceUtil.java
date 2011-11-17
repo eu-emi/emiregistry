@@ -26,6 +26,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.validator.ValidatorFactory;
 
@@ -126,7 +127,7 @@ public class ServiceUtil {
 	}
 
 	/**
-	 * Initialise log4j
+	 * Simultaneously initializing the log4j and log4j 
 	 * 
 	 * @param path
 	 */
@@ -134,7 +135,9 @@ public class ServiceUtil {
 		if (path == null) {
 			return;
 		}
+		//initialize log4j
 		PropertyConfigurator.configure(path);
+		//initialize java.util.logging
 		LogManager l = LogManager.getLogManager();
 		try {
 			l.readConfiguration(new FileInputStream(new File(path)));

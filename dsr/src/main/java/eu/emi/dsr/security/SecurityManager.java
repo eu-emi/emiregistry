@@ -56,14 +56,14 @@ import org.apache.log4j.MDC;
 
 import eu.emi.client.security.AuthSSLProtocolSocketFactory;
 import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.security.utl.KeystoreUtil;
+import eu.emi.client.security.util.KeystoreUtil;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.pdp.PDPResult;
 import eu.emi.dsr.pdp.PDPResult.Decision;
 import eu.emi.dsr.pdp.RegistryPDP;
 import eu.emi.dsr.pdp.local.LocalHerasafPDP;
 import eu.emi.dsr.security.util.ResourceDescriptor;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * access to security components

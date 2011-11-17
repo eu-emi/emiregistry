@@ -22,9 +22,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.util.Log;
 
 /**
  * @author g.szigeti

@@ -18,12 +18,12 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventListener;
 import eu.emi.dsr.event.EventTypes;
-import eu.emi.dsr.util.Log;
 
 /**
  * @author a.memon

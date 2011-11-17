@@ -30,7 +30,7 @@ import eu.emi.client.security.ISecurityProperties;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.util.FileWatcher;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * It checks incoming requests, trying to access the <b>serviceadmin<b> resource

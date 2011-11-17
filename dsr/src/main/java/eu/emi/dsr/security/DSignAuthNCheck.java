@@ -3,7 +3,7 @@ package eu.emi.dsr.security;
 import org.apache.log4j.Logger;
 
 import eu.emi.dsr.security.util.ResourceDescriptor;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 
 /**

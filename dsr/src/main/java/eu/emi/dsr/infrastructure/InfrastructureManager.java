@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.WebResource;
 import eu.emi.client.ClientSecurityProperties;
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
@@ -30,7 +31,6 @@ import eu.emi.dsr.db.NonExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.db.mongodb.ServiceObject;
-import eu.emi.dsr.util.Log;
 
 /**
  * @author g.szigeti

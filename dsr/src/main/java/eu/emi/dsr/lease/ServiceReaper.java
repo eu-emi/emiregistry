@@ -5,8 +5,8 @@ package eu.emi.dsr.lease;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.ServiceAdminManager;
-import eu.emi.dsr.util.Log;
 
 /**
  * Checks the service entry lease and deletes it if expired

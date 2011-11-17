@@ -32,7 +32,7 @@ import eu.emi.dsr.pdp.PDPUtils;
 import eu.emi.dsr.security.Client;
 import eu.emi.dsr.security.XACMLAttribute;
 import eu.emi.dsr.security.util.ResourceDescriptor;
-import eu.emi.dsr.util.Log;
+import eu.emi.client.util.Log;
 
 /**
  * Creates an XACML request.

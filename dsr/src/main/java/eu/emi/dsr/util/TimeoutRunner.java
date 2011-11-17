@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.core.RegistryThreadPool;
 
 

@@ -23,12 +23,12 @@ import javax.security.auth.x500.X500Principal;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.client.util.Log;
 import eu.emi.dsr.security.IAttributeSource;
 import eu.emi.dsr.security.SecurityTokens;
 import eu.emi.dsr.security.SubjectAttributesHolder;
 import eu.emi.dsr.security.XACMLAttribute;
 import eu.emi.dsr.security.XACMLAttribute.Type;
-import eu.emi.dsr.util.Log;
 
 /**
  * Retrieves client's attributes from a file. File format is quite simple:

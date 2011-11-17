@@ -15,13 +15,13 @@ import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.MongoException;
 
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.glue2.Glue2Mapper;
 import eu.emi.dsr.glue2.JSONToGlue2MappingException;
-import eu.emi.dsr.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**
