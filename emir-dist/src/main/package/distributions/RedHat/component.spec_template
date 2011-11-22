@@ -71,6 +71,13 @@ This package contains the EMIR server.
 %dir %attr(0700 emi emi) "/var/run/emi/emir"
 %dir %attr(0700 emi emi) "/var/lib/emi"
 
+#
+# dealing with .gitignores
+#
+%attr(0644 emi emi) "/var/lib/emi/emir/data/.gitignore"
+%attr(0644 emi emi) "/var/log/emi/emir/.gitignore"
+%attr(0644 emi emi) "/var/run/emi/emir/.gitignore"
+%attr(0644 emi emi) "/usr/share/doc/emi/emir/.gitignore"
 
 #
 # dir %attr(0700 emi emi) "/var/lib/emir"
