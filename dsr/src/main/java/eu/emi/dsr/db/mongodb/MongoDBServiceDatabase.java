@@ -235,9 +235,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			throw new NonExistingResourceException(
 					"No service description with the URL:" + url + " exists");
 		}
-		// sending update event to the recievers
-		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE,
-				url));
+		// sending update event to the receivers
+		try {
+			JSONObject deletedEntry = new JSONObject(d.toString());
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE,
+					deletedEntry));
+
+		} catch (JSONException e) {
+			logger.warn(e.getCause());
+		}
 	}
 
 	@Override

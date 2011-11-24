@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -147,22 +149,26 @@ public class ServiceEventReciever implements EventListener, Runnable {
 			if (logger.isDebugEnabled()) {
 				logger.debug("service added delete event fired");
 			}
+			String deleteURL = null;
 			try{
+				deleteURL = ((JSONObject) event.getData()).getString("Service_Endpoint_URL");
 				ClientResponse res = client.queryParam(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
-					event.getData().toString()).delete(ClientResponse.class);
+							deleteURL).delete(ClientResponse.class);
 				if ( res.getStatus() == Status.OK.getStatusCode() ){
 					if (parent_lost){
 						// DB sync
 						List<String> ID = new ArrayList<String>();
-						ID.add(event.getData().toString());
+						ID.add(deleteURL);
 						parent_lost = !infrastructure.dbSynchronization(ID, Method.DELETE, res.getStatus());
 					}
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
-				infrastructure.handleDelete(event.getData().toString());
+				infrastructure.handleDelete(deleteURL);
+			} catch (JSONException e) {
+				logger.warn(e.getCause());
 			}
 		}
 	}

@@ -6,6 +6,7 @@ package eu.emi.dsr.p2p;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.client.util.Log;
 import eu.emi.dsr.event.Event;
@@ -46,6 +47,13 @@ public class NeighborsEventReciever implements EventListener, Runnable {
 			} catch (ClassCastException e) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("event.data to JSONArray cast problem. May be delete message.");
+				}
+			}
+			try {
+				recievedjos.put((JSONObject) event.getData());
+			} catch (ClassCastException e) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("event.data to JSONObject cast problem. NOT delete message.");
 				}
 			}
 			try {
