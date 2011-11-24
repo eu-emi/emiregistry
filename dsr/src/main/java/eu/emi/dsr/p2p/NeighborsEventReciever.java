@@ -62,7 +62,7 @@ public class NeighborsEventReciever implements EventListener, Runnable {
 			
 			// Transmit to the Neighbors singleton
 			if (relevantEntries.length() > 0){
-				//Singleton.method
+				NeighborsManager.getInstance().addNeighborsDSRs(relevantEntries,event.getType());
 			}
 		}
 	}
