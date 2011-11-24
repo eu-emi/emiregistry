@@ -73,6 +73,8 @@ public class TestNeighborsManager {
 		Configuration c = new Configuration(serverProps);
 		s = new DSRServer(c);
 		s.startJetty();
+		// Clear the hash table
+		NeighborsManager.getInstance().hashClear();
 		Thread.sleep(1000);
 	}
 	

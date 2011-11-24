@@ -69,6 +69,16 @@ public class NeighborsManager {
 	}
 	
 	/**
+	 * Clear the hash table and set the neighbors count to 0.
+	 *  
+	 * @param None
+	 */
+	public void hashClear(){
+		hash.clear();
+		neighbors_count =0;
+	}
+	
+	/**
 	 * Get list of neighbors.
 	 *  
 	 * @param None
