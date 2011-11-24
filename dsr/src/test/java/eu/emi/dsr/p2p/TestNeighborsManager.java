@@ -52,7 +52,7 @@ public class TestNeighborsManager {
 		
 		TestRegistryBase.startMongoDB();
 		Properties serverProps = new Properties();
-		serverProps.put(ServerConstants.REGISTRY_TYPE, "global");
+		serverProps.put(ServerConstants.REGISTRY_GLOBAL_ENABLE, "true");
 		serverProps.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
 		serverProps.put(ServerConstants.REGISTRY_PORT, "54321");
 		serverProps.put(ServerConstants.REGISTRY_SCHEME, "http");

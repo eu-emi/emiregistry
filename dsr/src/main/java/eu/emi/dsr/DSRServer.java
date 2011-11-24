@@ -129,8 +129,9 @@ public class DSRServer {
 		startServiceExpiryCheckcer();
 		
 		String type = "DSR";
-		String registryType = conf.getProperty(ServerConstants.REGISTRY_TYPE);
-		if (registryType != null && registryType.equals("global")) {
+		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+		if (globalRegistryEnabled != null &&
+				globalRegistryEnabled.toLowerCase().equals("true")) {
 			type = "GSR";
 			startGSRFunctions();
 		} else {
