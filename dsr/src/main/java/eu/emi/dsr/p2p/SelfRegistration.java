@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.dsr.infrastructure;
+package eu.emi.dsr.p2p;
 
 
 import java.net.MalformedURLException;
