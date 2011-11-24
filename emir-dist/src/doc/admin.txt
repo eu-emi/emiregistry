@@ -1,0 +1,142 @@
+Configuration
+-------------
+
+The EMIR server comes with a configuration file, a well documented file containing a 
+number of options (security, database, multi-node setup etc...). The options are well 
+defined and can be sufficient to setup and start-up the server in non-production 
+environment, however the administrator needs to review before deploying on the
+production environment (DCI).    
+
+Server Configuration
+~~~~~~~~~~~~~~~~~~~~
+
+The server configuration options are:
+
+	*  Server host, port and scheme (plain or SSL)
+	*  Settings of the type of the registry node, i.e. whether the current registry instance
+	   is a child of some other (a parent) regitsry node or a global registry.
+	      
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+4+^e|Server general settings
+|registry.scheme|http or https|https|The selected scheme which will be used.
+|registry.hostname|string|localhost|The host name of the machine on which the registry is running.
+|registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
+|registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
+4+^e|Registry Infrastructure Settings
+|registry.parent.url|URI|-|The URI of the parent registry node.
+|registry.parent.type|true or false|false|Indicating whether the registry node is global -if set to true then it will ignore the registry.parent property.
+4+^e|Service record management
+|registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
+|registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
+|=========================
+
+
+MongoDB Configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The registry uses MongoDB to store and index the service records. Thus it is 
+necessary to setup the Database before starting the EMIR.
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|mongodb.hostname|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
+|mongodb.port|Integer|27017|The port number
+|mongodb.dbname|string|emiregistry|The name of the database to store the entries
+|mongodb.colname|string|services|The name of the collection in which the records will be stored 
+|========================= 
+
+Logging Configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The EMIR server provides log facilities to record all but some of the server activities. In order to 
+change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|logger.conf.path|URI|CONF/log4j.properties|The log4j configuration
+|=========================
+
+Authentication with X.509 
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The authentication of the client in EMIR is based on PKI, thus using X.509 standard is used to
+authenticate the client as well as the server. However this implies the EMIR client and the server
+should own a X.509 certificate issued by a mutually trusted certificate authority (CA).
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|registry.ssl.keystore|URI|CONF/certs/demo-server.p12|The location of the server key-store
+|registry.ssl.keytype|string|pkcs12|The type of the key-store 
+|registry.ssl.keypass|URI|emi|The password of the key-store
+|registry.ssl.truststore|URI|CONF/certs/demo-server.jks|The location of the server key store
+|registry.ssl.truststorepass|string|emi|The password of the trust-store 
+|registry.ssl.truststoretype|string|JKS|The type of the trust-store
+|registry.ssl.clientauthentication|true or false|true|If set the server will attempt to authenticate the client
+|=========================
+
+
+Authorization
+~~~~~~~~~~~~~
+
+The EMIR offers two mutually exclusive options to authorize its clients.
+
+	* Using Access Control List (ACL)
+	* XACML based authorization
+
+ACL Based Authorization
+~~~~~~~~~~~~~~~~~~~~~~~
+
+This is the standard mechanism in EMIR to authorize the clients. The incoming requests' subject is matched against the 
+pre-defined ACL file (CONF/emir.acl). The ACL file has a list of DN/role pairs separated by *::*, see the example below
+
+.emir.acl
+-----------------
+emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
+emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
+-----------------
+
+the property in the +CONF/dsr.config+ file
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|registry.acl.file|URI|CONF/emir.acl|The location of the acl file
+|===========================================================
+
+There are only two pre-defined roles in EMIR that can be selected: the _administrator_ who can 
+change any registration, while the _serviceowner_ is only allowed to change (modify/delete) her
+already created registrations.
+
+IMPORTANT: The server should be running on SSL mode to anable the authorization
+
+
+Fine Grained Authorization with XACML
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using XACML 2.0 is an alternative way to authorize the subjects in a fine grained manner. The administrator should 
+review the policies defined in the +CONF/xacml2Policies/+ folder and change them according to the infrastructure
+needs. However the already defined policies provides a good starting point to the administrators to define/modify the
+policies. In order to enable the given authorization following property must be set
+
+.Settings of the Attribute Sources
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|registry.security.attributes.order|string|FILE|This property is a space separated list of attribute source names, which are then configured in detail below. The named attribute sources are queried in the given order.
+|registry.security.attributes.FILE.class|string|eu.unicore.uas.security.file.FileAttributeSource|configuration of the 'FILE' attribute source
+|registry.security.attributes.FILE.file|URI|CONF/users/testUd.strict.xml|The path to the file containing subjects' DNs
+|===========================================================
+
+.Access Control Settings
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|registry.security.accesscontrol|true or false|true|Enable/disable authorisation. Server should running on https with valid client and server certificates, see 'Authentication' properties above.
+|registry.security.accesscontrol.pdp.config|URI|CONF/xacml2.config|The path to XACML2 configuration, containing the rules of executing the policies
+|registry.security.accesscontrol.pdp|string|eu.unicore.uas.pdp.local.LocalHerasafPDP|The name of the pdp class to endorse, for the xacml2 policies execution
+|===========================================================

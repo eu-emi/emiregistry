@@ -1,0 +1,48 @@
+Installation
+------------
+
+In order to install EMIR, it is required to install 
+the SUN or OpenJDK Java 6 (JRE or SDK). If not installed 
+on your system, you can download it from http://java.oracle.com[http://java.oracle.com]
+
+* Linux based operating system
+* MongoDB[www.mongodb.org]
+
+EMIR is distributed in the following formats:
+
+* Platform independent format, provided in "tar.gz" format 
+* RPM package, suitable SL5 and other Fedora based Linux derivatives (RedHat, CentOS etc...)
+ 
+[NOTE]
+.IMPORTANT NOTE ON PATHS
+=========================================================
+The location of the installation and configuration files differ 
+depending on type of bundle (see the above section).
+
+If RPM bundle is chosen, the following paths will be used:
+  
+  CONF=/etc/emi/emir
+  BIN=/usr/sbin
+  LOG=/var/log/emi/emir
+  
+The platform independent binary bundles all the files under
+single directory. Thus if extracted:
+
+  CONF=INST/conf
+  BIN=INST/bin
+  LOG=INST/logs
+  
+The above variables (CONF, BIN and LOG) will be used throughout the rest of this manual.
+=========================================================
+
+Installation from the self-contained archive (tar.gz)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Download the tar.gz archive from the EMIR website. The archive contains all the necessary 
+files which are bundled already, therefore no special actions will be required except the 
+exraction to final folder.
+
+Installation using the RPM bundle
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+RPM Installation instructions.

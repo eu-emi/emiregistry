@@ -1,0 +1,224 @@
+REST API
+--------
+
+The EMI Registry allows Services to register/publish their capabilities
+while the Service Consumers are able to find the deployed services.
+
+This section contains the description of the REST-ful interface, that allows the
+management of the service information (or entries) by exposing the individual
+URIs. The normative description of the API cab also be defined as Web Application Description Language (WADL) document xref:appendixii[WADL].
+
+Register new Services
+~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : POST
+
++URI+ : /serviceadmin
+
++Content Type+ : application/json
+
++Security Implications+ : Requires authenticated "and" authorized user to perform this operation 
+
+Request
++++++++
+
+The message must contain a JSON document, includes an array of the JSON objects (see below), each of which
+is a service entry in the EMI registry.
+
+Service description is defined as a xref:appendixi[] document.
+
+
+IMPORTANT: The only mandatory attribute is *Service_Endpoint_URL*, which should be unique
+
+Response
+++++++++
+
+The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.
+
++Status Code+ : OK / 200
+
+Updating the Service information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : PUT
+
++URI+ : /serviceadmin
+
++Content Type+ : application/json
+
++Security Implications+ : Requires an authenticated "and" authorized user to perform this operation
+
+Request
++++++++
+
+The request body contain a similar JSON array object as defined POST method that contains the
+description of the Services to be updated. The Service Entries
+identified by the 'Service_Endpoint_URL' key in the individual JSON
+objects will be updated respectively.
+
+Response
+++++++++
+
+The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.
+
++Status Code+ : OK / 200
+
+Delete existing Services
+~~~~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : DELETE
+
++URI+ : /serviceadmin
+
++Security Implications+ : Requires an authenticated "and" authorized user to perform this operation
+
+Request
++++++++
+
+The Service Entry identified by the URL will be deleted from the
+database if the client is properly authorized and the method were
+allowed by the security plugins.
+
++Query Parameters+ : Service_Endpoint_URL= _<service unique URL>_
+
+******
+*Example* : /serviceadmin?Service_Endpoint_URL=http://1
+******
+
+Response
+++++++++
+
++Status Code+ : OK / 200
+
+Querying the EMI Registry database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : GET
+
++URI+ : /services/query
+
++Content Type+ : application/json
+
+Request
++++++++
+
+The request contains the key-value pairs separated by ampersand +&+
+
++Query Parameters+ : AttributeName=<Attribute_Value>&AttributeName=<Attribute_Value>&...
+
+*******
+*Example* : /services/query?Service_Type=eu.emi.es&Service_Endpoint_HealthState=ok
+*******
+
+The additional parameters can also be added to restrict and/or paginate the result
+
++Additional Query Parameters+ : 
+
+-----
+skip=Integer value
+-----
+
+_skip_ returns the result skipping the given number of entries
+  
+
+-----
+limit=Integer value
+-----
+
+_limit_ defines the maximum number of result containing the service entries
+
+
+Response
+++++++++
+
+The response contains an array of service entries packed in a JSON array object 
+
++Status Code+ : OK / 200
+
+Querying the EMI Registry database GLUE 2.0 XML format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : GET
+
++URI+ : /services/query.xml
+
++Content Type+ : application/xml
+
+Request
++++++++
+
+The request contains the key-value pairs separated by ampersand +&+
+
++Query Parameters+ : AttributeName=<Attribute_Value>&AttributeName=<Attribute_Value>&...
+
+*******
+*Example* : /services/query?Service_Type=eu.emi.es&Service_Endpoint_HealthState=ok
+*******
+
+The additional parameters can also be added to restrict and/or paginate the result
+
++Additional Query Parameters+ : 
+
+-----
+skip=Integer value
+-----
+
+_skip_ returns the result skipping the given number of entries
+  
+
+-----
+limit=Integer value
+-----
+
+_limit_ defines the maximum number of result containing the service entries
+
+
+Response
+++++++++
+
+The response contains an XML document containing service entries in GLUE 2.0 format 
+
++Status Code+ : OK / 200
+
+
+Viewing the Service information template
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This To view the GLUE 2.0's JSON flavored service model.
+
++HTTP Method+ : GET 
+
++URI+ : /model
+
++Content Type+ : application/json
+
+Request
++++++++
+
+N/A
+
+Response
+++++++++
+
+JSON document, as described in the +/serviceadmin+ POST method
+
++Status Code+ : OK / 200
+
+Monitoring the Registry
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Allows registry users to view the registry status 
+
++HTTP Method+ : GET
+
++URI+ : /ping
+
+Request
++++++++
+
+N/A
+
+Response
+++++++++
+
++Status Code+ : OK / 200
