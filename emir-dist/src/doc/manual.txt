@@ -1,8 +1,9 @@
 EMI Registry Manual
 ===================
-EMI Registry Team <info@example.org>
+EMIR Team <info@example.org>
 v1.0.0-SNAPSHOT, August 2011
-:revnumber: 1.0.0
+:revnumber: 1.0.1
+:numbered:
 
 Overview
 --------
@@ -29,3 +30,15 @@ The registry provides following features:
 For more information about EMI visit http://www.eu-emi.eu[http://www.eu-emi.eu].
 
 include::emir.txt[]
+
+include::developer.txt[]
+
+include::install.txt[]
+
+include::admin.txt[]
+
+include::client.txt[]
+
+include::appendix1.txt[]
+
+include::appendix2.txt[]

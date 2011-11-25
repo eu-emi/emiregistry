@@ -1,0 +1,9 @@
+[[appendixii]]
+Appendix II
+-----------
+
+The EMIR WADL document to define the REST-ful API
+
+-----
+include::emir.wadl[]
+-----

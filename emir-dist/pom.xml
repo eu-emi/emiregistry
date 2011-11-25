@@ -2,17 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.emi</groupId>
 	<artifactId>emir-distribution</artifactId>
 	<packaging>pom</packaging>
-	<description>Build EMIR distribution</description>
+	<description>Enable building EMIR distribution for Redhat and general Linux/Unix environments</description>
 	<inceptionYear>2011</inceptionYear>
 	<url>http://www.unicore.eu</url>
 
 	<name>Distribution of the EMIR server</name>
 
 	<!-- this is the "release" version -->
-	<version>1.0.0-SNAPSHOT</version>
 
 	<parent>
 		<groupId>eu.emi</groupId>
@@ -36,6 +34,7 @@
 		<docman.enabled />
 		<doc.src>src/doc/manual.txt</doc.src>
 		<doc.target>emir-manual</doc.target>
+		<doc.template>emi-nonunicore</doc.template>
 	</properties>
 
 	<dependencies>

@@ -222,11 +222,18 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<inherited>true</inherited>
+					<version>2.8</version>
 					<executions>
 						<execution>
 							<id>attach-javadocs</id>
 							<goals>
 								<goal>jar</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report-javadocs</id>
+							<goals>
+								<goal>javadoc</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -277,6 +284,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<id>svn</id>
@@ -348,4 +356,31 @@
 			<url>file:///${basedir}/../../emiregistry-pages/repository/</url>
 		</repository>
 	</distributionManagement>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<excludePackageNames>org.ogf.*,org.w3.*,org.ggf.*</excludePackageNames>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

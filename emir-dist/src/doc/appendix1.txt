@@ -1,0 +1,9 @@
+[[appendixi]]
+Appendix I
+----------
+
+The service record JSON template of EMIR interface.
+
+-----
+include::servicemodel.json[]
+-----

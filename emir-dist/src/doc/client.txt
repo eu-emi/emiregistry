@@ -1,0 +1,4 @@
+EMIR Client Daemon (EMIRD)
+--------------------------
+
+Client usage manual
