@@ -32,9 +32,9 @@ import eu.emi.dsr.event.EventTypes;
  * @author g.szigeti
  * 
  */
-public class ServiceEventReciever implements EventListener, Runnable {
+public class ServiceEventReceiver implements EventListener, Runnable {
 	private static Logger logger = Log.getLogger(Log.DSR,
-			ServiceEventReciever.class);
+			ServiceEventReceiver.class);
 	private static Configuration conf;
 	private final WebResource client;
 	private static InfrastructureManager infrastructure;
@@ -44,7 +44,7 @@ public class ServiceEventReciever implements EventListener, Runnable {
 	/**
 	 * @param property
 	 */
-	public ServiceEventReciever(String parentUrl, Configuration config) {
+	public ServiceEventReceiver(String parentUrl, Configuration config) {
 		conf = config;
 		infrastructure = new InfrastructureManager(conf);
 		try {

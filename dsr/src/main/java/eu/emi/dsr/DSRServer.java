@@ -30,7 +30,7 @@ import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
-import eu.emi.dsr.infrastructure.ServiceEventReciever;
+import eu.emi.dsr.infrastructure.ServiceEventReceiver;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
 import eu.emi.dsr.p2p.NeighborsEventReciever;
@@ -305,7 +305,7 @@ public class DSRServer {
 		if (url != null) {
 			logger.info("adding parent dsr : " + url + " to: " + getBaseUrl());
 			RegistryThreadPool.getExecutorService().execute(
-					new ServiceEventReciever(conf
+					new ServiceEventReceiver(conf
 							.getProperty(ServerConstants.REGISTRY_PARENT_URL), conf));
 			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
 	                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
