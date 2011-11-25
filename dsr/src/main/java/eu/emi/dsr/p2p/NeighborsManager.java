@@ -124,6 +124,16 @@ public class NeighborsManager {
         }
 	}
 	
+	/**
+	 * Set unavailable neighbor DSR.
+	 *  
+	 * @param URL of the unavailable neighbor DSR
+	 */
+	public synchronized void setUnavailableNeighbor(String url){
+		logger.warn("Unavailable neighbor: " + url);
+	}
+
+	
 	private void Neighbors_Update(){
 		if (logger.isDebugEnabled()) {
 			logger.debug("Neighbors_Update called");
