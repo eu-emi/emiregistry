@@ -121,12 +121,5 @@
 				</excludes>
 			</resource>
 		</resources>
-	</build>
-	<distributionManagement>
-		<site>
-			<id>gh-pages</id>
-			<!-- path to the local repo -->
-			<url>file:///${basedir}/../../emiregistry-pages/documentation/registry-${version}</url>
-		</site>
-	</distributionManagement>
+	</build>	
 </project>

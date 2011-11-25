@@ -18,13 +18,13 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-<!-- 	<distributionManagement> -->
-		<!-- where the website is deployed -->
-		<!-- <site> -->
-		<!-- <id>unicore.eu</id> -->
-		<!-- <url>dav:https://unicore-dev.zam.kfa-juelich.de/documentation/unicorex-${version}</url> -->
-		<!-- </site> -->
-<!-- 	</distributionManagement> -->
+	<distributionManagement>
+		<site>
+			<id>gh-pages</id>
+			<!-- path to the local repo -->
+			<url>file:///${basedir}/../../emiregistry-pages/documentation/registry-${version}</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
 		<!-- this is the UNICORE/X version we are packaging -->

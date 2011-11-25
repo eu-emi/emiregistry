@@ -29,6 +29,7 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.infrastructure.InputFilter;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReceiver;
 import eu.emi.dsr.jetty.JettyServer;
@@ -168,11 +169,19 @@ public class DSRServer {
 	private void addRequestFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		if (getProperty(ISecurityProperties.REGISTRY_ACL_FILE) == null) {
-			//make sure all the properties for xacml are set
+
+		//checking whether to use xacml for the authorization
+		if ((getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG).isEmpty())) {
 			sb.append(AccessControlFilter.class.getName()).append(",");
-		} else {
-			sb.append(ACLFilter.class.getName()).append(",");				
+		} 
+		//setting ACL filter		
+		if ((getProperty(ISecurityProperties.REGISTRY_ACL_FILE, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_ACL_FILE).isEmpty())) {
+			sb.append(ACLFilter.class.getName()).append(",");
+		}
+		
+		//adding the service record filter
+		if((getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, null) != null) && (!getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH).isEmpty())){
+			sb.append(InputFilter.class.getName()).append(",");
 		}
 		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
 		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
