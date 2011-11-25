@@ -643,7 +643,7 @@ footnotes: function () {
 <span id="author">EMIR Team</span><br />
 <span id="email"><tt>&lt;<a href="mailto:info@example.org">info@example.org</a>&gt;</tt></span><br />
 <span id="revnumber">version 1.0.1,</span>
-<span id="revdate">24 11 2011</span>
+<span id="revdate">25 11 2011</span>
 <br /><span id="revremark">component version: 1.0.0-SNAPSHOT</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -957,6 +957,21 @@ cellspacing="0" cellpadding="4">
 <td align="left" valign="top"><p class="table">The host name of the machine on which the registry is running.</p></td>
 </tr>
 <tr>
+<td colspan="4" align="center" valign="top"><p class="table"><em>Service Record Filter Settings</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.input</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/inputfilters</tt></p></td>
+<td align="left" valign="top"><p class="table">This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.output</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/outputfilters</tt></p></td>
+<td align="left" valign="top"><p class="table">Restrict the amount of service records sent to the parent registry node would be defined in the output filters file</p></td>
+</tr>
+<tr>
 <td align="left" valign="top"><p class="table"><tt>registry.filters.request</tt></p></td>
 <td align="left" valign="top"><p class="table">Fully qualified java class names separated by a space</p></td>
 <td align="left" valign="top"><p class="table"><tt>none</tt></p></td>
@@ -1167,7 +1182,7 @@ pre-defined ACL file (CONF/emir.acl). The ACL file has a list of DN/role pairs s
 <div class="title">emir.acl</div>
 <div class="content">
 <pre><tt>emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
-emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin</tt></pre>
+emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin</tt></pre>
 </div></div>
 <div class="paragraph"><p>the property in the <tt>CONF/dsr.config</tt> file</p></div>
 <div class="tableblock">
@@ -1253,43 +1268,41 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<div class="literalblock">
-<div class="title">Access Control Settings</div>
-<div class="content">
-<pre><tt>[width="100%",cols="&lt;35%m,12%&lt;,23%&lt;m,30%&lt;",frame="topbot",options="header"]</tt></pre>
-</div></div>
 <div class="tableblock">
 <table rules="all"
 width="100%"
-frame="border"
+frame="hsides"
 cellspacing="0" cellpadding="4">
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<caption class="title">Table 2. Access Control Settings</caption>
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td align="left" valign="top"><p class="table">Property name</p></td>
-<td align="left" valign="top"><p class="table">Type</p></td>
-<td align="left" valign="top"><p class="table">Default value</p></td>
-<td align="left" valign="top"><p class="table">Description</p></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">registry.security.accesscontrol</p></td>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol</tt></p></td>
 <td align="left" valign="top"><p class="table">true or false</p></td>
-<td align="left" valign="top"><p class="table">true</p></td>
+<td align="left" valign="top"><p class="table"><tt>true</tt></p></td>
 <td align="left" valign="top"><p class="table">Enable/disable authorisation. Server should running on https with valid client and server certificates, see <em>Authentication</em> properties above.</p></td>
 </tr>
 <tr>
-<td align="left" valign="top"><p class="table">registry.security.accesscontrol.pdp.config</p></td>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol.pdp.config</tt></p></td>
 <td align="left" valign="top"><p class="table">URI</p></td>
-<td align="left" valign="top"><p class="table">CONF/xacml2.config</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/xacml2.config</tt></p></td>
 <td align="left" valign="top"><p class="table">The path to XACML2 configuration, containing the rules of executing the policies</p></td>
 </tr>
 <tr>
-<td align="left" valign="top"><p class="table">registry.security.accesscontrol.pdp</p></td>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol.pdp</tt></p></td>
 <td align="left" valign="top"><p class="table">string</p></td>
-<td align="left" valign="top"><p class="table">eu.unicore.uas.pdp.local.LocalHerasafPDP</p></td>
+<td align="left" valign="top"><p class="table"><tt>eu.unicore.uas.pdp.local.LocalHerasafPDP</tt></p></td>
 <td align="left" valign="top"><p class="table">The name of the pdp class to endorse, for the xacml2 policies execution</p></td>
 </tr>
 </tbody>
@@ -1525,7 +1538,7 @@ cellspacing="0" cellpadding="4">
 <div id="footer">
 <div id="footer-text">
 Version 1.0.1<br />
-Last updated 2011-11-24 12:59:29 CET
+Last updated 2011-11-25 17:34:58 CET
 </div>
 </div>
 </body>
