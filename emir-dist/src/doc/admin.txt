@@ -22,6 +22,9 @@ The server configuration options are:
 4+^e|Server general settings
 |registry.scheme|http or https|https|The selected scheme which will be used.
 |registry.hostname|string|localhost|The host name of the machine on which the registry is running.
+4+^e|Service Record Filter Settings
+|registry.filters.input|string|CONF/inputfilters|This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file
+|registry.filters.output|string|CONF/outputfilters|Restrict the amount of service records sent to the parent registry node would be defined in the output filters file
 |registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
 |registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
 4+^e|Registry Infrastructure Settings
@@ -31,6 +34,7 @@ The server configuration options are:
 |registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
 |registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
 |=========================
+
 
 
 MongoDB Configuration
