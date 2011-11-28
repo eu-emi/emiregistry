@@ -41,6 +41,8 @@ import java.util.Map;
  * Describes the user that is consuming resources<br/>
  *  
  * @author schuller
+ * @author a.memon
+ * 
  */
 public class Client implements Serializable {
 	

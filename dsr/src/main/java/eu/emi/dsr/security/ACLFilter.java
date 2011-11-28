@@ -61,8 +61,9 @@ public class ACLFilter implements ContainerRequestFilter {
 	 */
 	public ACLFilter() throws IOException {
 		// this(new File("conf", "emir.acl"));
-		this(new File(
-				DSRServer.getProperty(ISecurityProperties.REGISTRY_ACL_FILE)));
+			this(new File(
+					DSRServer.getProperty(ISecurityProperties.REGISTRY_ACL_FILE,"")));
+				
 	}
 
 	/**
