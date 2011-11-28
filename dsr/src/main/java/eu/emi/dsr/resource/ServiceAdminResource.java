@@ -338,6 +338,7 @@ public class ServiceAdminResource {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
 			serviceurl = extractServiceUrlFromUri(infos);
+			logger.error(extractServiceDateFromUri(infos));
 			logger.debug("deleting service by url: " + serviceurl
 					+ ", Owned by: " + owner);
 			if (c.getRole().getName().equalsIgnoreCase("admin")) {
@@ -360,4 +361,19 @@ public class ServiceAdminResource {
 		} 
 		return Response.ok().build();
 	}
+	
+	private String extractServiceDateFromUri(UriInfo infos) throws IllegalArgumentException{
+		MultivaluedMap<String, String> mm = infos.getQueryParameters();
+		String attrName = ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+				.getAttributeName();
+		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
+		if (key == "unknown") {
+			return "nincs";
+		}
+		String value = mm
+				.getFirst(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+						.getAttributeName());
+		return value;
+	}
+
 }
