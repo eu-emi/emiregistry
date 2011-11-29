@@ -12,7 +12,7 @@ NAME="EMIR"
 
 #This must be equal to this file name
 SERVICE=emir
-EMIR_USER=emir
+EMIR_USER=emi
 START=/usr/sbin/emir-start.sh
 STOP=/usr/sbin/emir-stop.sh
 LASTPID=/var/run/emir/emir.pid
