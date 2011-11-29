@@ -4,6 +4,7 @@
 package eu.emi.dsr.resource;
 
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -36,6 +37,7 @@ import eu.emi.dsr.event.EventDispatcher;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.exception.UnknownServiceException;
 import eu.emi.dsr.security.Client;
+import eu.emi.dsr.util.ServiceUtil;
 import eu.emi.client.util.Log;
 
 /**
@@ -190,10 +192,22 @@ public class ServiceAdminResource {
 					res = serviceAdmin.addService(serviceInfo);
 
 				} else {
-					// add if the owner is missing
-					serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
-							.getAttributeName(), c.getDistinguishedName());
-					res = serviceAdmin.addService(serviceInfo);
+					String serviceurl = serviceInfo
+							.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+									.getAttributeName());
+					String messageTime = "";
+					if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName())){
+						messageTime = serviceInfo
+								.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+										.getAttributeName());
+					}
+					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+						// add if the owner is missing
+						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+								.getAttributeName(), c.getDistinguishedName());
+						res = serviceAdmin.addService(serviceInfo);
+					}
 				}
 				arr.put(res);
 				continue;
@@ -302,6 +316,14 @@ public class ServiceAdminResource {
 					logger.debug("updating service by url: " + url
 							+ ", Owned by: " + owner);
 				}
+				
+				String messageTime = "";
+				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName())){
+					messageTime = serviceInfo
+							.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName());
+				}
 
 				if (c.getRole().getName().equalsIgnoreCase("admin")) {
 					// let the admin update any service
@@ -322,7 +344,8 @@ public class ServiceAdminResource {
 										owner,
 										serviceInfo
 												.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-														.getAttributeName()))) {
+														.getAttributeName()))
+								&& serviceAdmin.checkMessageGenerationTime(messageTime, url)) {
 					JSONObject res;
 					try {
 						res = serviceAdmin.updateService(serviceInfo);
@@ -379,14 +402,21 @@ public class ServiceAdminResource {
 			Client c = (Client) req.getAttribute("client");
 			String owner = c.getDistinguishedName();
 			serviceurl = extractServiceUrlFromUri(infos);
-			logger.error(extractServiceDateFromUri(infos));
+			String messageTime = extractServiceDateFromUri(infos);
+			if ("true".equalsIgnoreCase(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false")) &&
+						messageTime == "") {
+				// New entry and message generation time need, it is come from one DSR
+				messageTime = ServiceUtil.toUTCFormat(new Date());
+			}
 			logger.debug("deleting service by url: " + serviceurl
 					+ ", Owned by: " + owner);
 			if (c.getRole().getName().equalsIgnoreCase("admin")) {
 				// let the admin delete everything
 				serviceAdmin.removeService(serviceurl);
 			} else if ((owner != null)
-					&& (serviceAdmin.checkOwner(owner, serviceurl))) {
+					&& (serviceAdmin.checkOwner(owner, serviceurl))
+						&& (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl))) {
 
 				serviceAdmin.removeService(serviceurl);
 

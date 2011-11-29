@@ -52,6 +52,9 @@ public class ServiceUtil {
 
 	public static SimpleDateFormat ISODateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ssZ");
+
+	public static SimpleDateFormat UTCISODateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private static List<String> lstNames;
 
 	/**

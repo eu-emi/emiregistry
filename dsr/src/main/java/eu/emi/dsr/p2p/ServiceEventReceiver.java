@@ -124,10 +124,16 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			String deleteURL;
 			try {
 				deleteURL = message.getJSONObject(0).getString("Service_Endpoint_URL");
+				String updateSince = ((JSONObject)message.getJSONObject(0)
+							.get("updateSince")).getString("$date");
 				res = client.queryParam(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName(),
-								deleteURL).delete(ClientResponse.class);
+								deleteURL)
+							.queryParam(
+						ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName(),
+								updateSince).delete(ClientResponse.class);
 			} catch (JSONException e) {
 				logger.warn(e.getCause());
 			}
