@@ -3,6 +3,9 @@
  */
 package eu.emi.dsr.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +17,6 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
 
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.client.util.Log;
@@ -36,6 +38,7 @@ import eu.emi.dsr.util.ServiceUtil;
  * Class to perform Service Provider related functions
  * 
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class ServiceAdminManager {
@@ -237,6 +240,7 @@ public class ServiceAdminManager {
 	 */
 	public boolean checkOwner(String owner, String serviceurl) throws QueryException,
 			PersistentStoreFailureException {
+		// First query
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
@@ -245,10 +249,59 @@ public class ServiceAdminManager {
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
 		
 		JSONObject jo = new JSONObject(map);
+		
+		List<ServiceObject> objects = serviceDB.query(jo.toString());
+		
+		List<ServiceObject> objects2 = new ArrayList<ServiceObject>();
+		if ("true".equalsIgnoreCase(DSRServer
+				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))){
+			// Second query
+			// We accept every messages from GSRs
+			Map<String, String> map2 = new HashMap<String, String>();
+			
+			map2.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+					owner);
+			
+			map2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+			
+			JSONObject jo2 = new JSONObject(map2);
+			objects2 = serviceDB.query(jo2.toString());
+		}
 
-		if (serviceDB.query(jo.toString()).size() > 0)
+		if (!objects.isEmpty() || !objects2.isEmpty())
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * @param messageGenerationTime
+	 * @param serviceurl 
+	 * @return
+	 * @throws PersistentStoreFailureException
+	 * @throws QueryException
+	 * @throws ParseException 
+	 */
+	public boolean checkMessageGenerationTime(String messageTime, String serviceurl) throws QueryException,
+			PersistentStoreFailureException, ParseException {
+		Map<String, String> map = new HashMap<String, String>();
+			
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+		
+		JSONObject jo = new JSONObject(map);
+		List<ServiceObject> storedEntries = serviceDB.query(jo.toString());
+		if (storedEntries.size() > 0) {
+			SimpleDateFormat ISODateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			Date messageDate = ISODateFormat.parse(messageTime);
+			Date entryDate = storedEntries.get(0).getUpdateSince();
+			if (messageDate.compareTo(entryDate) > 0){
+				// The given message newer than the stored
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -173,9 +173,9 @@ public class DSRServer {
 		//checking whether to use xacml for the authorization
 		if ((getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG).isEmpty())) {
 			sb.append(AccessControlFilter.class.getName()).append(",");
-		} 
+		} else {
 		//setting ACL filter		
-		if ((getProperty(ISecurityProperties.REGISTRY_ACL_FILE, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_ACL_FILE).isEmpty())) {
+//		if ((getProperty(ISecurityProperties.REGISTRY_ACL_FILE, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_ACL_FILE).isEmpty())) {
 			sb.append(ACLFilter.class.getName()).append(",");
 		}
 		
