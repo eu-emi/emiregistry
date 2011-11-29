@@ -84,9 +84,9 @@ This package contains the EMIR server.
 #
 
 %pre
-/usr/sbin/groupadd -r emi 2>/dev/null || :
-/usr/sbin/useradd -c "EMI" -g emi \
-    -s /sbin/nologin -r -d /usr/share/emi emi 2>/dev/null || :
+/usr/sbin/groupadd -r emir 2>/dev/null || :
+/usr/sbin/useradd -c "EMI" -g emir \
+    -s /sbin/nologin -r -d /usr/share/emi emir 2>/dev/null || :
 	
 %post
 if [ -e /sbin/chkconfig ]; then
