@@ -84,27 +84,27 @@ This package contains the EMIR server.
 #
 
 %pre
-/usr/sbin/groupadd -r emir 2>/dev/null || :
-/usr/sbin/useradd -c "UNICORE" -g unicore \
-    -s /sbin/nologin -r -d /usr/share/unicore unicore 2>/dev/null || :
+/usr/sbin/groupadd -r emi 2>/dev/null || :
+/usr/sbin/useradd -c "EMI" -g emi \
+    -s /sbin/nologin -r -d /usr/share/emi emi 2>/dev/null || :
 	
 %post
 if [ -e /sbin/chkconfig ]; then
-    /sbin/chkconfig --add unicore-unicorex
+    /sbin/chkconfig --add emi-emir
 elif [ -e /sbin/insserv ]; then
-    /sbin/insserv unicore-unicorex
+    /sbin/insserv emi-emir
 fi
 
 
 %preun
 if [ -e /sbin/chkconfig ]; then
   if [ "$1" = "0" ]; then 
-      /etc/init.d/unicore-unicorex stop >/dev/null 2>&1
-      /sbin/chkconfig --del unicore-unicorex
+      /etc/init.d/emi-emir stop >/dev/null 2>&1
+      /sbin/chkconfig --del emi-emir
   fi
 elif [ -e /sbin/insserv ]; then
   if [ "$1" = "0" ]; then 
-      /etc/init.d/unicore-unicorex stop >/dev/null 2>&1
-      /sbin/insserv -r unicore-unicorex
+      /etc/init.d/emi-emir stop >/dev/null 2>&1
+      /sbin/insserv -r emi-emir
   fi
 fi
