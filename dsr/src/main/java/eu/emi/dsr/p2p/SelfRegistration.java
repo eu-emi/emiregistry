@@ -78,7 +78,7 @@ public class SelfRegistration implements Runnable {
 			logger.info("Server's DN: "+DN);
 				
 		} catch(NullPointerException e){
-			logger.error("No DN. Please turn on the SSL!");
+			logger.error("No DN. Please turn on the SSL with registry.scheme=https!");
 		}
 		// current time and last update should be same in the beginning
 		JSONObject date = new JSONObject();
