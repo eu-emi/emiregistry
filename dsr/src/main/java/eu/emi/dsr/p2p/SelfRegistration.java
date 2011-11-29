@@ -72,6 +72,14 @@ public class SelfRegistration implements Runnable {
 		myInfos.put("Service_Endpoint_URL", myUrl);
 		myInfos.put("Service_Name", "IndexService");
 		myInfos.put("Service_Type", "GSR");
+		try {
+			String DN = eu.emi.dsr.security.SecurityManager.getServerDistinguishedName();
+			myInfos.put("Service_DN", DN);
+			logger.info("Server's DN: "+DN);
+				
+		} catch(NullPointerException e){
+			logger.error("No DN. Please turn on the SSL!");
+		}
 		// current time and last update should be same in the beginning
 		JSONObject date = new JSONObject();
 		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
