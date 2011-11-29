@@ -280,10 +280,9 @@ public class ServiceAdminManager {
 	 * @return
 	 * @throws PersistentStoreFailureException
 	 * @throws QueryException
-	 * @throws ParseException 
 	 */
 	public boolean checkMessageGenerationTime(String messageTime, String serviceurl) throws QueryException,
-			PersistentStoreFailureException, ParseException {
+			PersistentStoreFailureException {
 		Map<String, String> map = new HashMap<String, String>();
 			
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
@@ -291,9 +290,13 @@ public class ServiceAdminManager {
 		JSONObject jo = new JSONObject(map);
 		List<ServiceObject> storedEntries = serviceDB.query(jo.toString());
 		if (storedEntries.size() > 0) {
-			SimpleDateFormat ISODateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-			Date messageDate = ISODateFormat.parse(messageTime);
+			Date messageDate = new Date();
+			try {
+				messageDate =  ServiceUtil.UTCISODateFormat.parse(messageTime);
+			} catch (ParseException e) {
+				// no problem, the time was empty
+				//Log.logException(e);
+			}
 			Date entryDate = storedEntries.get(0).getUpdateSince();
 			if (messageDate.compareTo(entryDate) > 0){
 				// The given message newer than the stored

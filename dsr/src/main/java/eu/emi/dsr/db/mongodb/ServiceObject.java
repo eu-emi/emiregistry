@@ -90,9 +90,9 @@ public class ServiceObject {
 	public Date getUpdateSince() {
 		Date d = null;
 		try {
-			d = ServiceUtil.ServiceDateFormat.parse(jo.get(
+			d = ServiceUtil.UTCISODateFormat.parse(((JSONObject)jo.get(
 					ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-							.getAttributeName()).toString());
+							.getAttributeName())).get("$date").toString());
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
