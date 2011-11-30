@@ -37,6 +37,9 @@ public class NeighborsManager {
 	private ServiceDatabase serviceDB = null;
 	private String myURL;
 	private int sparsity;
+	private int retry;
+	private int etvalid;
+	private int etremove;
 
 	protected NeighborsManager() {
 		neighbors = new ArrayList<String>();
@@ -53,7 +56,42 @@ public class NeighborsManager {
 		 * etvalid
 		 * etremove
 		 */
-		sparsity = 2;
+		try {
+			sparsity = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_SPARSITY));
+			logger.info("Set the sparsity to "+ sparsity);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (2) value of sparsity.");
+			sparsity = 2;
+		}
+		try {
+			retry = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_RETRY));
+			logger.info("Set the retry to "+ retry);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (5) value of retry.");
+			retry = 5;
+		}
+		try {
+			etvalid = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID));
+			logger.info("Set the etvalid to "+ etvalid);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (24hours) value of etvalid.");
+			etvalid = 24;
+		}
+		try {
+			etremove = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETREMOVE));
+			logger.info("Set the etremove to "+ etremove);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (24hours) value of etremove.");
+			etremove = 24;
+		}
 		// connect to the network
 		// Connection to the cloud in 6 steps.
         // 1. step: Put it's own InfoProvider URL(s) from configuration in the set of providers.
