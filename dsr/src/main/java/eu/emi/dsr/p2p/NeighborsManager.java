@@ -37,6 +37,9 @@ public class NeighborsManager {
 	private ServiceDatabase serviceDB = null;
 	private String myURL;
 	private int sparsity;
+	private int retry;
+	private int etvalid;
+	private int etremove;
 
 	protected NeighborsManager() {
 		neighbors = new ArrayList<String>();
@@ -53,7 +56,58 @@ public class NeighborsManager {
 		 * etvalid
 		 * etremove
 		 */
-		sparsity = 2;
+		try {
+			sparsity = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_SPARSITY));
+			if (sparsity < 2) {
+				logger.info("Configured sparsity value (" + sparsity + ") is very low. Min value: 2 Default value will be used.");
+				sparsity = 2;
+			}
+			logger.info("Set the sparsity to "+ sparsity);		
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (2) value of sparsity.");
+			sparsity = 2;
+		}
+		try {
+			retry = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_RETRY));
+			if (retry < 1) {
+				logger.info("Configured retry value (" + retry + ") is very low. Min value: 1 Default value will be used.");
+				retry = 5;
+			}
+			logger.info("Set the retry to "+ retry);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (5) value of retry.");
+			retry = 5;
+		}
+		try {
+			etvalid = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID));
+			if (retry < 12) {
+				logger.info("Configured etvalid value (" + etvalid + ") is very low. Min value: 12 Default value will be used.");
+				retry = 12;
+			}
+			logger.info("Set the etvalid to "+ etvalid);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (12hours) value of etvalid.");
+			etvalid = 12;
+		}
+		try {
+			etremove = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETREMOVE));
+			if (retry < 24) {
+				logger.info("Configured etremove value (" + etremove + ") is very low. Min value: 24 Default value will be used.");
+				retry = 24;
+			}
+			logger.info("Set the etremove to "+ etremove);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (24hours) value of etremove.");
+			etremove = 24;
+		}
 		// connect to the network
 		// Connection to the cloud in 6 steps.
         // 1. step: Put it's own InfoProvider URL(s) from configuration in the set of providers.
@@ -76,6 +130,16 @@ public class NeighborsManager {
 	public void hashClear(){
 		hash.clear();
 		neighbors_count =0;
+	}
+	/**
+	 * Get value of retry.
+	 *  
+	 * @param None
+	 * @return retry
+	 */
+
+	public int getRetry(){
+		return retry;
 	}
 	
 	/**
