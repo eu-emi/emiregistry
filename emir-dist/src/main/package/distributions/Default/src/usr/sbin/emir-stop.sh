@@ -7,7 +7,7 @@
 #
 # PID file
 #
-PID=LAST_PID
+PID=/var/run/emi/emir/emir.pid
 
 #
 # Installation Directory
