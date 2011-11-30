@@ -115,6 +115,16 @@ public class NeighborsManager {
 		hash.clear();
 		neighbors_count =0;
 	}
+	/**
+	 * Get value of retry.
+	 *  
+	 * @param None
+	 * @return retry
+	 */
+
+	public int getRetry(){
+		return retry;
+	}
 	
 	/**
 	 * Get list of neighbors.

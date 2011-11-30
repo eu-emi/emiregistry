@@ -87,15 +87,26 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			// Don't want to send message to myself.
 			return;
 		}
+		int retry = NeighborsManager.getInstance().getRetry();
 		for (int i=0; i<neighbors.size(); i++){
-			try {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Send service " + eventType +" message to " + neighbors.get(i));
+			boolean connected = true; 
+			for (int count=0; count<retry; count++ ){
+				try {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Send service " + eventType 
+								+ " message to " + neighbors.get(i)
+									+ " " + (count+1) + " time(s).");
+					}
+					messageSend(neighbors.get(i), jos, event.getType());
+					connected = true;
+					break;
+				} catch(ClientHandlerException e){
+					connected = false;
 				}
-				messageSend(neighbors.get(i), jos, event.getType());
-			} catch(ClientHandlerException e){
+			}
+			if (!connected){
 				NeighborsManager.getInstance().setUnavailableNeighbor(neighbors.get(i));
-			} 
+			}
 		}
 	}
 
@@ -140,7 +151,9 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 		}
 		if ( res.getStatus() == Status.OK.getStatusCode() ||
 			 res.getStatus() == Status.CONFLICT.getStatusCode() ){
-			// ??? kell ilyenkor tenni valamit?
+			if (logger.isDebugEnabled()) {
+				logger.debug("Message sent succesfully to " + url);
+			}
 		}
 	}
 	
