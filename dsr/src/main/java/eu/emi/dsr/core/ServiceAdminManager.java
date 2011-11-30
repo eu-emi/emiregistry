@@ -251,35 +251,48 @@ public class ServiceAdminManager {
 			oldMongoDBUse = false;
 			// since 2.0.1 supported the "and" operation
 			/* Query structure:
-			 *        {"$and":[{"serviceOwner":"<DN>"},
-			 *                 {"$or":[{"Service_Endpoint_URL":"<URL>"},
-			 *                         {"Service_Type":"GSR"}]}]}
+			 *        {"$or":[{"$and":[{"serviceOwner":"<DN>"},
+			 *                         {"Service_Endpoint_URL":"<URL>"}]},
+			 *                {"$and":[{"Service_DN":"<DN>"},
+			 *                         {"Service_Type":"GSR"}]}
+			 *                 ]}
 			 */
-			// OR structure
-			JSONArray or = new JSONArray();
-			JSONObject orParam1 = new JSONObject();
-			orParam1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
-			or.put(orParam1);
-			
-			JSONObject orParam2 = new JSONObject();
-			orParam2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
-			or.put(orParam2);
-					
-			// AND structure
-			JSONArray and = new JSONArray();
+			// AND1 structure
+			JSONArray and1 = new JSONArray();
 			JSONObject andParam1 = new JSONObject();
-			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-					owner);
-			and.put(andParam1);
-			
-			JSONObject andParam2 = new JSONObject();
-			andParam2.put("$or", or);
-			and.put(andParam2);
+			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), owner);
+			and1.put(andParam1);
 
+			JSONObject andParam2 = new JSONObject();
+			andParam2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+			and1.put(andParam2);
+
+			JSONObject orParam1 = new JSONObject();
+			orParam1.put("$and", and1);
+			
+			// AND2 structure
+			JSONArray and2 = new JSONArray();
+			JSONObject andParam21 = new JSONObject();
+			andParam21.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(), owner);
+			and2.put(andParam21);
+
+			JSONObject andParam22 = new JSONObject();
+			andParam22.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+			and2.put(andParam22);
+
+			JSONObject orParam2 = new JSONObject();
+			orParam2.put("$and", and2);
 			JSONObject AND = new JSONObject();
-			AND.put("$and", and);
-			//System.out.println(AND.toString());
-			query1 = serviceDB.query(AND.toString());
+
+			JSONArray or = new JSONArray();
+			or.put(orParam1);
+			or.put(orParam2);
+
+			// OR structure
+			JSONObject OR = new JSONObject();
+			OR.put("$or", or);
+			//System.out.println(OR.toString());
+			query1 = serviceDB.query(OR.toString());
 			//System.out.println(objects.toString());
 
 		} else {
@@ -301,7 +314,7 @@ public class ServiceAdminManager {
 				// Second query
 				// We accept every messages from GSRs if I was GSR.
 				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+				map2.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(),
 						owner);			
 				map2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
 				

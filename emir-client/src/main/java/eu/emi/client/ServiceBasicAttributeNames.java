@@ -23,6 +23,7 @@ public enum ServiceBasicAttributeNames {
 	        SERVICE_EXPIRE_ON("Service_ExpireOn", Date.class), 
 	        SERVICE_UPDATE_SINCE("updateSince", Date.class), 
 	        SERVICE_OWNER("serviceOwner"), 
+	        SERVICE_DN("Service_DN"),
 	        SERVICE_EXTENSIONS("Service_Extensions", JSONArray.class), 
 			SERVICE_ENDPOINT_CAPABILITY("Service_Endpoint_Capability"), 
 			SERVICE_ENDPOINT_TECHNOLOGY("Service_Endpoint_Technology"), 
