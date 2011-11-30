@@ -45,7 +45,7 @@ public class Filters extends ServerConstants {
 	 */
 	public Filters() {
 		inputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_INPUTFILEPATH);
-		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);		
+		outputFilterPath = DSRServer.getProperty(REGISTRY_FILTERS_OUTPUTFILEPATH);
 	}
 
 	/**
