@@ -59,7 +59,11 @@ public class NeighborsManager {
 		try {
 			sparsity = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_SPARSITY));
-			logger.info("Set the sparsity to "+ sparsity);
+			if (sparsity < 2) {
+				logger.info("Configured sparsity value (" + sparsity + ") is very low. Min value: 2 Default value will be used.");
+				sparsity = 2;
+			}
+			logger.info("Set the sparsity to "+ sparsity);		
 		} catch (NumberFormatException e) {
 			// set default value
 			logger.info("Set the default (2) value of sparsity.");
@@ -68,6 +72,10 @@ public class NeighborsManager {
 		try {
 			retry = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_RETRY));
+			if (retry < 1) {
+				logger.info("Configured retry value (" + retry + ") is very low. Min value: 1 Default value will be used.");
+				retry = 5;
+			}
 			logger.info("Set the retry to "+ retry);
 		} catch (NumberFormatException e) {
 			// set default value
@@ -77,15 +85,23 @@ public class NeighborsManager {
 		try {
 			etvalid = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID));
+			if (retry < 12) {
+				logger.info("Configured etvalid value (" + etvalid + ") is very low. Min value: 12 Default value will be used.");
+				retry = 12;
+			}
 			logger.info("Set the etvalid to "+ etvalid);
 		} catch (NumberFormatException e) {
 			// set default value
-			logger.info("Set the default (24hours) value of etvalid.");
-			etvalid = 24;
+			logger.info("Set the default (12hours) value of etvalid.");
+			etvalid = 12;
 		}
 		try {
 			etremove = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETREMOVE));
+			if (retry < 24) {
+				logger.info("Configured etremove value (" + etremove + ") is very low. Min value: 24 Default value will be used.");
+				retry = 24;
+			}
 			logger.info("Set the etremove to "+ etremove);
 		} catch (NumberFormatException e) {
 			// set default value
