@@ -24,7 +24,12 @@ This package contains the EMIR server.
 
 %changelog
 * Fri Nov 02 2011 Shiraz Memon <emir@niif.hu> 
--Initial rpm package
+- Initial rpm package
+
+* Wed Nov 30 2011 Ivan Marton <martoni@niif.hu>
+- Fixing paths, init scripts, related directories
+- creating proper user and group
+- eliminating UNICORE heritage
 
 @install_command@
 
@@ -37,10 +42,10 @@ This package contains the EMIR server.
 %dir %attr(755 emi emi) "/etc/emi/emir/users"
 %dir %attr(755 emi emi) "/etc/emi/emir/xacml2Policies"
 %config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/log4j.properties"
-%config(noreplace) %attr(0644 emi emi)"/etc/emi/emir/users/testUdb-strict.xml"
-%config(noreplace) %attr(0644 emi emi)"/etc/emi/emir/users/testUdb-regexp.xml"
-%config(noreplace) %attr(0644 emi emi)"/etc/emi/emir/xacml2Policies/01coreResources.xml"
-%config(noreplace) %attr(0644 emi emi)"/etc/emi/emir/xacml2Policies/99finalDeny.xml"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/users/testUdb-strict.xml"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/users/testUdb-regexp.xml"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/xacml2Policies/01coreResources.xml"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/xacml2Policies/99finalDeny.xml"
 %config(noreplace) %attr(0600 emi emi) "/etc/emi/emir/dsr.config"
 %config(noreplace) %attr(0600 emi emi) "/etc/emi/emir/emir.acl"
 %config(noreplace) %attr(0600 emi emi) "/etc/emi/emir/inputfilters"
