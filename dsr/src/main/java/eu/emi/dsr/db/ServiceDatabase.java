@@ -194,4 +194,9 @@ public interface ServiceDatabase {
 	
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id);
 
+	/**
+	 * Get version of the database
+	 * @return String, version of the database
+	 */
+	public String getDBVersion();
 }

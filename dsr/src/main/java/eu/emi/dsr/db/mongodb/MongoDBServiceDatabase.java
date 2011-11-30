@@ -540,4 +540,14 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.dropDatabase();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.dsr.db.ServiceDatabase#findAndDelete(java.lang.String)
+	 */
+	@Override
+	public String getDBVersion() {
+		CommandResult result = database.command("serverStatus");
+		return result.getString("version");
+	}
 }
