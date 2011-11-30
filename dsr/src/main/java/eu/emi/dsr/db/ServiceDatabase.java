@@ -14,6 +14,7 @@ import eu.emi.dsr.db.mongodb.ServiceObject;
 
 /**
  * @author martoni
+ * @author g.szigeti
  * 
  */
 public interface ServiceDatabase {
