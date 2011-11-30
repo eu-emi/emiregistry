@@ -58,7 +58,7 @@ MEM=-Xmx256m
 #
 #put all jars in lib/ on the classpath
 #
-JARS=lib/*.jar
+JARS=/usr/share/emi/emir/lib/*.jar
 CP=.
 for JAR in $JARS ; do 
     CP=$CP:$JAR
@@ -69,16 +69,16 @@ cd $INST
 PARAM=$*
 if [ "$PARAM" = "" ]
 then
-  PARAM=conf/dsr.config
+  PARAM=/etc/emi/emir/dsr.config
 fi
 
 #
 #go
 #
 
-if [ ! -d  logs ]
+if [ ! -d  /var/log/emi/emir ]
 then
-  mkdir -p logs
+  mkdir -p /var/log/emi/emir
 fi
 
-nohup java ${MEM} ${OPTS} ${DEFS} -cp ${CP} eu.emi.dsr.DSRServer ${PARAM} > logs/startup.log 2>&1 & echo $! > LAST_PID
+nohup java ${MEM} ${OPTS} ${DEFS} -cp ${CP} eu.emi.dsr.DSRServer ${PARAM} > /var/log/emi/emir/startup.log 2>&1 & echo $! > /var/run/emi/emir/emir.pid
