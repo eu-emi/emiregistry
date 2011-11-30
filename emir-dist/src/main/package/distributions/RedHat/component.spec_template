@@ -23,13 +23,13 @@ of the various infrastructures and have been implemented in the registry.
 This package contains the EMIR server.
 
 %changelog
-* Fri Nov 02 2011 Shiraz Memon <emir@niif.hu> 
-- Initial rpm package
-
 * Wed Nov 30 2011 Ivan Marton <martoni@niif.hu>
 - Fixing paths, init scripts, related directories
 - creating proper user and group
 - eliminating UNICORE heritage
+
+* Fri Nov 02 2011 Shiraz Memon <emir@niif.hu> 
+- Initial rpm package
 
 @install_command@
 
