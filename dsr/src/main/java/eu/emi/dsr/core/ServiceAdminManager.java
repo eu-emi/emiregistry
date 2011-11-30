@@ -4,7 +4,6 @@
 package eu.emi.dsr.core;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -45,6 +45,7 @@ public class ServiceAdminManager {
 	private static Logger log = Log.getLogger(Log.DSR, ServiceAdminManager.class);
 	
 	private ServiceDatabase serviceDB = null;
+	private String DBVersion = null;
 
 	
 
@@ -55,6 +56,7 @@ public class ServiceAdminManager {
 	public ServiceAdminManager(){
 		serviceDB = new MongoDBServiceDatabase();
 //		serviceDB = MongoDBServiceDatabase.getInstance();
+		DBVersion = serviceDB.getDBVersion();
 	}
 
 	/**
@@ -237,38 +239,78 @@ public class ServiceAdminManager {
 	 * @return
 	 * @throws PersistentStoreFailureException
 	 * @throws QueryException
+	 * @throws JSONException 
 	 */
 	public boolean checkOwner(String owner, String serviceurl) throws QueryException,
-			PersistentStoreFailureException {
-		// First query
-		Map<String, String> map = new HashMap<String, String>();
-		
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				owner);
-		
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
-		
-		JSONObject jo = new JSONObject(map);
-		
-		List<ServiceObject> objects = serviceDB.query(jo.toString());
-		
-		List<ServiceObject> objects2 = new ArrayList<ServiceObject>();
-		if ("true".equalsIgnoreCase(DSRServer
-				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))){
-			// Second query
-			// We accept every messages from GSRs
-			Map<String, String> map2 = new HashMap<String, String>();
+			PersistentStoreFailureException, JSONException {
+		List<ServiceObject> query1 = new ArrayList<ServiceObject>();
+		List<ServiceObject> query2 = new ArrayList<ServiceObject>();
+		boolean oldMongoDBUse = true;
+
+		if (DBVersion.compareTo("2.0.1") >= 0) {
+			oldMongoDBUse = false;
+			// since 2.0.1 supported the "and" operation
+			/* Query structure:
+			 *        {"$and":[{"serviceOwner":"<DN>"},
+			 *                 {"$or":[{"Service_Endpoint_URL":"<URL>"},
+			 *                         {"Service_Type":"GSR"}]}]}
+			 */
+			// OR structure
+			JSONArray or = new JSONArray();
+			JSONObject orParam1 = new JSONObject();
+			orParam1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+			or.put(orParam1);
 			
-			map2.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+			JSONObject orParam2 = new JSONObject();
+			orParam2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+			or.put(orParam2);
+					
+			// AND structure
+			JSONArray and = new JSONArray();
+			JSONObject andParam1 = new JSONObject();
+			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+					owner);
+			and.put(andParam1);
+			
+			JSONObject andParam2 = new JSONObject();
+			andParam2.put("$or", or);
+			and.put(andParam2);
+
+			JSONObject AND = new JSONObject();
+			AND.put("$and", and);
+			//System.out.println(AND.toString());
+			query1 = serviceDB.query(AND.toString());
+			//System.out.println(objects.toString());
+
+		} else {
+			// First query
+			Map<String, String> map = new HashMap<String, String>();
+			
+			map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
 					owner);
 			
-			map2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
 			
-			JSONObject jo2 = new JSONObject(map2);
-			objects2 = serviceDB.query(jo2.toString());
+			JSONObject jo = new JSONObject(map);
+			
+			query1 = serviceDB.query(jo.toString());
+			
+			// by DSR the second query does not need.
+			if ("false".equalsIgnoreCase(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))){
+				// Second query
+				// We accept every messages from GSRs if I was GSR.
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+						owner);			
+				map2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+				
+				JSONObject jo2 = new JSONObject(map2);
+				query2 = serviceDB.query(jo2.toString());
+			}
 		}
 
-		if (!objects.isEmpty() || !objects2.isEmpty())
+		if (!query1.isEmpty() || (oldMongoDBUse && !query2.isEmpty()) )
 			return true;
 		else
 			return false;
