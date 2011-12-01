@@ -8,6 +8,7 @@ import logging
 
 from time   import sleep
 from sys    import exit, path
+from os     import devnull
 
 path.insert(0, '/usr/lib/emi/emird')
 path.insert(0, '/usr/lib64/emi/emird')
@@ -50,7 +51,7 @@ class emird(Daemon):
       exit(1)
 
     # Call parent's constructor to daemonize the process
-    super(emird,self).__init__(pid_file)
+    super(emird,self).__init__(pid_file, devnull, devnull, devnull, '/tmp')
 
   def stop(self):
     # Delete registered entries
