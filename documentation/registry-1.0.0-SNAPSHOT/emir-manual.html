@@ -1553,9 +1553,56 @@ directory and naming them after the name of the given service with
 &lt;application xmlns="http://wadl.dev.java.net/2009/02"&gt;
     &lt;doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 1.9.1 09/14/2011 02:05 PM"/&gt;
     &lt;grammars/&gt;
-    &lt;resources base="http://localhost:9001/"&gt;
+    &lt;resources base="https://localhost:54321/"&gt;
+        &lt;resource path="/children"&gt;
+            &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="checkin" name="POST"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/neighbors"&gt;
+            &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
         &lt;resource path="/parent"&gt;
             &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/serviceadmin"&gt;
+            &lt;method id="getServicebyUrl" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="registerServices" name="POST"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="updateServices" name="PUT"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="deleteService" name="DELETE"&gt;
                 &lt;response&gt;
                     &lt;representation mediaType="*/*"/&gt;
                 &lt;/response&gt;
@@ -1619,14 +1666,6 @@ directory and naming them after the name of the given service with
                 &lt;/method&gt;
             &lt;/resource&gt;
         &lt;/resource&gt;
-        &lt;resource path="/ping"&gt;
-            &lt;method id="ping" name="GET"&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="application/json"/&gt;
-                    &lt;representation mediaType="text/plain"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-        &lt;/resource&gt;
         &lt;resource path="/model"&gt;
             &lt;method id="getModel" name="GET"&gt;
                 &lt;response&gt;
@@ -1635,43 +1674,11 @@ directory and naming them after the name of the given service with
                 &lt;/response&gt;
             &lt;/method&gt;
         &lt;/resource&gt;
-        &lt;resource path="/children"&gt;
-            &lt;method id="checkin" name="POST"&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="*/*"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-            &lt;method id="childDSRs" name="GET"&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="*/*"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-        &lt;/resource&gt;
-        &lt;resource path="/serviceadmin"&gt;
-            &lt;method id="getServicebyUrl" name="GET"&gt;
+        &lt;resource path="/ping"&gt;
+            &lt;method id="ping" name="GET"&gt;
                 &lt;response&gt;
                     &lt;representation mediaType="application/json"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-            &lt;method id="registerServices" name="POST"&gt;
-                &lt;request&gt;
-                    &lt;representation mediaType="application/json"/&gt;
-                &lt;/request&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="application/json"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-            &lt;method id="updateServices" name="PUT"&gt;
-                &lt;request&gt;
-                    &lt;representation mediaType="application/json"/&gt;
-                &lt;/request&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="application/json"/&gt;
-                &lt;/response&gt;
-            &lt;/method&gt;
-            &lt;method id="deleteService" name="DELETE"&gt;
-                &lt;response&gt;
-                    &lt;representation mediaType="*/*"/&gt;
+                    &lt;representation mediaType="text/plain"/&gt;
                 &lt;/response&gt;
             &lt;/method&gt;
         &lt;/resource&gt;
@@ -1684,7 +1691,7 @@ directory and naming them after the name of the given service with
 <div id="footer">
 <div id="footer-text">
 Version 1.0.1<br />
-Last updated 2011-12-01 11:49:17 CET
+Last updated 2011-12-01 12:36:30 CET
 </div>
 </div>
 </body>
