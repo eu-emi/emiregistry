@@ -77,7 +77,7 @@ rm -rf %{buildroot}/emiregistry
 #
 # Lock files
 #
-%dir %attr(0700 emi emi) "%{_localstatedir}/run/emi/emir"
+%dir %attr(0700 emi emi) "%{_localstatedir}/run/emi/emird"
 
 %pre
 /usr/sbin/groupadd -r emi 2>/dev/null || :
