@@ -83,7 +83,7 @@ class emird(Daemon):
       # After the successful initial registration wait the selected time
       # (where the configured period is given in minutes so have to be
       # multiplied by 60) then try to send an update message.
-      sleep(self.config.period)
+      sleep(self.config.period * 60)
       try:
         self.logger.debug('Periodical registration update')
         self.client.update()
