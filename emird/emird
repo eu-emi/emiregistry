@@ -9,9 +9,8 @@ import logging
 from time   import sleep
 from sys    import exit, path
 
-
-sys.path.insert(0, '/usr/lib/emi/emird')
-sys.path.insert(0, '/usr/lib64/emi/emird')
+path.insert(0, '/usr/lib/emi/emird')
+path.insert(0, '/usr/lib64/emi/emird')
 
 from daemon import Daemon
 from EMIR import EMIRConfiguration, EMIRClient
