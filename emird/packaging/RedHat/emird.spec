@@ -40,6 +40,7 @@ install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_localstatedir}/run/emi/emird/
 install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emird
+install -d %{buildroot}/etc/init.d
 install -m 0644 %{buildroot}/emiregistry/emird/daemon.py %{buildroot}%{_libdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/EMIR.py %{buildroot}%{_libdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
