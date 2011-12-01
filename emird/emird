@@ -3,7 +3,6 @@
 # Dependcies:
 #   sudo yum install python-simplejson
 
-import signal
 import logging
 
 from time   import sleep
@@ -53,17 +52,6 @@ class emird(Daemon):
     # Call parent's constructor to daemonize the process
     super(emird,self).__init__(pid_file, devnull, devnull, devnull, '/tmp')
 
-  def stop(self):
-    # Delete registered entries
-    try:
-      self.logger.debug('Deleting reqistered entries')
-      self.client.delete()
-    except Exception, ex:
-      self.logger.error(ex)
-      exit(1)
-    # Call parents stop() function to stop the daemon itself
-    super(emird,self).stop()
-
   def run(self):
     # Try to send registration message. If do not manage to fall back
     # to update. For example because of already existing registration
@@ -78,18 +66,29 @@ class emird(Daemon):
       except Exception, ex:
         self.logger.error("Registration failed: %s" % ex)
         exit(1)
-    
-    while True:
+
+    while self.daemon_alive:
       # After the successful initial registration wait the selected time
       # (where the configured period is given in minutes so have to be
       # multiplied by 60) then try to send an update message.
-      sleep(self.config.period * 60)
+      sleep(self.config.period)
       try:
         self.logger.debug('Periodical registration update')
         self.client.update()
       except Exception, ex:
         self.logger.error("Update failed: %s" % ex)
         exit(1)
+
+    # Delete registered entries
+    try:
+      self.logger.debug('Deleting reqistered entries')
+      self.client.delete()
+    except Exception, ex:
+      self.logger.error(ex)
+      exit(1)
+    # Call parents stop() function to stop the daemon itself
+
+    self.stop()
 
 if __name__ == "__main__":
 
