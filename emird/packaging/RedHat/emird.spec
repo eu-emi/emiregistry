@@ -90,23 +90,8 @@ rm -rf %{buildroot}/emiregistry
 /usr/sbin/useradd -c "EMI" -g emi \
     -s /sbin/nologin -r -d %{_datadir}/emi emi 2>/dev/null || :
 
-%post
-if [ -e /sbin/chkconfig ]; then
-    /sbin/chkconfig --add emi-emird
-elif [ -e /sbin/insserv ]; then
-    /sbin/insserv emi-emird
-fi
-
 %preun
-if [ -e /sbin/chkconfig ]; then
-  if [ "$1" = "0" ]; then 
-      /etc/init.d/emi-emird stop >/dev/null 2>&1
-      /sbin/chkconfig --del emi-emird
-  fi
-elif [ -e /sbin/insserv ]; then
-  if [ "$1" = "0" ]; then 
-      /etc/init.d/emi-emird stop >/dev/null 2>&1
-      /sbin/insserv -r emi-emird
-  fi
+/etc/init.d/emird status 2>&1 > /dev/null
+if [ "$?" = "0" ]; then 
+  /etc/init.d/emird stop >/dev/null 2>&1
 fi
-
