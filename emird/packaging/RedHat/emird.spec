@@ -46,6 +46,7 @@ install -m 0644 %{buildroot}/emiregistry/emird/emird.ini %{buildroot}%{_sysconfd
 install -m 0644 %{buildroot}/emiregistry/emird/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0644 %{buildroot}/emiregistry/emird/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0755 %{buildroot}/emiregistry/emird/emird %{buildroot}%{_bindir}/
+install -m 0755 %{buildroot}/emiregistry/emird/packaging/RedHat/emird %{buildroot}/etc/init.d/
 rm -rf %{buildroot}/emiregistry
 
 
@@ -78,6 +79,11 @@ rm -rf %{buildroot}/emiregistry
 # Lock files
 #
 %dir %attr(0700 emi emi) "%{_localstatedir}/run/emi/emird"
+#
+# Init script
+#
+%attr(0755 emi emi) "/etc/init.d/emird"
+
 
 %pre
 /usr/sbin/groupadd -r emi 2>/dev/null || :
