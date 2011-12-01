@@ -37,6 +37,7 @@ git clone git://github.com/eu-emi/emiregistry.git %{buildroot}/emiregistry/
 install -d %{buildroot}%{_libdir}/emi/emird/
 install -d %{buildroot}%{_sysconfdir}/emi/emird/
 install -d %{buildroot}%{_bindir}
+install -d %{buildroot}%{_localstatedir}/run/emi/emird/
 install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emird
 install -m 0644 %{buildroot}/emiregistry/emird/daemon.py %{buildroot}%{_libdir}/emi/emird/
@@ -73,6 +74,11 @@ rm -rf %{buildroot}/emiregistry
 # Executable
 #
 %attr(0755 emi emi) "%{_bindir}/emird"
+#
+# Lock files
+#
+%dir %attr(0700 emi emi) "%{_localstatedir}/run/emi/emir"
+
 %pre
 /usr/sbin/groupadd -r emi 2>/dev/null || :
 /usr/sbin/useradd -c "EMI" -g emi \
