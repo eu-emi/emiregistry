@@ -44,7 +44,7 @@ install -m 0644 %{buildroot}/emiregistry/emird/EMIR.py %{buildroot}%{_libdir}/em
 install -m 0644 %{buildroot}/emiregistry/emird/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0644 %{buildroot}/emiregistry/emird/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 %{buildroot}/emiregistry/emird/emird.py %{buildroot}%{_bindir}/
+install -m 0755 %{buildroot}/emiregistry/emird/emird %{buildroot}%{_bindir}/
 rm -rf %{buildroot}/emiregistry
 
 
@@ -72,7 +72,7 @@ rm -rf %{buildroot}/emiregistry
 #
 # Executable
 #
-%attr(0755 emi emi) "%{_bindir}/emird.py"
+%attr(0755 emi emi) "%{_bindir}/emird"
 %pre
 /usr/sbin/groupadd -r emi 2>/dev/null || :
 /usr/sbin/useradd -c "EMI" -g emi \
