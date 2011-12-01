@@ -32,7 +32,7 @@ This package contains the EMIR Client Daemon.
 
 
 %prep
-rm -rf %{buildroot}/%{name}-%{version}
+rm -rf %{name}-%{version}
 git clone git://github.com/eu-emi/emiregistry.git %{buildroot}/emiregistry/
 install -d %{buildroot}%{_libdir}/emi/emird/
 install -d %{buildroot}%{_sysconfdir}/emi/emird/
@@ -44,7 +44,7 @@ install -m 0644 %{buildroot}/emiregistry/emird/EMIR.py %{buildroot}%{_libdir}/em
 install -m 0644 %{buildroot}/emiregistry/emird/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0644 %{buildroot}/emiregistry/emird/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 %{buildroot}/emiregistry/emird/emird.py %{Obuildroot}%{_bindir}/
+install -m 0755 %{buildroot}/emiregistry/emird/emird.py %{buildroot}%{_bindir}/
 rm -rf %{buildroot}/emiregistry
 
 
