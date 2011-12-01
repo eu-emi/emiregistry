@@ -63,7 +63,7 @@ rm -rf %{buildroot}/emiregistry
 #
 # Lib files
 #
-%attr(644 root root) %dir "%{_libdir}/emi/emird"
+%attr(755 root root) %dir "%{_libdir}/emi/emird"
 %attr(644 root root) "%{_libdir}/emi/emird/*.py"
 #
 # Documentation
