@@ -8,9 +8,12 @@ import logging
 
 from daemon import Daemon
 from time   import sleep
-from sys    import exit
+from sys    import exit, path
 
 from EMIR import EMIRConfiguration, EMIRClient
+
+sys.path.insert(0, '/usr/lib/emi/emird')
+sys.path.insert(0, '/usr/lib64/emi/emird')
 
 class emird(Daemon):
   def __init__(self, pid_file, config_file, log_file):
@@ -95,15 +98,15 @@ if __name__ == "__main__":
   
   # Location of the configuration file. TODO: Should be turn into a
   # configurable option.
-  config_file = 'emird.ini'
+  config_file = '/etc/emi/emird/emird.ini'
 
   # Location of the log file. TODO: Should be turn into a
   # configurable option.
-  log_file = '/tmp/emird.log'
+  log_file = '/var/log/emi/emird/emird.log'
 
   # Location of the pid file. TODO: Should be turn into a
   # configurable option.
-  pid_file = '/tmp/emird.pid'
+  pid_file = '/var/run/emi/emird/emird.pid'
 
   # Creating and starting the daemon class and process
   myDaemon = emird(pid_file, config_file, log_file)
