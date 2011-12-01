@@ -2,9 +2,56 @@
 <application xmlns="http://wadl.dev.java.net/2009/02">
     <doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 1.9.1 09/14/2011 02:05 PM"/>
     <grammars/>
-    <resources base="http://localhost:9001/">
+    <resources base="https://localhost:54321/">
+        <resource path="/children">
+            <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <method id="checkin" name="POST">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/neighbors">
+            <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
         <resource path="/parent">
             <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/serviceadmin">
+            <method id="getServicebyUrl" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="registerServices" name="POST">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="updateServices" name="PUT">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="deleteService" name="DELETE">
                 <response>
                     <representation mediaType="*/*"/>
                 </response>
@@ -68,14 +115,6 @@
                 </method>
             </resource>
         </resource>
-        <resource path="/ping">
-            <method id="ping" name="GET">
-                <response>
-                    <representation mediaType="application/json"/>
-                    <representation mediaType="text/plain"/>
-                </response>
-            </method>
-        </resource>
         <resource path="/model">
             <method id="getModel" name="GET">
                 <response>
@@ -84,43 +123,11 @@
                 </response>
             </method>
         </resource>
-        <resource path="/children">
-            <method id="checkin" name="POST">
-                <response>
-                    <representation mediaType="*/*"/>
-                </response>
-            </method>
-            <method id="childDSRs" name="GET">
-                <response>
-                    <representation mediaType="*/*"/>
-                </response>
-            </method>
-        </resource>
-        <resource path="/serviceadmin">
-            <method id="getServicebyUrl" name="GET">
+        <resource path="/ping">
+            <method id="ping" name="GET">
                 <response>
                     <representation mediaType="application/json"/>
-                </response>
-            </method>
-            <method id="registerServices" name="POST">
-                <request>
-                    <representation mediaType="application/json"/>
-                </request>
-                <response>
-                    <representation mediaType="application/json"/>
-                </response>
-            </method>
-            <method id="updateServices" name="PUT">
-                <request>
-                    <representation mediaType="application/json"/>
-                </request>
-                <response>
-                    <representation mediaType="application/json"/>
-                </response>
-            </method>
-            <method id="deleteService" name="DELETE">
-                <response>
-                    <representation mediaType="*/*"/>
+                    <representation mediaType="text/plain"/>
                 </response>
             </method>
         </resource>
