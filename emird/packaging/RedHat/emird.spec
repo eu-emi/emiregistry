@@ -5,7 +5,7 @@ Summary: EMIRD - EMIR Client Daemon
 Name: emird
 Version: 1.0
 Release: 1
-Copyright: CC BY-SA 3.0
+License: CC-BY-SA
 Group: Infrastructure Services
 URL: https://github.com/eu-emi/emiregistry
 BuildArch: noarch
@@ -34,10 +34,17 @@ This package contains the EMIR Client Daemon.
 %prep
 rm -rf %{buildroot}/%{name}-%{version}
 git clone git://github.com/eu-emi/emiregistry.git %{buildroot}/emiregistry/
+install -d %{buildroot}%{_libdir}/emi/emird/
+install -d %{buildroot}%{_sysconfdir}/emi/emird/
+install -d %{buildroot}%{_bindir}
+install -d %{buildroot}%{_defaultdocdir}%{name}-%{version}
+install -d %{buildroot}/var/log/emi/emird
 install -m 0644 %{buildroot}/emiregistry/emird/daemon.py %{buildroot}%{_libdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/EMIR.py %{buildroot}%{_libdir}/emi/emird/
 install -m 0644 %{buildroot}/emiregistry/emird/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
-install -m 0755 %{buildroot}/emiregistry/emird/emird.py %{buildroot}%{_bindir}/
+install -m 0644 %{buildroot}/emiregistry/emird/docs/README %{buildroot}%{_defaultdocdir}%{name}-%{version}/
+install -m 0644 %{buildroot}/emiregistry/emird/docs/example.json %{buildroot}%{_defaultdocdir}%{name}-%{version}/
+install -m 0755 %{buildroot}/emiregistry/emird/emird.py %{Obuildroot}%{_bindir}/
 rm -rf %{buildroot}/emiregistry
 
 
@@ -60,7 +67,8 @@ rm -rf %{buildroot}/emiregistry
 #
 # Documentation
 #
-%doc emiregistry/emird/docs
+%doc %{buildroot}/emiregistry/emird/docs/README
+%doc %{buildroot}/emiregistry/emird/docs/example.json
 #
 # Executable
 #
