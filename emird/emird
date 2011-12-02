@@ -1,15 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Dependcies:
 #   sudo yum install python-simplejson
 
-import signal
 import logging
 
-from daemon import Daemon
 from time   import sleep
-from sys    import exit
+from sys    import exit, path
+from os     import devnull
 
+path.insert(0, '/usr/lib/emi/emird')
+path.insert(0, '/usr/lib64/emi/emird')
+
+from daemon import Daemon
 from EMIR import EMIRConfiguration, EMIRClient
 
 class emird(Daemon):
@@ -47,18 +50,7 @@ class emird(Daemon):
       exit(1)
 
     # Call parent's constructor to daemonize the process
-    super(emird,self).__init__(pid_file)
-
-  def stop(self):
-    # Delete registered entries
-    try:
-      self.logger.debug('Deleting reqistered entries')
-      self.client.delete()
-    except Exception, ex:
-      self.logger.error(ex)
-      exit(1)
-    # Call parents stop() function to stop the daemon itself
-    super(emird,self).stop()
+    super(emird,self).__init__(pid_file, devnull, devnull, devnull, '/tmp')
 
   def run(self):
     # Try to send registration message. If do not manage to fall back
@@ -74,18 +66,29 @@ class emird(Daemon):
       except Exception, ex:
         self.logger.error("Registration failed: %s" % ex)
         exit(1)
-    
-    while True:
+
+    while self.daemon_alive:
       # After the successful initial registration wait the selected time
       # (where the configured period is given in minutes so have to be
       # multiplied by 60) then try to send an update message.
-      sleep(self.config.period)
+      sleep(self.config.period * 60)
       try:
         self.logger.debug('Periodical registration update')
         self.client.update()
       except Exception, ex:
         self.logger.error("Update failed: %s" % ex)
         exit(1)
+
+    # Delete registered entries
+    try:
+      self.logger.debug('Deleting reqistered entries')
+      self.client.delete()
+    except Exception, ex:
+      self.logger.error(ex)
+      exit(1)
+    # Call parents stop() function to stop the daemon itself
+
+    self.stop()
 
 if __name__ == "__main__":
 
@@ -95,15 +98,15 @@ if __name__ == "__main__":
   
   # Location of the configuration file. TODO: Should be turn into a
   # configurable option.
-  config_file = 'emird.ini'
+  config_file = '/etc/emi/emird/emird.ini'
 
   # Location of the log file. TODO: Should be turn into a
   # configurable option.
-  log_file = '/tmp/emird.log'
+  log_file = '/var/log/emi/emird/emird.log'
 
   # Location of the pid file. TODO: Should be turn into a
   # configurable option.
-  pid_file = '/tmp/emird.pid'
+  pid_file = '/var/run/emi/emird/emird.pid'
 
   # Creating and starting the daemon class and process
   myDaemon = emird(pid_file, config_file, log_file)
