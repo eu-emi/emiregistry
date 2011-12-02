@@ -111,13 +111,38 @@ public class ServiceAdminManager {
 	 * Removing the service by url
 	 * 
 	 * @param url
+	 * @param messageTime
 	 * @throws PersistentStoreFailureException
 	 * @throws NonExistingResourceException
 	 * @throws MultipleResourceException
+	 * @throws JSONException 
 	 */
-	public void removeService(String url) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException{
-		serviceDB.deleteByUrl(url);
-		 
+	public void removeService(String url, String messageTime) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException{
+		if ("true".equalsIgnoreCase(DSRServer
+				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))) {
+			// Update message will be contains only the URL and the update since attributes.
+			JSONObject newEntry = new JSONObject();
+			newEntry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.getAttributeName(),url);
+			
+			JSONObject date = new JSONObject();
+			date.put("$date", messageTime);
+			newEntry.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+							.getAttributeName(), date);
+
+			ServiceObject sObj = new ServiceObject(newEntry);
+			try {
+				serviceDB.update(sObj);
+			} catch (MultipleResourceException e) {
+				Log.logException(e);
+			} catch (NonExistingResourceException e) {
+				throw new WebApplicationException(Status.CONFLICT);
+			} catch (PersistentStoreFailureException e) {
+				Log.logException(e);
+			}
+		} else {
+			serviceDB.deleteByUrl(url);
+		}
 	}
 
 	/**
@@ -282,7 +307,6 @@ public class ServiceAdminManager {
 
 			JSONObject orParam2 = new JSONObject();
 			orParam2.put("$and", and2);
-			JSONObject AND = new JSONObject();
 
 			JSONArray or = new JSONArray();
 			or.put(orParam1);
