@@ -41,6 +41,10 @@ public class NeighborsManager {
 	private int etvalid;
 	private int etremove;
 
+	/** 
+	 * Default constructor if you don't want to use as a singleton class 
+	 * @param None
+	 */
 	protected NeighborsManager() {
 		neighbors = new ArrayList<String>();
 		neighbors_count = 0;
@@ -115,6 +119,12 @@ public class NeighborsManager {
 		//BootStrap(retry);
 	}
 	
+	/**
+	 * Get only one instance for the neighbors manager class.
+	 * Use this operation if you want to use this class as a Singleton.
+	 * @param None
+	 * @return NeighborsManager instance
+	 */
 	public static synchronized NeighborsManager getInstance() {
 	      if(instance == null) {
 	         instance = new NeighborsManager();
@@ -161,7 +171,8 @@ public class NeighborsManager {
 	/**
 	 * Add neighbors DSRs.
 	 *  
-	 * @param URL of the global DSRs
+	 * @param List of entries for global DSRs
+	 * @param Type of the message (Register or Delete)
 	 */
 
 	public synchronized void addNeighborsDSRs(JSONArray entries, String type){
@@ -190,14 +201,18 @@ public class NeighborsManager {
 	
 	/**
 	 * Set unavailable neighbor DSR.
-	 *  
 	 * @param URL of the unavailable neighbor DSR
+	 * 
+	 * Not implemented yet.
 	 */
 	public synchronized void setUnavailableNeighbor(String url){
 		logger.warn("Unavailable neighbor: " + url);
 	}
 
-	
+	/**
+	 * Update the neighbors count and the hash table
+	 * @param None
+	 */
 	private void Neighbors_Update(){
 		if (logger.isDebugEnabled()) {
 			logger.debug("Neighbors_Update called");
@@ -256,6 +271,10 @@ public class NeighborsManager {
         neighbors_count = new_neighbors_count;
 	}
 	
+	/**
+	 * Calculate the new list of neighbors
+	 * @param count of neighbors
+	 */
 	private void Neighbors_Calculate(int count){
 		if (logger.isDebugEnabled()) {
 			logger.debug("Neighbors_Calculate called");
@@ -290,6 +309,12 @@ public class NeighborsManager {
         }
 	}
 	
+	/**
+	 * Connect to the global GSR network
+	 * @param how many time(s) try to connect to the unavailable global DSR server
+	 * 
+	 * Not implemented yet.
+	 */
 	private void BootStrap(int retry_count){
 		// 2. step: goto InfoProviderGSR (one of the list)
 		// 3. step: Send Query message to the providerGSR with Filter

@@ -21,10 +21,20 @@ public class ChildrenManager {
 	private static ChildrenManager instance = null;
 	private Map<String, Date> childServices;
 
+	/** 
+	 * Default constructor if you don't want to use as a singleton class 
+	 * @param None
+	 */
 	protected ChildrenManager() {
 		childServices = new HashMap<String, Date>();
 	}
-	
+
+	/**
+	 * Get only one instance for the children manager class.
+	 * Use this operation if you want to use this class as a Singleton.
+	 * @param None
+	 * @return ChildrenManager instance
+	 */
 	public static synchronized ChildrenManager getInstance() {
 	      if(instance == null) {
 	         instance = new ChildrenManager();

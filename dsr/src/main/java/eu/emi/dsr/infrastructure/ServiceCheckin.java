@@ -41,6 +41,10 @@ public class ServiceCheckin implements Runnable {
 	private Filters filters;
 	
 	/**
+	 * Constructor for a service checkin mechanism
+	 * @param URL of the parent DSR
+	 * @param own URL
+	 * @param maximum number of entries per message
 	 * @throws Throwable 
 	 * 
 	 */

@@ -46,6 +46,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 
 	private List<String> parentsRoute;
 
+	/**
+	 * Constructor
+	 * Create connection to the H2 database.
+	 * @param configuration
+	 */
 	public InfrastructureManager(Configuration config) {
 		conf = config;
 		parentsRoute = new ArrayList<String>();
@@ -79,6 +84,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		}
 	}
 
+	/**
+	 * Destructor
+	 * Stop every open connection.
+	 * @param None
+	 * @throws SQLException
+	 */
 	protected void finalize() throws SQLException {
 		stat.close();
 		conn.close();
@@ -167,7 +178,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/**
-	 * Handle the unsended registration message.
+	 * Handle the unsent registration message.
 	 * 
 	 * @param list of service
 	 *            identifier
@@ -201,7 +212,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/**
-	 * Handle the unsended update message.
+	 * Handle the unsent update message.
 	 * 
 	 * @param list of service
 	 *            identifier
@@ -233,7 +244,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/**
-	 * Handle the unsended delete message.
+	 * Handle the unsent delete message.
 	 * 
 	 * @param service
 	 *            identifier

@@ -23,7 +23,10 @@ public class NeighborsEventReciever implements EventListener, Runnable {
 			NeighborsEventReciever.class);
 
 	/**
-	 * @param property
+	 * Constructor for the neighbors event receiver class.
+	 * This class transmit relevant (for only global DSR) messages to the 
+	 * neighbors manager class.
+	 * @param None
 	 */
 	public NeighborsEventReciever() {
 	}

@@ -41,8 +41,10 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 	private static boolean parent_lost;
 	private Filters filter;
 
-	/**
-	 * @param property
+	/** 
+	 * Constructor for this event receiver class
+	 * @param URL of the parent
+	 * @param configuration
 	 */
 	public ServiceEventReceiver(String parentUrl, Configuration config) {
 		conf = config;
