@@ -27,9 +27,13 @@ The server configuration options are:
 |registry.filters.output|string|CONF/outputfilters|Restrict the amount of service records sent to the parent registry node would be defined in the output filters file
 |registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
 |registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
-4+^e|Registry Infrastructure Settings
-|registry.parent.url|URI|-|The URI of the parent registry node.
-|registry.parent.type|true or false|false|Indicating whether the registry node is global -if set to true then it will ignore the registry.parent property.
+4+^e|EMIR Topology Settings
+|registry.global.enable|boolean|true or false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the 'registry.parent.url' property. This implies the current instance will not have parent.
+|registry.global.sparsity|Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
+|registry.global.retry|Integer|5|It specifies a number of attempts if communication to another GSR is failed.
+|registry.global.etvalid|Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).
+|registry.global.etremove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
+|registry.parent.url|URI|-|The URI of the parent registry node where the state of this suppose to be aggregated.
 4+^e|Service record management
 |registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
 |registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
