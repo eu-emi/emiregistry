@@ -35,17 +35,18 @@ This package contains the EMIR Client Daemon.
 
 
 %prep
+EMIRD_SOURCE=/tmp/emird-source
 install -d %{buildroot}%{_libdir}/emi/emird/
 install -d %{buildroot}%{_sysconfdir}/emi/emird/
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emird
-install -m 0644 daemon.py %{buildroot}%{_libdir}/emi/emird/
-install -m 0644 EMIR.py %{buildroot}%{_libdir}/emi/emird/
-install -m 0644 emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
-install -m 0644 docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0644 docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 emird.py %{Obuildroot}%{_bindir}/
+install -m 0644 $EMIRD_SOURCE/daemon.py %{buildroot}%{_libdir}/emi/emird/
+install -m 0644 $EMIRD_SOURCE/EMIR.py %{buildroot}%{_libdir}/emi/emird/
+install -m 0644 $EMIRD_SOURCE/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
+install -m 0644 $EMIRD_SOURCE/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
+install -m 0644 $EMIRD_SOURCE/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
+install -m 0755 $EMIRD_SOURCE/emird.py %{Obuildroot}%{_bindir}/
 
 
 %files
