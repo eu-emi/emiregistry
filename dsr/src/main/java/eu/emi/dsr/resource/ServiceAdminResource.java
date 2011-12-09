@@ -413,12 +413,12 @@ public class ServiceAdminResource {
 					+ ", Owned by: " + owner);
 			if (c.getRole().getName().equalsIgnoreCase("admin")) {
 				// let the admin delete everything
-				serviceAdmin.removeService(serviceurl);
+				serviceAdmin.removeService(serviceurl, messageTime);
 			} else if ((owner != null)
 					&& (serviceAdmin.checkOwner(owner, serviceurl))
 						&& (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl))) {
 
-				serviceAdmin.removeService(serviceurl);
+				serviceAdmin.removeService(serviceurl, messageTime);
 
 			} else {
 				return Response

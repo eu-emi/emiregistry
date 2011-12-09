@@ -337,6 +337,10 @@ public class DSRServer {
 		RegistryThreadPool.getExecutorService().execute(
 				new NeighborsEventReciever());
 
+		// Message(s) send event receiver start
+		RegistryThreadPool.getExecutorService().execute(
+				new eu.emi.dsr.p2p.ServiceEventReceiver());
+
 		// Self registration start
 		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
                    conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+

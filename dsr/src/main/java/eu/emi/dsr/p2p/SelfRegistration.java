@@ -37,7 +37,9 @@ public class SelfRegistration implements Runnable {
 	private JSONObject myInfos;
 	private Boolean firstUsage;
 	
-	/**
+	/** 
+	 * Constructor for a self-registration mechanism
+	 * @param url
 	 * @throws Throwable 
 	 * 
 	 */
@@ -131,7 +133,5 @@ public class SelfRegistration implements Runnable {
 			}
 		}
 	}
-	
-	
 
 }

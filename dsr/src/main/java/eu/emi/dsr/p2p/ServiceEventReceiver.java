@@ -21,7 +21,6 @@ import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
-import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
@@ -41,10 +40,11 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 	private Filters filter;
 	private String myURL;
 
-	/**
-	 * @param property
+	/** 
+	 * Constructor for this event receiver class
+	 * @param None
 	 */
-	public ServiceEventReceiver(String parentUrl, Configuration config) {
+	public ServiceEventReceiver() {
 		client = null;
 		filter = new Filters();
 		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
@@ -59,6 +59,13 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 	 */
 	@Override
 	public void recieve(Event event) {
+		List<String> neighbors;
+		neighbors = NeighborsManager.getInstance().getNeighbors();
+		if (neighbors.size()==1 && neighbors.get(0).equals(myURL)){
+			// Don't want to send message to myself.
+			return;
+		}
+
 		JSONArray jos = new JSONArray();
 		try {
 			jos = filter.outputFilter((JSONArray) event.getData());
@@ -81,12 +88,6 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 		}
 
 		// here sending messages to the neighbors
-		List<String> neighbors;
-		neighbors = NeighborsManager.getInstance().getNeighbors();
-		if (neighbors.size()==1 && neighbors.get(0).equals(myURL)){
-			// Don't want to send message to myself.
-			return;
-		}
 		int retry = NeighborsManager.getInstance().getRetry();
 		for (int i=0; i<neighbors.size(); i++){
 			boolean connected = true; 

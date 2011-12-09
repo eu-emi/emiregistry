@@ -158,19 +158,8 @@ class Daemon(object):
 			
 			return # Not an error in a restart
 
-		# Try killing the daemon process	
-		try:
-			while 1:
-				os.kill(pid, signal.SIGTERM)
-				time.sleep(0.1)
-		except OSError, err:
-			err = str(err)
-			if err.find("No such process") > 0:
-				if os.path.exists(self.pidfile):
-					os.remove(self.pidfile)
-			else:
-				print str(err)
-				sys.exit(1)
+		if os.path.exists(self.pidfile):
+			os.remove(self.pidfile)
 		
 		logging.getLogger('emird').debug('Daemon stopped')
 
