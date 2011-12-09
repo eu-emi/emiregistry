@@ -1,0 +1,6 @@
+@component-prefix@@component-name@@component-suffix@ (@component-version@-@component-release@) stable; urgency=low
+
+  * Initial release
+
+ -- EMIR <emir@niif.hu>  Thu, 08 Dec 2011 11:51:33 +0100
+

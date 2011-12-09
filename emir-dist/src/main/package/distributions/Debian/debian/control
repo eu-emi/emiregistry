@@ -1,0 +1,18 @@
+Source: @component-prefix@@component-name@@component-suffix@
+Section: unknown
+Priority: extra
+Maintainer: Piotr Piernik <unicore-support@lists.sourceforge.net> 
+Standards-Version: @component-version@
+Homepage: http://www.unicore.eu
+@build_depends@
+
+Package: @component-prefix@@component-name@@component-suffix@
+Architecture: all
+Depends: sun-java5-jre (>= 1.5.0-22-0) | sun-java6-jre (>= 6.22-1) | openjdk-6-jre (>= 6b18-1.8.2-4)
+Description: A Service Registry conceived during the EMI project. 
+ Its main goals to discover all the Service endpoints that 
+ exist and hence obtain future information about them. The key 
+ part to the service registry is the management procedures and 
+ policies which it implements. These are dictated by the stakeholders 
+ of the various infrastructures and have been implemented in the registry.
+
