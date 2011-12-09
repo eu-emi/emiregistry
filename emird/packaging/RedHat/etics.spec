@@ -46,7 +46,7 @@ install -m 0644 $EMIRD_SOURCE/EMIR.py %{buildroot}%{_libdir}/emi/emird/
 install -m 0644 $EMIRD_SOURCE/emird.ini %{buildroot}%{_sysconfdir}/emi/emird/
 install -m 0644 $EMIRD_SOURCE/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0644 $EMIRD_SOURCE/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 $EMIRD_SOURCE/emird.py %{Obuildroot}%{_bindir}/
+install -m 0755 $EMIRD_SOURCE/emird.py %{buildroot}%{_bindir}/
 
 
 %files
