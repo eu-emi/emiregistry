@@ -643,7 +643,7 @@ footnotes: function () {
 <span id="author">EMIR Team</span><br />
 <span id="email"><tt>&lt;<a href="mailto:info@example.org">info@example.org</a>&gt;</tt></span><br />
 <span id="revnumber">version 1.0.1,</span>
-<span id="revdate">01 12 2011</span>
+<span id="revdate">09 12 2011</span>
 <br /><span id="revremark">component version: 1.0.0-SNAPSHOT</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -984,19 +984,43 @@ cellspacing="0" cellpadding="4">
 <td align="left" valign="top"><p class="table">Invoke the class&#8217;s <tt>run()</tt> method while sending the response.</p></td>
 </tr>
 <tr>
-<td colspan="4" align="center" valign="top"><p class="table"><em>Registry Infrastructure Settings</em></p></td>
+<td colspan="4" align="center" valign="top"><p class="table"><em>EMIR Topology Settings</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.enable</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table"><tt>true or false</tt></p></td>
+<td align="left" valign="top"><p class="table">If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the <em>registry.parent.url</em> property. This implies the current instance will not have parent.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.sparsity</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>2</tt></p></td>
+<td align="left" valign="top"><p class="table">It determines the number of neighbors as a function of the actual number of member nodes of the network.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.retry</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>5</tt></p></td>
+<td align="left" valign="top"><p class="table">It specifies a number of attempts if communication to another GSR is failed.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.etvalid</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>12</tt></p></td>
+<td align="left" valign="top"><p class="table">Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.etremove</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>24</tt></p></td>
+<td align="left" valign="top"><p class="table">Specifies period in hours for checking the entries in the soft state database and remove the expired entries.</p></td>
 </tr>
 <tr>
 <td align="left" valign="top"><p class="table"><tt>registry.parent.url</tt></p></td>
 <td align="left" valign="top"><p class="table">URI</p></td>
 <td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
-<td align="left" valign="top"><p class="table">The URI of the parent registry node.</p></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><tt>registry.parent.type</tt></p></td>
-<td align="left" valign="top"><p class="table">true or false</p></td>
-<td align="left" valign="top"><p class="table"><tt>false</tt></p></td>
-<td align="left" valign="top"><p class="table">Indicating whether the registry node is global -if set to true then it will ignore the registry.parent property.</p></td>
+<td align="left" valign="top"><p class="table">The URI of the parent registry node where the state of this suppose to be aggregated.</p></td>
 </tr>
 <tr>
 <td colspan="4" align="center" valign="top"><p class="table"><em>Service record management</em></p></td>
@@ -1691,7 +1715,7 @@ directory and naming them after the name of the given service with
 <div id="footer">
 <div id="footer-text">
 Version 1.0.1<br />
-Last updated 2011-12-01 12:36:30 CET
+Last updated 2011-12-09 17:17:09 CET
 </div>
 </div>
 </body>
