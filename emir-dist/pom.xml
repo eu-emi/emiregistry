@@ -6,7 +6,7 @@
 	<description>Enable building EMIR distribution for Redhat, general Linux/Unix environments, and Debian</description>
 	<inceptionYear>2011</inceptionYear>
 	<url>https://github.com/eu-emi/emiregistry</url>
-
+	<version>1.0.0-0</version>
 	<name>Distribution of the EMIR server</name>
 
 	<!-- this is the "release" version -->
@@ -26,7 +26,8 @@
 	</distributionManagement>
 
 	<properties>
-		<!-- this is the UNICORE/X version we are packaging -->
+		<ux.version>${parent.version}</ux.version>
+		<!-- this is the version we are packaging -->
 		<releaseVersion>${version}</releaseVersion>
 		<!-- configuration of the "docman" tool -->
 		<docman.enabled />
@@ -39,17 +40,17 @@
 		<dependency>
 			<groupId>eu.emi</groupId>
 			<artifactId>dsr</artifactId>
-			<version>${parent.version}</version>
+			<version>${ux.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.emi</groupId>
 			<artifactId>xmltypes</artifactId>
-			<version>${parent.version}</version>
+			<version>${ux.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.emi</groupId>
 			<artifactId>emir-client</artifactId>
-			<version>${parent.version}</version>
+			<version>${ux.version}</version>
 		</dependency>
 	</dependencies>
 	<profiles>
