@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>emir-distribution</artifactId>
 	<packaging>pom</packaging>
-	<description>Enable building EMIR distribution for Redhat and general Linux/Unix environments</description>
+	<description>Enable building EMIR distribution for Redhat, general Linux/Unix environments, and Debian</description>
 	<inceptionYear>2011</inceptionYear>
-	<url>http://www.unicore.eu</url>
+	<url>https://github.com/eu-emi/emiregistry</url>
 
 	<name>Distribution of the EMIR server</name>
 
@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>eu.emi</groupId>
 		<artifactId>emiregistry</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<distributionManagement>
@@ -39,7 +39,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>eu.emi</groupId>
+			<groupId>eu.emi</pomgroupId>
 			<artifactId>dsr</artifactId>
 			<version>${ux.version}</version>
 		</dependency>

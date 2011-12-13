@@ -5,10 +5,10 @@
 
 	<groupId>eu.emi</groupId>
 	<artifactId>emiregistry</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>EMI Registry</name>
-	<url>http://maven.apache.org</url>
+	<name>EMIR</name>
+	<url>https://github.com/eu-emi/emiregistry</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -384,4 +384,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<description>The root or parent project of the EMIR components. The pom contains the common dependencies.</description>
 </project>
