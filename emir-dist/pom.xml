@@ -3,7 +3,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>emir-distribution</artifactId>
-	<packaging>pom</packaging>
 	<description>Enable building EMIR distribution for Redhat, general Linux/Unix environments, and Debian</description>
 	<inceptionYear>2011</inceptionYear>
 	<url>https://github.com/eu-emi/emiregistry</url>
@@ -28,7 +27,6 @@
 
 	<properties>
 		<!-- this is the UNICORE/X version we are packaging -->
-		<ux.version>${parent.version}</ux.version>
 		<releaseVersion>${version}</releaseVersion>
 		<!-- configuration of the "docman" tool -->
 		<docman.enabled />
@@ -39,19 +37,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>eu.emi</pomgroupId>
+			<groupId>eu.emi</groupId>
 			<artifactId>dsr</artifactId>
-			<version>${ux.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.emi</groupId>
 			<artifactId>xmltypes</artifactId>
-			<version>${ux.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.emi</groupId>
 			<artifactId>emir-client</artifactId>
-			<version>${ux.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
 	<profiles>
