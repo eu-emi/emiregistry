@@ -34,6 +34,7 @@
 		<doc.src>src/doc/manual.txt</doc.src>
 		<doc.target>emir-manual</doc.target>
 		<doc.template>emi-nonunicore</doc.template>
+		<exec.maven.plugin.version>1.2.1</exec.maven.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -61,6 +62,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
+						<version>${exec.maven.plugin.version}</version>
 						<executions>
 							<execution>
 								<id>svn </id>
