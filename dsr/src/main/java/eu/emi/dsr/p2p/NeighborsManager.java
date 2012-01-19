@@ -6,24 +6,36 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.StringTokenizer;
+
+import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
+import com.sun.jersey.api.client.ClientHandlerException;
 
+import eu.emi.client.DSRClient;
+import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.core.ServiceAdminManager;
+import eu.emi.dsr.db.ExistingResourceException;
 import eu.emi.dsr.db.PersistentStoreFailureException;
 import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.ServiceDatabase;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.event.EventTypes;
+import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 
 
 
@@ -32,6 +44,7 @@ public class NeighborsManager {
 								NeighborsManager.class);
 	private static NeighborsManager instance = null;
 	private List<String> neighbors;
+	private ArrayList<String> infoProviders;
 	int neighbors_count;
 	private Hashtable<String, String> hash;
 	private ServiceDatabase serviceDB = null;
@@ -114,11 +127,13 @@ public class NeighborsManager {
 		}
 		// connect to the network
 		// Connection to the cloud in 6 steps.
-        // 1. step: Put it's own InfoProvider URL(s) from configuration in the set of providers.
+        // 1. step: Download and set the list of the InfoProvider URL(s).
+		String url = "http://localhost/EMIR.txt";
+		infoProviders = DownloadProviderList(url);
 		// 2.-6. steps are in the BootStrap function.
-		//BootStrap(retry);
+		BootStrap(retry);
 	}
-	
+
 	/**
 	 * Get only one instance for the neighbors manager class.
 	 * Use this operation if you want to use this class as a Singleton.
@@ -317,9 +332,203 @@ public class NeighborsManager {
 	 */
 	private void BootStrap(int retry_count){
 		// 2. step: goto InfoProviderGSR (one of the list)
-		// 3. step: Send Query message to the providerGSR with Filter
-		// 4. step: Hash table and neighbors filling
-		// 5. step: Connect message send to one ISIS of the neighbors
-		// 6. step: response data processing (DB sync, Config saving)
+		ArrayList<String> listOfGSRs = new ArrayList<String>();
+		Collections.shuffle(infoProviders, new Random());
+		for (int i=0; i<infoProviders.size(); i++){
+		    // 3. step: Send Query message to the providerGSR with Filter
+		    listOfGSRs = GSRList(infoProviders.get(i), retry_count);
+		    if ( (listOfGSRs != null) && !listOfGSRs.isEmpty() ){
+		    	break;
+		    }
+		}
+		
+		//System.out.println(listOfGSRs.toString());
+		// 4. step: Extend the list of GSRs with the InfoProviders if it is needed.
+		listOfGSRs = GSRPriorities(listOfGSRs);
+		System.out.println(listOfGSRs.toString());
+		
+		// 5. step: Get the DB from one GSR
+		GetDB(listOfGSRs, retry);
+		
+		// 6. step: Neighbors calculation
+		Neighbors_Update();
 	}
+	
+	/*
+	 * 
+	 * 
+	 */
+	private ArrayList<String> GSRList(String url, int retry){
+		DSRClient c = new DSRClient(url + "/services?Service_Type=GSR");
+		for (int i=0; i<retry; i++){
+			JSONArray o = new JSONArray();
+			try {
+				o = c.getClientResource()
+						.accept(MediaType.APPLICATION_JSON_TYPE)
+							.get(JSONArray.class);
+			} catch (ClientHandlerException e) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Unreachable host: " + url);
+				}
+			}
+			if (o.length() == 0){
+				continue;
+			}
+			ArrayList<String> listOfGSRs = new ArrayList<String>();
+			for (int j=0; j<o.length(); j++){
+				try {
+					listOfGSRs.add(o.getJSONObject(j).getString(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return listOfGSRs;
+		}
+		return null;
+	}
+	
+	/*
+	 * 
+	 */
+	private ArrayList<String> GSRPriorities(ArrayList<String> list){
+		if (list == null){
+			list = new ArrayList<String>();
+		}
+		if (list.removeAll(infoProviders)){
+			// The element was exist in the list and removed it.
+			System.out.println("remove: "+ infoProviders.toString());
+		}
+		//Collections.shuffle(list, new Random()); // if needed this shuffle
+		// Put all providers at the end of the list
+		list.addAll(infoProviders);
+		return list;
+	}
+	
+	/*
+	 * 
+	 */
+	private void GetDB(ArrayList<String> list, int retry){
+		JSONArray newDB = new JSONArray();
+		for (int j=0; j<list.size(); j++){
+			// Fetch the DB from the GSR
+			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery");
+			boolean found = false;
+			for (int i=0; i<retry; i++){
+				JSONObject o = new JSONObject();
+				try {
+					o = c.getClientResource()
+							.accept(MediaType.APPLICATION_JSON_TYPE)
+								.get(JSONObject.class);
+				} catch (ClientHandlerException e) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Unreachable host: " + list.get(j));
+					}
+					continue;
+				}
+				if (!o.isNull("result")){
+					try {
+						newDB = o.getJSONArray("result");
+					} catch (JSONException e) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("The got message is not JSONArray! message: " + o.toString());
+						}
+					}
+					found = true;
+					break;
+				}
+			}
+			if (found){
+				if (logger.isDebugEnabled()) {
+					logger.debug("New DB: " + newDB.toString());
+				}
+				break;
+			}
+		}
+		// Store the new DB entries
+		if (!DBStore(newDB)){
+			logger.warn("Some failure happend during the DB store.");
+		}
+	}
+	
+	/*
+	 * 
+	 */
+	private boolean DBStore(JSONArray newDB){
+		ServiceAdminManager serviceAdmin = new ServiceAdminManager();
+		boolean retval = true;
+		System.out.println(newDB.length() + " " +newDB.toString());
+		for (int i=0; i<newDB.length(); i++){
+			JSONObject jo = null;
+			try {
+				jo = new JSONObject(newDB.getString(0));
+				String serviceurl = jo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName());
+				String messageTime = "";
+				if (jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName())){
+					messageTime = jo
+							.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName());
+				}
+				if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+					JSONObject res = serviceAdmin.addService(jo);
+				}
+			} catch (JSONException e) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Some attribute(s) is/are missing: " + e.getMessage());
+				}
+				retval = false;
+			} catch (InvalidServiceDescriptionException e) {	//addService
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				retval = false;
+			} catch (ExistingResourceException e) {
+				if (logger.isDebugEnabled()) {
+					logger.warn("This entry is exist in the DB: " + jo.toString());
+				}
+				retval = false;
+			} catch (QueryException e) {	//checkMessageGenerationTime
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				retval = false;
+			} catch (PersistentStoreFailureException e) {	//checkMessageGenerationTime
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				retval = false;
+			}
+		}
+		return retval;
+	}
+
+	/*
+	 * 
+	 */
+	private ArrayList<String> DownloadProviderList(String url) {
+		ArrayList<String> providers = new ArrayList<String>();
+		// Download the list of the URLs
+		DSRClient c = new DSRClient(url);
+		try {
+			String content = c.getClientResource()
+					.accept(MediaType.TEXT_PLAIN)
+						.get(String.class);
+			// Replace the following characters (' ', '[', ']', '\n') 
+			// with empty character
+			content = content.replaceAll(" |\\[|\\]|\n", "");
+			// Tokenize the input string and add into the list
+			StringTokenizer tokens = new StringTokenizer(content,",");
+		    while(tokens.hasMoreTokens()){
+				// Put the URL into the provider list
+		    	providers.add((String)tokens.nextElement());
+		    }	
+		} catch (ClientHandlerException e) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Unreachable provider list from " + url);
+			}
+		}
+		return providers;
+	}
+
 }
