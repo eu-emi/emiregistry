@@ -328,7 +328,6 @@ public class NeighborsManager {
 	 * Connect to the global GSR network
 	 * @param how many time(s) try to connect to the unavailable global DSR server
 	 * 
-	 * Not implemented yet.
 	 */
 	private void BootStrap(int retry_count){
 		// 2. step: goto InfoProviderGSR (one of the list)
@@ -342,10 +341,8 @@ public class NeighborsManager {
 		    }
 		}
 		
-		//System.out.println(listOfGSRs.toString());
 		// 4. step: Extend the list of GSRs with the InfoProviders if it is needed.
 		listOfGSRs = GSRPriorities(listOfGSRs);
-		System.out.println(listOfGSRs.toString());
 		
 		// 5. step: Get the DB from one GSR
 		GetDB(listOfGSRs, retry);
@@ -354,9 +351,11 @@ public class NeighborsManager {
 		Neighbors_Update();
 	}
 	
-	/*
-	 * 
-	 * 
+	/**
+	 * Get the list of the GSRs from the given URL.
+	 * @param URL of the GSR
+	 * @param how many time(s) try to connect to the unavailable global DSR server
+	 * @return list of GSRs
 	 */
 	private ArrayList<String> GSRList(String url, int retry){
 		DSRClient c = new DSRClient(url + "/services?Service_Type=GSR");
@@ -389,8 +388,10 @@ public class NeighborsManager {
 		return null;
 	}
 	
-	/*
-	 * 
+	/**
+	 * Priorities the list of the GSRs. All InfoProviders move to the end of the list.
+	 * @param list of GSRs
+	 * @return priorities list of the GSRs and InfoProviders 
 	 */
 	private ArrayList<String> GSRPriorities(ArrayList<String> list){
 		if (list == null){
@@ -398,7 +399,6 @@ public class NeighborsManager {
 		}
 		if (list.removeAll(infoProviders)){
 			// The element was exist in the list and removed it.
-			System.out.println("remove: "+ infoProviders.toString());
 		}
 		//Collections.shuffle(list, new Random()); // if needed this shuffle
 		// Put all providers at the end of the list
@@ -406,8 +406,10 @@ public class NeighborsManager {
 		return list;
 	}
 	
-	/*
-	 * 
+	/**
+	 * Get and store the Database from the given URL.
+	 * @param list of GSRs
+	 * @param how many time(s) try to connect to the unavailable global DSR server
 	 */
 	private void GetDB(ArrayList<String> list, int retry){
 		JSONArray newDB = new JSONArray();
@@ -423,7 +425,7 @@ public class NeighborsManager {
 								.get(JSONObject.class);
 				} catch (ClientHandlerException e) {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Unreachable host: " + list.get(j));
+						logger.debug("DB query, unreachable host: " + list.get(j));
 					}
 					continue;
 				}
@@ -452,13 +454,15 @@ public class NeighborsManager {
 		}
 	}
 	
-	/*
+	/**
+	 * Store the given DB entries into the local Database.
+	 * @param list of the DB entries
 	 * 
+	 * @return boolean, all elements can be stored without any failure or not.
 	 */
 	private boolean DBStore(JSONArray newDB){
 		ServiceAdminManager serviceAdmin = new ServiceAdminManager();
 		boolean retval = true;
-		System.out.println(newDB.length() + " " +newDB.toString());
 		for (int i=0; i<newDB.length(); i++){
 			JSONObject jo = null;
 			try {
@@ -474,6 +478,7 @@ public class NeighborsManager {
 									.getAttributeName());
 				}
 				if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+					// Insert the entry to the database
 					JSONObject res = serviceAdmin.addService(jo);
 				}
 			} catch (JSONException e) {
@@ -503,8 +508,10 @@ public class NeighborsManager {
 		return retval;
 	}
 
-	/*
-	 * 
+	/**
+	 * Download the list of the InfoProvider GSR from the given URL.
+	 * @param URL for the list of the InfoProvider
+	 * @return list of the InfoProviders
 	 */
 	private ArrayList<String> DownloadProviderList(String url) {
 		ArrayList<String> providers = new ArrayList<String>();
@@ -515,7 +522,7 @@ public class NeighborsManager {
 					.accept(MediaType.TEXT_PLAIN)
 						.get(String.class);
 			// Replace the following characters (' ', '[', ']', '\n') 
-			// with empty character
+			// with empty character.
 			content = content.replaceAll(" |\\[|\\]|\n", "");
 			// Tokenize the input string and add into the list
 			StringTokenizer tokens = new StringTokenizer(content,",");
