@@ -125,10 +125,10 @@ public class NeighborsManager {
 			logger.info("Set the default (24hours) value of etremove.");
 			etremove = 24;
 		}
-		// connect to the network
+
 		// Connection to the cloud in 6 steps.
         // 1. step: Download and set the list of the InfoProvider URL(s).
-		String url = "http://localhost/EMIR.txt";
+		String url = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST).toString();
 		infoProviders = DownloadProviderList(url);
 		// 2.-6. steps are in the BootStrap function.
 		BootStrap(retry);

@@ -15,6 +15,7 @@ public class ServerConstants {
 	public static String REGISTRY_GLOBAL_RETRY = "registry.global.retry";
 	public static String REGISTRY_GLOBAL_ETVALID = "registry.global.etvalid";
 	public static String REGISTRY_GLOBAL_ETREMOVE = "registry.global.etremove";
+	public static String REGISTRY_GLOBAL_PROVIDERLIST = "registry.global.providerlist";
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";
 	public static String REGISTRY_PORT = "registry.port";
