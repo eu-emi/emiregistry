@@ -163,13 +163,13 @@ public class NeighborsManager {
 		hash.clear();
 		neighbors_count =0;
 	}
+
 	/**
 	 * Get value of retry.
 	 *  
 	 * @param None
 	 * @return retry
 	 */
-
 	public int getRetry(){
 		return retry;
 	}
@@ -180,7 +180,6 @@ public class NeighborsManager {
 	 * @param None
 	 * @return list of neighbors URLs or own URL
 	 */
-
 	public synchronized List<String> getNeighbors(){
 		if (neighbors.isEmpty()){
 			List<String> tmp = new ArrayList<String>();	
@@ -196,7 +195,6 @@ public class NeighborsManager {
 	 * @param List of entries for global DSRs
 	 * @param Type of the message (Register or Delete)
 	 */
-
 	public synchronized void addNeighborsDSRs(JSONArray entries, String type){
 		if (logger.isDebugEnabled()) {
 			logger.debug("addNeighborsDSRs called");
