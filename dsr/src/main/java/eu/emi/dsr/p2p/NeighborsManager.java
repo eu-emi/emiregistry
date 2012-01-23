@@ -190,7 +190,7 @@ public class NeighborsManager {
 	}
 
 	/**
-	 * Add neighbors DSRs.
+	 * Add neighbors GSRs.
 	 *  
 	 * @param List of entries for global DSRs
 	 * @param Type of the message (Register or Delete)
@@ -220,8 +220,8 @@ public class NeighborsManager {
 	}
 	
 	/**
-	 * Set unavailable neighbor DSR.
-	 * @param URL of the unavailable neighbor DSR
+	 * Set unavailable neighbor GSR.
+	 * @param URL of the unavailable neighbor GSR
 	 * 
 	 */
 	public synchronized void setUnavailableNeighbor(String url){
@@ -236,8 +236,8 @@ public class NeighborsManager {
 	}
 
 	/**
-	 * Reset unavailable neighbor DSR if it is need.
-	 * @param URL of the available neighbor DSR
+	 * Reset unavailable neighbor GSR if it is need.
+	 * @param URL of the available neighbor GSR
 	 * 
 	 */
 	public synchronized void resetUnavailableNeighbor(String url){
@@ -503,6 +503,7 @@ public class NeighborsManager {
 				}
 				if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
 					// Insert the entry to the database
+					@SuppressWarnings("unused")
 					JSONObject res = serviceAdmin.addService(jo);
 				}
 			} catch (JSONException e) {
