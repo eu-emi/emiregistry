@@ -50,6 +50,7 @@ public class NeighborsManager {
 	private Hashtable<String, String> hash;
 	private ServiceDatabase serviceDB = null;
 	private String myURL;
+	private String providerListURL;
 	private int sparsity;
 	private int retry;
 	private int etvalid;
@@ -70,11 +71,16 @@ public class NeighborsManager {
 		serviceDB = new MongoDBServiceDatabase();
 		// config parse
 		/*
+		 * providerlist
 		 * retry
 		 * sparsity
 		 * etvalid
 		 * etremove
 		 */
+		providerListURL = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST).toString();
+		if (providerListURL.isEmpty()){
+			logger.warn("Configured providerlist value is empty. Please set it!");
+		}
 		try {
 			sparsity = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_SPARSITY));
@@ -130,8 +136,7 @@ public class NeighborsManager {
 
 		// Connection to the cloud in 6 steps.
         // 1. step: Download and set the list of the InfoProvider URL(s).
-		String url = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST).toString();
-		infoProviders = DownloadProviderList(url);
+		infoProviders = DownloadProviderList(providerListURL);
 		// 2.-6. steps are in the BootStrap function.
 		BootStrap(retry);
 	}
