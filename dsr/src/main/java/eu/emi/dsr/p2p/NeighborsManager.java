@@ -44,6 +44,7 @@ public class NeighborsManager {
 								NeighborsManager.class);
 	private static NeighborsManager instance = null;
 	private List<String> neighbors;
+	private List<String> unavailableNeighbors;
 	private ArrayList<String> infoProviders;
 	int neighbors_count;
 	private Hashtable<String, String> hash;
@@ -60,6 +61,7 @@ public class NeighborsManager {
 	 */
 	protected NeighborsManager() {
 		neighbors = new ArrayList<String>();
+		unavailableNeighbors = new ArrayList<String>();
 		neighbors_count = 0;
 		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
 				DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
@@ -218,10 +220,29 @@ public class NeighborsManager {
 	 * Set unavailable neighbor DSR.
 	 * @param URL of the unavailable neighbor DSR
 	 * 
-	 * Not implemented yet.
 	 */
 	public synchronized void setUnavailableNeighbor(String url){
 		logger.warn("Unavailable neighbor: " + url);
+		if (!unavailableNeighbors.contains(url)){
+			unavailableNeighbors.add(url);
+		}
+		if (unavailableNeighbors.size() > (neighbors_count/2)){
+			Neighbors_Update();
+			unavailableNeighbors.clear();
+		}
+	}
+
+	/**
+	 * Reset unavailable neighbor DSR if it is need.
+	 * @param URL of the available neighbor DSR
+	 * 
+	 */
+	public synchronized void resetUnavailableNeighbor(String url){
+		if (unavailableNeighbors.remove(url)){
+			if (logger.isDebugEnabled()) {
+				logger.debug("Remove "+ url + "from the list of unavailable GSR.");
+			}
+		}
 	}
 
 	/**

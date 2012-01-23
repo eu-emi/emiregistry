@@ -107,6 +107,8 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			}
 			if (!connected){
 				NeighborsManager.getInstance().setUnavailableNeighbor(neighbors.get(i));
+			} else {
+				NeighborsManager.getInstance().resetUnavailableNeighbor(neighbors.get(i));
 			}
 		}
 	}
