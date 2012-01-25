@@ -30,6 +30,19 @@ public class DateUtil {
 		return jo;
 	}
 
+	public static JSONObject setExpiryTimeWithHours(JSONObject jo, Integer hours) {
+		JSONObject date = new JSONObject();
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(addHours(hours)));
+			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName(), date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return jo;
+	}
+
 	public static JSONObject addDate(JSONObject jo, String attrName, Date d) {
 		JSONObject date = new JSONObject();
 		try {
@@ -58,6 +71,23 @@ public class DateUtil {
 		return addDays(new Date(), days);
 	}
 
+	/**
+	 * Add hours to the given date
+	 * **/
+	public static Date addHours(Date date, Integer hours) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.HOUR, hours);
+		return c.getTime();
+	}
+
+	/**
+	 * Add hours to the current date
+	 * **/
+	public static Date addHours(Integer hours) {
+		return addHours(new Date(), hours);
+	}
+	
 	/**
 	 * @param resJson
 	 */
