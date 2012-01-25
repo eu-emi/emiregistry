@@ -4,7 +4,6 @@
 package eu.emi.dsr.p2p;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -13,10 +12,7 @@ import com.mongodb.MongoException;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
-import eu.emi.dsr.db.PersistentStoreFailureException;
-import eu.emi.dsr.db.QueryException;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.util.DateUtil;
 
 /**
@@ -68,22 +64,15 @@ public class ValidityCheck implements Runnable {
 			}
 			JSONObject currentTime = DateUtil.setExpiryTimeWithHours(new JSONObject(),timedelay);
 				
-			// get the list of GSRs from the database
+			// remove all GSRs from the database that are expired
 			try {
 				String query = "{ \"Service_ExpireOn\" : { $lt: "+ currentTime.getString("Service_ExpireOn")+"} }";
 				logger.info(query);
 
-				/*JSONArray gsrList = new JSONArray();
-				gsrList = mongoDB.queryJSON(query);
-				logger.error(gsrList.toString());*/
 				mongoDB.findAndDelete(query);
 			} catch (MongoException e) {
 				logger.warn(e.getCause());
-			}/* catch (QueryException e) {
-				logger.warn(e.getCause());
-			} catch (PersistentStoreFailureException e) {
-				logger.warn(e.getCause());
-			}*/ catch (JSONException e) {
+			} catch (JSONException e) {
 				logger.warn(e.getCause());
 			}
 			
