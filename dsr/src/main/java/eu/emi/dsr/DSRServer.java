@@ -36,6 +36,7 @@ import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
 import eu.emi.dsr.p2p.NeighborsEventReciever;
 import eu.emi.dsr.p2p.SelfRegistration;
+import eu.emi.dsr.p2p.ValidityCheck;
 import eu.emi.dsr.security.ACLFilter;
 import eu.emi.dsr.security.AccessControlFilter;
 import eu.emi.dsr.security.DSRSecurityProperties;
@@ -351,6 +352,15 @@ public class DSRServer {
 		} catch (Throwable e) {
 			logger.warn("Has a problem with the self-registration.");
 		}
+		
+		//Soft-State functions start
+		try {
+			RegistryThreadPool.getExecutorService().execute(
+					new ValidityCheck());
+		} catch (Throwable e) {
+			logger.warn("Has a problem with the validity check.");
+		}
+
 	}
 	
 
