@@ -67,7 +67,7 @@ public class ServiceAdminManager {
 	 * @param jo
 	 * @return the inserted service description
 	 * @throws JSONException
-	 * @throws PersistentStoreFailureException
+	 * @throws InvalidServiceDescriptionException
 	 * @throws ExistingResourceException
 	 * 
 	 * 	 */
