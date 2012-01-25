@@ -53,8 +53,6 @@ public class NeighborsManager {
 	private String providerListURL;
 	private int sparsity;
 	private int retry;
-	private int etvalid;
-	private int etremove;
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
@@ -74,8 +72,6 @@ public class NeighborsManager {
 		 * providerlist
 		 * retry
 		 * sparsity
-		 * etvalid
-		 * etremove
 		 */
 		providerListURL = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST).toString();
 		if (providerListURL.isEmpty()){
@@ -106,32 +102,6 @@ public class NeighborsManager {
 			// set default value
 			logger.info("Set the default (5) value of retry.");
 			retry = 5;
-		}
-		try {
-			etvalid = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID));
-			if (retry < 12) {
-				logger.info("Configured etvalid value (" + etvalid + ") is very low. Min value: 12 Default value will be used.");
-				retry = 12;
-			}
-			logger.info("Set the etvalid to "+ etvalid);
-		} catch (NumberFormatException e) {
-			// set default value
-			logger.info("Set the default (12hours) value of etvalid.");
-			etvalid = 12;
-		}
-		try {
-			etremove = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETREMOVE));
-			if (retry < 24) {
-				logger.info("Configured etremove value (" + etremove + ") is very low. Min value: 24 Default value will be used.");
-				retry = 24;
-			}
-			logger.info("Set the etremove to "+ etremove);
-		} catch (NumberFormatException e) {
-			// set default value
-			logger.info("Set the default (24hours) value of etremove.");
-			etremove = 24;
 		}
 
 		// Connection to the cloud in 6 steps.
