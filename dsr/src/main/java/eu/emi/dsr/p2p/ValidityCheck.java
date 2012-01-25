@@ -48,7 +48,19 @@ public class ValidityCheck implements Runnable {
 			etvalid = 12;
 		}
 		
-		timedelay = 2;
+		try {
+			timedelay = Integer.valueOf(DSRServer
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID_DELAY));
+			if (timedelay < 0) {
+				logger.info("Configured etvalid timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
+				timedelay = 2;
+			}
+			logger.info("Set the etvalid timedelay to "+ timedelay);
+		} catch (NumberFormatException e) {
+			// set default value
+			logger.info("Set the default (2 hours) value of etvalid timedelay.");
+			timedelay = 2;
+		}
 	}
 
 	/*
