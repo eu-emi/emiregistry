@@ -58,7 +58,7 @@ public class ValidityCheck implements Runnable {
 			logger.info("Set the etvalid timedelay to "+ timedelay);
 		} catch (NumberFormatException e) {
 			// set default value
-			logger.info("Set the default (2 hours) value of etvalid timedelay.");
+			logger.info("Set the default (2 hours) value of Soft-State timedelay.");
 			timedelay = 2;
 		}
 	}
