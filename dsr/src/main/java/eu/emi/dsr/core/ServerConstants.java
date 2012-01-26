@@ -14,8 +14,8 @@ public class ServerConstants {
 	public static String REGISTRY_GLOBAL_SPARSITY = "registry.global.sparsity";
 	public static String REGISTRY_GLOBAL_RETRY = "registry.global.retry";
 	public static String REGISTRY_GLOBAL_ETVALID = "registry.global.etvalid";
-	public static String REGISTRY_GLOBAL_ETVALID_DELAY = "registry.global.etvalid.delay";
 	public static String REGISTRY_GLOBAL_ETREMOVE = "registry.global.etremove";
+	public static String REGISTRY_GLOBAL_SOFTSTATE_DELAY = "registry.global.softstate.delay";
 	public static String REGISTRY_GLOBAL_PROVIDERLIST = "registry.global.providerlist";
 	public static String REGISTRY_SCHEME = "registry.scheme";
 	public static String REGISTRY_HOSTNAME = "registry.hostname";

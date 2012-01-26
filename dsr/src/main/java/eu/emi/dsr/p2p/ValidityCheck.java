@@ -28,7 +28,7 @@ public class ValidityCheck implements Runnable {
 	private MongoDBServiceDatabase mongoDB;
 	
 	/** 
-	 * Constructor for a self-registration mechanism
+	 * Constructor for a Soft-State mechanism
 	 * 
 	 */
 	public ValidityCheck() {
@@ -50,9 +50,9 @@ public class ValidityCheck implements Runnable {
 		
 		try {
 			timedelay = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID_DELAY));
+					.getProperty(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY));
 			if (timedelay < 0) {
-				logger.info("Configured etvalid timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
+				logger.info("Configured Soft-State timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
 				timedelay = 2;
 			}
 			logger.info("Set the etvalid timedelay to "+ timedelay);
