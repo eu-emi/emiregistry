@@ -35,6 +35,7 @@ import eu.emi.dsr.infrastructure.ServiceEventReceiver;
 import eu.emi.dsr.jetty.JettyServer;
 import eu.emi.dsr.lease.ServiceReaper;
 import eu.emi.dsr.p2p.NeighborsEventReciever;
+import eu.emi.dsr.p2p.RemoveCheck;
 import eu.emi.dsr.p2p.SelfRegistration;
 import eu.emi.dsr.p2p.ValidityCheck;
 import eu.emi.dsr.security.ACLFilter;
@@ -359,6 +360,12 @@ public class DSRServer {
 					new ValidityCheck());
 		} catch (Throwable e) {
 			logger.warn("Has a problem with the validity check.");
+		}
+		try {
+			RegistryThreadPool.getExecutorService().execute(
+					new RemoveCheck());
+		} catch (Throwable e) {
+			logger.warn("Has a problem with the remove check.");
 		}
 
 	}
