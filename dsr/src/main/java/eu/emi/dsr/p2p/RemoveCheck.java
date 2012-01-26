@@ -31,7 +31,8 @@ public class RemoveCheck implements Runnable {
 	 * Constructor for a Soft-State mechanism
 	 * 
 	 */
-	public RemoveCheck() {
+	public RemoveCheck(int delay) {
+		timedelay = delay;
 		mongoDB = new MongoDBServiceDatabase();
 
 		try {
@@ -47,21 +48,6 @@ public class RemoveCheck implements Runnable {
 			logger.info("Set the default (24hours) value of etremove.");
 			etremove = 24;
 		}
-
-		try {
-			timedelay = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY));
-			if (timedelay < 0) {
-				logger.info("Configured Soft-State timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
-				timedelay = 2;
-			}
-			logger.info("Set the etremove timedelay to "+ timedelay);
-		} catch (NumberFormatException e) {
-			// set default value
-			logger.info("Set the default (2 hours) value of Soft-State timedelay.");
-			timedelay = 2;
-		}
-
 	}
 
 	/*
