@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>emiregistry</artifactId>
 		<groupId>eu.emi</groupId>
-		<version>1.0.0</version>
+		<version>1.0.0-rc1</version>
 	</parent>
 	<artifactId>xmltypes</artifactId>
 	<name>XML Types</name>

@@ -6,15 +6,15 @@
 	<description>Enable building EMIR distribution for Redhat, general Linux/Unix environments, and Debian</description>
 	<inceptionYear>2011</inceptionYear>
 	<url>https://github.com/eu-emi/emiregistry</url>
-	<version>1.0.0-0</version>
 	<name>Distribution of the EMIR server</name>
 
 	<!-- this is the "release" version -->
-
+    <version>1.0.0-rc1</version>
+    
 	<parent>
 		<groupId>eu.emi</groupId>
 		<artifactId>emiregistry</artifactId>
-		<version>1.0.0</version>
+ 		<version>1.0.0-rc1</version>
 	</parent>
 
 	<distributionManagement>
