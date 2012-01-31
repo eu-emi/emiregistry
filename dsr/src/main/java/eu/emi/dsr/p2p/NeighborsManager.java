@@ -467,9 +467,9 @@ public class NeighborsManager {
 				String messageTime = "";
 				if (jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 								.getAttributeName())){
-					messageTime = jo
-							.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-									.getAttributeName());
+					messageTime = (jo
+							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName())).getString("$date");
 				}
 				if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
 					// Insert the entry to the database

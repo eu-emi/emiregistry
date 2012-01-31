@@ -174,7 +174,18 @@ public class ServiceAdminResource {
 				if (length <= 0 || length > 100) {
 					throw new WebApplicationException(Status.FORBIDDEN);
 				}
-
+				// Get the Endpoint URL and a time of the message from the entry
+				String serviceurl = serviceInfo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.getAttributeName());
+				String messageTime = "";
+				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName())){
+					messageTime = (serviceInfo
+							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName())).getString("$date");
+				}
+				
 				Client c = (Client) req.getAttribute("client");
 				JSONObject res = null;
 				// let the admin add entries from others
@@ -189,19 +200,11 @@ public class ServiceAdminResource {
 										.getDistinguishedName());
 
 					}
-					res = serviceAdmin.addService(serviceInfo);
+					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+						res = serviceAdmin.addService(serviceInfo);
+					}
 
 				} else {
-					String serviceurl = serviceInfo
-							.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-									.getAttributeName());
-					String messageTime = "";
-					if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-									.getAttributeName())){
-						messageTime = serviceInfo
-								.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-										.getAttributeName());
-					}
 					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
 						// add if the owner is missing
 						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
@@ -320,12 +323,12 @@ public class ServiceAdminResource {
 				String messageTime = "";
 				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 								.getAttributeName())){
-					messageTime = serviceInfo
-							.getString(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-									.getAttributeName());
+					messageTime = (serviceInfo
+							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+									.getAttributeName())).getString("$date");
 				}
-
-				if (c.getRole().getName().equalsIgnoreCase("admin")) {
+				if (c.getRole().getName().equalsIgnoreCase("admin")
+						&& serviceAdmin.checkMessageGenerationTime(messageTime, url)) {
 					// let the admin update any service
 					JSONObject res;
 					try {

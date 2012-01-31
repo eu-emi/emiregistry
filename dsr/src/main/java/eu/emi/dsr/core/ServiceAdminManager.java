@@ -178,9 +178,12 @@ public class ServiceAdminManager {
 		}
 
 		// setting the update time
-		jo = DateUtil.addDate(jo,
+		if (!jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+				.getAttributeName())) {
+			jo = DateUtil.addDate(jo,
 				ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 						.getAttributeName(), new Date());
+		}
 
 		ServiceObject sObj = new ServiceObject(jo);
 		try {
@@ -371,6 +374,9 @@ public class ServiceAdminManager {
 		if (storedEntries.size() > 0) {
 			Date messageDate = new Date();
 			try {
+				// set the message date to GMT time
+				messageDate =  ServiceUtil.UTCISODateFormat.parse(ServiceUtil.toUTCFormat(messageDate));
+				// if possible set the message date from the message time
 				messageDate =  ServiceUtil.UTCISODateFormat.parse(messageTime);
 			} catch (ParseException e) {
 				// no problem, the time was empty
