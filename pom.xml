@@ -5,7 +5,7 @@
 
 	<groupId>eu.emi</groupId>
 	<artifactId>emiregistry</artifactId>
-	<version>1.0.0-rc1</version>
+	<version>1.0.0-rc2</version>
 	<packaging>pom</packaging>
 	<name>EMIR</name>
 	<url>https://github.com/eu-emi/emiregistry</url>
