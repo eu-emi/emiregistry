@@ -53,6 +53,7 @@ public class NeighborsManager {
 	private String providerListURL;
 	private int sparsity;
 	private int retry;
+	private boolean dowloadedProviderList;
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
@@ -106,6 +107,7 @@ public class NeighborsManager {
 
 		// Connection to the cloud in 6 steps.
         // 1. step: Download and set the list of the InfoProvider URL(s).
+		dowloadedProviderList = false;
 		infoProviders = DownloadProviderList(providerListURL);
 		// 2.-6. steps are in the BootStrap function.
 		BootStrap(retry);
@@ -151,6 +153,9 @@ public class NeighborsManager {
 	 * @return list of neighbors URLs or own URL
 	 */
 	public synchronized List<String> getNeighbors(){
+		if (!dowloadedProviderList){
+			infoProviders = DownloadProviderList(providerListURL);
+		}
 		if (neighbors.isEmpty()){
 			List<String> tmp = new ArrayList<String>();	
 			tmp.add(myURL);
@@ -524,8 +529,10 @@ public class NeighborsManager {
 		    while(tokens.hasMoreTokens()){
 				// Put the URL into the provider list
 		    	providers.add((String)tokens.nextElement());
-		    }	
+		    }
+		    dowloadedProviderList = true;
 		} catch (ClientHandlerException e) {
+			dowloadedProviderList = false;
 			if (logger.isDebugEnabled()) {
 				logger.debug("Unreachable provider list from " + url);
 			}
