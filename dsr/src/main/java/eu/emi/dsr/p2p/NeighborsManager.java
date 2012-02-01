@@ -54,6 +54,7 @@ public class NeighborsManager {
 	private int sparsity;
 	private int retry;
 	private boolean dowloadedProviderList;
+	private boolean connected;
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
@@ -110,6 +111,7 @@ public class NeighborsManager {
 		dowloadedProviderList = false;
 		infoProviders = DownloadProviderList(providerListURL);
 		// 2.-6. steps are in the BootStrap function.
+		connected = false;
 		BootStrap(retry);
 	}
 
@@ -153,9 +155,14 @@ public class NeighborsManager {
 	 * @return list of neighbors URLs or own URL
 	 */
 	public synchronized List<String> getNeighbors(){
+		// Reconnection section
 		if (!dowloadedProviderList){
 			infoProviders = DownloadProviderList(providerListURL);
 		}
+		if (dowloadedProviderList && !connected){
+			BootStrap(retry);
+		}
+		// End of the reconnection section
 		if (neighbors.isEmpty()){
 			List<String> tmp = new ArrayList<String>();	
 			tmp.add(myURL);
@@ -441,6 +448,7 @@ public class NeighborsManager {
 				}
 			}
 			if (found){
+				connected = true;
 				if (logger.isDebugEnabled()) {
 					logger.debug("New DB: " + newDB.toString());
 				}
