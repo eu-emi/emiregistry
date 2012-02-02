@@ -492,7 +492,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("deleting all the contents from the db collection");
 		}
 		BasicDBObject o = new BasicDBObject(0);
+		database.requestStart();
 		serviceCollection.remove(o);
+		database.requestDone();
 
 	}
 
@@ -523,7 +525,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		if (logger.isTraceEnabled()) {
 			logger.debug("delete by query: " + db.toString());
 		}
-			serviceCollection.remove(db);	
+		database.requestStart();
+		serviceCollection.remove(db);
+		database.requestDone();
 		
 	}
 
