@@ -172,12 +172,10 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.debug("inserting: " + item);
 			}
-			database.requestStart();
 			DBObject db = item;
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			database.requestDone();
 			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
 			// item
 			// .toJSON()));
