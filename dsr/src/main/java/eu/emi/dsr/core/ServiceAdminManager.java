@@ -83,8 +83,11 @@ public class ServiceAdminManager {
 			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), date);
-			jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+			if (!jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+					.getAttributeName())) {
+				jo.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 					.getAttributeName(), date);
+			}
 
 			// in case the expiry attribute is not mentioned in the service
 			// description, then will be taken from the config or otherwise the
