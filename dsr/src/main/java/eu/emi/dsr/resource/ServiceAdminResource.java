@@ -212,7 +212,9 @@ public class ServiceAdminResource {
 						res = serviceAdmin.addService(serviceInfo);
 					}
 				}
-				arr.put(res);
+				if (res != null){
+					arr.put(res);
+				}
 				continue;
 				// return Response.ok(res).build();
 			} catch (ExistingResourceException e) {
