@@ -228,7 +228,9 @@ public class ServiceAdminResource {
 			}
 
 		}
-		EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
+		if (arr.length() > 0){
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
+		}
 		if (errorArray.length() > 0) {
 			return Response.status(Status.CONFLICT).entity(errorArray).build();
 		}
@@ -377,8 +379,10 @@ public class ServiceAdminResource {
 									+ url).build();
 				}
 			}
-			EventDispatcher.notifyRecievers(new Event(
-					EventTypes.SERVICE_UPDATE, arr));
+			if (arr.length() > 0){
+				EventDispatcher.notifyRecievers(new Event(
+						EventTypes.SERVICE_UPDATE, arr));
+			}
 			if (errorArray.length() > 0) {
 				return Response.status(Status.CONFLICT).entity(errorArray)
 						.build();
