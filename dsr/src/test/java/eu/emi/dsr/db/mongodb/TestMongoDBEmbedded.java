@@ -53,7 +53,7 @@ public class TestMongoDBEmbedded extends Assert{
 		}
 		
 		
-		File f = new File("./mongodata"); 
+		File f = new File("mongodata"); 
 		if (!f.exists()) {
 			f.mkdir();
 		}
@@ -63,7 +63,10 @@ public class TestMongoDBEmbedded extends Assert{
 		ProcessBuilder pb = new ProcessBuilder(command);
 
 		p = pb.start();
-
+		
+		//wait for 1 sec to start the db
+		Thread.sleep(500);
+		
 		logger.debug("Process started with pid: " + p);
 
 	}

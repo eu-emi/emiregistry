@@ -145,9 +145,34 @@ public class Glue2Mapper {
 									.getAttributeName())))
 							: null);
 
-					if (jo.has("_id")) {
-						st.setID(jo.getJSONObject("_id").getString("$oid"));
-						et.setID(jo.getJSONObject("_id").getString("$oid"));
+					//service id
+					if (jo.has(ServiceBasicAttributeNames.SERVICE_ID
+							.getAttributeName())) {
+						st.setID(jo
+								.getString(ServiceBasicAttributeNames.SERVICE_ID
+										.getAttributeName()));
+					} else if (jo.has(ServiceBasicAttributeNames.SERVICE_DB_ID
+							.getAttributeName())) {
+						st.setID(jo.getJSONObject(
+								ServiceBasicAttributeNames.SERVICE_DB_ID
+										.getAttributeName()).getString("$oid"));
+					} else {
+						st.setID("null-id");
+					}
+					
+					//endpoint id
+					if (jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+							.getAttributeName())) {
+						et.setID(jo
+								.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+										.getAttributeName()));
+					} else if (jo.has(ServiceBasicAttributeNames.SERVICE_DB_ID
+							.getAttributeName())) {
+						et.setID(jo.getJSONObject(
+								ServiceBasicAttributeNames.SERVICE_DB_ID
+										.getAttributeName()).getString("$oid"));						
+					} else {
+						et.setID("null-id");
 					}
 
 					et.setName(jo.has(ServiceBasicAttributeNames.SERVICE_NAME
@@ -288,9 +313,9 @@ public class Glue2Mapper {
 							jo.getDouble(ServiceBasicAttributeNames.SERVICE_LOCATION_LONGITUDE
 									.getAttributeName()))
 							: null);
-					lt.setID(jo.has(ServiceBasicAttributeNames.SERVICE_ID
+					lt.setID(jo.has(ServiceBasicAttributeNames.SERVICE_DB_ID
 							.getAttributeName()) ? jo.getJSONObject(
-							ServiceBasicAttributeNames.SERVICE_ID
+							ServiceBasicAttributeNames.SERVICE_DB_ID
 									.getAttributeName()).getString("$oid")
 							: null);
 					lt.setPostCode(jo
@@ -335,23 +360,33 @@ public class Glue2Mapper {
 										.getJSONArray(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_EXT
 												.getAttributeName())));
 					}
-					
-					//adding contacts
+
+					// adding contacts
 					if ((st.getContact().size() <= 0)
 							&& (jo.has(ServiceBasicAttributeNames.SERVICE_CONTACT
 									.getAttributeName()))) {
-						
-						JSONArray ja = jo.getJSONArray(ServiceBasicAttributeNames.SERVICE_CONTACT
-								.getAttributeName());
+
+						JSONArray ja = jo
+								.getJSONArray(ServiceBasicAttributeNames.SERVICE_CONTACT
+										.getAttributeName());
 						for (int j = 0; j < ja.length(); j++) {
 							JSONObject cj = ja.getJSONObject(j);
 							ContactT ct = of.createContactT();
-							ct.setDetail(cj.has(ServiceBasicAttributeNames.SERVICE_CONTACT_DETAIL.getAttributeName())?cj.getString(ServiceBasicAttributeNames.SERVICE_CONTACT_DETAIL.getAttributeName()):null);
-							ct.setType(cj.has(ServiceBasicAttributeNames.SERVICE_CONTACT_TYPE.getAttributeName())?cj.getString(ServiceBasicAttributeNames.SERVICE_CONTACT_TYPE.getAttributeName()):null);
+							ct.setDetail(cj
+									.has(ServiceBasicAttributeNames.SERVICE_CONTACT_DETAIL
+											.getAttributeName()) ? cj
+									.getString(ServiceBasicAttributeNames.SERVICE_CONTACT_DETAIL
+											.getAttributeName())
+									: null);
+							ct.setType(cj
+									.has(ServiceBasicAttributeNames.SERVICE_CONTACT_TYPE
+											.getAttributeName()) ? cj
+									.getString(ServiceBasicAttributeNames.SERVICE_CONTACT_TYPE
+											.getAttributeName())
+									: null);
 							st.getContact().add(ct);
 						}
-						
-						
+
 					}
 
 					if (!ServiceUtil.getAttributeNames().contains(type)) {

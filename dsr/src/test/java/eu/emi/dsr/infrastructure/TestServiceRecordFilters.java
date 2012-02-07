@@ -51,6 +51,8 @@ public class TestServiceRecordFilters {
 	
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+    	//should start the db before making any operations 
+    	TestRegistryBase.startMongoDB();
     	ServiceUtil.initLogger("src/test/resources/conf/log4j.properties");
  		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
  				dbHostname, dbPort, dbName, dbCollectionName);
@@ -58,8 +60,7 @@ public class TestServiceRecordFilters {
 	}
     
 	@Before
-	public void setup() throws IOException{
-		TestRegistryBase.startMongoDB();
+	public void setup() throws IOException, InterruptedException{
 		Properties serverProps = new Properties();
 		serverProps.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
 		serverProps.put(ServerConstants.REGISTRY_PORT, "54321");

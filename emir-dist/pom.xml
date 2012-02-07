@@ -9,12 +9,12 @@
 	<name>Distribution of the EMIR server</name>
 
 	<!-- this is the "release" version -->
-    <version>1.0.0-rc2</version>
+    <version>1.0.0-rc3</version>
     
 	<parent>
-		<groupId>eu.emi</groupId>
+		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
- 		<version>1.0.0-rc2</version>
+ 		<version>1.0.0-rc3</version>
 	</parent>
 
 	<distributionManagement>
@@ -49,7 +49,7 @@
 			<version>${ux.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.emi</groupId>
+			<groupId>eu.eu-emi</groupId>
 			<artifactId>emir-client</artifactId>
 			<version>${ux.version}</version>
 		</dependency>

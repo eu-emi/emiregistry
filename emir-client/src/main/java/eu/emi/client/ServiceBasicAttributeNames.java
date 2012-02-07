@@ -46,7 +46,7 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_ENDPOINT_IMPL_NAME("Service_Endpoint_ImplementationName"), 
 			SERVICE_ENDPOINT_IMPL_VERSION("Service_Endpoint_ImplementationVersion"), 
 			SERVICE_ENDPOINT_IMPLEMENTOR("Service_Endpoint_Implementor"), 
-			SERVICE_ID("_id",null,"MongoDB specific identifier"),
+			SERVICE_DB_ID("_id",null,"MongoDB specific identifier"),
 			SERVICE_LOCATION_ADDRESS("Service_Location_Address", null, "Street Address"), 
 			SERVICE_LOCATION_PLACE("Service_Location_Place",null,"City Name"),
 			SERVICE_LOCATION_COUNTRY("Service_Location_Country",null,"Country Name"),
@@ -55,7 +55,9 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_LOCATION_LONGITUDE("Service_Location_Longitude",null,"Geo Location Longitude"),
 			SERVICE_CONTACT("Service_Contact",JSONArray.class,"GLUE 2.0 Service Contact information as Array"),
 			SERVICE_CONTACT_DETAIL("Detail",null,"GLUE 2.0 Service Contact Detail"),
-			SERVICE_CONTACT_TYPE("ContactType",null,"GLUE 2.0 Service Contact Type");
+			SERVICE_CONTACT_TYPE("ContactType",null,"GLUE 2.0 Service Contact Type"),
+			SERVICE_ID("Service_ID",null,"GLUE 2.0 Service ID"),
+			SERVICE_ENDPOINT_ID("Service_Endpoint_ID",null,"GLUE 2.0 Service Endpoint ID"),
 			;
 
 	private String attributeName;

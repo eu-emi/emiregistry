@@ -61,15 +61,16 @@ public abstract class TestRegistryBase {
 
 	/**
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 * 
 	 */
-	public static void startMongoDB() throws IOException {
+	public static void startMongoDB() throws IOException, InterruptedException {
 		File daemonFile = new File(mongodPath);
 		if (!daemonFile.exists()) {
 			mongodPath = "/usr/bin/mongod";
 		}
 
-		File f = new File("./mongodata");
+		File f = new File("mongodata");
 		if (!f.exists()) {
 			f.mkdir();
 		}
@@ -79,7 +80,8 @@ public abstract class TestRegistryBase {
 		ProcessBuilder pb = new ProcessBuilder(command);
 
 		p = pb.start();
-
+		
+		Thread.sleep(500);
 		logger.debug("Process started with pid: " + p);
 
 	}

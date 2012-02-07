@@ -5,21 +5,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>emiregistry</artifactId>
-		<groupId>eu.emi</groupId>
-		<version>1.0.0-rc2</version>
+		<groupId>eu.eu-emi</groupId>
+		<version>1.0.0-rc3</version>
 	</parent>
 	<artifactId>dsr</artifactId>
 	<name>Core EMI Registry Server</name>
 	<url>https://github.com/eu-emi/emiregistry</url>
 	<dependencies>
 		<dependency>
-			<groupId>eu.emi</groupId>
+			<groupId>eu.eu-emi</groupId>
 			<artifactId>emir-client</artifactId>
 			<version>${parent.version}</version>
 		</dependency> 		
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>

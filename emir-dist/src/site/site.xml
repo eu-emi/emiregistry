@@ -7,12 +7,12 @@
   </bannerLeft>
   <version/>
   <body>
-    <links>
+  	<links>
       <item name="EMI" href="http://www.emi-eu.eu" />
     </links> 
     <menu name="EMI Registry">
       <item name="Main" href="index.html"/>
-    </menu>
+    </menu>    
     <!-- <menu ref="reports"/> -->
   </body>
 </project>

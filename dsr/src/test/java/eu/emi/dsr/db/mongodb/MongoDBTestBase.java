@@ -49,7 +49,7 @@ public class MongoDBTestBase {
 			mongodPath = "/usr/bin/mongod";
 		}
 		
-		File f = new File("./mongodata");
+		File f = new File("mongodata");
 		if (!f.exists()) {
 			f.mkdir();
 		}
@@ -59,7 +59,8 @@ public class MongoDBTestBase {
 		ProcessBuilder pb = new ProcessBuilder(command);
 
 		p = pb.start();
-
+		//give sometime to start the db
+		Thread.sleep(500);
 		logger.debug("Process started with pid: " + p);
 
 	}
