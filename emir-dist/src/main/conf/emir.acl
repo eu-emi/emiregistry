@@ -1,12 +1,14 @@
 #
 # example EMIR ACL file
 #
-# - the trusted subjects are listed, one per line
+# - the trusted subjects are listed as a pair of DN and role (separated by "::"), one per line
+# 
+# - The role name should be defined (for unique DNs) only from a set of given role names: serviceowner, admin  
 #
-# - the subject name must be in RFC 2253 format
+# - the subject name must not be duplicated and defined according to RFC 2253 format
 #
 # - to extract the subject name from a certificate, use
 #
 #    openssl x509 -subject -noout -nameopt RFC2253 -in <certfile>
 #
-emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
+emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin
