@@ -9,12 +9,12 @@
 	<name>Distribution of the EMIR server</name>
 
 	<!-- this is the "release" version -->
-    <version>1.0.0-rc3</version>
+    <version>1.1.0-SNASPHOT</version>
     
 	<parent>
 		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
- 		<version>1.0.0-rc3</version>
+ 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<distributionManagement>
