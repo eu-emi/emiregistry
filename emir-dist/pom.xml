@@ -39,12 +39,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>eu.emi</groupId>
+			<groupId>eu.eu-emi</groupId>
 			<artifactId>dsr</artifactId>
 			<version>${ux.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.emi</groupId>
+			<groupId>eu.eu-emi</groupId>
 			<artifactId>xmltypes</artifactId>
 			<version>${ux.version}</version>
 		</dependency>
