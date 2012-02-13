@@ -54,14 +54,14 @@ This package contains the EMIR server.
 %config(noreplace) %attr(0755 emi emi) "/etc/rc.d/init.d/emi-emir"
 
 
-%attr(0755 emi emi) "/usr/sbin/emir-start.sh"
-%attr(0755 emi emi) "/usr/sbin/emir-stop.sh"
-%attr(0755 emi emi) "/usr/sbin/emir-status.sh"
+%attr(0755 - -) "/usr/sbin/emir-start.sh"
+%attr(0755 - -) "/usr/sbin/emir-stop.sh"
+%attr(0755 - -) "/usr/sbin/emir-status.sh"
 #
 # Documentation
 #
 %docdir %attr(755 root root) "/usr/share/doc/emi/emir/"
-%attr(644 root root) "/usr/share/doc/emi/emir/*"
+"/usr/share/doc/emi/emir/*"
 
 #
 # jar files
@@ -75,14 +75,16 @@ This package contains the EMIR server.
 %dir %attr(0700 emi emi) "/var/log/emi/emir"
 %dir %attr(0700 emi emi) "/var/run/emi/emir"
 %dir %attr(0700 emi emi) "/var/lib/emi"
+%dir %attr(0700 emi emi) "/var/lib/emi/emir"
+%dir %attr(0700 emi emi) "/var/lib/emi/emir/data"
 
 #
 # dealing with .gitignores
 #
-%attr(0644 emi emi) "/var/lib/emi/emir/data/.gitignore"
-%attr(0644 emi emi) "/var/log/emi/emir/.gitignore"
-%attr(0644 emi emi) "/var/run/emi/emir/.gitignore"
-%attr(0644 emi emi) "/usr/share/doc/emi/emir/.gitignore"
+%attr(0700 emi emi) "/var/lib/emi/emir/data/.gitignore"
+%attr(0700 emi emi) "/var/log/emi/emir/.gitignore"
+%attr(0700 emi emi) "/var/run/emi/emir/.gitignore"
+%attr(0700 emi emi) "/usr/share/doc/emi/emir/.gitignore"
 
 #
 # dir %attr(0700 emi emi) "/var/lib/emir"
