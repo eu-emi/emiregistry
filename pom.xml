@@ -410,4 +410,9 @@
 	<scm>
 		<url>scm:git://github.com/eu-emi/emiregistry.git</url>
 	</scm>
+	<mailingLists>
+		<mailingList>
+			<post>emir@niif.hu</post>
+		</mailingList>
+	</mailingLists>
 </project>
