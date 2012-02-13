@@ -77,6 +77,9 @@ case "$1" in
 	chown emi:emi /var/lib/emi/emir
 	chmod 700 /var/lib/emi/emir
 	
+	chown emi:emi /var/lib/emi/emir/data
+	chmod 700 /var/lib/emi/emir/data
+	
 	insserv emi-emir
 	;;
 
