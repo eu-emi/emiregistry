@@ -63,7 +63,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 			String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
 			if (h2db == null || h2db.isEmpty()) {
-				h2db = "/var/lib/emi/emir/data/Emyregistry";
+				h2db = "/var/lib/emi/emir/data/Emiregistry";
 			}
 			conn = DriverManager.getConnection("jdbc:h2:" + h2db, "sa", "");
 			stat = conn.createStatement();
