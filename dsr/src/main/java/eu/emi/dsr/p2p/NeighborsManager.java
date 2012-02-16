@@ -75,7 +75,8 @@ public class NeighborsManager {
 		 * retry
 		 * sparsity
 		 */
-		providerListURL = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST).toString();
+		providerListURL = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST, "");
+
 		if (providerListURL.isEmpty()){
 			logger.warn("Configured providerlist value is empty. Please set it!");
 		}
