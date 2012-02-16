@@ -7,7 +7,7 @@ License: APL 2.0
 Distribution: RedHat
 Group: Infrastructure Services
 URL: https://github.com/eu-emi/emiregistry
-Requires: java-1.6.0-openjdk,mongodb-server >= 1.6.4
+Requires: java-1.6.0-openjdk,mongodb-server >= 1.8.2
 BuildArch: @component-architecture@
 Packager: EMI emir@niif.hu
 @preamble@
