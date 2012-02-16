@@ -18,7 +18,7 @@ public class ParentResource {
 	@GET
 	public Response childDSRs(){
 		String parent = DSRServer.getProperty(ServerConstants.REGISTRY_PARENT_URL);
-		if ( parent.isEmpty()) {
+		if ( parent == null || parent.isEmpty()) {
 			parent = "No parent set!";
 		}
 		return Response.ok().entity(parent).build();
