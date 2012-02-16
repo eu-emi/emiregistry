@@ -14,9 +14,23 @@ import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class DateUtil {
+	public static JSONObject setCreationTime(JSONObject jo, Integer days) {
+		JSONObject date = new JSONObject();
+		try {
+			date.put("$date", ServiceUtil.toUTCFormat(addDays(days)));
+			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
+					.getAttributeName(), date);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return jo;
+	}
+	
 	public static JSONObject setExpiryTime(JSONObject jo, Integer days) {
 		JSONObject date = new JSONObject();
 		try {
