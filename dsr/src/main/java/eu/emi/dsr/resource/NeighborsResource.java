@@ -8,6 +8,8 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 
+import eu.emi.dsr.DSRServer;
+import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.p2p.NeighborsManager;
 
 /**
@@ -20,6 +22,10 @@ public class NeighborsResource {
 
 	@GET
 	public Response childDSRs(){
+		if ("false".equalsIgnoreCase(DSRServer.getProperty(
+							ServerConstants.REGISTRY_GLOBAL_ENABLE, "false").toString())){
+			return Response.noContent().entity("Not supported method by the federated DSR.").build();
+		}
 		List<String> resp;
 		resp = NeighborsManager.getInstance().getNeighbors();
 		JSONArray respArray = new JSONArray();
