@@ -50,7 +50,7 @@ public class NeighborsManager {
 	private Hashtable<String, String> hash;
 	private ServiceDatabase serviceDB = null;
 	private String myURL;
-	private String providerListURL;
+	private List<String> providerListURL;
 	private int sparsity;
 	private int retry;
 	private boolean dowloadedProviderList;
@@ -75,7 +75,7 @@ public class NeighborsManager {
 		 * retry
 		 * sparsity
 		 */
-		providerListURL = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST, "");
+		providerListURL = GetInfoProvidersFromConfiguration();
 
 		if (providerListURL.isEmpty()){
 			logger.warn("Configured providerlist value is empty. Please set it!");
@@ -522,31 +522,53 @@ public class NeighborsManager {
 	 * @param URL for the list of the InfoProvider
 	 * @return list of the InfoProviders
 	 */
-	private ArrayList<String> DownloadProviderList(String url) {
+	private ArrayList<String> DownloadProviderList(List<String> urls) {
 		ArrayList<String> providers = new ArrayList<String>();
-		// Download the list of the URLs
-		DSRClient c = new DSRClient(url);
-		try {
-			String content = c.getClientResource()
-					.accept(MediaType.TEXT_PLAIN)
-						.get(String.class);
-			// Replace the following characters (' ', '[', ']', '\n') 
-			// with empty character.
-			content = content.replaceAll(" |\\[|\\]|\n", "");
-			// Tokenize the input string and add into the list
-			StringTokenizer tokens = new StringTokenizer(content,",");
-		    while(tokens.hasMoreTokens()){
-				// Put the URL into the provider list
-		    	providers.add((String)tokens.nextElement());
-		    }
-		    dowloadedProviderList = true;
-		} catch (ClientHandlerException e) {
-			dowloadedProviderList = false;
-			if (logger.isDebugEnabled()) {
-				logger.debug("Unreachable provider list from " + url);
+		for (int i=0; i<urls.size(); i++){
+			// Download the list of the URLs
+			DSRClient c = new DSRClient(urls.get(i));
+			try {
+				String content = c.getClientResource()
+						.accept(MediaType.TEXT_PLAIN)
+							.get(String.class);
+				// Replace the following characters (' ', '[', ']', '\n') 
+				// with empty character.
+				content = content.replaceAll(" |\\[|\\]|\n", "");
+				// Tokenize the input string and add into the list
+				StringTokenizer tokens = new StringTokenizer(content,",");
+			    while(tokens.hasMoreTokens()){
+					// Put the URL into the provider list
+			    	providers.add((String)tokens.nextElement());
+			    }
+			    dowloadedProviderList = true;
+			    break;
+			} catch (ClientHandlerException e) {
+				dowloadedProviderList = false;
+				if (logger.isDebugEnabled()) {
+					logger.debug("Unreachable provider list from " + urls.get(i));
+				}
 			}
 		}
 		return providers;
 	}
 
+	/*
+	 * 
+	 * 
+	 */
+	private List<String> GetInfoProvidersFromConfiguration(){
+		List<String> listOfURLs = new ArrayList<String>();
+		
+		String configValue = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST, "");
+		// Replace the following characters (' ', '[', ']', '\n') 
+		// with empty character.
+		configValue = configValue.replaceAll(" |\\[|\\]|\n", "");
+		// Tokenize the input string and add into the list
+		StringTokenizer tokens = new StringTokenizer(configValue,",");
+	    while(tokens.hasMoreTokens()){
+			// Put the URL into the provider list
+	    	listOfURLs.add((String)tokens.nextElement());
+	    }
+		return listOfURLs;
+	}
 }
