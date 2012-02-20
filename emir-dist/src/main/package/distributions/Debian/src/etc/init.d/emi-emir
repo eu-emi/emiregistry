@@ -2,7 +2,7 @@
 #
 # UNICORE Registry
 ### BEGIN INIT INFO
-# Provides:          unicore-registry
+# Provides:          emi-registry
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -22,7 +22,7 @@ SERVICE=emi-emir
 EMIR_USER=emi
 START=/usr/sbin/emir-start.sh
 STOP=/usr/sbin/emir-stop.sh
-LASTPID=/var/run/emi/emir.pid
+LASTPID=/var/run/emi/emir/emir.pid
 
 start() {
         log_daemon_msg "Starting $NAME"
@@ -40,12 +40,11 @@ stop() {
          su $EMIR_USER -p "$STOP"
          log_end_msg $?
          rm -f "/var/lock/$SERVICE"
-         echo
 }
 
 status(){
          if [ -a "$LASTPID" ]; then
-                 status_of_proc -p "$LASTPID" "$SERVICE"
+                 status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
          else
                  log_failure_msg "$SERVICE is not running"
          fi
