@@ -9,8 +9,8 @@ emir-dist> mvn site package
 # To create the rpm distributions
 
 emir-dist> mvn site package -Ppackman 
-	-Dpackage.type=(rpm|deb|src.tar.gz|rpm.tar.gz|deb.tar.gz|all-rpm|all-deb)	default: rpm-all 
-	-Ddistribution=(Redhat|Debian) 												default: Redhat 
+	-Dpackage.type=(rpm|deb|src.tar.gz|rpm.tar.gz|deb.tar.gz|all-rpm|all-deb)	default: all-rpm 
+	-Ddistribution=(Redhat|Debian|SL5|SL6) 												default: Redhat 
 	-Dpackage.release=															default: from pom.xml
 	-Dpackage.version=															default: from pom.xml
 	-DindexJars=(true|false) 													default: false
