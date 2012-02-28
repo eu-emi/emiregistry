@@ -1,5 +1,5 @@
 #!/bin/sh
-# preinst script for unicore-gateway
+# preinst script for emi-registry
 #
 # see: dh_installdeb(1)
 
