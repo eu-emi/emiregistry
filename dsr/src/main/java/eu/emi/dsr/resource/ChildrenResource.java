@@ -1,5 +1,6 @@
 package eu.emi.dsr.resource;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -47,7 +48,12 @@ public class ChildrenResource {
 	public Response childDSRs(){
 		System.out.println("checkout !!");
 		List<String> resp;
-		resp = ChildrenManager.getInstance().getChildDSRs();
+		try {
+			resp = ChildrenManager.getInstance().getChildDSRs();
+		} catch (ConcurrentModificationException e) {
+			// try again
+			resp = ChildrenManager.getInstance().getChildDSRs();
+		}
 		JSONArray respArray = new JSONArray();
 		for (int i=0; i< resp.size(); i++){
 			System.out.println(i +". value: " + resp.get(i));
