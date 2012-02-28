@@ -23,6 +23,9 @@ of the various infrastructures and have been implemented in the registry.
 This package contains the EMIR server.
 
 %changelog
+* Wed Feb 29 2012 Gabor Szigeti <szigeti@niif.hu>
+- Fixing mongodb dependency, resource bugs
+
 * Wed Nov 30 2011 Ivan Marton <martoni@niif.hu>
 - Fixing paths, init scripts, related directories
 - creating proper user and group
