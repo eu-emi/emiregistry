@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# UNICORE Registry
+# EMI Registry
 ### BEGIN INIT INFO
 # Provides:          emi-registry
 # Required-Start:    $remote_fs $syslog
