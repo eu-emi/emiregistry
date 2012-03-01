@@ -27,6 +27,9 @@ This package contains the EMIR Client Daemon.
 
 
 %changelog
+* Thu Mar 1 2012 Ivan Marton <martoni@niif.hu>
+- Fixing rights on the library directory. The previous verision of the rpm package was buggy.
+
 * Thu Dec 8 2011 Ivan Marton <martoni@niif.hu>
 - Adapting the spec file to ETICS building system and eliminating git dependency
 
@@ -65,7 +68,7 @@ install -m 0755 $EMIRD_SOURCE/packaging/RedHat/emird %{buildroot}/etc/init.d/
 #
 # Lib files
 #
-%attr(644 root root) %dir "%{_libdir}/emi/emird"
+%attr(755 root root) %dir "%{_libdir}/emi/emird"
 %attr(644 root root) "%{_libdir}/emi/emird/*.py"
 #
 # Documentation
