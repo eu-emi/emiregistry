@@ -28,7 +28,7 @@ This package contains the EMIR Client Daemon.
 
 %changelog
 * Thu Mar 1 2012 Ivan Marton <martoni@niif.hu>
-- Fixing rights on the library directory. The previous verision of the rpm package was buggy.
+- Fixing rights on the library directory. The previous version of the rpm package was buggy.
 
 * Thu Dec 8 2011 Ivan Marton <martoni@niif.hu>
 - Adapting the spec file to ETICS building system and eliminating git dependency
