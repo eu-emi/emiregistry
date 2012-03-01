@@ -42,11 +42,8 @@ class emird(Daemon):
     # Check whether the EMIR is URL is valid and the service is available
     try:
       self.logger.debug("EMIR service on url '%s://%s:%s' is running since %s" % (self.config.protocol, self.config.host, self.config.port, self.client.ping()))
-    except IOError, err:
-      self.logger.error("EMIR service on url '%s://%s:%s' is not available" % (self.config.protocol, self.config.host, self.config.port))
-      exit(1)
-    except Exception, ex:
-      self.logger.error(ex)
+    except:
+      self.logger.error("Connection failed to %s://%s:%s" % (self.config.protocol, self.config.host, self.config.port))
       exit(1)
 
     # Call parent's constructor to daemonize the process
@@ -84,7 +81,7 @@ class emird(Daemon):
       self.logger.debug('Deleting reqistered entries')
       self.client.delete()
     except Exception, ex:
-      self.logger.error(ex)
+      self.logger.error('Error during deletion: %s' % ex)
       exit(1)
     # Call parents stop() function to stop the daemon itself
 
