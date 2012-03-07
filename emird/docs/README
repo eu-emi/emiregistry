@@ -207,3 +207,26 @@ The location of this file must be defined in this ini variable. The
 recommended place for these files is under the +/etc/emi/emird/+
 directory and naming them after the name of the given service with
 +.json+ extension.
+
+Note 1: The files are reread in every period so the changes made on the file
+will affect the composed registration messages.
+
+Note 2: If multiple service entries belong to a given service, they
+can b defined in the same file in a json array format. These entries are
+going to be handled separately.
+
+json_dir_location
+++++++++++++++++++
+Location: multiple service entry section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The service entry can be also defined in multiple external json formatted
+files per service. Any allowed json attributes are allowed in these files.
+The files must be put under a directory defined in this ini variable. The
+recommended place for these directories is under the +/etc/emi/emird/+
+directory. The directory is rescanned in every period and the file that
+can be found (directly) on this location will reparsed, so the changes
+made or new file created will appear in the next registration.
+
