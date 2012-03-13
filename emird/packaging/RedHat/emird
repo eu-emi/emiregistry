@@ -13,34 +13,43 @@ DAEMON=/usr/bin/emird
 EMIRD_USER=emi
 LASTPID=/var/run/emi/emird/emird.pid
 
+function start {
+  if [ -f $LASTPID ]; then
+    status -p "$LASTPID" "$SERVICE"
+    RETVAL=$?
+  else
+    runuser -s /bin/bash -c "$DAEMON" "$EMIRD_USER"
+    RETVAL=$?
+    echo -n "$NAME startup"
+    [ "$RETVAL" -eq 0 ] && success || failure 
+    echo
+  fi
+}
+
+function stop {
+  kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
+  RETVAL=$?
+  echo -n "$NAME shutdown"
+  if [ "$RETVAL" -eq 0 ]; then
+    until [ ! -f $LASTPID ]; do
+      sleep 2
+    done
+    success 
+  else
+    failure
+  fi
+  echo
+}
+
+
 # See how we were called.
 RETVAL=0
 case "$1" in
   start)
-        if [ -f $LASTPID ]; then
-          status -p "$LASTPID" "$SERVICE"
-          RETVAL=$?
-        else
-          runuser -s /bin/bash -c "$DAEMON" "$EMIRD_USER"
-          RETVAL=$?
-          echo -n "$NAME startup"
-          [ "$RETVAL" -eq 0 ] && success || failure 
-          echo
-        fi
+        start
         ;;
   stop)
-        kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
-        RETVAL=$?
-        echo -n "$NAME shutdown"
-        if [ "$RETVAL" -eq 0 ]; then
-          until [ ! -f $LASTPID ]; do
-            sleep 2
-          done
-          success 
-        else
-          failure
-        fi
-        echo
+        stop
         ;;
   status)
         status -p "$LASTPID" "$SERVICE"

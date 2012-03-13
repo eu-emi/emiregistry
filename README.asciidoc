@@ -128,3 +128,18 @@ The authorization model is being carried out using the PUSH model, where the att
 * Powerful database back-end on http://www.mongodb.org[MongDB]
 * http://maven.apache.org/[Maven 2] for project management
 * Documentation using maven site plug-in with asciidoc markdown
+
+=== Changes
+
+==== Version 1.1.0
+
+* P2P:  support for the global replication
+* P2P:  robust handling of the global list
+* Improved RPM and Debian distributions
+* Fix: status script
+* add separate packaging bundles for SL5 and SL6  
+
+
+==== Version 1.0.0
+
+Implemented most of the basic functionality described in the EMI Registry design document

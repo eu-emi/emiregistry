@@ -44,7 +44,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private DB database;
 	private DBCollection serviceCollection;
 
-	public MongoDBServiceDatabase(){
+	public MongoDBServiceDatabase() {
 		if (DSRServer.getConfiguration() == null) {
 			new DSRServer(new Configuration(new Properties()));
 		}
@@ -60,7 +60,16 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			// connection = MongoConnection.get(hostname,
 			// Integer.valueOf(port));
 			if (connection == null) {
-				connection = new Mongo(hostname, Integer.valueOf(port));
+
+				MongoOptions mo = new MongoOptions();
+				mo.autoConnectRetry = true;
+				mo.connectTimeout = 100;
+				mo.maxWaitTime = 100;
+				mo.socketKeepAlive = true;
+				mo.connectionsPerHost = 255;
+				ServerAddress sa = new ServerAddress(hostname,
+						Integer.valueOf(port));
+				connection = new Mongo(sa, mo);
 			}
 			database = connection.getDB(dbName);
 			serviceCollection = database.getCollection(colName);
@@ -236,8 +245,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		// sending update event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
-			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE,
-					deletedEntry));
+			EventDispatcher.notifyRecievers(new Event(
+					EventTypes.SERVICE_DELETE, deletedEntry));
 
 		} catch (JSONException e) {
 			logger.warn(e.getCause());
@@ -520,7 +529,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 * @see eu.emi.dsr.db.ServiceDatabase#findAndDelete(java.lang.String)
 	 */
 	@Override
-	public void findAndDelete(String query){
+	public void findAndDelete(String query) {
 		DBObject db = (DBObject) JSON.parse(query);
 		if (logger.isTraceEnabled()) {
 			logger.debug("delete by query: " + db.toString());
@@ -528,7 +537,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.requestStart();
 		serviceCollection.remove(db);
 		database.requestDone();
-		
+
 	}
 
 	public void dropCollection() {
