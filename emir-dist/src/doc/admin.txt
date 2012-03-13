@@ -29,9 +29,11 @@ The server configuration options are:
 |registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
 4+^e|EMIR Topology Settings
 |registry.global.enable|boolean|true or false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the 'registry.parent.url' property. This implies the current instance will not have parent.
+|registry.global.providerlist|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
 |registry.global.sparsity|Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
 |registry.global.retry|Integer|5|It specifies a number of attempts if communication to another GSR is failed.
 |registry.global.etvalid|Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).
+|registry.global.softstate.delay|Integer|2|Extend the expiration time with this time delay in hours.
 |registry.global.etremove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
 |registry.parent.url|URI|-|The URI of the parent registry node where the state of this suppose to be aggregated.
 4+^e|Service record management
