@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 1.9.1 09/14/2011 02:05 PM"/>
+    <grammars/>
+    <resources base="https://localhost:54321/">
+        <resource path="/children">
+            <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <method id="checkin" name="POST">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/neighbors">
+            <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/parent">
+            <method id="childDSRs" name="GET">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/serviceadmin">
+            <method id="getServicebyUrl" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="registerServices" name="POST">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="updateServices" name="PUT">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="deleteService" name="DELETE">
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/services">
+            <method id="queryWithParams" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="queryWithJSON" name="POST">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="queryXMLWithJSON" name="POST">
+                <request>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <method id="queryXMLWithParams" name="GET">
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="text/xml"/>
+                </response>
+            </method>
+            <resource path="/urls">
+                <method id="getServiceEndPoints" name="GET">
+                    <response>
+                        <representation mediaType="application/json"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="/types">
+                <method id="getServiceTypes" name="GET">
+                    <response>
+                        <representation mediaType="application/json"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="/query.xml">
+                <method id="queryXml" name="GET">
+                    <response>
+                        <representation mediaType="application/xml"/>
+                        <representation mediaType="text/xml"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="/pagedquery">
+                <method id="pagedQuery" name="GET">
+                    <response>
+                        <representation mediaType="*/*"/>
+                    </response>
+                </method>
+            </resource>
+        </resource>
+        <resource path="/model">
+            <method id="getModel" name="GET">
+                <response>
+                    <representation mediaType="text/html"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/ping">
+            <method id="ping" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                    <representation mediaType="text/plain"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>

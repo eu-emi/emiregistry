@@ -1,0 +1,1780 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.6" />
+<title>EMI Registry Manual</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #dddddd;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.fixReferences();asciidoc.footnotes(); asciidoc.toc(2);}
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+fixReferences: function () {
+
+  // own implementation of this since it is not supported by all browsers (IE - as usual :)
+  function getElementsByClassName(element, class_name)
+  {
+    var all_obj,ret_obj=new Array(),k=0,teststr;
+
+    if(element.all)all_obj=element.all;
+    else if(element.getElementsByTagName && !element.all)
+      all_obj=element.getElementsByTagName("*");
+    for(var j=0;j<all_obj.length;j++)
+    {
+      if(all_obj[j].className.indexOf(class_name)!=-1)
+      {
+        teststr=","+all_obj[j].className.split(" ").join(",")+",";
+        if(teststr.indexOf(","+class_name+",")!=-1)
+        {
+          ret_obj[k]=all_obj[j];
+          k++;
+        }
+      }
+    }
+    return ret_obj;
+  }
+
+
+  function storeSectionNum(refNames,element) {
+    if(element != null)
+    {
+        var id = element.getAttribute("id");
+        if(element.innerHTML.match("^[0-9.]+ .*"))
+        {
+           var parts = element.innerHTML.split(" ");
+           var refName = parts[0];
+           if(refName.match("\\.$")==".")
+           {
+             refName = refName.substr(0,refName.length-1);
+           }
+           refNames[id] = "Section "+refName;
+        }
+    }
+  }
+
+  function storeImageNum(refNames,imageblock) {
+    var id = imageblock.getAttribute("id");
+    var element = getElementsByClassName(imageblock,"image-title")[0];
+    var match;
+    if(element != null)
+    {
+        if(match = element.innerHTML.match("^\\w+\\s+([0-9.]+).*"))
+        {
+           var refName = match[1];
+           refNames[id] = "Figure "+refName;
+        }
+    }
+  }
+
+  var refNames = new Array();
+  var elements = document.getElementsByTagName("h2");
+  for (var i = 0; i < elements.length; ++i) {
+    storeSectionNum(refNames,elements[i]);
+  }
+
+  elements = document.getElementsByTagName("h3");
+  for (var i = 0; i < elements.length; ++i) {
+    storeSectionNum(refNames,elements[i]);
+  }
+
+  elements = document.getElementsByTagName("h4");
+  for (var i = 0; i < elements.length; ++i) {
+    storeSectionNum(refNames,elements[i]);
+  }
+
+  elements = getElementsByClassName(document,"imageblock");
+  for (var i = 0; i < elements.length; ++i) {
+    storeImageNum(refNames,elements[i]);
+  }
+
+  for (var i = 0; i < document.links.length; ++i)
+  {
+    var link = document.links[i];
+    var refName = refNames[link.href.split("#")[1]];
+    if(refName != null)
+    {
+      link.innerHTML=refName;
+    }
+  }
+},
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  var cont = document.getElementById("content");
+  var noteholder = document.getElementById("footnotes");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      // Use [\s\S] in place of . so multi-line matches work.
+      // Because JavaScript has no s (dotall) regex flag.
+      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      spans[i].innerHTML =
+        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+        "' title='View footnote' class='footnote'>" + n + "</a>]";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+}
+
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="header">
+<h1>EMI Registry Manual</h1>
+<span id="author">EMIR Team</span><br />
+<span id="email"><tt>&lt;<a href="mailto:info@example.org">info@example.org</a>&gt;</tt></span><br />
+<span id="revnumber">version 1.0.2,</span>
+<span id="revdate">19 03 2012</span>
+<br /><span id="revremark">component version: 1.1.0</span>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_overview">1. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The EMI Registry is a federated service registry based on REST-ful interfaces. The major functionalities of the registry includes</p></div>
+</div>
+<h2 id="_features">2. Features</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The registry provides following features:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+the service registration includes the management of the services' information.
+</p>
+</li>
+<li>
+<p>
+Powerful data back-end based on MongoDB
+</p>
+</li>
+<li>
+<p>
+Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
+</p>
+</li>
+<li>
+<p>
+REST-ful API to browse the service registrations
+</p>
+</li>
+<li>
+<p>
+Security
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+PKI governed authentication
+</p>
+</li>
+<li>
+<p>
+Distinguished Name based authorization using XACML driven PDP
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>For more information about EMI visit <a href="http://www.eu-emi.eu">http://www.eu-emi.eu</a>.</p></div>
+</div>
+<h2 id="_introduction">3. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The EMI Registry (EMIR) enables Grid services to be discovered in a DCI or a sub-domain of that DCI.
+It does not provide a full description of that service, only the minimal
+set of information that is required to find more details about that service.
+In this sense it acts as a bootstrapping mechanism for the DCI. The EMIR has
+considered the concept of DCI management, for example, only services or sub-domains
+that are part of the DCI would be discovered. This implies that the EMIR enables
+implementation of the DCI&#8217;s management policies. As DCIs are distributed and based on
+federated sub-domains, the EMI Registry must also reflect such a model.</p></div>
+</div>
+<h2 id="_rest_api">4. REST API</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The EMI Registry allows Services to register/publish their capabilities
+while the Service Consumers are able to find the deployed services.</p></div>
+<div class="paragraph"><p>This section contains the description of the REST-ful interface, that allows the
+management of the service information (or entries) by exposing the individual
+URIs. The normative description of the API cab also be defined as Web Application Description Language (WADL) document <a href="#appendixii">WADL</a>.</p></div>
+<h3 id="_register_new_services">4.1. Register new Services</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : POST</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
+<div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
+<div class="paragraph"><p><tt>Security Implications</tt> : Requires authenticated "and" authorized user access to perform this operation</p></div>
+<h5 id="_request">Request</h5>
+<div class="paragraph"><p>The message body contain a JSON Array containing the JSON objects (see below), each of which
+would be a service entry in the EMI registry.</p></div>
+<div class="paragraph"><p>Service description is defined as a <a href="#appendixi">[appendixi]</a> document.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">The only mandatory attribute is <strong>Service_Endpoint_URL</strong>, which should be unique</td>
+</tr></table>
+</div>
+<h5 id="_response">Response</h5>
+<div class="paragraph"><p>The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.</p></div>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_updating_the_service_information">4.2. Updating the Service information</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : PUT</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
+<div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
+<div class="paragraph"><p><tt>Security Implications</tt> : Requires an authenticated "and" authorized user access to perform this operation</p></div>
+<h5 id="_request_2">Request</h5>
+<div class="paragraph"><p>The request body contain a similar JSON array object as defined POST method that contains the
+description of the Services to be updated. The Service Entries
+identified by the <em>Service_Endpoint_URL</em> key in the individual JSON
+objects will be updated respectively.</p></div>
+<h5 id="_response_2">Response</h5>
+<div class="paragraph"><p>The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.</p></div>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_delete_existing_services">4.3. Delete existing Services</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : DELETE</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
+<div class="paragraph"><p><tt>Security Implications</tt> : Requires an authenticated "and" authorized user access to perform this operation</p></div>
+<h5 id="_request_3">Request</h5>
+<div class="paragraph"><p>The Service Entry matching the Endpoint URL will be deleted from the
+database only if the client executing the action has authorized access and the
+method is allowed by the security plugins.</p></div>
+<div class="paragraph"><p><tt>Query Parameters</tt> : Service_Endpoint_URL= <em>&lt;service unique URL&gt;</em></p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p><strong>Example</strong> : /serviceadmin?Service_Endpoint_URL=http://1</p></div>
+</div></div>
+<h5 id="_response_3">Response</h5>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_querying_the_emir">4.4. Querying the EMIR</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /services</p></div>
+<div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
+<h5 id="_request_4">Request</h5>
+<div class="paragraph"><p>The request contains the key-value pairs separated by ampersand <tt>&amp;</tt></p></div>
+<div class="paragraph"><p><tt>Query Parameters</tt> : AttributeName=&lt;Attribute_Value&gt;&amp;AttributeName=&lt;Attribute_Value&gt;&amp;&#8230;</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p><strong>Example</strong> : /services/query?Service_Type=eu.emi.es&amp;Service_Endpoint_HealthState=ok</p></div>
+</div></div>
+<div class="paragraph"><p>The additional parameters can also be added to restrict and/or paginate the result</p></div>
+<div class="paragraph"><p><tt>Additional Query Parameters</tt> :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>skip=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>skip</em> returns the result skipping the given number of entries</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>limit=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>limit</em> defines the maximum number of result containing the service entries</p></div>
+<div class="paragraph"><p>Response+Additional Query Parameters+ :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>skip=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>skip</em> returns the result skipping the given number of entries</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>limit=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>limit</em> defines the maximum number of result containing the service entries</p></div>
+The response contains an array of service entries packed in a JSON array object
+
++Status Code+ : OK / 200
+
+Rich Querying in EMIR
+~~~~~~~~~~~~~~~~~~~~~~
+
++HTTP Method+ : GET
+
++URI+ : /services
+
++Content Type+ : application/json
+
+Request
+<div class="paragraph"><p>The request contains the JSON document including with support for defining advanced clauses, the
+<a href="http://www.mongodb.org/display/DOCS/Advanced+Queries">http://www.mongodb.org/display/DOCS/Advanced+Queries</a>, MongoDB Advanced Queries[MongoDB JSON Query Language] describes the various types of queries</p></div>
+<div class="paragraph"><p>Additional keys (skip, limit) can also be added to paginate the returning results.</p></div>
+<h5 id="_response_4">Response</h5>
+<div class="paragraph"><p>The response contains the array of service entries packed in a JSON array object</p></div>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_querying_the_emir_for_glue_2_0_xml_documents">4.5. Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /services</p></div>
+<div class="paragraph"><p><tt>Content Type</tt> : application/xml</p></div>
+<h5 id="_request_5">Request</h5>
+<div class="paragraph"><p>The request contains the key-value pairs separated by ampersand <tt>&amp;</tt></p></div>
+<div class="paragraph"><p><tt>Query Parameters</tt> : AttributeName=&lt;Attribute_Value&gt;&amp;AttributeName=&lt;Attribute_Value&gt;&amp;&#8230;</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p><strong>Example</strong> : /services/query?Service_Type=eu.emi.es&amp;Service_Endpoint_HealthState=ok</p></div>
+</div></div>
+<div class="paragraph"><p>The additional parameters can also be added to restrict and/or paginate the result</p></div>
+<div class="paragraph"><p><tt>Additional Query Parameters</tt> :</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>skip=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>skip</em> returns the result skipping the given number of entries</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>limit=Integer value</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>limit</em> defines the maximum number of result containing the service entries</p></div>
+<h5 id="_response_5">Response</h5>
+<div class="paragraph"><p>The response contains an XML document containing service entries in GLUE 2.0 format</p></div>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_rich_querying_the_emir_for_glue_2_0_xml_documents">4.6. Rich Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The request and response interface is same as defined above, however the content type must be
+defined as <strong>application/xml</strong> instead.</p></div>
+<h3 id="_viewing_the_service_information_template">4.7. Viewing the Service information template</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This To view the GLUE 2.0&#8217;s JSON flavored service model.</p></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /model</p></div>
+<div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
+<h5 id="_request_6">Request</h5>
+<div class="paragraph"><p>N/A</p></div>
+<h5 id="_response_6">Response</h5>
+<div class="paragraph"><p>JSON document, as described in the <tt>/serviceadmin</tt> POST method</p></div>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+<h3 id="_monitoring_the_registry">4.8. Monitoring the Registry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Allows registry users to view the registry status</p></div>
+<div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
+<div class="paragraph"><p><tt>URI</tt> : /ping</p></div>
+<h5 id="_request_7">Request</h5>
+<div class="paragraph"><p>N/A</p></div>
+<h5 id="_response_7">Response</h5>
+<div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
+</div>
+<h2 id="_installation">5. Installation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In order to install EMIR, it is required to install
+the SUN or OpenJDK Java 6 (JRE or SDK). If not installed
+on your system, you can download it from <a href="http://java.oracle.com">http://java.oracle.com</a></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Linux based operating system
+</p>
+</li>
+<li>
+<p>
+MongoDB[www.mongodb.org]
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>EMIR is distributed in the following formats:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Platform independent format, provided in "tar.gz" format
+</p>
+</li>
+<li>
+<p>
+RPM package, suitable SL5/SL6 and other Fedora based Linux derivatives (RedHat, CentOS etc&#8230;)
+</p>
+</li>
+<li>
+<p>
+Debian package
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="title">IMPORTANT NOTE ON PATHS</div>
+<div class="paragraph"><p>The location of the installation and configuration files differ
+depending on type of bundle (see the above section).</p></div>
+<div class="paragraph"><p>If RPM bundle is chosen, the following paths will be used:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>CONF=/etc/emi/emir
+BIN=/usr/sbin
+LOG=/var/log/emi/emir</tt></pre>
+</div></div>
+<div class="paragraph"><p>The platform independent binary bundles all the files under
+single directory. Thus if extracted:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>CONF=INST/conf
+BIN=INST/bin
+LOG=INST/logs</tt></pre>
+</div></div>
+<div class="paragraph"><p>The above variables (CONF, BIN and LOG) will be used throughout the rest of this manual.</p></div>
+</td>
+</tr></table>
+</div>
+<h3 id="_installation_from_the_self_contained_archive_tar_gz">5.1. Installation from the self-contained archive (tar.gz)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Download the tar.gz archive from the EMIR website. The archive contains all the necessary
+files which are bundled already, therefore no special actions will be required except the
+exraction to final folder.</p></div>
+<h3 id="_installation_using_the_rpm_bundle_redhat_distributions">5.2. Installation using the RPM bundle (RedHat Distributions)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Download the RPM distribution from the EMI&#8217;s <a href="http://emisoft.web.cern.ch/emisoft/">emisoft</a> and install it
+using the rpm or yum command.</p></div>
+<h3 id="_database_installation">5.3. Database Installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>EMIR uses MongoDB to store the service records, therefore it is highly recommended to install
+and configure the database before starting the emir server. The installation and configuration
+instructions to setup the MongoDB database can be found
+on their Website[<a href="http://www.mongodb.org/display/DOCS/Quickstart">http://www.mongodb.org/display/DOCS/Quickstart</a>].</p></div>
+</div>
+<h2 id="_configuration">6. Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The EMIR server comes with a configuration file, a well documented file containing a
+number of options (security, database, multi-node setup etc&#8230;). The options are well
+defined and can be sufficient to setup and start-up the server in non-production
+environment, however the administrator needs to review before deploying on the
+production environment (DCI).</p></div>
+<h3 id="_server_configuration">6.1. Server Configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The server configuration options are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Server host, port and scheme (plain or SSL)
+</p>
+</li>
+<li>
+<p>
+Settings of the type of the registry node, i.e. whether the current registry instance
+           is a child of some other (a parent) regitsry node or a global registry.
+</p>
+</li>
+</ul></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="4" align="center" valign="top"><p class="table"><em>Server general settings</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.scheme</tt></p></td>
+<td align="left" valign="top"><p class="table">http or https</p></td>
+<td align="left" valign="top"><p class="table"><tt>https</tt></p></td>
+<td align="left" valign="top"><p class="table">The selected scheme which will be used.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.hostname</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>localhost</tt></p></td>
+<td align="left" valign="top"><p class="table">The host name of the machine on which the registry is running.</p></td>
+</tr>
+<tr>
+<td colspan="4" align="center" valign="top"><p class="table"><em>Service Record Filter Settings</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.input</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/inputfilters</tt></p></td>
+<td align="left" valign="top"><p class="table">This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.output</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/outputfilters</tt></p></td>
+<td align="left" valign="top"><p class="table">Restrict the amount of service records sent to the parent registry node would be defined in the output filters file</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.request</tt></p></td>
+<td align="left" valign="top"><p class="table">Fully qualified java class names separated by a space</p></td>
+<td align="left" valign="top"><p class="table"><tt>none</tt></p></td>
+<td align="left" valign="top"><p class="table">Invoke the class&#8217;s <tt>run()</tt> method while receiving the request.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.filters.response</tt></p></td>
+<td align="left" valign="top"><p class="table">Fully qualified java class names separated by a space</p></td>
+<td align="left" valign="top"><p class="table"><tt>none</tt></p></td>
+<td align="left" valign="top"><p class="table">Invoke the class&#8217;s <tt>run()</tt> method while sending the response.</p></td>
+</tr>
+<tr>
+<td colspan="4" align="center" valign="top"><p class="table"><em>EMIR Topology Settings</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.enable</tt></p></td>
+<td align="left" valign="top"><p class="table">boolean</p></td>
+<td align="left" valign="top"><p class="table"><tt>true or false</tt></p></td>
+<td align="left" valign="top"><p class="table">If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the <em>registry.parent.url</em> property. This implies the current instance will not have parent.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.providerlist</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
+<td align="left" valign="top"><p class="table">List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.sparsity</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>2</tt></p></td>
+<td align="left" valign="top"><p class="table">It determines the number of neighbors as a function of the actual number of member nodes of the network.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.retry</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>5</tt></p></td>
+<td align="left" valign="top"><p class="table">It specifies a number of attempts if communication to another GSR is failed.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.etvalid</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>12</tt></p></td>
+<td align="left" valign="top"><p class="table">Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.softstate.delay</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>2</tt></p></td>
+<td align="left" valign="top"><p class="table">Extend the expiration time with this time delay in hours.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.global.etremove</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>24</tt></p></td>
+<td align="left" valign="top"><p class="table">Specifies period in hours for checking the entries in the soft state database and remove the expired entries.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.parent.url</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
+<td align="left" valign="top"><p class="table">The URI of the parent registry node where the state of this suppose to be aggregated.</p></td>
+</tr>
+<tr>
+<td colspan="4" align="center" valign="top"><p class="table"><em>Service record management</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.expiry.url</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer (in days)</p></td>
+<td align="left" valign="top"><p class="table"><tt>365</tt></p></td>
+<td align="left" valign="top"><p class="table">Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.expiry.default</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>1</tt></p></td>
+<td align="left" valign="top"><p class="table">The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_mongodb_configuration">6.2. MongoDB Configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The registry uses MongoDB to store and index the service records. Thus it is
+necessary to setup the Database before starting the EMIR.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>mongodb.hostname</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>localhost</tt></p></td>
+<td align="left" valign="top"><p class="table">Fully qualified host name of the machine on which MongoDB is setup</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>mongodb.port</tt></p></td>
+<td align="left" valign="top"><p class="table">Integer</p></td>
+<td align="left" valign="top"><p class="table"><tt>27017</tt></p></td>
+<td align="left" valign="top"><p class="table">The port number</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>mongodb.dbname</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>emiregistry</tt></p></td>
+<td align="left" valign="top"><p class="table">The name of the database to store the entries</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>mongodb.colname</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>services</tt></p></td>
+<td align="left" valign="top"><p class="table">The name of the collection in which the records will be stored</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_logging_configuration">6.3. Logging Configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The EMIR server provides log facilities to record all but some of the server activities. In order to
+change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>logger.conf.path</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/log4j.properties</tt></p></td>
+<td align="left" valign="top"><p class="table">The log4j configuration</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_authentication_with_x_509">6.4. Authentication with X.509</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The authentication of the client in EMIR is based on PKI, thus using X.509 standard is used to
+authenticate the client as well as the server. However this implies the EMIR client and the server
+should own a X.509 certificate issued by a mutually trusted certificate authority (CA).</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.keystore</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/certs/demo-server.p12</tt></p></td>
+<td align="left" valign="top"><p class="table">The location of the server key-store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.keytype</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>pkcs12</tt></p></td>
+<td align="left" valign="top"><p class="table">The type of the key-store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.keypass</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>emi</tt></p></td>
+<td align="left" valign="top"><p class="table">The password of the key-store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.truststore</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/certs/demo-server.jks</tt></p></td>
+<td align="left" valign="top"><p class="table">The location of the server key store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.truststorepass</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>emi</tt></p></td>
+<td align="left" valign="top"><p class="table">The password of the trust-store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.truststoretype</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>JKS</tt></p></td>
+<td align="left" valign="top"><p class="table">The type of the trust-store</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.ssl.clientauthentication</tt></p></td>
+<td align="left" valign="top"><p class="table">true or false</p></td>
+<td align="left" valign="top"><p class="table"><tt>true</tt></p></td>
+<td align="left" valign="top"><p class="table">If set the server will attempt to authenticate the client</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_authorization">6.5. Authorization</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The EMIR offers two mutually exclusive options to authorize its clients.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Using Access Control List (ACL)
+</p>
+</li>
+<li>
+<p>
+XACML based authorization
+</p>
+</li>
+</ul></div>
+<h3 id="_acl_based_authorization">6.6. ACL Based Authorization</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is the standard mechanism in EMIR to authorize the clients. The incoming requests' subject is matched against the
+pre-defined ACL file (CONF/emir.acl). The ACL file has a list of DN/role pairs separated by <strong>::</strong>, see the example below</p></div>
+<div class="listingblock">
+<div class="title">emir.acl</div>
+<div class="content">
+<pre><tt>emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
+emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin</tt></pre>
+</div></div>
+<div class="paragraph"><p>the property in the <tt>CONF/dsr.config</tt> file</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.acl.file</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/emir.acl</tt></p></td>
+<td align="left" valign="top"><p class="table">The location of the acl file</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>There are only two pre-defined roles in EMIR that can be selected: the <em>administrator</em> who can
+change any registration, while the <em>serviceowner</em> is only allowed to change (modify/delete) her
+already created registrations.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">The server should be running on SSL mode to anable the authorization</td>
+</tr></table>
+</div>
+<h3 id="_fine_grained_authorization_with_xacml">6.7. Fine Grained Authorization with XACML</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Using XACML 2.0 is an alternative way to authorize the subjects in a fine grained manner. The administrator should
+review the policies defined in the <tt>CONF/xacml2Policies/</tt> folder and change them according to the infrastructure
+needs. However the already defined policies provides a good starting point to the administrators to define/modify the
+policies. In order to enable the given authorization following property must be set</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Settings of the Attribute Sources</caption>
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.attributes.order</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>FILE</tt></p></td>
+<td align="left" valign="top"><p class="table">This property is a space separated list of attribute source names, which are then configured in detail below. The named attribute sources are queried in the given order.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.attributes.FILE.class</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>eu.unicore.uas.security.file.FileAttributeSource</tt></p></td>
+<td align="left" valign="top"><p class="table">configuration of the <em>FILE</em> attribute source</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.attributes.FILE.file</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/users/testUd.strict.xml</tt></p></td>
+<td align="left" valign="top"><p class="table">The path to the file containing subjects' DNs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 2. Access Control Settings</caption>
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol</tt></p></td>
+<td align="left" valign="top"><p class="table">true or false</p></td>
+<td align="left" valign="top"><p class="table"><tt>true</tt></p></td>
+<td align="left" valign="top"><p class="table">Enable/disable authorisation. Server should running on https with valid client and server certificates, see <em>Authentication</em> properties above.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol.pdp.config</tt></p></td>
+<td align="left" valign="top"><p class="table">URI</p></td>
+<td align="left" valign="top"><p class="table"><tt>CONF/xacml2.config</tt></p></td>
+<td align="left" valign="top"><p class="table">The path to XACML2 configuration, containing the rules of executing the policies</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>registry.security.accesscontrol.pdp</tt></p></td>
+<td align="left" valign="top"><p class="table">string</p></td>
+<td align="left" valign="top"><p class="table"><tt>eu.unicore.uas.pdp.local.LocalHerasafPDP</tt></p></td>
+<td align="left" valign="top"><p class="table">The name of the pdp class to endorse, for the xacml2 policies execution</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="_emir_client_daemon_emird">7. EMIR Client Daemon (EMIRD)</h2>
+<div class="sectionbody">
+<h3 id="_about_the_emird">7.1. About the EMIRD</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The UMD services need to be registered into the EMI Registry service
+infrastructure to be discoverable for the clients. Most of the services
+or even the containers executing them provide a way to do this but not
+all of them. For those that are unable to register themselves
+automatically and periodically the EMIRD is available.</p></div>
+<div class="paragraph"><p>The EMIRD is a daemon like service that can be executed next to these
+services (preferably on the same machine) and able to perform the
+automatical and periodical registration and update against the
+configured EMI Registry service instead of the service itself. This
+client uses exactly the same, standard RESTful API as the other clients
+do.</p></div>
+<div class="paragraph"><p>Most of the parameters of these registrations and updates can be
+configured. For the details see the <a href="#anchor-emird-config">Configuration section</a>!</p></div>
+<div class="paragraph"><p>After the successful registration until the termination of the daemon,
+the EMIRD client do the periodical updates then finally, when the execution of
+the daemon is over, it attempts to delete the service entries from the
+remote database.</p></div>
+<div class="paragraph"><p>The service entries can be simple or advanced ones.</p></div>
+<div class="paragraph"><p>The simple service entries contain only the mandatory and easily configurable
+attributes that are the following: Service_Name, Service_Type,
+Service_Endpoint_URL, Service_Endpoint_InterfaceName. Here, the single
+mandatory element is the Service_Endpoint_URL.</p></div>
+<div class="paragraph"><p>The advanced entries can contains any kind of key value pairs that are
+accepted by the EMI Regisrty services and can be configured in the form
+of whole, formatted <strong>json</strong> documents.</p></div>
+<h3 id="_installation_2">7.2. Installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p><a id="anchor-emird-installation"></a></p></div>
+<div class="paragraph"><p>The installation of the EMIRD client is trivial. The only thing to do is
+to install the <tt>emir-daemon</tt> package from the EMI repository by
+executing:</p></div>
+<div class="paragraph"><p><tt>yum instlal emir-daemon</tt></p></div>
+<h3 id="_configuration_2">7.3. Configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p><a id="anchor-emird-config"></a></p></div>
+<div class="paragraph"><p>The configuration of EMIRD can be performed by editing its configuration
+file or files. The configuration can be found basically in one file
+that default location is <tt>/etc/emi/emird/emird.ini</tt>.</p></div>
+<div class="paragraph"><p>This file contains every configuration options that can be the EMIRD daemon
+control by, like <em>service url</em>, <em>logging verbosity</em>, <em>credential
+location</em>, etc.</p></div>
+<div class="paragraph"><p>The advanced service entries to be propagated can be described in
+separated configuration files preferably also under this directory and
+use to have <tt>.json</tt> extension.</p></div>
+<div class="paragraph"><p>The main configuration file has INI format. The <tt>emir</tt> section contains
+the daemon scoped options while the others are to describe the different
+service entries to be registered. In these cases the exact name is
+indifferent, they just have to differ from eachother and must avoid the
+<tt>emir</tt> name as well.</p></div>
+<h4 id="_configuration_options">7.3.1. Configuration options</h4>
+<div class="paragraph"><p>Note: The option names are case-insensitives.</p></div>
+<h5 id="_url">url</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>URL of the EMIR service to connect in a
+protocol://domain:port format.</p></div>
+<div class="paragraph"><p>The protocol part is not mandatory if https (default)
+The port part is not mandatory if 54321 (default)
+The domain part is mandatory</p></div>
+<div class="paragraph"><p>Examples:
+url = emiregistry2.grid.niif.hu
+url = <a href="https://emiregistry2.grid.niif.hu">https://emiregistry2.grid.niif.hu</a>
+url = <a href="https://emiregistry2.grid.niif.hu:54321">https://emiregistry2.grid.niif.hu:54321</a></p></div>
+<h5 id="_period">period</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The period of the registration/update messages. Its value is given in
+minutes.</p></div>
+<h5 id="_validity">validity</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The validity of the registration entries. Its value is given in minutes.</p></div>
+<h5 id="_cert">cert</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/hostcert.pem</p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>User certificate file location in PEM format. Only used and checked if the protocol in
+the url option is <em>https</em>.</p></div>
+<h5 id="_key">key</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/hostkey.pem</p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>User key file location in PEM format. Only used and checked if the protocol in
+the url option is <em>https</em>.</p></div>
+<h5 id="_cadir">cadir</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/certificates</p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>A path pointing to the store where the PEM certificate of the trusted
+Certificate Authorities can be found. Only used and checked if the protocol in
+the url option is <em>https</em>.</p></div>
+<h5 id="_verbosity">verbosity</h5>
+<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> error</p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>Logging verbosity. The parameter is optional. If missing or an invalid
+value is given, the default value will be used. The logs are written
+into the log file that can be found in the <em>/var/log/emi/emird</em>
+directory by default.</p></div>
+<h5 id="_service_endpoint_url">Service_Endpoint_URL</h5>
+<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The Service Endpoint URL to be propagated. If this option is missing an
+error message will be raised.</p></div>
+<h5 id="_service_name">Service_Name</h5>
+<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The Service Name to be propagated. If this option is missing then the
+service entry will contains no such component.</p></div>
+<h5 id="_service_type">Service_Type</h5>
+<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The Service Type to be propagated. If this option is missing then the
+service entry will contains no such component.</p></div>
+<h5 id="_service_endpoint_interfacename">Service_Endpoint_InterfaceName</h5>
+<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The Service Endpoint Interface Name to be propagated. If this option is missing then the
+service entry will contains no such component.</p></div>
+<h5 id="_json_file_location">json_file_location</h5>
+<div class="paragraph"><p><tt>Location:</tt> advanced service entry section</p></div>
+<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
+<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
+<div class="paragraph"><p><tt>Description:</tt></p></div>
+<div class="paragraph"><p>The service entry can be also defined in a single external json formatted
+file per service. Any allowed json attributes are allowed in this way.
+The location of this file must be defined in this ini variable. The
+recommended place for these files is under the <tt>/etc/emi/emird/</tt>
+directory and naming them after the name of the given service with
+<tt>.json</tt> extension.</p></div>
+</div>
+<h2 id="appendixi">8. Appendix I</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The service record JSON template of EMIR interface.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[
+        {
+                "Service_ID":"s1",
+                "Service_Name":"ComputingService",
+                "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Type":"job-management",
+                "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
+                "Service_Capability":["capability1","capability2"],
+                "Service_QualityLevel":"production",
+                "Service_Complexity":"complexity",
+                "Service_Validity": 12313,
+                "Service_Extensions":[{"key":"value"},{"key":"value"}],
+                "Service_Endpoint_ID":"se1",
+                "Service_Endpoint_URL":"http://1",
+                "Service_Endpoint_Capability":["capability1","capability2"],
+                "Service_Endpoint_Technology":"technology",
+                "Service_Endpoint_InterfaceName":"interface",
+                "Service_Endpoint_InterfaceVersion":["version1","version2"],
+                "Service_Endpoint_InterfaceExtension":["extension1","extension2"],
+                "Service_Endpoint_WSDL":"http//1.wsdl",
+                "Service_Endpoint_SupportedProfile":["profile1","profile2"],
+                "Service_Endpoint_Semantics":["semantic1","semantic2"],
+                "Service_Endpoint_HealthState":"ok",
+                "Service_Endpoint_HealthStateInfo":"state info",
+                "Service_Endpoint_ServingState":"production",
+                "Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_IssuerCA":"issuer-dn",
+                "Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
+                "Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_QualityLevel":"production",
+                "Service_Location_Address":"A Street 1",
+                "Service_Location_Place":"Bonn",
+                "Service_Location_Country":"Germany",
+                "Service_Location_PostCode":"53119",
+                "Service_Location_Latitude":53.3,
+                "Service_Location_Longitude":4,
+                "Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
+
+        },
+        {
+                "Service_ID":"s2",
+                "Service_Name":"ComputingService",
+                "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Type":"job-management",
+                "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
+                "Service_Capability":["capability1","capability2"],
+                "Service_QualityLevel":"production",
+                "Service_Complexity":"complexity",
+                "Service_Validity": 12313,
+                "Service_Extensions":[{"key":"value"},{"key":"value"}],
+                "Service_Endpoint_ID":"se2",
+                "Service_Endpoint_URL":"http://2",
+                "Service_Endpoint_Capability":["capability1","capability2"],
+                "Service_Endpoint_Technology":"technology",
+                "Service_Endpoint_InterfaceName":"interface",
+                "Service_Endpoint_InterfaceVersion":["version1","version2"],
+                "Service_Endpoint_InterfaceExtension":["extension1","extension2"],
+                "Service_Endpoint_WSDL":"http//1.wsdl",
+                "Service_Endpoint_SupportedProfile":["profile1","profile2"],
+                "Service_Endpoint_Semantics":["semantic1","semantic2"],
+                "Service_Endpoint_HealthState":"ok",
+                "Service_Endpoint_HealthStateInfo":"state info",
+                "Service_Endpoint_ServingState":"production",
+                "Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_IssuerCA":"issuer-dn",
+                "Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
+                "Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
+                "Service_Endpoint_QualityLevel":"production",
+                "Service_Location_Address":"A Street 1",
+                "Service_Location_Place":"Bonn",
+                "Service_Location_Country":"Germany",
+                "Service_Location_PostCode":"53119",
+                "Service_Location_Latitude":53.3,
+                "Service_Location_Longitude":4,
+                "Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
+        },
+
+]</tt></pre>
+</div></div>
+</div>
+<h2 id="appendixii">9. Appendix II</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The EMIR WADL document to define the REST-ful API</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;application xmlns="http://wadl.dev.java.net/2009/02"&gt;
+    &lt;doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 1.9.1 09/14/2011 02:05 PM"/&gt;
+    &lt;grammars/&gt;
+    &lt;resources base="https://localhost:54321/"&gt;
+        &lt;resource path="/children"&gt;
+            &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="checkin" name="POST"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/neighbors"&gt;
+            &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/parent"&gt;
+            &lt;method id="childDSRs" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/serviceadmin"&gt;
+            &lt;method id="getServicebyUrl" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="registerServices" name="POST"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="updateServices" name="PUT"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="deleteService" name="DELETE"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="*/*"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/services"&gt;
+            &lt;method id="queryWithParams" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="queryWithJSON" name="POST"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="queryXMLWithJSON" name="POST"&gt;
+                &lt;request&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/request&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/xml"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;method id="queryXMLWithParams" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/xml"/&gt;
+                    &lt;representation mediaType="text/xml"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+            &lt;resource path="/urls"&gt;
+                &lt;method id="getServiceEndPoints" name="GET"&gt;
+                    &lt;response&gt;
+                        &lt;representation mediaType="application/json"/&gt;
+                    &lt;/response&gt;
+                &lt;/method&gt;
+            &lt;/resource&gt;
+            &lt;resource path="/types"&gt;
+                &lt;method id="getServiceTypes" name="GET"&gt;
+                    &lt;response&gt;
+                        &lt;representation mediaType="application/json"/&gt;
+                    &lt;/response&gt;
+                &lt;/method&gt;
+            &lt;/resource&gt;
+            &lt;resource path="/query.xml"&gt;
+                &lt;method id="queryXml" name="GET"&gt;
+                    &lt;response&gt;
+                        &lt;representation mediaType="application/xml"/&gt;
+                        &lt;representation mediaType="text/xml"/&gt;
+                    &lt;/response&gt;
+                &lt;/method&gt;
+            &lt;/resource&gt;
+            &lt;resource path="/pagedquery"&gt;
+                &lt;method id="pagedQuery" name="GET"&gt;
+                    &lt;response&gt;
+                        &lt;representation mediaType="*/*"/&gt;
+                    &lt;/response&gt;
+                &lt;/method&gt;
+            &lt;/resource&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/model"&gt;
+            &lt;method id="getModel" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="text/html"/&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+        &lt;resource path="/ping"&gt;
+            &lt;method id="ping" name="GET"&gt;
+                &lt;response&gt;
+                    &lt;representation mediaType="application/json"/&gt;
+                    &lt;representation mediaType="text/plain"/&gt;
+                &lt;/response&gt;
+            &lt;/method&gt;
+        &lt;/resource&gt;
+    &lt;/resources&gt;
+&lt;/application&gt;</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.2<br />
+Last updated 2012-03-19 13:18:56 CET
+</div>
+</div>
+</body>
+</html>
