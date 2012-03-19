@@ -11,7 +11,8 @@ on your system, you can download it from http://java.oracle.com[http://java.orac
 EMIR is distributed in the following formats:
 
 * Platform independent format, provided in "tar.gz" format 
-* RPM package, suitable SL5 and other Fedora based Linux derivatives (RedHat, CentOS etc...)
+* RPM package, suitable SL5/SL6 and other Fedora based Linux derivatives (RedHat, CentOS etc...)
+* Debian package
  
 [NOTE]
 .IMPORTANT NOTE ON PATHS
@@ -42,7 +43,20 @@ Download the tar.gz archive from the EMIR website. The archive contains all the 
 files which are bundled already, therefore no special actions will be required except the 
 exraction to final folder.
 
-Installation using the RPM bundle
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation using the RPM bundle (RedHat Distributions)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-RPM Installation instructions.
+Download the RPM distribution from the EMI's http://emisoft.web.cern.ch/emisoft/[emisoft] and install it
+using the rpm or yum command.
+ 
+
+Database Installation
+~~~~~~~~~~~~~~~~~~~~~
+
+EMIR uses MongoDB to store the service records, therefore it is highly recommended to install 
+and configure the database before starting the EMIR server. The installation and configuration 
+instructions to setup the MongoDB database can be found 
+on their Website[http://www.mongodb.org/display/DOCS/Quickstart].
+  
+
+ 
