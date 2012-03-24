@@ -454,8 +454,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public JSONArray queryDistinctJSON(String attributeName) {
+		String s = "{ "+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+							.getAttributeName() +" : { $exists : true } }";
+		DBObject query = (DBObject) JSON.parse(s);
 		@SuppressWarnings("unchecked")
-		List<DBObject> lst = serviceCollection.distinct(attributeName);
+		List<DBObject> lst = serviceCollection.distinct(attributeName, query);
 		JSONArray arr = new JSONArray(lst);
 		return arr;
 	}
