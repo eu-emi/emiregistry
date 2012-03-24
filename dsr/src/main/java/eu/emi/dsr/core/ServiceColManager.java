@@ -26,6 +26,7 @@ import eu.eu_emi.emiregistry.QueryResult;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class ServiceColManager {
@@ -41,13 +42,14 @@ public class ServiceColManager {
 		serviceDB = new MongoDBServiceDatabase();
 	}
 
-	public JSONObject getServiceReferences() throws JSONException {
-		JSONArray j = new JSONArray();
-		j.put("http://1");
-		j.put("http://1");
-		JSONObject o = new JSONObject();
-		o.put("references", j);
-		return o;
+	public JSONArray getServiceReferences() throws JSONException, QueryException,
+			PersistentStoreFailureException {
+		JSONArray arr = new JSONArray();
+
+		arr = serviceDB
+			.queryDistinctJSON(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName());
+		return arr;
 	}
 
 	public JSONArray getServicesByType(String serviceType)
