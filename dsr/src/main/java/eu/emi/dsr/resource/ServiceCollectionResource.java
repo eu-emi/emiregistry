@@ -52,19 +52,19 @@ public class ServiceCollectionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/urls")
 	public Response getServiceEndPoints() throws WebApplicationException, JSONException {
-		JSONObject o = null;
+		JSONArray jArr = null;
 		try {
-			o = col.getServiceReferences();
-		} catch (JSONException e) {
+			jArr = col.getServiceReferences();
+		} catch (Exception e) {
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
-		if (o.length() == 0) {
-			return Response.ok(o).status(Status.NO_CONTENT).build();
+		if (jArr.length() == 0) {
+			return Response.ok(jArr).status(Status.NO_CONTENT).build();
 		}
 
-		return Response.ok(o).build();
+		return Response.ok(jArr).build();
 	}
 
 	/** query method 
