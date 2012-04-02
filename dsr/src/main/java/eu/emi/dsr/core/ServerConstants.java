@@ -37,8 +37,8 @@ public class ServerConstants {
 	public static String MONGODB_HOSTNAME = "mongodb.hostname";
 	public static String MONGODB_DB_NAME = "mongodb.dbname";
 	public static String MONGODB_COLLECTION_NAME = "mongodb.colname";
-	public static String MONGODB_COLLECTION_USERNAME = "mongodb.username";
-	public static String MONGODB_COLLECTION_PASSWORD = "mongodb.password";
+	public static String MONGODB_USERNAME = "mongodb.username";
+	public static String MONGODB_PASSWORD = "mongodb.password";
 	// create new on startup, drop the old one - type: boolean
 	public static final String MONGODB_COL_CREATE = "mongodb.create";
 
