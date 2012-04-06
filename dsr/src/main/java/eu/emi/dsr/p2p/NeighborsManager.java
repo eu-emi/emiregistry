@@ -474,7 +474,7 @@ public class NeighborsManager {
 		for (int i=0; i<newDB.length(); i++){
 			JSONObject jo = null;
 			try {
-				jo = new JSONObject(newDB.getString(0));
+				jo = new JSONObject(newDB.getString(i));
 				String serviceurl = jo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName());
