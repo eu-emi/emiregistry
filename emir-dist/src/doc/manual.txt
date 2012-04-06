@@ -1,8 +1,8 @@
 EMI Registry Manual
 ===================
-EMIR Team <info@example.org>
-v1.0.0-rc3, February 2012
-:revnumber: 1.0.2
+EMIR Team <emir@niif.hu>
+v1.1.1-rc1, April 2012
+:revnumber: 1.0.3
 :numbered:
 
 Overview

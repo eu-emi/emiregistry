@@ -131,6 +131,12 @@ The authorization model is being carried out using the PUSH model, where the att
 
 === Changes
 
+==== Version 1.1.1
+
+* Adding Support for MongoDB Authentication
+* Fix: return correct service endpoint URLs while GET-ting the /services/urls
+* Fix: appropriately handling the empty directories while packaging
+
 ==== Version 1.1.0
 
 * P2P:  support for the global replication
