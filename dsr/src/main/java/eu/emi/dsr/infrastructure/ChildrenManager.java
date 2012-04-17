@@ -20,6 +20,7 @@ import eu.emi.client.DSRClient;
 public class ChildrenManager {
 	private static ChildrenManager instance = null;
 	private Map<String, Date> childServices;
+	private long hour = 60*60*1000;
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
@@ -58,7 +59,6 @@ public class ChildrenManager {
 		while(it.hasNext()) {
             String key=it.next();
             Date value=childServices.get(key);
-            long hour = 60*60*1000;
             if ( value.getTime()+hour > currentTime.getTime()) {
 				result.add(key);
 			} else {
@@ -85,7 +85,14 @@ public class ChildrenManager {
 
 		boolean retval = false;
 		if (childServices.containsKey(identifier)) {
+			Date currentTime = new Date();
+			Date value = childServices.get(identifier);
+            if ( value.getTime()+hour <= currentTime.getTime()) {
+				// expired checkin entry
+				retval = true;
+			}
 			childServices.remove(identifier);
+			
 		} else {
 			// First time put the identifier into the list
 			retval = true;
