@@ -87,12 +87,11 @@ public class ChildrenManager {
 		if (childServices.containsKey(identifier)) {
 			Date currentTime = new Date();
 			Date value = childServices.get(identifier);
-            if ( value.getTime()+hour <= currentTime.getTime()) {
+			if ( value.getTime()+hour <= currentTime.getTime()) {
 				// expired checkin entry
 				retval = true;
 			}
 			childServices.remove(identifier);
-			
 		} else {
 			// First time put the identifier into the list
 			retval = true;
