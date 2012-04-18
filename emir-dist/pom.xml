@@ -116,45 +116,14 @@
 			</build>
 		</profile>
 	</profiles>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<excludePackageNames>org.ogf.*,org.w3.*,org.ggf.*</excludePackageNames>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>mailing-list</report>
-							<report>issue-tracking</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-				<configuration>
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.12</version>
-			</plugin>
-		</plugins>
-	</reporting> 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.3</version>
-			</plugin>			
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
