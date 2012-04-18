@@ -126,6 +126,7 @@ public class DSRServer {
 		if (!started) {
 			jettyServer = new JettyServer(DSRApplication.class, conf);
 			jettyServer.start();
+			setStarted(jettyServer.isStarted());
 		}
 
 		startLog4jFileListener();

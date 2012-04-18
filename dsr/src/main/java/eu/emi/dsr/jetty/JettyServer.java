@@ -226,6 +226,7 @@ public class JettyServer {
 	public void start() {
 		try {
 			server.start();
+			started = server.isStarted();
 		} catch (Exception e) {
 			Log.logException("cannot start the server", e);
 		}
@@ -234,6 +235,7 @@ public class JettyServer {
 	public void stop() {
 		try {
 			server.stop();
+			started = !server.isStopped();
 		} catch (Exception e) {
 			Log.logException("cannot to stop the server", e);
 		}
