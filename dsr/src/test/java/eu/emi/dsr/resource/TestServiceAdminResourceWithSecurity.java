@@ -28,6 +28,7 @@ import eu.emi.dsr.TestRegistryBaseWithSecurity;
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.dsr.util.ServiceUtil;
+import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
  * @author a.memon
@@ -57,7 +58,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		return jArr;
 	}
 
-	@Test
+	@Test	
 	public void testRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {

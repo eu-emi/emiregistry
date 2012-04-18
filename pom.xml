@@ -5,7 +5,7 @@
 
 	<groupId>eu.eu-emi</groupId>
 	<artifactId>emiregistry</artifactId>
-	<version>1.1.1-rc1</version>
+	<version>1.1.1</version>
 	<packaging>pom</packaging>
 	<name>EMIR</name>
 	<url>https://github.com/eu-emi/emiregistry</url>
@@ -19,6 +19,7 @@
 		<jetty.version>8.0.3.v20111011</jetty.version>
 		<jersey.version>1.11</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<bugsreporter.version>1.2</bugsreporter.version>		
 	</properties>
 	<licenses>
 		<license>
@@ -48,6 +49,14 @@
 			<organizationUrl>www.niif.hu</organizationUrl>
 		</developer>
 	</developers>
+	<dependencies>
+		<dependency>
+			<groupId>eu.unicore</groupId>
+			<artifactId>maven-bugsreporter-annotations</artifactId>
+			<version>${bugsreporter.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -196,9 +205,6 @@
 			<!-- <version>1.2</version> -->
 			<!-- </dependency> -->
 		</dependencies>
-
-
-
 	</dependencyManagement>
 	<modules>
 		<module>dsr</module>
@@ -289,6 +295,7 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -346,7 +353,49 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+			<plugin>
+				<groupId>eu.unicore</groupId>
+				<artifactId>maven-bugsreporter-plugin</artifactId>
+				<version>1.2</version>
+				<configuration>
+					<factory>eu.unicore.bugsreporter.factory.TestAnnotationProcessorFactory</factory>
+					<properties>
+						<componentName>${project.artifactId}-${project.version}</componentName>
+						<scmInfo>${scm.connection}</scmInfo>
+					</properties>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>eu.unicore</groupId>
+						<artifactId>maven-bugsreporter-plugin</artifactId>
+						<version>1.2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>			
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/dep.xml</descriptor>
+						<descriptor>src/main/assembly/srcdep.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>				
+			</plugin>
+			</plugins>
 	</build>
 	<repositories>
 		<repository>
@@ -372,13 +421,22 @@
 			<url>http://eu-emi.github.com/emiregistry/repository</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>unicore.eu</id>
+			<name>UNICORE repository</name>
+			<url>http://unicore-dev.zam.kfa-juelich.de/maven</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<distributionManagement>
 		<!-- <repository> -->
 		<!-- <id>gh-pages</id> -->
 		<!-- path to the local repo -->
 		<!-- <url>file:///${basedir}/../../emiregistry-pages/repository/</url> -->
-		<!-- </repository> -->		
+		<!-- </repository> -->
 	</distributionManagement>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -403,6 +461,11 @@
 					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.12</version>
 			</plugin>
 		</plugins>
 	</reporting>

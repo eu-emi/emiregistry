@@ -35,6 +35,7 @@ import eu.emi.dsr.core.ServerConstants;
 import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
+import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
  * @author a.memon
@@ -113,6 +114,7 @@ public class TestServiceRecordFilters {
 	}
 
 	@Test
+	@FunctionalTest(id="RunInputFilterTest", description="Test Filtering of incoming service records")
 	public void testInputFilterJSONArrayValue() throws JSONException, IOException{
 		DSRClient c = new DSRClient(URL+"/serviceadmin");
 		
@@ -163,6 +165,7 @@ public class TestServiceRecordFilters {
 	}
 
 	@Test
+	@FunctionalTest(id="RunOutputFilterTest", description="Test Filtering of outgoing service records")
 	public void testOutputFilter(){
 		//TODO add more functional code here
 		DSRClient c = new DSRClient(URL+"/ping");

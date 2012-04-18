@@ -29,6 +29,7 @@ import eu.emi.dsr.db.mongodb.MongoDBTestBase;
 import eu.emi.dsr.exception.InvalidServiceDescriptionException;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
+import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
  * @author a.memon
@@ -57,6 +58,7 @@ public class TestServiceReaper extends MongoDBTestBase{
 	}
 
 	@Test
+	@FunctionalTest(id="RunTTLTest", description="Test TTL of a service record")
 	public void testReaping() throws InvalidServiceDescriptionException,
 			JSONException, InterruptedException, ExistingResourceException {
 		// adding service entries
