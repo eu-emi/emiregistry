@@ -29,6 +29,8 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.event.Event;
+import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.infrastructure.InputFilter;
 import eu.emi.dsr.infrastructure.ServiceCheckin;
 import eu.emi.dsr.infrastructure.ServiceEventReceiver;
@@ -46,6 +48,7 @@ import eu.emi.dsr.security.DSRSecurityProperties;
  * The main class for starting the server
  * 
  * @author a.memon
+ * @author g.szigeti
  * 
  * 
  */
@@ -218,9 +221,9 @@ public class DSRServer {
 	public void stopJetty() {
 		jettyServer.stop();
 		started = false;
+		this.finalize();
 		System.out.println("DSR server stopped");
 		logger.info("DSR server stopped");
-
 	}
 
 	public String getBaseUrl() {
@@ -274,7 +277,32 @@ public class DSRServer {
 		} else {
 			server = new DSRServer("conf/dsr.config");
 		}
-		server.startJetty();
+		// Shutdown hook
+		final DSRServer serverPointer = server;
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			private Logger threadLogger = Log.getLogger(Log.DSR, DSRServer.class);
+			public void run() {
+				threadLogger.debug("DSR server is stopping now (shutdown hook)");
+				String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+				if (globalRegistryEnabled != null &&
+						globalRegistryEnabled.toLowerCase().equals("true")) {
+					try {
+						//serverPointer.finalize();
+						serverPointer.stopJetty();
+					} catch (NullPointerException e) {
+						System.out.println("null failure");
+					} catch (Throwable e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				threadLogger.debug("DSR server stopped (shutdown hook)");
+			}
+		});
+		// end of Shutdown hook
+
+		server.startJetty();	
 	}
 	
 	public static Date getRunningSince(){
@@ -385,5 +413,15 @@ public class DSRServer {
 
 	}
 	
+	protected void finalize(){
+		System.out.println("Send DELETE message to the neighbors.");
+		logger.info("Send DELETE message to the neighbors.");
+		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
+                conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
+			    conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		
+		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
+		new eu.emi.dsr.p2p.ServiceEventReceiver().recieve(event);
+	}
 
 }
