@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
-		<version>1.1.1-rc1</version>
+		<version>1.1.1</version>
 	</parent>
 
 	<distributionManagement>
@@ -147,7 +147,7 @@
 				<version>2.12</version>
 			</plugin>
 		</plugins>
-	</reporting>
+	</reporting> 
 	<build>
 		<plugins>
 			<plugin>
