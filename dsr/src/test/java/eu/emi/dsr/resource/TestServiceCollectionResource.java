@@ -29,6 +29,7 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.db.mongodb.ServiceObject;
 import eu.emi.dsr.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;
+import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
  * Integration test
@@ -185,6 +186,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 
 	@Test
+	@FunctionalTest(id="ServiceQueryJSONTest", description="Test querying the service records in JSON format")
 	public void testQueryJSON() throws JSONException {
 		DSRClient cr = new DSRClient(BaseURI);
 		
@@ -252,6 +254,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 
 	@Test
+	@FunctionalTest(id="ServiceQueryGLUE2Test", description="Test querying the service records in GLUE 2.0 format")
 	public void testGlue2QueryCollection() {
 		try {
 			DSRClient cr = new DSRClient(BaseURI

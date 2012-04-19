@@ -7,14 +7,13 @@
 	<inceptionYear>2011</inceptionYear>
 	<url>https://github.com/eu-emi/emiregistry</url>
 	<name>Distribution of the EMIR server</name>
-
 	<!-- this is the "release" version -->
-    <version>1.1.0-SNASPHOT</version>
-    
+	<version>1.1.1</version>
+
 	<parent>
 		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
- 		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.1</version>
 	</parent>
 
 	<distributionManagement>
@@ -36,7 +35,7 @@
 		<doc.template>emi-nonunicore</doc.template>
 		<exec.maven.plugin.version>1.2.1</exec.maven.plugin.version>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>eu.eu-emi</groupId>

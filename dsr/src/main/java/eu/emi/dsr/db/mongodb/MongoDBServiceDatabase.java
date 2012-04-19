@@ -44,7 +44,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private DB database;
 	private DBCollection serviceCollection;
 
-	public MongoDBServiceDatabase(){
+	public MongoDBServiceDatabase() {
 		if (DSRServer.getConfiguration() == null) {
 			new DSRServer(new Configuration(new Properties()));
 		}
@@ -56,13 +56,50 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				"emiregistry");
 		String colName = DSRServer.getProperty(
 				ServerConstants.MONGODB_COLLECTION_NAME, "services");
+
+		String dbUserName = DSRServer.getProperty(
+				ServerConstants.MONGODB_USERNAME, "");
+		String dbPassword = DSRServer.getProperty(
+				ServerConstants.MONGODB_PASSWORD, "");
+
 		try {
 			// connection = MongoConnection.get(hostname,
 			// Integer.valueOf(port));
 			if (connection == null) {
-				connection = new Mongo(hostname, Integer.valueOf(port));
+
+				MongoOptions mo = new MongoOptions();
+				mo.autoConnectRetry = true;
+				mo.connectTimeout = 100;
+				mo.maxWaitTime = 100;
+				mo.socketKeepAlive = true;
+				mo.connectionsPerHost = 255;
+
+				ServerAddress sa = new ServerAddress(hostname,
+						Integer.valueOf(port));
+				connection = new Mongo(sa, mo);
 			}
+
 			database = connection.getDB(dbName);
+
+			if ((!dbUserName.equalsIgnoreCase(""))
+					&& (!dbPassword.equalsIgnoreCase(""))) {
+				if (!database
+						.authenticate(dbUserName, dbPassword.toCharArray())) {
+					
+					Log.logException("Cannot authenticate the user: " + dbUserName + "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again", new RuntimeException("MongoDB Authentication Failed"));
+					
+					System.out
+							.printf("%s:%s.%s.%s",
+									"Error occurred while starting the EMIR server",
+									"Cannot authenticate the database User: "
+											+ dbUserName,
+									" Provide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
+									" Stoppoing the EMIR server.");
+					System.exit(1);
+				}
+
+			}
+
 			serviceCollection = database.getCollection(colName);
 
 			// setting index and uniquesness on "serviceUrl"
@@ -78,6 +115,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
 		} catch (MongoException e) {
+			e.printStackTrace();
 			logger.warn(e.getCause());
 		} catch (Exception e) {
 			logger.error("Error in connecting the MongoDB database", e);
@@ -236,8 +274,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		// sending update event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
-			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_DELETE,
-					deletedEntry));
+			EventDispatcher.notifyRecievers(new Event(
+					EventTypes.SERVICE_DELETE, deletedEntry));
 
 		} catch (JSONException e) {
 			logger.warn(e.getCause());
@@ -445,8 +483,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public JSONArray queryDistinctJSON(String attributeName) {
+		String s = "{ "
+				+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+						.getAttributeName() + " : { $exists : true } }";
+		DBObject query = (DBObject) JSON.parse(s);
 		@SuppressWarnings("unchecked")
-		List<DBObject> lst = serviceCollection.distinct(attributeName);
+		List<DBObject> lst = serviceCollection.distinct(attributeName, query);
 		JSONArray arr = new JSONArray(lst);
 		return arr;
 	}
@@ -520,7 +562,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 * @see eu.emi.dsr.db.ServiceDatabase#findAndDelete(java.lang.String)
 	 */
 	@Override
-	public void findAndDelete(String query){
+	public void findAndDelete(String query) {
 		DBObject db = (DBObject) JSON.parse(query);
 		if (logger.isTraceEnabled()) {
 			logger.debug("delete by query: " + db.toString());
@@ -528,7 +570,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.requestStart();
 		serviceCollection.remove(db);
 		database.requestDone();
-		
+
 	}
 
 	public void dropCollection() {

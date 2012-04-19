@@ -7,7 +7,7 @@ License: APL 2.0
 Distribution: SL6
 Group: Infrastructure Services
 URL: https://github.com/eu-emi/emiregistry
-Requires: java-1.6.0-openjdk,mongodb-server >= 1.8.2
+Requires: java-1.6.0-openjdk, mongo-10gen, mongo-10gen-server
 
 BuildArch: @component-architecture@
 Packager: EMI emir@niif.hu
@@ -85,10 +85,10 @@ This package contains the EMIR server.
 #
 # dealing with .gitignores
 #
-%attr(0700 emi emi) "/var/lib/emi/emir/data/.gitignore"
-%attr(0700 emi emi) "/var/log/emi/emir/.gitignore"
-%attr(0700 emi emi) "/var/run/emi/emir/.gitignore"
-%attr(0700 emi emi) "/usr/share/doc/emi/emir/.gitignore"
+# %attr(0700 emi emi) "/var/lib/emi/emir/data/.gitignore"
+# %attr(0700 emi emi) "/var/log/emi/emir/.gitignore"
+# %attr(0700 emi emi) "/var/run/emi/emir/.gitignore"
+# %attr(0700 emi emi) "/usr/share/doc/emi/emir/.gitignore"
 
 #
 # dir %attr(0700 emi emi) "/var/lib/emir"

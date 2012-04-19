@@ -39,6 +39,8 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
 		p.put(ServerConstants.MONGODB_PORT, "27017");
 		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
+//		p.put(ServerConstants.MONGODB_USERNAME, "abc");
+//		p.put(ServerConstants.MONGODB_PASSWORD, "def");
 		Configuration conf = new Configuration(p);
 		new DSRServer(conf);
 		adminMgr = new ServiceAdminManager();
@@ -70,7 +72,7 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 	
 	@Test
 	public void addServiceDescription() throws Exception {		
-		adminMgr.addService(getDummyServiceDesc());
+		System.out.println(adminMgr.addService(getDummyServiceDesc()));
 		System.out.println("service added");
 	}
 

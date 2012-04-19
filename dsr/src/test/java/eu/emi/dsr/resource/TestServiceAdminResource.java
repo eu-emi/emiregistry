@@ -26,6 +26,7 @@ import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.util.DateUtil;
 import eu.emi.dsr.util.ServiceUtil;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.unicore.bugsreporter.annotation.FunctionalTest;
 import static org.junit.Assert.*;
 
 /**
@@ -68,6 +69,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	}
 
 	@Test
+	@FunctionalTest(id="ServiceRegistrationTest", description="Test registration of a service record")
 	public void testRegisterService() throws JSONException,
 			InterruptedException {
 		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
@@ -183,6 +185,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	}
 
 	@Test
+	@FunctionalTest(id="ServiceDeletionTest", description="Test deletion of a service record")
 	public void testDeleteResource() throws JSONException {
 		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
 		

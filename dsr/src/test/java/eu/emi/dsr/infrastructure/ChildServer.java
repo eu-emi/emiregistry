@@ -15,9 +15,23 @@ import eu.emi.dsr.core.Configuration;
  */
 public class ChildServer extends AbstractServer{
 	private static DSRServer client = null;
+	private static ChildServer cs = null;
 	
 	public static void main(String[] args) {
-		ChildServer cs = new ChildServer();
+		cs = new ChildServer();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("stopping now (shutdown hook)");
+				try {
+					Thread.sleep(1000);
+					cs.stop();
+				} catch (InterruptedException e) {
+					System.out.println("failure");
+				}
+				System.out.println("stopped (shutdown hook)");
+			}
+		});
 		cs.start();
 	}
 	
@@ -65,5 +79,4 @@ public class ChildServer extends AbstractServer{
 		}
 	}
 
-	
 }
