@@ -3,7 +3,7 @@
 #
 Summary: EMIRD - EMIR Client Daemon
 Name: emird
-Version: 1.0
+Version: 1.1
 Release: 1
 License: CC-BY-SA
 Group: Infrastructure Services
