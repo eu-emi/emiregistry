@@ -14,6 +14,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.client.DSRClient;
+import eu.emi.client.security.ISecurityProperties;
+import eu.emi.dsr.DSRServer;
 
 
 
@@ -113,6 +115,11 @@ public class ChildrenManager {
 		while(it.hasNext()) {
             String key=it.next();
 			DSRClient c = new DSRClient(key + "/ping");
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+				c = new DSRClient(key + "/ping",
+											DSRServer.getClientSecurityProperties());
+			}
 			ClientResponse res = c.getClientResource().accept(MediaType.TEXT_PLAIN)
 					.get(ClientResponse.class);
 			if ( res.getStatus() != Status.OK.getStatusCode() ){

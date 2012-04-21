@@ -25,6 +25,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
@@ -366,6 +367,11 @@ public class NeighborsManager {
 	 */
 	private ArrayList<String> GSRList(String url, int retry){
 		DSRClient c = new DSRClient(url + "/services?Service_Type=GSR");
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+			c = new DSRClient(url + "/services?Service_Type=GSR",
+										DSRServer.getClientSecurityProperties());
+		}
 		for (int i=0; i<retry; i++){
 			JSONArray o = new JSONArray();
 			try {
@@ -423,6 +429,11 @@ public class NeighborsManager {
 		for (int j=0; j<list.size(); j++){
 			// Fetch the DB from the GSR
 			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery");
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+				c = new DSRClient(list.get(j) + "/services/pagedquery",
+											DSRServer.getClientSecurityProperties());
+			}
 			boolean found = false;
 			for (int i=0; i<retry; i++){
 				JSONObject o = new JSONObject();
@@ -527,6 +538,11 @@ public class NeighborsManager {
 		for (int i=0; i<urls.size(); i++){
 			// Download the list of the URLs
 			DSRClient c = new DSRClient(urls.get(i));
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+				c = new DSRClient(urls.get(i),
+											DSRServer.getClientSecurityProperties());
+			}
 			try {
 				String content = c.getClientResource()
 						.accept(MediaType.TEXT_PLAIN)

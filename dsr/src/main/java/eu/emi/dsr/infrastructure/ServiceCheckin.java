@@ -21,7 +21,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServiceAdminManager;
 import eu.emi.dsr.db.mongodb.ServiceObject;
 
@@ -50,8 +52,15 @@ public class ServiceCheckin implements Runnable {
 	 */
 	public ServiceCheckin(String parentUrl, String url, Long maxmessage) throws Throwable {
 		DSRClient cc = new DSRClient(parentUrl + "/children");
-		childClient = cc.getClientResource();
 		DSRClient sc = new DSRClient(parentUrl + "/serviceadmin");
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+			cc = new DSRClient(parentUrl + "/children",
+										DSRServer.getClientSecurityProperties());
+			sc = new DSRClient(parentUrl + "/serviceadmin",
+										DSRServer.getClientSecurityProperties());
+		}
+		childClient = cc.getClientResource();
 		synchClient = sc.getClientResource();
 		sm = new ServiceAdminManager();
 		try {

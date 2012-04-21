@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Date;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 
@@ -23,6 +24,7 @@ import org.eclipse.jetty.server.Server;
 
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 
+import eu.emi.client.ClientSecurityProperties;
 import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.core.Configuration;
@@ -424,4 +426,38 @@ public class DSRServer {
 		new eu.emi.dsr.p2p.ServiceEventReceiver().recieve(event);
 	}
 
+	public static ClientSecurityProperties getClientSecurityProperties(){
+		ClientSecurityProperties csp = null;
+
+		/*Properties p = new Properties();
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, sProps.requireClientAuthentication());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, sProps.getKeystoreKeyPassword());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, sProps.getKeystoreType());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,sProps.getKeystore());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, sProps.getTruststorePassword());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE, sProps.getTruststore());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, sProps.getTruststoreType());
+		*/
+		try {
+			//csp = new ClientSecurityProperties(p);
+			csp = new ClientSecurityProperties(DSRServer
+						.getSecurityProperties().getProperties());
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return csp;
+	}
 }

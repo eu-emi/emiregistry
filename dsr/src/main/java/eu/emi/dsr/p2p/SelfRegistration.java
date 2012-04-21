@@ -19,6 +19,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
 import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.ServerConstants;
@@ -45,6 +46,11 @@ public class SelfRegistration implements Runnable {
 	 */
 	public SelfRegistration(String myUrl) throws Throwable {
 		DSRClient sc = new DSRClient(myUrl + "/serviceadmin");
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+			sc = new DSRClient(myUrl + "/serviceadmin",
+										DSRServer.getClientSecurityProperties());
+		}
 		selfRegisterClient = sc.getClientResource();
 		firstUsage = true;
 		try {

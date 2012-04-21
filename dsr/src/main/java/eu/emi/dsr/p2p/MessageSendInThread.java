@@ -17,7 +17,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventTypes;
 
@@ -124,6 +126,11 @@ public class MessageSendInThread extends Thread {
 	
 	protected WebResource getClient(String url) {
 		DSRClient c = new DSRClient(url + "/serviceadmin");
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+			c = new DSRClient(url + "/serviceadmin",
+										DSRServer.getClientSecurityProperties());
+		}
 		return c.getClientResource();
 	}
 	

@@ -20,7 +20,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.client.DSRClient;
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.security.ISecurityProperties;
 import eu.emi.client.util.Log;
+import eu.emi.dsr.DSRServer;
 import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventDispatcher;
@@ -57,6 +59,12 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			logger.error("NULL point error by the parent URL!");
 		}
 		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+
+			c = new DSRClient(parentUrl + "/serviceadmin",
+										DSRServer.getClientSecurityProperties());
+		}
+
 		client = c.getClientResource();
 		parent_lost = false;
 		filter = new Filters();
