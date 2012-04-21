@@ -430,11 +430,10 @@
 	</pluginRepositories>
 
 	<distributionManagement>
-		<!-- <repository> -->
-		<!-- <id>gh-pages</id> -->
-		<!-- path to the local repo -->
-		<!-- <url>file:///${basedir}/../../emiregistry-pages/repository/</url> -->
-		<!-- </repository> -->
+<!-- 		<repository> -->
+<!-- 		<id>gh-pages</id>		 -->
+<!-- 		<url>file:///${basedir}/../../emiregistry-pages/repository/</url> -->
+<!-- 		</repository> -->
 	</distributionManagement>
 
 	<reporting>
