@@ -429,7 +429,7 @@ public class DSRServer {
 	public static ClientSecurityProperties getClientSecurityProperties(){
 		ClientSecurityProperties csp = null;
 
-		/*Properties p = new Properties();
+		Properties p = new Properties();
 		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, sProps.requireClientAuthentication());
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, sProps.getKeystoreKeyPassword());
 		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, sProps.getKeystoreType());
@@ -437,11 +437,9 @@ public class DSRServer {
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, sProps.getTruststorePassword());
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE, sProps.getTruststore());
 		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, sProps.getTruststoreType());
-		*/
+		
 		try {
-			//csp = new ClientSecurityProperties(p);
-			csp = new ClientSecurityProperties(DSRServer
-						.getSecurityProperties().getProperties());
+			csp = new ClientSecurityProperties(p);
 		} catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
