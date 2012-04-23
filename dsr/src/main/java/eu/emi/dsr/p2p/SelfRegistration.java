@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
@@ -47,7 +48,6 @@ public class SelfRegistration implements Runnable {
 	public SelfRegistration(String myUrl) throws Throwable {
 		DSRClient sc = new DSRClient(myUrl + "/serviceadmin");
 		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-
 			sc = new DSRClient(myUrl + "/serviceadmin",
 										DSRServer.getClientSecurityProperties());
 		}
@@ -115,20 +115,24 @@ public class SelfRegistration implements Runnable {
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
 			// message sending
-			if (firstUsage){
-				ClientResponse res = selfRegisterClient.accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(ClientResponse.class, message);
-				if ( res.getStatus() != Status.BAD_REQUEST.getStatusCode() ){
-					// Next message will be send as UPDATE
-					firstUsage = false;
+			try{
+				if (firstUsage){
+					ClientResponse res = selfRegisterClient.accept(MediaType.APPLICATION_JSON_TYPE)
+						.post(ClientResponse.class, message);
+					if ( res.getStatus() != Status.BAD_REQUEST.getStatusCode() ){
+						// Next message will be send as UPDATE
+						firstUsage = false;
+					}
+				} else {
+					ClientResponse res = selfRegisterClient.accept(MediaType.APPLICATION_JSON_TYPE)
+						.put(ClientResponse.class, message);
+					if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ){
+						// Next message will be send as REGISTER
+						firstUsage = true;
+					}
 				}
-			} else {
-				ClientResponse res = selfRegisterClient.accept(MediaType.APPLICATION_JSON_TYPE)
-					.put(ClientResponse.class, message);
-				if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ){
-					// Next message will be send as REGISTER
-					firstUsage = true;
-				}
+			} catch(ClientHandlerException e) {
+				logger.trace("Self-registration problem: " + e.getMessage());
 			}
 			
 			try {
