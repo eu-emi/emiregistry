@@ -1,0 +1,232 @@
+EMIR Client Daemon (EMIRD)
+--------------------------
+
+About the EMIRD
+~~~~~~~~~~~~~~~
+
+The UMD services need to be registered into the EMI Registry service
+infrastructure to be discoverable for the clients. Most of the services
+or even the containers executing them provide a way to do this but not
+all of them. For those that are unable to register themselves
+automatically and periodically the EMIRD is available.
+
+The EMIRD is a daemon like service that can be executed next to these
+services (preferably on the same machine) and able to perform the
+automatical and periodical registration and update against the
+configured EMI Registry service instead of the service itself. This
+client uses exactly the same, standard RESTful API as the other clients
+do.
+
+Most of the parameters of these registrations and updates can be
+configured. For the details see the <<anchor-emird-config,Configuration section>>!
+
+After the successful registration until the termination of the daemon,
+the EMIRD client do the periodical updates then finally, when the execution of
+the daemon is over, it attempts to delete the service entries from the
+remote database.
+
+The service entries can be simple or advanced ones.
+
+The simple service entries contain only the mandatory and easily configurable
+attributes that are the following: Service_Name, Service_Type,
+Service_Endpoint_URL, Service_Endpoint_InterfaceName. Here, the single
+mandatory element is the Service_Endpoint_URL.
+
+The advanced entries can contains any kind of key value pairs that are
+accepted by the EMI Regisrty services and can be configured in the form
+of whole, formatted *json* documents.
+
+anchor:anchor-emird-installation
+Installation
+~~~~~~~~~~~~
+
+The installation of the EMIRD client is trivial. The only thing to do is
+to install the +emir-daemon+ package from the EMI repository by
+executing:
+
+`yum instlal emir-daemon`
+
+anchor:anchor-emird-config
+Configuration
+~~~~~~~~~~~~~
+
+The configuration of EMIRD can be performed by editing its configuration
+file or files. The configuration can be found basically in one file
+that default location is +/etc/emi/emird/emird.ini+.
+
+This file contains every configuration options that can be the EMIRD daemon
+control by, like _service url_, _logging verbosity_, _credential
+location_, etc.
+
+The advanced service entries to be propagated can be described in
+separated configuration files preferably also under this directory and
+use to have +.json+ extension.
+
+The main configuration file has INI format. The +emir+ section contains
+the daemon scoped options while the others are to describe the different
+service entries to be registered. In these cases the exact name is
+indifferent, they just have to differ from eachother and must avoid the
++emir+ name as well.
+
+Configuration options
+^^^^^^^^^^^^^^^^^^^^^
+
+Note: The option names are case-insensitives.
+
+url
++++
+Location: +emir+ section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+URL of the EMIR service to connect in a
+protocol://domain:port format.
+
+The protocol part is not mandatory if https (default)
+The port part is not mandatory if 54321 (default)
+The domain part is mandatory
+
+Examples:
+url = emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu:54321
+
+period
+++++++
+Location: +emir+ section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The period of the registration/update messages. Its value is given in
+minutes.
+
+validity
+++++++++
+Location: +emir+ section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The validity of the registration entries. Its value is given in minutes.
+
+cert
+++++
+Location: +emir+ section
+Default value: /etc/grid-security/hostcert.pem
+Mandatory: No
+Description:
+
+User certificate file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.
+
+key
++++
+Location: +emir+ section
+Default value: /etc/grid-security/hostkey.pem
+Mandatory: No
+Description:
+
+User key file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.
+
+cadir
++++++
+Location: +emir+ section
+Default value: /etc/grid-security/certificates
+Mandatory: No
+Description:
+
+A path pointing to the store where the PEM certificate of the trusted
+Certificate Authorities can be found. Only used and checked if the protocol in
+the url option is 'https'.
+
+verbosity
++++++++++
+Location: +emir+ section
+Default value: error
+Mandatory: No
+Description:
+
+Logging verbosity. The parameter is optional. If missing or an invalid
+value is given, the default value will be used. The logs are written
+into the log file that can be found in the _/var/log/emi/emird_
+directory by default.
+
+Service_Endpoint_URL
+++++++++++++++++++++
+Location: simple service entry section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The Service Endpoint URL to be propagated. If this option is missing an
+error message will be raised.
+
+Service_Name
+++++++++++++
+Location: simple service entry section
+Default value: _No default value_
+Mandatory: No
+Description:
+
+The Service Name to be propagated. If this option is missing then the
+service entry will contains no such component.
+
+Service_Type
+++++++++++++
+Location: simple service entry section
+Default value: _No default value_
+Mandatory: No
+Description:
+
+The Service Type to be propagated. If this option is missing then the
+service entry will contains no such component.
+
+Service_Endpoint_InterfaceName
+++++++++++++++++++++++++++++++
+Location: simple service entry section
+Default value: _No default value_
+Mandatory: No
+Description:
+
+The Service Endpoint Interface Name to be propagated. If this option is missing then the
+service entry will contains no such component.
+
+json_file_location
+++++++++++++++++++
+Location: advanced service entry section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The service entry can be also defined in a single external json formatted
+file per service. Any allowed json attributes are allowed in this way.
+The location of this file must be defined in this ini variable. The
+recommended place for these files is under the +/etc/emi/emird/+
+directory and naming them after the name of the given service with
++.json+ extension.
+
+Note 1: The files are reread in every period so the changes made on the file
+will affect the composed registration messages.
+
+Note 2: If multiple service entries belong to a given service, they
+can b defined in the same file in a json array format. These entries are
+going to be handled separately.
+
+json_dir_location
+++++++++++++++++++
+Location: multiple service entry section
+Default value: _No default value_
+Mandatory: Yes
+Description:
+
+The service entry can be also defined in multiple external json formatted
+files per service. Any allowed json attributes are allowed in these files.
+The files must be put under a directory defined in this ini variable. The
+recommended place for these directories is under the +/etc/emi/emird/+
+directory. The directory is rescanned in every period and the file that
+can be found (directly) on this location will reparsed, so the changes
+made or new file created will appear in the next registration.
+
