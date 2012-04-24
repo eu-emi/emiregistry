@@ -2,7 +2,7 @@ Buildroot: %{_builddir}/%{name}-root
 Name: @component-prefix@@component-name@
 Version: @component-version@
 Release: @component-release@@component-disttag@
-Summary: EMIR Server
+Summary: EMIR Client Daemon
 License: APL 2.0
 Distribution: RedHat
 Group: Infrastructure Services
