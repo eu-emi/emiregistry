@@ -17,6 +17,10 @@ public class ParentResource {
 
 	@GET
 	public Response childDSRs(){
+		if ("true".equalsIgnoreCase(DSRServer.getProperty(
+				ServerConstants.REGISTRY_GLOBAL_ENABLE, "false").toString())){
+			return Response.noContent().entity("Not supported method by the global DSR.").build();
+		}
 		String parent = DSRServer.getProperty(ServerConstants.REGISTRY_PARENT_URL);
 		if ( parent == null || parent.isEmpty()) {
 			parent = "No parent set!";
