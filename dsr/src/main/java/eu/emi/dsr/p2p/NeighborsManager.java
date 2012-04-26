@@ -429,11 +429,11 @@ public class NeighborsManager {
 		for (int j=0; j<list.size(); j++){
 			// Fetch the DB from the GSR
 			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery");
-			//if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
 
-			//	c = new DSRClient(list.get(j) + "/services/pagedquery",
-			//								DSRServer.getClientSecurityProperties());
-			//}
+				c = new DSRClient(list.get(j) + "/services/pagedquery",
+											DSRServer.getClientSecurityProperties());
+			}
 			boolean found = false;
 			for (int i=0; i<retry; i++){
 				JSONObject o = new JSONObject();
