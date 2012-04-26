@@ -146,7 +146,7 @@ public class ACLFilter implements ContainerRequestFilter {
 			throws WebApplicationException {
 		Client client = null;
 		String msg = "Admin access denied!\n\nTo allow access for this "
-				+ "certificate, the distinguished name \n\"" + userName
+				+ "certificate, the distinguished name \n" + userName
 				+ "\nneeds to be entered into the ACL file."
 				+ "\nPlease check the EMIR's ACL file!\n\n";
 		synchronized (acceptedDNs) {
