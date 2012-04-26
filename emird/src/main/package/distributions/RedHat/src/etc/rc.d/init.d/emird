@@ -9,7 +9,7 @@ NAME="EMIRD"
 
 #This must be equal to this file name
 SERVICE=emird
-DAEMON=/usr/bin/emird
+DAEMON=/usr/sbin/emird
 EMIRD_USER=emi
 LASTPID=/var/run/emi/emird/emird.pid
 
