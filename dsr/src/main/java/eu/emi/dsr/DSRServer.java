@@ -31,6 +31,7 @@ import eu.emi.dsr.core.Configuration;
 import eu.emi.dsr.core.FileListener;
 import eu.emi.dsr.core.RegistryThreadPool;
 import eu.emi.dsr.core.ServerConstants;
+import eu.emi.dsr.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.dsr.event.Event;
 import eu.emi.dsr.event.EventTypes;
 import eu.emi.dsr.infrastructure.InputFilter;
@@ -424,6 +425,11 @@ public class DSRServer {
 		
 		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
 		new eu.emi.dsr.p2p.ServiceEventReceiver().recieve(event);
+		try {
+			new MongoDBServiceDatabase().deleteByUrl(myURL);
+		} catch (Exception e) {
+			Log.logException("Error in the delete procedure ", e);
+		}
 	}
 
 	public static ClientSecurityProperties getClientSecurityProperties(){
