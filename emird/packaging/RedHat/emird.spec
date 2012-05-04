@@ -3,13 +3,14 @@
 #
 Summary: EMIRD - EMIR Client Daemon
 Name: emird
-Version: 1.0
+Version: 1.1
 Release: 1
 License: CC-BY-SA
 Group: Infrastructure Services
 URL: https://github.com/eu-emi/emiregistry
 BuildArch: noarch
 Packager: EMI emir@niif.hu
+BuildRequires: git
 Requires: python >= 2.4.3, python-simplejson
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
@@ -30,6 +31,11 @@ This package contains the EMIR Client Daemon.
 * Thu Dec 1 2011 Ivan Marton <martoni@niif.hu>
 - Initial RPM package
 
+* Thu Mar 1 2012 Ivan Marton <martoni@niif.hu>
+- Fixing rights on the library directory. The previous version of the rpm package was buggy.
+
+* Thu Dec 8 2011 Ivan Marton <martoni@niif.hu>
+- Adapting the spec file to ETICS building system and eliminating git dependency
 
 %prep
 rm -rf %{name}-%{version}
