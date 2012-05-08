@@ -2,8 +2,9 @@
 import re
 # Logging facility
 import logging
-# JSON encoding
-import simplejson as json
+# JSON encoding - fallback to json if simplejson is not present
+try: import simplejson as json
+except ImportError: import json
 # File checking
 from os.path import exists, join
 from os import listdir, access, R_OK
