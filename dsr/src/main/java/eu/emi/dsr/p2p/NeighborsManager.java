@@ -392,8 +392,7 @@ public class NeighborsManager {
 					listOfGSRs.add(o.getJSONObject(j).getString(
 							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.logException("", e);
 				}
 			}
 			return listOfGSRs;
@@ -427,6 +426,9 @@ public class NeighborsManager {
 	private void GetDB(ArrayList<String> list, int retry){
 		JSONArray newDB = new JSONArray();
 		for (int j=0; j<list.size(); j++){
+			if (list.get(j).equals(myURL)){
+				continue;
+			}
 			// Fetch the DB from the GSR
 			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery");
 			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
@@ -507,8 +509,7 @@ public class NeighborsManager {
 				}
 				retval = false;
 			} catch (InvalidServiceDescriptionException e) {	//addService
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 				retval = false;
 			} catch (ExistingResourceException e) {
 				if (logger.isDebugEnabled()) {
@@ -516,12 +517,10 @@ public class NeighborsManager {
 				}
 				retval = false;
 			} catch (QueryException e) {	//checkMessageGenerationTime
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 				retval = false;
 			} catch (PersistentStoreFailureException e) {	//checkMessageGenerationTime
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 				retval = false;
 			}
 		}
