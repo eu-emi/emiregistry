@@ -57,8 +57,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		try {
 			String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
@@ -205,8 +204,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 							+ identifier + "'");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 	}
@@ -237,8 +235,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 							+ "' ID! Everything correct.");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 	}
@@ -275,8 +272,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 	}
@@ -363,8 +359,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					try {
 						sended.put(jos.getJSONObject(index));
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.logException("", e);
 					}
 				}
 				// Send
@@ -387,8 +382,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					try {
 						sended.put(jos.getJSONObject(index));
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.logException("", e);
 					}
 				}
 				// Send
@@ -430,8 +424,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		if (ne == 0 && del == 1) {
 			return jo;
@@ -455,14 +448,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 			}
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (PersistentStoreFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (NonExistingResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 		return jo;
@@ -530,12 +520,10 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			} catch (ClientHandlerException e) {
 				retval = false;
 			} catch (UniformInterfaceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 				retval = false;
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 				retval = false;
 			}
 
@@ -550,8 +538,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 						databaseclean(0, 0);
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.logException("", e);
 				}
 			}
 
@@ -578,8 +565,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 								.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 										.getAttributeName()).toString();
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.logException("", e);
 						break;
 					}
 					if (!currentURL.equals(failedURL)) {
@@ -596,8 +582,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 										.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 												.getAttributeName()).toString();
 							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Log.logException("", e);
 							}
 						}
 					}
@@ -639,7 +624,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		try {
 			stat.execute("delete from " + dbname + " where id='" + id + "'");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return;
 	}

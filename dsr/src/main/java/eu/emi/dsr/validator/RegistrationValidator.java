@@ -81,7 +81,6 @@ public class RegistrationValidator extends AbstractInfoValidator {
 				// }
 
 			} catch (Exception e) {
-				e.printStackTrace();
 				Log.logException(new InvalidServiceDescriptionException(
 						"invalid date format for the key: " + key, e));
 				valid = false;
@@ -187,7 +186,6 @@ public class RegistrationValidator extends AbstractInfoValidator {
 //								.getAttributeName());
 //			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			Log.logException("Invalid expiry time", e);
 			return false;
 		}

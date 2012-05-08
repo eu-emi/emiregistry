@@ -26,6 +26,7 @@ public class ServiceObject {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -8819684158264382427L;
 
 	private final JSONObject jo;
@@ -53,7 +54,7 @@ public class ServiceObject {
 					.get(ServiceBasicAttributeNames.SERVICE_OWNER
 							.getAttributeName()).toString();
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return owner;
 	}
@@ -65,8 +66,7 @@ public class ServiceObject {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName())
 					.toString();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return serviceUrl;
 	}
@@ -81,8 +81,7 @@ public class ServiceObject {
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return d;
 	}
@@ -96,8 +95,7 @@ public class ServiceObject {
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return d;
 	}
@@ -111,8 +109,7 @@ public class ServiceObject {
 		} catch (ParseException e) {
 			Log.logException(e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return d;
 	}

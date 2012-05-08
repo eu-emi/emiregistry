@@ -193,11 +193,11 @@ public class ServiceAdminManager {
 			serviceDB.update(sObj);
 			return jo;
 		} catch (MultipleResourceException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (NonExistingResourceException e) {
 			throw new WebApplicationException(Status.CONFLICT);
 		} catch (PersistentStoreFailureException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return null;
 
@@ -218,8 +218,7 @@ public class ServiceAdminManager {
 		try {
 			so = serviceDB.getServiceByUrl(url);
 		} catch (MultipleResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		if (so == null) {
 			return null;

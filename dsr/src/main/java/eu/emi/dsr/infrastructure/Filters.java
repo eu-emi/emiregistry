@@ -141,8 +141,7 @@ public class Filters extends ServerConstants {
 	            		break;
 	            	}
 	            } catch (JSONException e) {
-	            	// TODO Auto-generated catch block
-	            	e.printStackTrace();
+	            	Log.logException("", e);
 	            }
 	        }
 	        if (!found){
@@ -150,8 +149,7 @@ public class Filters extends ServerConstants {
 	        	try {
 	        		filteredArray.put(serviceInfos.getJSONObject(i));
 	        	} catch (JSONException e) {
-	        		// TODO Auto-generated catch block
-	        		e.printStackTrace();
+	        		Log.logException("", e);
 	        	}
 	        }
 		}
@@ -206,8 +204,7 @@ public class Filters extends ServerConstants {
 			logger.warn("Filter file (" + path + ") not found! "
 					+ ((path.equals(inputFilterPath)) ? "Input" : "Output") + " filter turned OFF!");
 		} catch (Exception e){
-			// TODO Auto-generated catch block
-        	e.printStackTrace();
+			Log.logException("", e);
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Parsed filters: " + filters.toString());

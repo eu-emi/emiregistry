@@ -97,15 +97,15 @@ public class DSRServer {
 			}
 			
 		} catch (UnrecoverableKeyException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (KeyStoreException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (CertificateException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		
 
@@ -296,8 +296,7 @@ public class DSRServer {
 					} catch (NullPointerException e) {
 						System.out.println("null failure");
 					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.logException("shutdown hook", e);
 					}
 				}
 				threadLogger.debug("DSR server stopped (shutdown hook)");

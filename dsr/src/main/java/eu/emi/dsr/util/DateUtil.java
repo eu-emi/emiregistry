@@ -10,6 +10,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 import eu.emi.dsr.glue2.JSONToGlue2MappingException;
 
 /**
@@ -25,7 +26,7 @@ public class DateUtil {
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), date);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 		return jo;
@@ -38,7 +39,7 @@ public class DateUtil {
 			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), date);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 		return jo;
@@ -51,7 +52,7 @@ public class DateUtil {
 			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), date);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 		return jo;
@@ -63,7 +64,7 @@ public class DateUtil {
 			date.put("$date", ServiceUtil.toUTCFormat(d));
 			jo.put(attrName, date);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return jo;
 	}

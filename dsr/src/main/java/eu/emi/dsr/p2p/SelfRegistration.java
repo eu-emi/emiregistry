@@ -72,8 +72,7 @@ public class SelfRegistration implements Runnable {
 				this.finalize();
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		// Fill the infos
 		myInfos = new JSONObject();
@@ -138,8 +137,7 @@ public class SelfRegistration implements Runnable {
 			try {
 				Thread.sleep(60*60*1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 	}

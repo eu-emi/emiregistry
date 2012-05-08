@@ -113,8 +113,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 								try {
 									IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_URL"));
 								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									Log.logException("", e);
 								}
 							}
 						}

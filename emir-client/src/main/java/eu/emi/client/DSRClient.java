@@ -112,25 +112,19 @@ public class DSRClient {
 
 			cr = Client.create(config);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (CertificateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (UnrecoverableKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 	}

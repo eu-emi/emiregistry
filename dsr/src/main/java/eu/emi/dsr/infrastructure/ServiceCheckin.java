@@ -82,8 +82,7 @@ public class ServiceCheckin implements Runnable {
 				this.finalize();
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		myURL = url;
 		max = maxmessage;
@@ -131,8 +130,7 @@ public class ServiceCheckin implements Runnable {
 							}
 						}
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.logException("", e);
 					}
 				}
 			} catch (ClientHandlerException e){
@@ -141,8 +139,7 @@ public class ServiceCheckin implements Runnable {
 			try {
 				Thread.sleep(60*60*1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 	}

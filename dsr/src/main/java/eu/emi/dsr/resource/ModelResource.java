@@ -20,6 +20,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.client.util.Log;
 
 
 /**
@@ -40,9 +41,9 @@ public class ModelResource {
 			IOUtils.copy(is, writer);
 			jo = new JSONArray(writer.toString()); 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 	}
 	
@@ -90,7 +91,7 @@ public class ModelResource {
 		try {
 			b.append(jo.toString(2));
 		} catch (JSONException e) {			
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		b.append("</textarea>");		
 		b.append("</body></html>");

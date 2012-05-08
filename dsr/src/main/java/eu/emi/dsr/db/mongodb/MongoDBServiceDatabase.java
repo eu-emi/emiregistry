@@ -115,7 +115,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(), true);
 		} catch (MongoException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 			logger.warn(e.getCause());
 		} catch (Exception e) {
 			logger.error("Error in connecting the MongoDB database", e);
@@ -244,7 +244,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			so = new ServiceObject(db);
 
 		} catch (MongoException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		} catch (JSONException e) {
 			throw new NonExistingResourceException(e);
 		}
@@ -306,7 +306,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			// Event(EventTypes.SERVICE_UPDATE,
 			// sObj.toJSON()));
 		} catch (MongoException e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 	}
@@ -327,7 +327,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 
 		return Collections.unmodifiableList(resultCollection);
@@ -356,7 +356,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return Collections.unmodifiableList(resultCollection);
 	}
@@ -381,7 +381,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return Collections.unmodifiableList(resultCollection);
 	}
@@ -423,7 +423,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return arr;
 	}
@@ -445,7 +445,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return arr;
 	}
@@ -471,7 +471,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			}
 			cur.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logException("", e);
 		}
 		return arr;
 	}

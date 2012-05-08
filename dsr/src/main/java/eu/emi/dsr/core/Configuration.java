@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import eu.emi.client.util.Log;
+
 /**
  * @author a.memon
  * @author g.szigeti
@@ -27,7 +29,7 @@ public class Configuration implements Cloneable{
 			try {
 				throw new Exception("path cannot be empty");
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 		
@@ -36,9 +38,9 @@ public class Configuration implements Cloneable{
 			try {
 				props.load(new FileInputStream(new File(path)));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				Log.logException("", e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.logException("", e);
 			}
 		}
 
