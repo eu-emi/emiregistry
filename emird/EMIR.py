@@ -46,10 +46,8 @@ class EMIRConfiguration:
     # TODO: verification pattern and logic here
 
     # Extract derived attributes from the original ones from ini config
-    other_url = 'https://bla.bla.hu:54321'
     url_derivator = re.compile("^(http[s]?://)?([^:/]+)(:(\d*))?$")
     m = url_derivator.match(self.url)
-    m2 = url_derivator.match(other_url)
     if not m:
       raise Exception('Invalid URL format in url attribute')
 
