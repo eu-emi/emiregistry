@@ -18,7 +18,7 @@ function start {
     status -p "$LASTPID" "$SERVICE"
     RETVAL=$?
   else
-    runuser -s /bin/bash -c "$DAEMON" "$EMIRD_USER"
+    runuser -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIRD_USER"
     RETVAL=$?
     echo -n "$NAME startup"
     [ "$RETVAL" -eq 0 ] && success || failure 
