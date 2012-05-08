@@ -64,17 +64,18 @@ class emird(Daemon):
         self.logger.error("Registration failed: %s" % ex)
         exit(1)
 
+    # After the successful initial registration wait the selected time
+    # (where the configured period is given in minutes so have to be
+    # multiplied by 60) then try to send an update message.
+    sleep(self.config.period * 60)
     while self.daemon_alive:
-      # After the successful initial registration wait the selected time
-      # (where the configured period is given in minutes so have to be
-      # multiplied by 60) then try to send an update message.
-      sleep(self.config.period * 60)
       try:
         self.logger.debug('Periodical registration update')
         self.client.update()
       except Exception, ex:
         self.logger.error("Update failed: %s" % ex)
         exit(1)
+      sleep(self.config.period * 60)
 
     # Delete registered entries
     try:
