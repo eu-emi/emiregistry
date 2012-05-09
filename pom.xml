@@ -207,7 +207,7 @@
 		</dependencies>
 	</dependencyManagement>
 	<modules>
-		<module>dsr</module>
+		<module>emir-core</module>
 		<module>xmltypes</module>
 		<module>emir-client</module>
 	</modules>
