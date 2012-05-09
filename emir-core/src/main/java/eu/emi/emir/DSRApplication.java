@@ -18,7 +18,7 @@ public class DSRApplication extends PackagesResourceConfig{
 	 * 
 	 */
 	public DSRApplication() {
-		super("eu.emi.dsr.resource");
+		super("eu.emi.emir.resource");
 		
 	}
 	

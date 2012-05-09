@@ -40,7 +40,7 @@ public abstract class TestRegistryBase {
 		serverProps.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
 		serverProps.put(ServerConstants.JETTY_LOWTHREADS, "50");
 		serverProps.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
-		serverProps.put(ServerConstants.JETTY_MAXTHREADS, "1000");
+		serverProps.put(ServerConstants.JETTY_MAXTHREADS, "255");
 		serverProps.put(ServerConstants.LOGGER_CONF_PATH,
 				"src/test/resources/conf/log4j.properties");
 		serverProps.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
