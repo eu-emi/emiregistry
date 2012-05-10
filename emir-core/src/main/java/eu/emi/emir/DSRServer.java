@@ -416,18 +416,22 @@ public class DSRServer {
 	}
 	
 	protected void finalize(){
-		System.out.println("Send DELETE message to the neighbors.");
-		logger.info("Send DELETE message to the neighbors.");
-		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-                conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-			    conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
-		
-		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
-		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
-		try {
-			new MongoDBServiceDatabase().deleteByUrl(myURL);
-		} catch (Exception e) {
-			Log.logException("Error in the delete procedure ", e);
+		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+		if (globalRegistryEnabled != null &&
+				globalRegistryEnabled.toLowerCase().equals("true")) {
+			System.out.println("Send DELETE message to the neighbors.");
+			logger.info("Send DELETE message to the neighbors.");
+			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
+	                conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
+				    conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
+			
+			Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
+			new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
+			try {
+				new MongoDBServiceDatabase().deleteByUrl(myURL);
+			} catch (Exception e) {
+				Log.logException("Error in the delete procedure ", e);
+			}
 		}
 	}
 
