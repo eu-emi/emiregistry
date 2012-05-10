@@ -139,9 +139,7 @@ public class DSRServer {
 		startServiceExpiryCheckcer();
 		
 		String type = "DSR";
-		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-		if (globalRegistryEnabled != null &&
-				globalRegistryEnabled.toLowerCase().equals("true")) {
+		if (getGlobalRegistryEnabled()) {
 			type = "GSR";
 			startGSRFunctions();
 		} else {
@@ -151,6 +149,18 @@ public class DSRServer {
 		logger.info(type + " server started");
 	}
 
+	/**
+	 * The configured EMIR is global or federated component.
+	 * @return boolean
+	 */
+	private static boolean getGlobalRegistryEnabled() {
+		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+		if (globalRegistryEnabled != null &&
+				globalRegistryEnabled.toLowerCase().equals("true")) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * 
@@ -287,9 +297,7 @@ public class DSRServer {
 			private Logger threadLogger = Log.getLogger(Log.DSR, DSRServer.class);
 			public void run() {
 				threadLogger.debug("DSR server is stopping now (shutdown hook)");
-				String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-				if (globalRegistryEnabled != null &&
-						globalRegistryEnabled.toLowerCase().equals("true")) {
+				if (getGlobalRegistryEnabled()) {
 					try {
 						//serverPointer.finalize();
 						serverPointer.stopJetty();
@@ -416,9 +424,7 @@ public class DSRServer {
 	}
 	
 	protected void finalize(){
-		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-		if (globalRegistryEnabled != null &&
-				globalRegistryEnabled.toLowerCase().equals("true")) {
+		if (getGlobalRegistryEnabled()) {
 			System.out.println("Send DELETE message to the neighbors.");
 			logger.info("Send DELETE message to the neighbors.");
 			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
