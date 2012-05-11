@@ -31,18 +31,12 @@ import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.FileListener;
 import eu.emi.emir.core.RegistryThreadPool;
 import eu.emi.emir.core.ServerConstants;
-import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.emir.event.Event;
-import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.infrastructure.InputFilter;
 import eu.emi.emir.infrastructure.ServiceCheckin;
 import eu.emi.emir.infrastructure.ServiceEventReceiver;
 import eu.emi.emir.jetty.JettyServer;
 import eu.emi.emir.lease.ServiceReaper;
-import eu.emi.emir.p2p.NeighborsEventReciever;
-import eu.emi.emir.p2p.RemoveCheck;
-import eu.emi.emir.p2p.SelfRegistration;
-import eu.emi.emir.p2p.ValidityCheck;
+import eu.emi.emir.p2p.StartStopMethods;
 import eu.emi.emir.security.ACLFilter;
 import eu.emi.emir.security.AccessControlFilter;
 import eu.emi.emir.security.DSRSecurityProperties;
@@ -139,11 +133,9 @@ public class DSRServer {
 		startServiceExpiryCheckcer();
 		
 		String type = "DSR";
-		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-		if (globalRegistryEnabled != null &&
-				globalRegistryEnabled.toLowerCase().equals("true")) {
+		if (getGlobalRegistryEnabled()) {
 			type = "GSR";
-			startGSRFunctions();
+			StartStopMethods.startGSRFunctions();
 		} else {
 			addParentDSR();
 		}
@@ -151,6 +143,18 @@ public class DSRServer {
 		logger.info(type + " server started");
 	}
 
+	/**
+	 * The configured EMIR is global or federated component.
+	 * @return boolean
+	 */
+	private static boolean getGlobalRegistryEnabled() {
+		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+		if (globalRegistryEnabled != null &&
+				globalRegistryEnabled.toLowerCase().equals("true")) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * 
@@ -287,9 +291,7 @@ public class DSRServer {
 			private Logger threadLogger = Log.getLogger(Log.DSR, DSRServer.class);
 			public void run() {
 				threadLogger.debug("DSR server is stopping now (shutdown hook)");
-				String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-				if (globalRegistryEnabled != null &&
-						globalRegistryEnabled.toLowerCase().equals("true")) {
+				if (getGlobalRegistryEnabled()) {
 					try {
 						//serverPointer.finalize();
 						serverPointer.stopJetty();
@@ -365,69 +367,10 @@ public class DSRServer {
 
 	}
 	
-	public void startGSRFunctions() {
-		// Neighbors event receiver start
-		RegistryThreadPool.getExecutorService().execute(
-				new NeighborsEventReciever());
-
-		// Message(s) send event receiver start
-		RegistryThreadPool.getExecutorService().execute(
-				new eu.emi.emir.p2p.ServiceEventReceiver());
-
-		// Self registration start
-		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-			       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
-		try {
-			RegistryThreadPool.getExecutorService().execute(
-					new SelfRegistration(myURL));
-		} catch (Throwable e) {
-			logger.warn("Has a problem with the self-registration.");
-		}
 		
-		//Soft-State functions start
-		int timedelay;
-		try {
-			timedelay = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY));
-			if (timedelay < 0) {
-				logger.info("Configured Soft-State timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
-				timedelay = 2;
-			}
-			logger.info("Set the Soft-State timedelay to "+ timedelay);
-		} catch (NumberFormatException e) {
-			// set default value
-			logger.info("Set the default (2 hours) value of Soft-State timedelay.");
-			timedelay = 2;
-		}
-		try {
-			RegistryThreadPool.getExecutorService().execute(
-					new ValidityCheck(timedelay));
-		} catch (Throwable e) {
-			logger.warn("Has a problem with the validity check.");
-		}
-		try {
-			RegistryThreadPool.getExecutorService().execute(
-					new RemoveCheck(timedelay));
-		} catch (Throwable e) {
-			logger.warn("Has a problem with the remove check.");
-		}
-
-	}
-	
 	protected void finalize(){
-		System.out.println("Send DELETE message to the neighbors.");
-		logger.info("Send DELETE message to the neighbors.");
-		String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-                conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-			    conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
-		
-		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
-		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
-		try {
-			new MongoDBServiceDatabase().deleteByUrl(myURL);
-		} catch (Exception e) {
-			Log.logException("Error in the delete procedure ", e);
+		if (getGlobalRegistryEnabled()) {
+			StartStopMethods.stopGSRFunctions();
 		}
 	}
 
