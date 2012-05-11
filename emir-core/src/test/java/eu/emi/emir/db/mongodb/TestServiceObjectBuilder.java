@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.mongodb.ServiceObject;
 import eu.emi.emir.db.mongodb.ServiceObjectBuilder;
 

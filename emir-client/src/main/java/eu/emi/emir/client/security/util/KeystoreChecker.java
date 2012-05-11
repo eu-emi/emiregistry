@@ -5,7 +5,7 @@
  * Created on 2011-02-11
  * Author: K. Benedyczak <golbi@mat.umk.pl>
  */
-package eu.emi.client.security.util;
+package eu.emi.emir.client.security.util;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

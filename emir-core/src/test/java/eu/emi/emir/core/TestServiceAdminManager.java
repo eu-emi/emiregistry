@@ -14,8 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;

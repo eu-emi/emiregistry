@@ -36,8 +36,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.util.AttributeSourcesChain;
-import eu.emi.client.util.Log;
 
 
 /**

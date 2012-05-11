@@ -1,4 +1,4 @@
-package eu.emi.client.security;
+package eu.emi.emir.client.security;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpHost;

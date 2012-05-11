@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONArray;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 
 /**
  * @author g.szigeti

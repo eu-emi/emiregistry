@@ -11,8 +11,8 @@ import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.util.ServiceUtil;
 
 /**

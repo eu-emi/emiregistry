@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.mongodb.DBObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.QueryException;

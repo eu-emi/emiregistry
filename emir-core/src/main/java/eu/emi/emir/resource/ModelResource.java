@@ -19,8 +19,8 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 
 
 /**

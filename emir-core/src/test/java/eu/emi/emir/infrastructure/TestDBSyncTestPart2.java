@@ -20,8 +20,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.DateUtil;
 
 /**

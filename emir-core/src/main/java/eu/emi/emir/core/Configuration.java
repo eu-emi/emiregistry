@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 
 /**
  * @author a.memon

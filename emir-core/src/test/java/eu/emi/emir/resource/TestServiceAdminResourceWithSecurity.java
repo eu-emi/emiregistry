@@ -24,9 +24,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.TestRegistryBaseWithSecurity;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.ServiceUtil;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
 

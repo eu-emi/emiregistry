@@ -2,8 +2,8 @@ package eu.emi.emir.p2p;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;

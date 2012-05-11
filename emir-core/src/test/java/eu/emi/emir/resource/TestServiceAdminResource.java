@@ -19,13 +19,13 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.client.DSRClient;
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
 import static org.junit.Assert.*;
 

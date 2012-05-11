@@ -20,9 +20,9 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 

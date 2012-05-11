@@ -24,9 +24,9 @@ import org.eclipse.jetty.server.Server;
 
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 
-import eu.emi.client.ClientSecurityProperties;
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ClientSecurityProperties;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.FileListener;
 import eu.emi.emir.core.RegistryThreadPool;

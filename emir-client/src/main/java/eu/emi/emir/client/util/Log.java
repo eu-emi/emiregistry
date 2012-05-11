@@ -1,4 +1,4 @@
-package eu.emi.client.util;
+package eu.emi.emir.client.util;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;

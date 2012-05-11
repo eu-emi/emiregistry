@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.junit.Test;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.client.DSRClient;
+import eu.emi.emir.client.DSRClient;
 
 /**
  * @author a.memon

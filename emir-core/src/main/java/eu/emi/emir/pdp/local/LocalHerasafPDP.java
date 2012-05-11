@@ -32,7 +32,7 @@ import org.herasaf.xacml.core.simplePDP.SimplePDPConfiguration;
 import org.herasaf.xacml.core.simplePDP.SimplePDPFactory;
 import org.xml.sax.SAXException;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPResult;
 import eu.emi.emir.pdp.RegistryPDP;
 import eu.emi.emir.security.Client;
