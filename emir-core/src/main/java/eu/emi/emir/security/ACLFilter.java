@@ -40,7 +40,7 @@ import eu.emi.client.util.Log;
  * 
  */
 public class ACLFilter implements ContainerRequestFilter {
-	private static Logger logger = Log.getLogger(Log.SECURITY, ACLFilter.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_SECURITY, ACLFilter.class);
 	private final File aclFile;
 	private final FileWatcher watchDog;
 	private final boolean active;

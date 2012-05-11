@@ -24,7 +24,7 @@ import eu.emi.emir.util.ServiceUtil;
  * 
  */
 public class RegistrationValidator extends AbstractInfoValidator {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			RegistrationValidator.class);
 
 	/*

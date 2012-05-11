@@ -48,7 +48,7 @@ import eu.emi.client.util.Log;
  */
 @Path("/serviceadmin")
 public class ServiceAdminResource {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceAdminResource.class);
 
 	private ServiceAdminManager serviceAdmin;

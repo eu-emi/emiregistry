@@ -68,7 +68,7 @@ import eu.emi.client.util.Log;
 
 public class AuthSSLProtocolSocketFactory implements SecureProtocolSocketFactory
 {
-	private static final Logger LOG = Log.getLogger(Log.SECURITY,
+	private static final Logger LOG = Log.getLogger(Log.EMIR_SECURITY,
 			AuthSSLProtocolSocketFactory.class);
 
 	private SSLContext sslcontext = null;

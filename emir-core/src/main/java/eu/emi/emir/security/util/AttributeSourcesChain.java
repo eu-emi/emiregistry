@@ -73,7 +73,7 @@ import eu.emi.client.util.Log;
  */
 public class AttributeSourcesChain implements IAttributeSource{
 
-	private final static Logger logger=Log.getLogger(Log.SECURITY, AttributeSourcesChain.class);
+	private final static Logger logger=Log.getLogger(Log.EMIR_SECURITY, AttributeSourcesChain.class);
 	
 	private List<IAttributeSource> chain;
 	private List<String> names;

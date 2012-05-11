@@ -51,7 +51,7 @@ public class DSRClient {
 	private String url;
 
 	private static Logger logger = Log
-			.getLogger(Log.DSRCLIENT, DSRClient.class);
+			.getLogger(Log.EMIR_CLIENT, DSRClient.class);
 	Client cr = null;
 	ClientSecurityProperties sProps = null;
 

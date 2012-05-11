@@ -37,7 +37,7 @@ import eu.emi.emir.db.mongodb.ServiceObject;
  * 
  */
 public class InfrastructureManager implements ServiceInfrastructure {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			InfrastructureManager.class);
 	private Configuration conf;
 	private static Connection conn;

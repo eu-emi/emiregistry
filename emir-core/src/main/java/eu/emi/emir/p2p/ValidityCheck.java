@@ -22,7 +22,7 @@ import eu.emi.emir.util.DateUtil;
  * 
  */
 public class ValidityCheck implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, ValidityCheck.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, ValidityCheck.class);
 	private int etvalid;
 	private int timedelay;
 	private MongoDBServiceDatabase mongoDB;

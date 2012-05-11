@@ -26,7 +26,7 @@ import eu.emi.client.util.Log;
 
 
 public class KeystoreUtil {
-	private final static Logger log=Log.getLogger(Log.SECURITY,KeystoreUtil.class);
+	private final static Logger log=Log.getLogger(Log.EMIR_SECURITY,KeystoreUtil.class);
 	private KeystoreUtil(){}
 	private final static AtomicInteger counter=new AtomicInteger(0);
 	public static String getDefaultKeyAlias(ISecurityProperties sec) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{

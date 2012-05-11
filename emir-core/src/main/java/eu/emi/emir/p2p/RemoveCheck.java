@@ -22,7 +22,7 @@ import eu.emi.emir.util.DateUtil;
  * 
  */
 public class RemoveCheck implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, RemoveCheck.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, RemoveCheck.class);
 	private int etremove;
 	private int timedelay;
 	private MongoDBServiceDatabase mongoDB;

@@ -48,7 +48,7 @@ import eu.emi.client.util.Log;
  */
 public class AttributeSourceFactory {
 
-	private static final Logger logger=Log.getLogger(Log.SECURITY,AttributeSourceFactory.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,AttributeSourceFactory.class);
 
 	/**
 	 * base for property names

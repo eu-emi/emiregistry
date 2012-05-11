@@ -34,7 +34,7 @@ import eu.emi.emir.db.mongodb.ServiceObject;
  * 
  */
 public class ServiceCheckin implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, ServiceCheckin.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, ServiceCheckin.class);
 	private final WebResource childClient;
 	private final WebResource synchClient;
 	private String myURL;

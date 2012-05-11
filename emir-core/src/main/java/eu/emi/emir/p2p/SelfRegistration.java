@@ -34,7 +34,7 @@ import eu.emi.emir.util.ServiceUtil;
  * 
  */
 public class SelfRegistration implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, SelfRegistration.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, SelfRegistration.class);
 	private final WebResource selfRegisterClient;
 	private JSONObject myInfos;
 	private Boolean firstUsage;

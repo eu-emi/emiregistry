@@ -73,7 +73,7 @@ import eu.emi.client.util.Log;
  */
 public final class SecurityManager {
 
-	private static final Logger logger=Log.getLogger(Log.SECURITY,SecurityManager.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,SecurityManager.class);
 
 	/**
 	 * for unit testing, set this property to "true" to disable security

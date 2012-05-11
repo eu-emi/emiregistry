@@ -11,7 +11,7 @@ import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventTypes;
 
 public class StartStopMethods {
-	private static Logger logger = Log.getLogger(Log.DSR, DSRServer.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, DSRServer.class);
 
 	public static void startGSRFunctions() {
 		// Neighbors event receiver start

@@ -76,7 +76,7 @@ import eu.emi.emir.security.XACMLAttribute.Type;
  * 
  */
 public class FileAttributeSource implements IAttributeSource {
-	private static final Logger logger = Log.getLogger(Log.SECURITY,
+	private static final Logger logger = Log.getLogger(Log.EMIR_SECURITY,
 			FileAttributeSource.class);
 
 	// config options

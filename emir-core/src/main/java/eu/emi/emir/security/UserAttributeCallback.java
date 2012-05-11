@@ -22,7 +22,7 @@ import eu.emi.emir.util.Utilities;
  */
 public class UserAttributeCallback implements UserAttributeHandler{
 	
-	private static final Logger logger = Log.getLogger(Log.SECURITY,UserAttributeCallback.class);
+	private static final Logger logger = Log.getLogger(Log.EMIR_SECURITY,UserAttributeCallback.class);
 	public static final String USER_PREFERENCES_KEY = UserAttributeCallback.class.getCanonicalName();
 	
 	/**

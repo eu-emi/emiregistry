@@ -38,7 +38,7 @@ import com.mongodb.util.JSON;
  * 
  */
 public class MongoDBServiceDatabase implements ServiceDatabase {
-	private static Logger logger = Log.getLogger(Log.DSRDB,
+	private static Logger logger = Log.getLogger(Log.EMIR_DB,
 			MongoDBServiceDatabase.class);
 	private static Mongo connection;
 	private DB database;

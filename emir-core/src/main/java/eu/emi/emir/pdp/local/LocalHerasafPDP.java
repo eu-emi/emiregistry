@@ -51,7 +51,7 @@ import eu.emi.emir.security.util.ResourceDescriptor;
  */
 public class LocalHerasafPDP implements RegistryPDP, PolicyListener
 {
-	private static final Logger log = Log.getLogger(Log.SECURITY, LocalHerasafPDP.class);
+	private static final Logger log = Log.getLogger(Log.EMIR_SECURITY, LocalHerasafPDP.class);
 	private PDP engine;
 	private RequestCreator requestMaker;
 	private ReadWriteLock lock = new ReentrantReadWriteLock();

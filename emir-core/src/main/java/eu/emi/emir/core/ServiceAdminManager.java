@@ -42,7 +42,7 @@ import eu.emi.emir.util.ServiceUtil;
  * 
  */
 public class ServiceAdminManager {
-	private static Logger log = Log.getLogger(Log.DSR, ServiceAdminManager.class);
+	private static Logger log = Log.getLogger(Log.EMIR_CORE, ServiceAdminManager.class);
 	
 	private ServiceDatabase serviceDB = null;
 	private String DBVersion = null;

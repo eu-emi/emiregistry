@@ -28,7 +28,7 @@ import eu.emi.emir.event.EventTypes;
  *
  */
 public class MessageSendInThread extends Thread {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			MessageSendInThread.class);
 	private int retry;
 	private String neighbor;

@@ -35,7 +35,7 @@ import eu.emi.emir.event.EventTypes;
  * 
  */
 public class ServiceEventReceiver implements EventListener, Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceEventReceiver.class);
 	private static Configuration conf;
 	private final WebResource client;

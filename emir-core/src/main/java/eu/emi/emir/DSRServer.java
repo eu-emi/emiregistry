@@ -53,9 +53,10 @@ public class DSRServer {
 	private boolean started;
 	private static Configuration conf;
 	private JettyServer jettyServer;
-	private Logger logger = Log.getLogger(Log.DSR, DSRServer.class);
+	private Logger logger = Log.getLogger(Log.EMIR_CORE, DSRServer.class);
 	private static ISecurityProperties sProps;
 	private static Date runningSince;
+
 	/**
 	 * @param path
 	 *            configuration file
@@ -80,16 +81,18 @@ public class DSRServer {
 		setSecurityProperties();
 	}
 
-	
 	private void setSecurityProperties() {
 		try {
-			if (getProperty(ServerConstants.REGISTRY_SCHEME, "http").equalsIgnoreCase("https")) {
-				conf.setProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "true");
+			if (getProperty(ServerConstants.REGISTRY_SCHEME, "http")
+					.equalsIgnoreCase("https")) {
+				conf.setProperty(ISecurityProperties.REGISTRY_SSL_ENABLED,
+						"true");
 			}
-			if ("true".equalsIgnoreCase(getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-				sProps = new DSRSecurityProperties(conf.getProperties());	
+			if ("true".equalsIgnoreCase(getProperty(
+					ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+				sProps = new DSRSecurityProperties(conf.getProperties());
 			}
-			
+
 		} catch (UnrecoverableKeyException e) {
 			Log.logException("", e);
 		} catch (KeyStoreException e) {
@@ -101,11 +104,8 @@ public class DSRServer {
 		} catch (IOException e) {
 			Log.logException("", e);
 		}
-		
 
 	}
-
-	
 
 	public static ISecurityProperties getSecurityProperties() {
 		return sProps.clone();
@@ -131,7 +131,7 @@ public class DSRServer {
 
 		startLog4jFileListener();
 		startServiceExpiryCheckcer();
-		
+
 		String type = "DSR";
 		if (getGlobalRegistryEnabled()) {
 			type = "GSR";
@@ -145,24 +145,26 @@ public class DSRServer {
 
 	/**
 	 * The configured EMIR is global or federated component.
+	 * 
 	 * @return boolean
 	 */
 	private static boolean getGlobalRegistryEnabled() {
-		String globalRegistryEnabled = conf.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
-		if (globalRegistryEnabled != null &&
-				globalRegistryEnabled.toLowerCase().equals("true")) {
+		String globalRegistryEnabled = conf
+				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE);
+		if (globalRegistryEnabled != null
+				&& globalRegistryEnabled.toLowerCase().equals("true")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void addDefaultFilterClasses() {
 		addRequestFilters();
 		addResponseFilters();
-				
+
 	}
 
 	/**
@@ -171,9 +173,14 @@ public class DSRServer {
 	private void addResponseFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
-		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
-		conf.setProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE, sb.toString());
+		sb.append(GZIPContentEncodingFilter.class.getName());
+		if (s != null) {
+			sb.append(";").append(s);	
+		}
 		
+		conf.setProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE,
+				sb.toString());
+
 	}
 
 	/**
@@ -183,35 +190,47 @@ public class DSRServer {
 		StringBuilder sb = new StringBuilder();
 		String s = conf.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
 
-		//checking whether to use xacml for the authorization
-		if ((getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG).isEmpty())) {
-			sb.append(AccessControlFilter.class.getName()).append(",");
+		// checking whether to use xacml for the authorization
+		if ((getProperty(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG,
+				null) != null)
+				&& (!getProperty(
+						ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG)
+						.isEmpty())) {
+			sb.append(AccessControlFilter.class.getName()).append(";");
 		} else {
-		//setting ACL filter		
-//		if ((getProperty(ISecurityProperties.REGISTRY_ACL_FILE, null) != null) && (!getProperty(ISecurityProperties.REGISTRY_ACL_FILE).isEmpty())) {
-			sb.append(ACLFilter.class.getName()).append(",");
+			// setting ACL filter
+			sb.append(ACLFilter.class.getName()).append(";");
+		}
+
+		// adding the service record filter
+		if ((getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, null) != null)
+				&& (!getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH)
+						.isEmpty())) {
+			sb.append(InputFilter.class.getName()).append(";");
 		}
 		
-		//adding the service record filter
-		if((getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, null) != null) && (!getProperty(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH).isEmpty())){
-			sb.append(InputFilter.class.getName()).append(",");
-		}
-		sb.append(GZIPContentEncodingFilter.class.getName()).append(",").append(s);
-		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST, sb.toString());
+		sb.append(GZIPContentEncodingFilter.class.getName());
 		
+		if (s != null) {
+			sb.append(";").append(s);	
+		}
+		
+		conf.setProperty(ServerConstants.REGISTRY_FILTERS_REQUEST,
+				sb.toString());
+
 	}
 
-	public static String getProperty(String key){
+	public static String getProperty(String key) {
 		return conf.getProperty(key);
 	}
-	
-	public static String getProperty(String key, String defaultValue){
+
+	public static String getProperty(String key, String defaultValue) {
 		if (conf == null) {
 			return null;
 		}
 		return conf.getProperty(key, defaultValue);
 	}
-	
+
 	public Server getServer() {
 		return jettyServer.getServer();
 	}
@@ -286,14 +305,17 @@ public class DSRServer {
 		}
 		// Shutdown hook
 		final DSRServer serverPointer = server;
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			private Logger threadLogger = Log.getLogger(Log.DSR, DSRServer.class);
+			private Logger threadLogger = Log.getLogger(Log.EMIR_CORE,
+					DSRServer.class);
+
 			public void run() {
-				threadLogger.debug("DSR server is stopping now (shutdown hook)");
+				threadLogger
+						.debug("DSR server is stopping now (shutdown hook)");
 				if (getGlobalRegistryEnabled()) {
 					try {
-						//serverPointer.finalize();
+						// serverPointer.finalize();
 						serverPointer.stopJetty();
 					} catch (NullPointerException e) {
 						System.out.println("null failure");
@@ -306,10 +328,10 @@ public class DSRServer {
 		});
 		// end of Shutdown hook
 
-		server.startJetty();	
+		server.startJetty();
 	}
-	
-	public static Date getRunningSince(){
+
+	public static Date getRunningSince() {
 		return runningSince;
 	}
 
@@ -350,15 +372,25 @@ public class DSRServer {
 			logger.info("adding parent dsr : " + url + " to: " + getBaseUrl());
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(conf
-							.getProperty(ServerConstants.REGISTRY_PARENT_URL), conf));
-			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-	                   conf.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-				       conf.getProperty(ServerConstants.REGISTRY_PORT).toString();
-			Long max = Long.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
+							.getProperty(ServerConstants.REGISTRY_PARENT_URL),
+							conf));
+			String myURL = conf.getProperty(ServerConstants.REGISTRY_SCHEME)
+					.toString()
+					+ "://"
+					+ conf.getProperty(ServerConstants.REGISTRY_HOSTNAME)
+							.toString()
+					+ ":"
+					+ conf.getProperty(ServerConstants.REGISTRY_PORT)
+							.toString();
+			Long max = Long.valueOf(DSRServer.getProperty(
+					ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
 			try {
-				RegistryThreadPool.getExecutorService().execute(
-						new ServiceCheckin(conf
-								.getProperty(ServerConstants.REGISTRY_PARENT_URL), myURL, max));
+				RegistryThreadPool
+						.getExecutorService()
+						.execute(
+								new ServiceCheckin(
+										conf.getProperty(ServerConstants.REGISTRY_PARENT_URL),
+										myURL, max));
 			} catch (Throwable e) {
 				logger.warn("The parent DSR is not available.");
 			}
@@ -366,30 +398,36 @@ public class DSRServer {
 		}
 
 	}
-	
-		
-	protected void finalize(){
+
+	protected void finalize() {
 		if (getGlobalRegistryEnabled()) {
 			StartStopMethods.stopGSRFunctions();
 		}
 	}
 
-	public static ClientSecurityProperties getClientSecurityProperties(){
+	public static ClientSecurityProperties getClientSecurityProperties() {
 		ClientSecurityProperties csp = null;
 
 		Properties p = new Properties();
-		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, sProps.requireClientAuthentication());
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, sProps.getKeystoreKeyPassword());
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, sProps.getKeystoreType());
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,sProps.getKeystore());
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, sProps.getTruststorePassword());
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE, sProps.getTruststore());
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, sProps.getTruststoreType());
-		
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH,
+				sProps.requireClientAuthentication());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS,
+				sProps.getKeystoreKeyPassword());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE,
+				sProps.getKeystoreType());
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE, sProps.getKeystore());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS,
+				sProps.getTruststorePassword());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
+				sProps.getTruststore());
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE,
+				sProps.getTruststoreType());
+
 		try {
 			csp = new ClientSecurityProperties(p);
-		} catch (Exception e){
-			Log.logException("Error in creating the client security properties", e);
+		} catch (Exception e) {
+			Log.logException(
+					"Error in creating the client security properties", e);
 		}
 		return csp;
 	}

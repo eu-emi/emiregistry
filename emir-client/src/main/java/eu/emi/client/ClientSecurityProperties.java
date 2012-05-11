@@ -31,7 +31,7 @@ import eu.emi.client.util.Log;
  * 
  */
 public class ClientSecurityProperties implements IClientProperties {
-	private static final Logger logger=Log.getLogger(Log.SECURITY,ClientSecurityProperties.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,ClientSecurityProperties.class);
 	/**
 	 * property defining whether SSL is enabled
 	 */

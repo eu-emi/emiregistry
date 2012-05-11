@@ -18,7 +18,7 @@ import eu.emi.client.util.Log;
  * 
  */
 public class InputFilter implements ContainerRequestFilter {
-	private Logger logger = Log.getLogger(Log.DSR,
+	private Logger logger = Log.getLogger(Log.EMIR_CORE,
 			InputFilter.class);
 	private Filters filter = null;
 

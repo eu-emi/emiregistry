@@ -31,7 +31,7 @@ import eu.emi.emir.core.ServerConstants;
  *
  */
 public class Filters extends ServerConstants {
-	private static Logger logger = Log.getLogger(Log.DSR, Filters.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, Filters.class);
 	private HashMap<String, List<String>> inputfilters;
 	private HashMap<String, List<String>> outputfilters;
 	private String inputFilterPath;

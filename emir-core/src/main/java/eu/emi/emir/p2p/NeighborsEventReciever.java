@@ -19,7 +19,7 @@ import eu.emi.emir.event.EventTypes;
  * 
  */
 public class NeighborsEventReciever implements EventListener, Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			NeighborsEventReciever.class);
 
 	/**

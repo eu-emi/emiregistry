@@ -4,7 +4,6 @@ import java.security.cert.CertPath;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -26,11 +25,14 @@ import eu.emi.emir.security.util.ResourceDescriptor;
 import eu.emi.client.util.Log;
 
 /**
+ * This filter intercept the incoming requests and authorize the subject's DN
+ * using XACML policies
+ * 
  * @author a.memon
  * 
  */
 public class AccessControlFilter implements ContainerRequestFilter {
-	private static Logger logger = Log.getLogger(Log.SECURITY,
+	private static Logger logger = Log.getLogger(Log.EMIR_SECURITY,
 			AccessControlFilter.class);
 	@Context
 	UriInfo uriInfo;

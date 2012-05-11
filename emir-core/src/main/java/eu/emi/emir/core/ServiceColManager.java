@@ -30,7 +30,7 @@ import eu.eu_emi.emiregistry.QueryResult;
  * 
  */
 public class ServiceColManager {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceColManager.class);
 	private ServiceDatabase serviceDB = null;
 

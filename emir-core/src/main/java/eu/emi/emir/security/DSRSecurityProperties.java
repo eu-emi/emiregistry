@@ -65,7 +65,7 @@ import eu.emi.client.util.Log;
  */
 public class DSRSecurityProperties implements ISecurityProperties, Cloneable {
 	
-	private static final Logger logger=Log.getLogger(Log.SECURITY,DSRSecurityProperties.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,DSRSecurityProperties.class);
 	
 	private Properties properties;
 	

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
 /**
- * 
+ * Log utility class to set emir loggers
  * @author a.memon
  *
  */
@@ -13,23 +13,26 @@ public class Log {
 	protected Log(){}
 
 	/**
-	 * logger prefix for services
+	 * logger prefix for core services
 	 */
-	public static final String DSR="emiregistry.dsr";
+	public static final String EMIR_CORE="eu.emi.emir.core";
 	
 	/**
 	 * logger prefix for client stack
 	 */
-	public static final String DSRCLIENT="emiregistry.dsr.client";
+	public static final String EMIR_CLIENT="eu.emi.emir.client";
 	
 	/**
-	 * logger prefix for client stack
+	 * logger prefix for db stack
 	 */
-	public static final String DSRDB="emiregistry.dsr.db";
+	public static final String EMIR_DB="eu.emi.emir.db";
 
-	public static final String SECURITY = "emiregistry.dsr.security";
+	/**
+	 * logger prefix for security stack
+	 */
+	public static final String EMIR_SECURITY = "eu.emi.emir.security";
 
-	public static final String CLIENT = "emiregistry.dsr.client";
+	
 	
 	/**
 	 * returns a logger name, using the given prefix and the simple name
@@ -65,7 +68,7 @@ public class Log {
 	 *
 	 */
 	public static void logException(String message, Throwable cause){
-		logException(message,cause,Logger.getLogger(DSR));
+		logException(message,cause,Logger.getLogger(EMIR_CORE));
 	}
 	
 	

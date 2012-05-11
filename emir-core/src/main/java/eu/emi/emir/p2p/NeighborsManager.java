@@ -41,7 +41,7 @@ import eu.emi.emir.exception.InvalidServiceDescriptionException;
 
 
 public class NeighborsManager {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 								NeighborsManager.class);
 	private static NeighborsManager instance = null;
 	private List<String> neighbors;
