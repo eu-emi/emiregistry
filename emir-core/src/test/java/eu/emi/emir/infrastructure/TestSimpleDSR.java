@@ -63,10 +63,7 @@ import eu.eu_emi.emiregistry.QueryResult;
        */
 
 public class TestSimpleDSR {
-	//private static String serverUrl = "http://sl5-test2.grid.niif.hu:54321";
-	//private static String serverUrl = "http://dhcp16.ki.iif.hu:54321";
-	//private static String serverUrl = "http://193.6.222.69:54321";
-	private static String serverUrl = "https://emiregistry-testbed.grid.niif.hu:54321";
+	private static String serverUrl = "http://localhost:9000";
 
 	
 	
