@@ -5,6 +5,7 @@ package eu.emi.emir.infrastructure;
 
 import java.util.Properties;
 
+import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 
@@ -38,8 +39,27 @@ public abstract class AbstractServer {
 			// set certificate properties
 		} else {
 			p.put(ServerConstants.REGISTRY_SCHEME, "https");
-		}
+			p.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
+			
+			p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE, "src/test/resources/certs/demo-server.p12");
+			p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
+			p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
 
+			p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE, "src/test/resources/certs/demo-server.jks");
+			p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
+			p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
+
+			//		registry.ssl.clientauthentication=true
+			p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
+
+
+		}
+		// When you would like to use GSR
+		p.put(ServerConstants.REGISTRY_GLOBAL_ENABLE, "true");
+		//p.put(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY, "-1");
+		p.put(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST, "http://valami.hu/lista, http://emi.eu/EMIR.txt");
+		//End of the GSR section
+		
 		p.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
 		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
 		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
