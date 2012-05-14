@@ -9,8 +9,8 @@ import java.util.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.glue2.JSONToGlue2MappingException;
 
 /**

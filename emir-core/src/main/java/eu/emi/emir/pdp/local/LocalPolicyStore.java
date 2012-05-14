@@ -33,7 +33,7 @@ import org.herasaf.xacml.core.simplePDP.SimplePDPFactory;
 import org.herasaf.xacml.core.utils.JAXBMarshallerConfiguration;
 import org.xml.sax.SAXException;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
 import eu.emi.emir.util.FileWatcher;
 
@@ -50,7 +50,7 @@ import eu.emi.emir.util.FileWatcher;
  */
 public class LocalPolicyStore
 {
-	public static final Logger log = Log.getLogger(Log.SECURITY, LocalPolicyStore.class);
+	public static final Logger log = Log.getLogger(Log.EMIR_SECURITY, LocalPolicyStore.class);
 	public static final String POLICY_ALG_DENY_OVERRIDES = "urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:deny-overrides";
 	public static final String SPOLICY_ALG_DENY_OVERRIDES = "deny-overrides";
 	public static final String POLICY_ALG_PERMIT_OVERRIDES = "urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides";

@@ -1,4 +1,4 @@
-package eu.emi.client.security;
+package eu.emi.emir.client.security;
 
 import javax.net.ssl.SSLContext;
 

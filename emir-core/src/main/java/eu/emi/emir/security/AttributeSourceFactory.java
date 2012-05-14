@@ -36,8 +36,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.util.AttributeSourcesChain;
-import eu.emi.client.util.Log;
 
 
 /**
@@ -48,7 +48,7 @@ import eu.emi.client.util.Log;
  */
 public class AttributeSourceFactory {
 
-	private static final Logger logger=Log.getLogger(Log.SECURITY,AttributeSourceFactory.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,AttributeSourceFactory.class);
 
 	/**
 	 * base for property names

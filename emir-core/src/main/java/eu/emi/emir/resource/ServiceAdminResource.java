@@ -27,8 +27,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
@@ -38,7 +39,6 @@ import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
 import eu.emi.emir.util.ServiceUtil;
-import eu.emi.client.util.Log;
 
 /**
  * Resource for the service providers (privileged) to manage their services
@@ -48,7 +48,7 @@ import eu.emi.client.util.Log;
  */
 @Path("/serviceadmin")
 public class ServiceAdminResource {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceAdminResource.class);
 
 	private ServiceAdminManager serviceAdmin;

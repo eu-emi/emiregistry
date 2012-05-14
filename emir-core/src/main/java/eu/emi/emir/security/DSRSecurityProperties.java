@@ -52,9 +52,9 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.security.util.KeystoreChecker;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.security.util.KeystoreChecker;
+import eu.emi.emir.client.util.Log;
 
 /**
  * UAS security properties. For property lookup, this uses a 
@@ -65,7 +65,7 @@ import eu.emi.client.util.Log;
  */
 public class DSRSecurityProperties implements ISecurityProperties, Cloneable {
 	
-	private static final Logger logger=Log.getLogger(Log.SECURITY,DSRSecurityProperties.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,DSRSecurityProperties.class);
 	
 	private Properties properties;
 	

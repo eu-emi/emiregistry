@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
 
 
@@ -21,7 +21,7 @@ import eu.emi.emir.core.RegistryThreadPool;
  */
 public class TimeoutRunner<V> implements Callable<V> {
 
-	private static final Logger logger=Log.getLogger(Log.DSR,TimeoutRunner.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_CORE,TimeoutRunner.class);
 
 	private final Callable<V> task;
 	

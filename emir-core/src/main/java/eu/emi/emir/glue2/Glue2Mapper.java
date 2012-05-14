@@ -31,7 +31,7 @@ import org.ogf.schemas.glue._2009._03.spec_2.QualityLevelT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServingStateT;
 
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;

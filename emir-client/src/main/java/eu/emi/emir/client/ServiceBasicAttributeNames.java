@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.client;
+package eu.emi.emir.client;
 
 import java.util.Date;
 import org.codehaus.jettison.json.JSONArray;

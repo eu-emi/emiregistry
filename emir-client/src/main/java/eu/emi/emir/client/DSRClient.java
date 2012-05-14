@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.client;
+package eu.emi.emir.client;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +34,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**
@@ -51,7 +51,7 @@ public class DSRClient {
 	private String url;
 
 	private static Logger logger = Log
-			.getLogger(Log.DSRCLIENT, DSRClient.class);
+			.getLogger(Log.EMIR_CLIENT, DSRClient.class);
 	Client cr = null;
 	ClientSecurityProperties sProps = null;
 

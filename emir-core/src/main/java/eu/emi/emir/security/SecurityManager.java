@@ -54,16 +54,16 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-import eu.emi.client.security.AuthSSLProtocolSocketFactory;
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.security.util.KeystoreUtil;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.security.AuthSSLProtocolSocketFactory;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.security.util.KeystoreUtil;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPResult;
 import eu.emi.emir.pdp.RegistryPDP;
 import eu.emi.emir.pdp.PDPResult.Decision;
 import eu.emi.emir.pdp.local.LocalHerasafPDP;
 import eu.emi.emir.security.util.ResourceDescriptor;
-import eu.emi.client.util.Log;
 
 /**
  * access to security components
@@ -73,7 +73,7 @@ import eu.emi.client.util.Log;
  */
 public final class SecurityManager {
 
-	private static final Logger logger=Log.getLogger(Log.SECURITY,SecurityManager.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,SecurityManager.class);
 
 	/**
 	 * for unit testing, set this property to "true" to disable security

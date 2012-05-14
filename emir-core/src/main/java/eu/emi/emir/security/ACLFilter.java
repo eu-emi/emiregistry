@@ -26,11 +26,11 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import eu.emi.client.security.ISecurityProperties;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.util.FileWatcher;
-import eu.emi.client.util.Log;
 
 /**
  * It checks incoming requests, trying to access the <b>serviceadmin<b> resource
@@ -40,7 +40,7 @@ import eu.emi.client.util.Log;
  * 
  */
 public class ACLFilter implements ContainerRequestFilter {
-	private static Logger logger = Log.getLogger(Log.SECURITY, ACLFilter.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_SECURITY, ACLFilter.class);
 	private final File aclFile;
 	private final FileWatcher watchDog;
 	private final boolean active;

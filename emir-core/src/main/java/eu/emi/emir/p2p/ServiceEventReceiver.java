@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
@@ -23,7 +23,7 @@ import eu.emi.emir.infrastructure.Filters;
  * 
  */
 public class ServiceEventReceiver implements EventListener, Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceEventReceiver.class);
 
 	private Filters filter;

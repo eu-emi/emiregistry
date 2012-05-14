@@ -14,7 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
 
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.infrastructure.ChildrenManager;
 import eu.emi.emir.infrastructure.EmptyIdentifierFailureException;
 import eu.emi.emir.infrastructure.NullPointerFailureException;

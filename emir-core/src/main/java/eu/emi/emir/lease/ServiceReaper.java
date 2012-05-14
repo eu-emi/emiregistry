@@ -5,7 +5,7 @@ package eu.emi.emir.lease;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServiceAdminManager;
 
 /**
@@ -15,7 +15,7 @@ import eu.emi.emir.core.ServiceAdminManager;
  * 
  */
 public class ServiceReaper implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, ServiceReaper.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, ServiceReaper.class);
 	private ServiceAdminManager sm;
 
 	/**

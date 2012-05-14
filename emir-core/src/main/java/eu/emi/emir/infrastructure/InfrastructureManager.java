@@ -19,11 +19,11 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.client.ClientSecurityProperties;
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ClientSecurityProperties;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.MultipleResourceException;
@@ -37,7 +37,7 @@ import eu.emi.emir.db.mongodb.ServiceObject;
  * 
  */
 public class InfrastructureManager implements ServiceInfrastructure {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			InfrastructureManager.class);
 	private Configuration conf;
 	private static Connection conn;

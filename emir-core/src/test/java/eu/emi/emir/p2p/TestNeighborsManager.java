@@ -19,10 +19,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.DSRServer;
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;

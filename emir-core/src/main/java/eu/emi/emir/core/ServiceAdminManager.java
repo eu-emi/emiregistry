@@ -18,9 +18,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;
 import eu.emi.emir.db.NonExistingResourceException;
@@ -42,7 +42,7 @@ import eu.emi.emir.util.ServiceUtil;
  * 
  */
 public class ServiceAdminManager {
-	private static Logger log = Log.getLogger(Log.DSR, ServiceAdminManager.class);
+	private static Logger log = Log.getLogger(Log.EMIR_CORE, ServiceAdminManager.class);
 	
 	private ServiceDatabase serviceDB = null;
 	private String DBVersion = null;

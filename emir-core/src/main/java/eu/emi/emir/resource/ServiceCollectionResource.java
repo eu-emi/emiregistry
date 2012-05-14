@@ -27,8 +27,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServiceColManager;
-import eu.emi.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**
@@ -36,7 +36,7 @@ import eu.eu_emi.emiregistry.QueryResult;
  */
 @Path("/services")
 public class ServiceCollectionResource {
-	Logger logger = Log.getLogger(Log.DSR, ServiceCollectionResource.class);
+	Logger logger = Log.getLogger(Log.EMIR_CORE, ServiceCollectionResource.class);
 	private ServiceColManager col;
 
 	/**

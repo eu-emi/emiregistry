@@ -32,7 +32,7 @@ import org.herasaf.xacml.core.simplePDP.SimplePDPConfiguration;
 import org.herasaf.xacml.core.simplePDP.SimplePDPFactory;
 import org.xml.sax.SAXException;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPResult;
 import eu.emi.emir.pdp.RegistryPDP;
 import eu.emi.emir.security.Client;
@@ -51,7 +51,7 @@ import eu.emi.emir.security.util.ResourceDescriptor;
  */
 public class LocalHerasafPDP implements RegistryPDP, PolicyListener
 {
-	private static final Logger log = Log.getLogger(Log.SECURITY, LocalHerasafPDP.class);
+	private static final Logger log = Log.getLogger(Log.EMIR_SECURITY, LocalHerasafPDP.class);
 	private PDP engine;
 	private RequestCreator requestMaker;
 	private ReadWriteLock lock = new ReentrantReadWriteLock();

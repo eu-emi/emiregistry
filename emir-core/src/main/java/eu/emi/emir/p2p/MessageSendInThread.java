@@ -15,11 +15,11 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventTypes;
 
@@ -28,7 +28,7 @@ import eu.emi.emir.event.EventTypes;
  *
  */
 public class MessageSendInThread extends Thread {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			MessageSendInThread.class);
 	private int retry;
 	private String neighbor;

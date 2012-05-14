@@ -19,11 +19,11 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.mongodb.ServiceObject;
 
@@ -34,7 +34,7 @@ import eu.emi.emir.db.mongodb.ServiceObject;
  * 
  */
 public class ServiceCheckin implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, ServiceCheckin.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, ServiceCheckin.class);
 	private final WebResource childClient;
 	private final WebResource synchClient;
 	private String myURL;

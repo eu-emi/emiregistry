@@ -20,9 +20,9 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 
@@ -31,7 +31,7 @@ import eu.emi.emir.core.ServerConstants;
  * 
  */
 public class JettyServer {
-	Logger logger = Log.getLogger(Log.DSR, JettyServer.class);
+	Logger logger = Log.getLogger(Log.EMIR_CORE, JettyServer.class);
 
 	Server server;
 	boolean started = false;
@@ -121,13 +121,13 @@ public class JettyServer {
 		context.addServlet(sh, "/*");
 
 		server.setHandler(context);
-		
+
 		QueuedThreadPool pool = new QueuedThreadPool();
 		pool.setMaxThreads(500);
 		pool.setMinThreads(50);
-		
+
 		server.setThreadPool(pool);
-				
+
 		server.setConnectors(new Connector[] { connector });
 
 	}
@@ -148,10 +148,15 @@ public class JettyServer {
 	private void addFilterClasses(Map<String, String> map) {
 		String reqClasses = DSRServer
 				.getProperty(ServerConstants.REGISTRY_FILTERS_REQUEST);
-		map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, reqClasses);
+		if (reqClasses != null)
+			map.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS,
+					reqClasses);
+
 		String resClasses = DSRServer
 				.getProperty(ServerConstants.REGISTRY_FILTERS_RESPONSE);
-		map.put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, resClasses);
+		if (resClasses != null)
+			map.put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
+					resClasses);
 	}
 
 	/**
@@ -159,10 +164,10 @@ public class JettyServer {
 	 */
 	private AbstractConnector createSecureConnector() {
 		SslSelectChannelConnector ssl_connector = null;
-//		SslSocketConnector ssl_connector = null;
+		// SslSocketConnector ssl_connector = null;
 		try {
 			ssl_connector = new SslSelectChannelConnector();
-//			ssl_connector = new SslSocketConnector();
+			// ssl_connector = new SslSocketConnector();
 			ssl_connector.setHost(conf
 					.getProperty(ServerConstants.REGISTRY_HOSTNAME));
 			ssl_connector.setPort(Integer.valueOf(conf
@@ -204,13 +209,13 @@ public class JettyServer {
 	 */
 	private AbstractConnector createConnector() {
 		SelectChannelConnector plain_connector = new SelectChannelConnector();
-//		SocketConnector plain_connector = new SocketConnector();
+		// SocketConnector plain_connector = new SocketConnector();
 		plain_connector.setHost(hostName);
 		plain_connector.setPort(portNumber);
-		
+
 		plain_connector.setMaxIdleTime(Integer.valueOf(conf
 				.getProperty(ServerConstants.JETTY_MAXIDLETIME)));
-		
+
 		return plain_connector;
 	}
 

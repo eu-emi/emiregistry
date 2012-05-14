@@ -12,8 +12,8 @@ import org.junit.rules.ExpectedException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;

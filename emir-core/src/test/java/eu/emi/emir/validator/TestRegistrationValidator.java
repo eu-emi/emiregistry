@@ -15,7 +15,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import eu.emi.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
 import eu.emi.emir.validator.ValidatorFactory;

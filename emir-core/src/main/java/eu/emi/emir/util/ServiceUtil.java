@@ -25,8 +25,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.validator.ValidatorFactory;
 

@@ -1,4 +1,4 @@
-package eu.emi.client.security.util;
+package eu.emi.emir.client.security.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -20,13 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 
 
 
 public class KeystoreUtil {
-	private final static Logger log=Log.getLogger(Log.SECURITY,KeystoreUtil.class);
+	private final static Logger log=Log.getLogger(Log.EMIR_SECURITY,KeystoreUtil.class);
 	private KeystoreUtil(){}
 	private final static AtomicInteger counter=new AtomicInteger(0);
 	public static String getDefaultKeyAlias(ISecurityProperties sec) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{

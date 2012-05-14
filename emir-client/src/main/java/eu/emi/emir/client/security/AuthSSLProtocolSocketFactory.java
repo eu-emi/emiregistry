@@ -1,4 +1,4 @@
-package eu.emi.client.security;
+package eu.emi.emir.client.security;
 
 
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 
 
 
@@ -68,7 +68,7 @@ import eu.emi.client.util.Log;
 
 public class AuthSSLProtocolSocketFactory implements SecureProtocolSocketFactory
 {
-	private static final Logger LOG = Log.getLogger(Log.SECURITY,
+	private static final Logger LOG = Log.getLogger(Log.EMIR_SECURITY,
 			AuthSSLProtocolSocketFactory.class);
 
 	private SSLContext sslcontext = null;

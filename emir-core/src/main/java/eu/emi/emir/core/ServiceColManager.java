@@ -14,8 +14,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.MongoException;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.QueryException;
 import eu.emi.emir.db.ServiceDatabase;
@@ -30,7 +30,7 @@ import eu.eu_emi.emiregistry.QueryResult;
  * 
  */
 public class ServiceColManager {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceColManager.class);
 	private ServiceDatabase serviceDB = null;
 

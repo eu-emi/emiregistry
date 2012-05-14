@@ -18,10 +18,10 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-import eu.emi.client.ClientSecurityProperties;
-import eu.emi.client.security.ISecurityProperties;
 import eu.emi.emir.DSRServer;
 import eu.emi.emir.aip.FileAttributeSource;
+import eu.emi.emir.client.ClientSecurityProperties;
+import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.ServiceDatabase;

@@ -9,8 +9,8 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
 
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.util.DateUtil;
@@ -22,7 +22,7 @@ import eu.emi.emir.util.DateUtil;
  * 
  */
 public class RemoveCheck implements Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR, RemoveCheck.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, RemoveCheck.class);
 	private int etremove;
 	private int timedelay;
 	private MongoDBServiceDatabase mongoDB;

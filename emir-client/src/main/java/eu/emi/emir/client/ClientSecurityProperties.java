@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.client;
+package eu.emi.emir.client;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,16 +22,16 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.security.IClientProperties;
-import eu.emi.client.security.util.KeystoreChecker;
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.security.IClientProperties;
+import eu.emi.emir.client.security.util.KeystoreChecker;
+import eu.emi.emir.client.util.Log;
 
 /**
  * @author a.memon
  * 
  */
 public class ClientSecurityProperties implements IClientProperties {
-	private static final Logger logger=Log.getLogger(Log.SECURITY,ClientSecurityProperties.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,ClientSecurityProperties.class);
 	/**
 	 * property defining whether SSL is enabled
 	 */

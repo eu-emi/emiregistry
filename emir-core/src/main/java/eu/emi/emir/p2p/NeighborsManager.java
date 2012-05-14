@@ -23,11 +23,11 @@ import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.MongoException;
 import com.sun.jersey.api.client.ClientHandlerException;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.security.ISecurityProperties;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
@@ -44,7 +44,7 @@ import eu.emi.emir.exception.InvalidServiceDescriptionException;
  * 
  */
 public class NeighborsManager {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 								NeighborsManager.class);
 	private static NeighborsManager instance = null;
 	private List<String> neighbors;

@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.util.PropertyHelper;
 
 
@@ -25,7 +25,7 @@ import eu.emi.emir.util.PropertyHelper;
  * @author golbi
  */
 public class AttributeSourceConfigurator {
-	private static final Logger logger=Log.getLogger(Log.SECURITY,AttributeSourceConfigurator.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,AttributeSourceConfigurator.class);
 	
 	public static IAttributeSource configureAttributeSource(String name, Properties properties)
 			throws Exception {

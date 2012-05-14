@@ -2,8 +2,8 @@ package eu.emi.emir.security;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.util.ResourceDescriptor;
-import eu.emi.client.util.Log;
 
 
 /**
@@ -12,7 +12,7 @@ import eu.emi.client.util.Log;
  */
 public class DSignAuthNCheck implements AuthNCheckingStrategy {
 
-	private static final Logger logger=Log.getLogger(Log.SECURITY,DSignAuthNCheck.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,DSignAuthNCheck.class);
 
 	public DSignAuthNCheck(){
 		logger.debug("Initialise AuthN check for digital signature.");

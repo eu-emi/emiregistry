@@ -23,7 +23,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.IAttributeSource;
 import eu.emi.emir.security.SecurityTokens;
 import eu.emi.emir.security.SubjectAttributesHolder;
@@ -76,7 +76,7 @@ import eu.emi.emir.security.XACMLAttribute.Type;
  * 
  */
 public class FileAttributeSource implements IAttributeSource {
-	private static final Logger logger = Log.getLogger(Log.SECURITY,
+	private static final Logger logger = Log.getLogger(Log.EMIR_SECURITY,
 			FileAttributeSource.class);
 
 	// config options

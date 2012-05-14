@@ -1,4 +1,4 @@
-package eu.emi.client.security;
+package eu.emi.emir.client.security;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +19,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.log4j.Logger;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 
 
 
@@ -52,7 +52,7 @@ import eu.emi.client.util.Log;
  */
 public class HttpUtils {
 
-	private static final Logger logger=Log.getLogger(Log.CLIENT, HttpUtils.class);
+	private static final Logger logger=Log.getLogger(Log.EMIR_CLIENT, HttpUtils.class);
 
 	//prevent instantiation 
 	private HttpUtils(){}

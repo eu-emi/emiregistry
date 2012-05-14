@@ -45,13 +45,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.AttributeSourceConfigurator;
 import eu.emi.emir.security.AttributeSourceFactory;
 import eu.emi.emir.security.AuthorisationException;
 import eu.emi.emir.security.IAttributeSource;
 import eu.emi.emir.security.SecurityTokens;
 import eu.emi.emir.security.SubjectAttributesHolder;
-import eu.emi.client.util.Log;
 
 /**
  * IAttributeSource implementation that combines the results from a chain of attribute sources using
@@ -73,7 +73,7 @@ import eu.emi.client.util.Log;
  */
 public class AttributeSourcesChain implements IAttributeSource{
 
-	private final static Logger logger=Log.getLogger(Log.SECURITY, AttributeSourcesChain.class);
+	private final static Logger logger=Log.getLogger(Log.EMIR_SECURITY, AttributeSourcesChain.class);
 	
 	private List<IAttributeSource> chain;
 	private List<String> names;

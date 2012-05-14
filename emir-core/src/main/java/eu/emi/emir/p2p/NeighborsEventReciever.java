@@ -8,7 +8,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.util.Log;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventListener;
@@ -19,7 +19,7 @@ import eu.emi.emir.event.EventTypes;
  * 
  */
 public class NeighborsEventReciever implements EventListener, Runnable {
-	private static Logger logger = Log.getLogger(Log.DSR,
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			NeighborsEventReciever.class);
 
 	/**

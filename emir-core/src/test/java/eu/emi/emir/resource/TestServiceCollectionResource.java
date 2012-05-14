@@ -20,9 +20,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.client.DSRClient;
-import eu.emi.client.ServiceBasicAttributeNames;
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;

@@ -28,11 +28,11 @@ import org.herasaf.xacml.core.dataTypeAttribute.impl.StringDataTypeAttribute;
 import org.herasaf.xacml.core.dataTypeAttribute.impl.X500DataTypeAttribute;
 
 
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPUtils;
 import eu.emi.emir.security.Client;
 import eu.emi.emir.security.XACMLAttribute;
 import eu.emi.emir.security.util.ResourceDescriptor;
-import eu.emi.client.util.Log;
 
 /**
  * Creates an XACML request.
@@ -42,7 +42,7 @@ import eu.emi.client.util.Log;
  */
 public class RequestCreator
 {
-	private static final Logger log = Log.getLogger(Log.SECURITY, RequestCreator.class);
+	private static final Logger log = Log.getLogger(Log.EMIR_SECURITY, RequestCreator.class);
 	
 	public RequestCtx createRequest(Client c, String action,
 			ResourceDescriptor des)

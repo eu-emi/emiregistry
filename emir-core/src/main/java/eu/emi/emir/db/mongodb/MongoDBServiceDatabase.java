@@ -12,9 +12,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.client.ServiceBasicAttributeNames;
-import eu.emi.client.util.Log;
 import eu.emi.emir.DSRServer;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.Configuration;
 import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.ExistingResourceException;
@@ -38,7 +38,7 @@ import com.mongodb.util.JSON;
  * 
  */
 public class MongoDBServiceDatabase implements ServiceDatabase {
-	private static Logger logger = Log.getLogger(Log.DSRDB,
+	private static Logger logger = Log.getLogger(Log.EMIR_DB,
 			MongoDBServiceDatabase.class);
 	private static Mongo connection;
 	private DB database;
