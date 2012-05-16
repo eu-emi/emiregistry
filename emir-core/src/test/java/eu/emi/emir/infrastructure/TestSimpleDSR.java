@@ -8,6 +8,12 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.util.Properties;
+
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXB;
 
@@ -24,8 +30,10 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
+import eu.emi.emir.client.ClientSecurityProperties;
 import eu.emi.emir.client.DSRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.util.DateUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 
@@ -55,9 +63,7 @@ import eu.eu_emi.emiregistry.QueryResult;
        */
 
 public class TestSimpleDSR {
-	private static String serverUrl = "http://sl5-test2.grid.niif.hu:54321";
-	//private static String serverUrl = "http://dhcp16.ki.iif.hu:54321";
-	//private static String serverUrl = "http://193.6.222.69:54321";
+	private static String serverUrl = "http://localhost:9000";
 
 	
 	
@@ -82,7 +88,7 @@ public class TestSimpleDSR {
 		} catch (UniformInterfaceException e){
 			System.out.println("DB clean");
 		} catch (ClientHandlerException e){
-			System.out.println("No route to host ("+serverUrl+")!");
+			System.out.println("No route to host ("+serverUrl+")!"+e);
 			fail();
 		}
     }
@@ -150,8 +156,10 @@ public class TestSimpleDSR {
 		ClientResponse res = getChildClient("/neighbors").accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(ClientResponse.class);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+		
+		String jo = res.getEntity(String.class);
 
-		JSONArray jo = res.getEntity(JSONArray.class);
+		//JSONArray jo = res.getEntity(JSONArray.class);
 		
 		System.out.println("	"+jo);
 
@@ -277,9 +285,9 @@ public class TestSimpleDSR {
 				.get(ClientResponse.class);
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
-		JSONObject jo = res.getEntity(JSONObject.class);
+		JSONArray jar = res.getEntity(JSONArray.class);
 		
-		System.out.println("	"+jo);
+		System.out.println("	"+jar);
 
 		System.out.println("	"+"OK");
 	}
@@ -416,7 +424,37 @@ public class TestSimpleDSR {
 	}
 	
 	protected static WebResource getChildClient(String path) {
-		DSRClient c = new DSRClient(serverUrl + path);
+		Properties p = new Properties();
+
+		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
+		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
+				"src/test/resources/certs/demo-user.p12");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
+				"src/test/resources/certs/demo-server.jks");
+		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
+		ClientSecurityProperties csp = null;
+		try {
+			csp = new ClientSecurityProperties(p);
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		DSRClient c = new DSRClient(serverUrl + path, csp);
 		return c.getClientResource();
 	}
 

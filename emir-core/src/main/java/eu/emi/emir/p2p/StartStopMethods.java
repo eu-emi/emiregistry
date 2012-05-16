@@ -10,6 +10,10 @@ import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventTypes;
 
+/**
+ * @author g.szigeti
+ * 
+ */
 public class StartStopMethods {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE, DSRServer.class);
 
@@ -35,6 +39,7 @@ public class StartStopMethods {
 		
 		//Soft-State functions start
 		int timedelay;
+		// time delay for a validity methods, extend the time windows with this extra time
 		try {
 			timedelay = Integer.valueOf(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY));

@@ -39,7 +39,10 @@ import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 
 
-
+/**
+ * @author g.szigeti
+ * 
+ */
 public class NeighborsManager {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 								NeighborsManager.class);
