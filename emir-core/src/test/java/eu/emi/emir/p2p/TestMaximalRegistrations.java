@@ -7,6 +7,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -60,7 +61,7 @@ public class TestMaximalRegistrations {
 		//Delete all elements
         System.out.print("Would you like to delete all entries? Y/N ");
         answer = sc.nextLine();
-        if (answer.toUpperCase().equals("N")) {
+        if (answer.toUpperCase().equals("Y")) {
 			for (int i=1; i<numberOfEntries+1; i++) {
 				String url = "http://"+i;
 				try{
@@ -80,6 +81,8 @@ public class TestMaximalRegistrations {
 	public void testServiceadminPOST() throws JSONException, IOException, InterruptedException{
 		System.out.println("/serviceadmin POST test");
 		JSONArray jos = new JSONArray();
+		Calendar now = Calendar.getInstance();
+		long start = now.getTimeInMillis();
 		for (int i=1; i<numberOfEntries+1; i++) {
 			String url = "http://"+i;
 
@@ -98,7 +101,7 @@ public class TestMaximalRegistrations {
 				assertTrue(res.getStatus() == Status.OK.getStatusCode());
 	
 				JSONArray rjo = res.getEntity(JSONArray.class);
-				System.out.println("	"+rjo.toString());
+				//System.out.println("	"+rjo.toString());
 		        assertFalse(rjo.length()==0);
 		        
 		        //waiting
@@ -115,7 +118,10 @@ public class TestMaximalRegistrations {
 			}
 		
 		}
-		System.out.println("	"+"Registration OK");
+		Calendar nowe = Calendar.getInstance();
+		long end = nowe.getTimeInMillis();
+		System.out.println("	"+"Registration OK with "+ numberOfEntries +" entries.");
+		System.out.println("Running time: " + (end-start)+ " ms");
 	}
 	
 
