@@ -18,7 +18,7 @@
 
 	<distributionManagement>
 		<site>
-			<id>gh-pages</id>
+			<id>gh-pages</id> 
 			<!-- path to the local repo -->
 			<url>file:///${basedir}/../../emiregistry-pages/documentation/registry-${version}</url>
 		</site>
@@ -39,7 +39,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.eu-emi</groupId>
-			<artifactId>dsr</artifactId>
+			<artifactId>emir-core</artifactId>
 			<version>${ux.version}</version>
 		</dependency>
 		<dependency>
