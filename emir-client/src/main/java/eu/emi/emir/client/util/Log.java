@@ -15,22 +15,22 @@ public class Log {
 	/**
 	 * logger prefix for core services
 	 */
-	public static final String EMIR_CORE="eu.emi.emir.core";
+	public static final String EMIR_CORE="emir-core";
 	
 	/**
 	 * logger prefix for client stack
 	 */
-	public static final String EMIR_CLIENT="eu.emi.emir.client";
+	public static final String EMIR_CLIENT="emir-client";
 	
 	/**
 	 * logger prefix for db stack
 	 */
-	public static final String EMIR_DB="eu.emi.emir.db";
+	public static final String EMIR_DB="emir-db";
 
 	/**
 	 * logger prefix for security stack
 	 */
-	public static final String EMIR_SECURITY = "eu.emi.emir.security";
+	public static final String EMIR_SECURITY = "emir-security";
 
 	
 	
@@ -43,7 +43,7 @@ public class Log {
 	 * @return logger name
 	 */
 	public static String getLoggerName(String prefix, Class<?>clazz){
-		return prefix+"."+clazz.getSimpleName();
+		return "["+prefix+"] "+clazz.getSimpleName();
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class Log {
 	 * @return logger
 	 */
 	public static Logger getLogger(String prefix, Class<?>clazz){
-		return Logger.getLogger(prefix+"."+clazz.getSimpleName());
+		return Logger.getLogger("["+prefix+"] "+clazz.getSimpleName());
 	}
 	
 	/** 
