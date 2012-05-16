@@ -121,6 +121,8 @@ public class MessageSendInThread extends Thread {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Message sent succesfully to " + url);
 			}
+		} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
+			logger.debug("Does not have access for the following neighbors: " + url);
 		}
 	}
 	

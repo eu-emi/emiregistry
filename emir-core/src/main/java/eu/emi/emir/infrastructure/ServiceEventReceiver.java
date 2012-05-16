@@ -120,6 +120,8 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 						// DB sync
 						parent_lost = !infrastructure.dbSynchronization(IDs, Method.REGISTER, res.getStatus());
 					}
+				} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
+					logger.debug("Does not have access for the parent.");
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
@@ -146,6 +148,8 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 						// DB sync
 						parent_lost = !infrastructure.dbSynchronization(IDs, Method.UPDATE, res.getStatus());
 					}
+				} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
+					logger.debug("Does not have access for the parent.");
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
@@ -172,6 +176,8 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 						ID.add(deleteURL);
 						parent_lost = !infrastructure.dbSynchronization(ID, Method.DELETE, res.getStatus());
 					}
+				} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
+					logger.debug("Does not have access for the parent.");
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
