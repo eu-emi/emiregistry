@@ -152,6 +152,7 @@ public class ACLFilter implements ContainerRequestFilter {
 		synchronized (acceptedDNs) {
 			// if (!acceptedDNs.get(userName)) {
 			if (!(acceptedDNs.containsKey(userName))) {
+				logger.info(msg);
 				throw new WebApplicationException(Response
 						.status(Status.UNAUTHORIZED).entity(msg).build());
 			} else {
