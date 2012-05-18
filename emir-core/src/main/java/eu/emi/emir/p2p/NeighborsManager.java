@@ -258,6 +258,11 @@ public class NeighborsManager {
 			logger.warn(e.getCause());
 		}
 		
+		// reconnect to the P2P network, because it contains only the own GSR entry
+		if (connected && gsrList.length() < 2) {
+			connected = false;
+		}
+		
 		// hash_table recalculate
 		hash.clear();
 		for(int i=0; i<gsrList.length(); i++){
