@@ -69,7 +69,7 @@ cd $INST
 PARAM=$*
 if [ "$PARAM" = "" ]
 then
-  PARAM=conf/dsr.config
+  PARAM=conf/emir.config
 fi
 
 #

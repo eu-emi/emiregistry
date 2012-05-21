@@ -301,7 +301,7 @@ public class DSRServer {
 		if (args[0] != null) {
 			server = new DSRServer(args[0]);
 		} else {
-			server = new DSRServer("conf/dsr.config");
+			server = new DSRServer("conf/emir.config");
 		}
 		// Shutdown hook
 		final DSRServer serverPointer = server;

@@ -110,7 +110,7 @@ emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszen
 emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
 -----------------
 
-the property in the +CONF/dsr.config+ file
+the property in the +CONF/emir.config+ file
 
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
