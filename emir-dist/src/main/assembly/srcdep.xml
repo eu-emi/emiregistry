@@ -5,16 +5,16 @@
 	</formats>
 	<fileSets>
 		<fileSet>
-			<directory>../dsr</directory>
-			<outputDirectory>/dsr</outputDirectory>
+			<directory>../emir-core</directory>
+			<outputDirectory>/emir-core</outputDirectory>
 			<includes>
 				<include>pom.xml</include>
 			</includes>
 			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 		<fileSet>
-			<directory>../dsr/src</directory>
-			<outputDirectory>/dsr/src</outputDirectory>
+			<directory>../emir-core/src</directory>
+			<outputDirectory>/emir-core/src</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 		<fileSet>
@@ -29,12 +29,7 @@
 			<directory>../emir-client/src</directory>
 			<outputDirectory>/emir-client/src</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
-		</fileSet>
-		<fileSet>
-			<directory>../emird</directory>
-			<outputDirectory>/emird</outputDirectory>
-			<useDefaultExcludes>true</useDefaultExcludes>
-		</fileSet>
+		</fileSet>		
 		<fileSet>
 			<directory>../xmltypes</directory>
 			<outputDirectory>/xmltypes</outputDirectory>
