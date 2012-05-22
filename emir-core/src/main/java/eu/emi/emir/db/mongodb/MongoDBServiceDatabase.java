@@ -187,6 +187,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			database.requestDone();
+			logger.info("inserted: " + item.getUrl());
 			// EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
 			// item
 			// .toJSON()));
@@ -271,6 +272,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			throw new NonExistingResourceException(
 					"No service description with the URL:" + url + " exists");
 		}
+		logger.info("deleted: " + url);
 		// sending update event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
@@ -301,6 +303,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
+			logger.info("updated: " + sObj.getUrl());
 			// sending update event to the recievers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
@@ -537,6 +540,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.requestStart();
 		serviceCollection.remove(o);
 		database.requestDone();
+		logger.info("deleted all the contents from the db collection");
 
 	}
 
