@@ -414,7 +414,7 @@ public class ServiceAdminResource {
 			String messageTime = extractServiceDateFromUri(infos);
 			if ("true".equalsIgnoreCase(DSRServer
 					.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false")) &&
-						messageTime == "") {
+						messageTime == "unknown") {
 				// New entry and message generation time need, it is come from one DSR
 				messageTime = ServiceUtil.toUTCFormat(new Date());
 			}
@@ -459,7 +459,7 @@ public class ServiceAdminResource {
 				.getAttributeName();
 		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
 		if (key == "unknown") {
-			return "nincs";
+			return "unknown";
 		}
 		String value = mm
 				.getFirst(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
