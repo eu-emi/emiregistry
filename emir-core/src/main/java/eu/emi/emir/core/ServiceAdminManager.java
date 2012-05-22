@@ -106,6 +106,36 @@ public class ServiceAdminManager {
 			return jo;
 		} catch (PersistentStoreFailureException e) {
 			Log.logException(e);
+		}catch (ExistingResourceException e) {
+			if ("true".equalsIgnoreCase(DSRServer
+				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false")) ) {
+				try {
+					if (serviceDB.getServiceByUrl(jo.getString(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()))
+									.getServiceOwner() == null ){
+						/* 
+						 * The stored entry was removed and it contains very base
+						 * (Endpoint_URL and updateSince) information.
+						 */
+						serviceDB.update(new ServiceObject(jo));
+					} else {
+						/* 
+						 * The stored entry has owner attribute (it is not removed entry),
+						 * and it can not insert again.
+						 */ 
+						throw new ExistingResourceException(e);
+					}
+				} catch (MultipleResourceException e1) {
+					Log.logException(e);
+				} catch (NonExistingResourceException e1) {
+					Log.logException(e);
+				} catch (PersistentStoreFailureException e1) {
+					Log.logException(e);
+				}
+			} else {
+				// Throw forward/higher the exception.
+				throw new ExistingResourceException(e);
+			}
 		}
 		return null;
 	}
