@@ -96,6 +96,9 @@ public class ServiceObject {
 			Log.logException(e);
 		} catch (JSONException e) {
 			Log.logException("", e);
+		} catch (ClassCastException e){
+			Log.logException("No updateSince attribute by the \"deleted\" entry!", e);
+			d = new Date(1);
 		}
 		return d;
 	}
