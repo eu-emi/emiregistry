@@ -16,6 +16,7 @@ import eu.emi.emir.event.EventTypes;
  */
 public class StartStopMethods {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE, DSRServer.class);
+	private static String myURL = "";
 
 	public static void startGSRFunctions() {
 		// Neighbors event receiver start
@@ -26,10 +27,15 @@ public class StartStopMethods {
 		RegistryThreadPool.getExecutorService().execute(
 				new eu.emi.emir.p2p.ServiceEventReceiver());
 
+		// Set own endpoint URL
+		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
+		        DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
+		        DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		
+		// Remove own entry from the local database
+		deleteOwnEntry();
+		
 		// Self registration start
-		String myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
 		try {
 			RegistryThreadPool.getExecutorService().execute(
 					new SelfRegistration(myURL));
@@ -70,12 +76,13 @@ public class StartStopMethods {
 	public static void stopGSRFunctions() {
 		System.out.println("Send DELETE message to the neighbors.");
 		logger.info("Send DELETE message to the neighbors.");
-		String myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
 		
 		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
 		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
+		deleteOwnEntry();
+	}
+	
+	private static void deleteOwnEntry(){
 		try {
 			new MongoDBServiceDatabase().deleteByUrl(myURL);
 		} catch (Exception e) {
