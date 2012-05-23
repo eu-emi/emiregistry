@@ -499,6 +499,9 @@ public class NeighborsManager {
 				String serviceurl = jo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName());
+				if (serviceurl.equals(myURL)) {
+					continue;
+				}
 				String messageTime = "";
 				if (jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 								.getAttributeName())){
