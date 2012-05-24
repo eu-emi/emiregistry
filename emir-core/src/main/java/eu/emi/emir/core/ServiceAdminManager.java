@@ -29,6 +29,9 @@ import eu.emi.emir.db.QueryException;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.ServiceObject;
+import eu.emi.emir.event.Event;
+import eu.emi.emir.event.EventDispatcher;
+import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.util.DateUtil;
@@ -118,6 +121,7 @@ public class ServiceAdminManager {
 						 * (Endpoint_URL and updateSince) information.
 						 */
 						serviceDB.update(new ServiceObject(jo));
+						return jo;
 					} else {
 						/* 
 						 * The stored entry has owner attribute (it is not removed entry),
@@ -166,6 +170,10 @@ public class ServiceAdminManager {
 			ServiceObject sObj = new ServiceObject(newEntry);
 			try {
 				serviceDB.update(sObj);
+				JSONArray arr = new JSONArray();
+				arr.put(newEntry);
+				EventDispatcher.notifyRecievers(new Event(
+						EventTypes.SERVICE_UPDATE, arr));
 			} catch (MultipleResourceException e) {
 				Log.logException(e);
 			} catch (NonExistingResourceException e) {
