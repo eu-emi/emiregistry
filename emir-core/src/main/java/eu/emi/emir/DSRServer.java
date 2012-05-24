@@ -248,8 +248,8 @@ public class DSRServer {
 		jettyServer.stop();
 		started = false;
 		this.finalize();
-		System.out.println("DSR server stopped");
-		logger.info("DSR server stopped");
+		System.out.println("EMIR server stopped");
+		logger.info("EMIR server stopped");
 	}
 
 	public String getBaseUrl() {
@@ -312,7 +312,7 @@ public class DSRServer {
 
 			public void run() {
 				threadLogger
-						.debug("DSR server is stopping now (shutdown hook)");
+						.debug("EMIR server is stopping now (shutdown hook)");
 				if (getGlobalRegistryEnabled()) {
 					try {
 						// serverPointer.finalize();
@@ -323,7 +323,7 @@ public class DSRServer {
 						Log.logException("shutdown hook", e);
 					}
 				}
-				threadLogger.debug("DSR server stopped (shutdown hook)");
+				threadLogger.debug("EMIR server stopped (shutdown hook)");
 			}
 		});
 		// end of Shutdown hook
@@ -369,7 +369,7 @@ public class DSRServer {
 
 		String url = conf.getProperty(ServerConstants.REGISTRY_PARENT_URL);
 		if (url != null) {
-			logger.info("adding parent dsr : " + url + " to: " + getBaseUrl());
+			logger.info("adding parent DSR : " + url + " to: " + getBaseUrl());
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(conf
 							.getProperty(ServerConstants.REGISTRY_PARENT_URL),

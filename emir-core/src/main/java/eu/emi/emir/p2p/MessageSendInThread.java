@@ -118,11 +118,9 @@ public class MessageSendInThread extends Thread {
 		}
 		if ( res.getStatus() == Status.OK.getStatusCode() ||
 			 res.getStatus() == Status.CONFLICT.getStatusCode() ){
-			if (logger.isDebugEnabled()) {
-				logger.debug("Message sent succesfully to " + url);
-			}
+			logger.info("("+ eventType +") Message sent succesfully to " + url);
 		} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
-			logger.debug("Does not have access for the following neighbors: " + url);
+			logger.info("Does not have access for the following neighbors: " + url);
 		}
 	}
 	
