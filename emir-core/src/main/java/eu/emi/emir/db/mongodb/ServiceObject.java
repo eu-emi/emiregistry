@@ -54,7 +54,7 @@ public class ServiceObject {
 					.get(ServiceBasicAttributeNames.SERVICE_OWNER
 							.getAttributeName()).toString();
 		} catch (JSONException e) {
-			Log.logException("", e);
+			Log.logException("serviceOwner not exist!", e);
 		}
 		return owner;
 	}

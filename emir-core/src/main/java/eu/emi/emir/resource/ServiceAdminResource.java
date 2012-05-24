@@ -370,7 +370,7 @@ public class ServiceAdminResource {
 								+ serviceInfo
 										.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 												.getAttributeName())
-								+ " does not exist.");
+								+ " does not exist or the update message is too old.");
 					}
 					return Response
 							.status(Status.UNAUTHORIZED)
