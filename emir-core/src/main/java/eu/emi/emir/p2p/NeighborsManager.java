@@ -152,6 +152,16 @@ public class NeighborsManager {
 	public int getRetry(){
 		return retry;
 	}
+
+	/**
+	 * Get value of connected.
+	 *  
+	 * @param None
+	 * @return connected or not
+	 */
+	public boolean getConnected(){
+		return connected;
+	}
 	
 	/**
 	 * Get list of neighbors.
@@ -294,7 +304,7 @@ public class NeighborsManager {
             new_neighbors_count = (int)Math.ceil(Math.log10((double)hash.size())
             		/Math.log10((double)sparsity));
         }
-        logger.debug("Neighbors count recalculate from " + neighbors_count +
+        logger.info("Neighbors count recalculate from " + neighbors_count +
         		                                " to "+ new_neighbors_count);
 
 		// neighbors list filling
@@ -380,6 +390,7 @@ public class NeighborsManager {
 			c = new DSRClient(url + "/services?Service_Type=GSR",
 										DSRServer.getClientSecurityProperties());
 		}
+		logger.info("Get the list of GSRs from " + url);
 		for (int i=0; i<retry; i++){
 			JSONArray o = new JSONArray();
 			try {
@@ -444,6 +455,7 @@ public class NeighborsManager {
 				c = new DSRClient(list.get(j) + "/services/pagedquery",
 											DSRServer.getClientSecurityProperties());
 			}
+			logger.info("Fetch the DB from  " + list.get(j));
 			boolean found = false;
 			for (int i=0; i<retry; i++){
 				JSONObject o = new JSONObject();

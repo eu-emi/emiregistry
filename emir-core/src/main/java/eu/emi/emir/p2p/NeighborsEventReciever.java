@@ -75,6 +75,11 @@ public class NeighborsEventReciever implements EventListener, Runnable {
 			if (relevantEntries.length() > 0){
 				NeighborsManager.getInstance().addNeighborsDSRs(relevantEntries,event.getType());
 			}
+		} else if (event.getType().equalsIgnoreCase(EventTypes.SERVICE_UPDATE)
+			       && (!NeighborsManager.getInstance().getConnected()
+			               || event.getData().toString().trim().contains("\"Service_Type\":\"GSR\"")) ) {
+			// (re)connection trigger
+			NeighborsManager.getInstance().getNeighbors();
 		}
 	}
 
