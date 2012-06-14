@@ -107,7 +107,7 @@ public class ServiceCheckin implements Runnable {
 				ClientResponse res = childClient.queryParam(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
-								myURL).post(ClientResponse.class);logger.error(res.toString());
+								myURL).post(ClientResponse.class);
 				if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ||
 						res.getStatus() == Status.NOT_FOUND.getStatusCode()){
 					logger.error("Please modified the server's configuration, because the following error (" +res.getEntity(String.class) + ") given from the parent DSR. Checkin stopped!");
