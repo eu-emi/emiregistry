@@ -51,13 +51,18 @@ public class ServiceCheckin implements Runnable {
 	 * 
 	 */
 	public ServiceCheckin(String parentUrl, String url, Long maxmessage) throws Throwable {
-		DSRClient cc = new DSRClient(parentUrl + "/children");
-		DSRClient sc = new DSRClient(parentUrl + "/serviceadmin");
+		// configuration error handling
+		String slash = "/";
+		if (parentUrl.charAt(parentUrl.length()-1) == '/' ){
+			slash = "";
+		}
+		DSRClient cc = new DSRClient(parentUrl + slash + "children");
+		DSRClient sc = new DSRClient(parentUrl + slash + "serviceadmin");
 		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
 
-			cc = new DSRClient(parentUrl + "/children",
+			cc = new DSRClient(parentUrl + slash + "children",
 										DSRServer.getClientSecurityProperties());
-			sc = new DSRClient(parentUrl + "/serviceadmin",
+			sc = new DSRClient(parentUrl + slash + "serviceadmin",
 										DSRServer.getClientSecurityProperties());
 		}
 		childClient = cc.getClientResource();
@@ -97,15 +102,14 @@ public class ServiceCheckin implements Runnable {
 	@Override
 	public void run() {
 		while(true){
-			if (logger.isTraceEnabled()) {
-				logger.trace("checkin service entry");
-			}
+			logger.debug("checkin service entry");
 			try {
 				ClientResponse res = childClient.queryParam(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName(),
-								myURL).post(ClientResponse.class);
-				if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ){
+								myURL).post(ClientResponse.class);logger.error(res.toString());
+				if ( res.getStatus() == Status.BAD_REQUEST.getStatusCode() ||
+						res.getStatus() == Status.NOT_FOUND.getStatusCode()){
 					logger.error("Please modified the server's configuration, because the following error (" +res.getEntity(String.class) + ") given from the parent DSR. Checkin stopped!");
 					return;
 				}
@@ -134,7 +138,7 @@ public class ServiceCheckin implements Runnable {
 					}
 				}
 			} catch (ClientHandlerException e){
-				logger.debug("The parent DSR is not available.");
+				logger.info("The parent DSR is not available.");
 			}
 			try {
 				Thread.sleep(60*60*1000);
