@@ -22,7 +22,7 @@ import eu.emi.emir.client.security.ISecurityProperties;
 public class ChildrenManager {
 	private static ChildrenManager instance = null;
 	private Map<String, Date> childServices;
-	private long hour = 60*60*1000;
+	private long hour = (60+2)*60*1000;	// one hour + 2 minutes time window
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
