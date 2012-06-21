@@ -120,6 +120,7 @@ public class ServiceCheckin implements Runnable {
 						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						logger.debug("Send synch messages.");
 						while (message.length() > 0){
+							message = convert(message);
 							// message sending
 							synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
 										.post(ClientResponse.class, filters.outputFilter(message));
@@ -144,6 +145,22 @@ public class ServiceCheckin implements Runnable {
 		}
 	}
 	
-	
+	/*
+	 * Convert the JSONArray's type of elements 
+	 * from com.mongodb.BasicDBObject
+	 * to   org.codehaus.jettison.json.JSONObject
+	 * 
+	 */
+	private JSONArray convert(JSONArray array){
+		JSONArray result = new JSONArray();
+		for (int i=0; i<array.length(); i++){
+			try {
+				result.put(new JSONObject(array.getString(i)));
+			} catch (JSONException e) {
+				Log.logException("JSONObject convertation problem: ", e);
+			}
+		}
+		return result;
+	}
 
 }
