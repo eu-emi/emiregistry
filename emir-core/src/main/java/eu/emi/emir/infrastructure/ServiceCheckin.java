@@ -6,15 +6,14 @@ package eu.emi.emir.infrastructure;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -24,8 +23,8 @@ import eu.emi.emir.client.DSRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServiceAdminManager;
-import eu.emi.emir.db.mongodb.ServiceObject;
+import eu.emi.emir.db.ServiceDatabase;
+import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 
 /**
  * Service periodically checkin to the parent DSR
@@ -39,7 +38,7 @@ public class ServiceCheckin implements Runnable {
 	private final WebResource synchClient;
 	private String myURL;
 	private Long max;
-	private ServiceAdminManager sm;
+	private ServiceDatabase serviceDB;
 	private Filters filters;
 	
 	/**
@@ -67,7 +66,7 @@ public class ServiceCheckin implements Runnable {
 		}
 		childClient = cc.getClientResource();
 		synchClient = sc.getClientResource();
-		sm = new ServiceAdminManager();
+		serviceDB = new MongoDBServiceDatabase();
 		try {
 			URL tmp = new URL(url);
 			if (tmp.getProtocol().isEmpty()) {
@@ -116,22 +115,19 @@ public class ServiceCheckin implements Runnable {
 				if ( res.hasEntity() && 
 					 res.getEntity(String.class).equals("First registration")){
 					// Full DB need to be send
-					List<ServiceObject> dbList = new ArrayList<ServiceObject>();
 					try {
-						dbList = sm.findAll();
-						JSONArray message = new JSONArray();
+						String refID = null;
+						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						logger.debug("Send synch messages.");
-						for (int i=0; i<dbList.size(); i++){
-							message.put(dbList.get(i).toJSON());
-							// sending message size limit
-							if ( (i>0 && ((i % max) == 0)) ||
-								  i+1 == dbList.size()){
-								// message sending
-								synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
-											.post(ClientResponse.class, filters.outputFilter(message));
-								// message cleaning
-								message = new JSONArray();
-							}
+						while (message.length() > 0){
+							// message sending
+							synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
+										.post(ClientResponse.class, filters.outputFilter(message));
+							// next message creation
+							JSONObject doc = new JSONObject(message.get(message.length()-1).toString());
+							refID = doc.getJSONObject("_id").get("$oid").toString();
+							
+							message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						}
 					} catch (JSONException e) {
 						Log.logException("", e);
