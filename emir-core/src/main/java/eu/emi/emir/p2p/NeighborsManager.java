@@ -59,6 +59,7 @@ public class NeighborsManager {
 	private int retry;
 	private boolean dowloadedProviderList;
 	private boolean connected;
+	private int maxEntriesNr;
 
 	/** 
 	 * Default constructor if you don't want to use as a singleton class 
@@ -117,6 +118,7 @@ public class NeighborsManager {
 		infoProviders = DownloadProviderList(providerListURL);
 		// 2.-6. steps are in the BootStrap function.
 		connected = false;
+		maxEntriesNr = 1000;
 		BootStrap(retry);
 	}
 
@@ -448,51 +450,69 @@ public class NeighborsManager {
 			if (list.get(j).equals(myURL)){
 				continue;
 			}
+			String ref = null;
 			// Fetch the DB from the GSR
-			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery");
+			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr);
 			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-
-				c = new DSRClient(list.get(j) + "/services/pagedquery",
+				c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr,
 											DSRServer.getClientSecurityProperties());
 			}
-			logger.info("Fetch the DB from  " + list.get(j));
 			boolean found = false;
-			for (int i=0; i<retry; i++){
-				JSONObject o = new JSONObject();
-				try {
-					o = c.getClientResource()
-							.accept(MediaType.APPLICATION_JSON_TYPE)
-								.get(JSONObject.class);
-				} catch (ClientHandlerException e) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("DB query, unreachable host: " + list.get(j));
-					}
-					continue;
-				}
-				if (!o.isNull("result")){
+			/*
+			 * States:
+			 *    0  start state
+			 *    1  try to communicate with the server
+			 *    2  get information from the server
+			 */
+			int state = 0;
+			while ( (ref == null && state == 0) || (newDB.length() > 0 && !found) ) {
+				logger.info("Fetch DB from  " + list.get(j));
+				for (int i=0; i<retry; i++){
+					JSONObject o = new JSONObject();
 					try {
-						newDB = o.getJSONArray("result");
-					} catch (JSONException e) {
-						if (logger.isDebugEnabled()) {
+						if (state == 0){
+							state = 1;
+						}
+						o = c.getClientResource()
+								.accept(MediaType.APPLICATION_JSON_TYPE)
+									.get(JSONObject.class);
+					} catch (ClientHandlerException e) {
+						logger.debug("DB query, unreachable host: " + list.get(j));
+						continue;
+					}
+					state = 2;
+					if (!o.isNull("result")){
+						try {
+							ref = o.getString("ref");
+							newDB = o.getJSONArray("result");
+							logger.debug("New ref: " + ref);
+							logger.debug("New DB: " + newDB.toString());
+							// Store the new DB part
+							if (!DBStore(newDB)){
+								logger.warn("Some failure happend during the DB store.");
+							}
+							// next part of the database
+							c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref);
+							if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+								c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref,
+															DSRServer.getClientSecurityProperties());
+							}
+						} catch (JSONException e) {
 							logger.debug("The got message is not JSONArray! message: " + o.toString());
 						}
+					} else {
+						// don't get more data from the server
+						found = true;
+						break;
 					}
-					found = true;
-					break;
-				}
-			}
+				} // end of the for
+			} // end of while
 			if (found){
 				connected = true;
-				if (logger.isDebugEnabled()) {
-					logger.debug("New DB: " + newDB.toString());
-				}
 				break;
 			}
 		}
-		// Store the new DB entries
-		if (!DBStore(newDB)){
-			logger.warn("Some failure happend during the DB store.");
-		}
+		
 	}
 	
 	/**
