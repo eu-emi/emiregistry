@@ -497,6 +497,7 @@ public class NeighborsManager {
 								c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref,
 															DSRServer.getClientSecurityProperties());
 							}
+							break;
 						} catch (JSONException e) {
 							logger.debug("The got message is not JSONArray! message: " + o.toString());
 						}
