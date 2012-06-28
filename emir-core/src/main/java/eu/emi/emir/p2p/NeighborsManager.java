@@ -463,20 +463,20 @@ public class NeighborsManager {
 			 *    0  start state
 			 *    1  try to communicate with the server
 			 *    2  get information from the server
+			 *    3  server unreachable
 			 */
 			int state = 0;
-			while ( (ref == null && state == 0) || (newDB.length() > 0 && !found) ) {
+			while ( (ref == null && state == 0) || (newDB.length() > 0 && !found && state != 3) ) {
 				logger.info("Fetch DB from  " + list.get(j));
 				for (int i=0; i<retry; i++){
 					JSONObject o = new JSONObject();
 					try {
-						if (state == 0){
-							state = 1;
-						}
+						state = 1;
 						o = c.getClientResource()
 								.accept(MediaType.APPLICATION_JSON_TYPE)
 									.get(JSONObject.class);
 					} catch (ClientHandlerException e) {
+						state = 3;
 						logger.debug("DB query, unreachable host: " + list.get(j));
 						continue;
 					}
@@ -484,8 +484,8 @@ public class NeighborsManager {
 					if (!o.isNull("result")){
 						try {
 							ref = o.getString("ref");
-							newDB = o.getJSONArray("result");
 							logger.debug("New ref: " + ref);
+							newDB = o.getJSONArray("result");
 							logger.debug("New DB: " + newDB.toString());
 							// Store the new DB part
 							if (!DBStore(newDB)){
