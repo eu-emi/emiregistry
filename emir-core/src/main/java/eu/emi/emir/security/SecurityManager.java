@@ -34,9 +34,6 @@ package eu.emi.emir.security;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.security.KeyStore;
 import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -48,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.SSLSocket;
 import javax.security.auth.x500.X500Principal;
 
 import org.apache.log4j.Logger;
@@ -57,9 +53,8 @@ import org.apache.log4j.MDC;
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPResult;
-import eu.emi.emir.pdp.RegistryPDP;
 import eu.emi.emir.pdp.PDPResult.Decision;
-import eu.emi.emir.pdp.local.LocalHerasafPDP;
+import eu.emi.emir.pdp.RegistryPDP;
 import eu.emi.emir.security.util.ResourceDescriptor;
 
 /**

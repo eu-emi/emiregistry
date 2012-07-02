@@ -166,27 +166,27 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<version>2.4.0</version>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.apache.xmlbeans</groupId> -->
+<!-- 				<artifactId>xmlbeans</artifactId> -->
+<!-- 				<version>2.4.0</version> -->
+<!-- 			</dependency> -->
 
-			<dependency>
-				<groupId>eu.unicore.services</groupId>
-				<artifactId>use-pdp</artifactId>
-				<version>2.0.1</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>use-core</artifactId>
-						<groupId>eu.unicore.services</groupId>
-					</exclusion>
-					<exclusion>
-						<groupId>eu.unicore.services</groupId>
-						<artifactId>use-wsrfclient</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>eu.unicore.services</groupId> -->
+<!-- 				<artifactId>use-pdp</artifactId> -->
+<!-- 				<version>2.0.1</version> -->
+<!-- 				<exclusions> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>use-core</artifactId> -->
+<!-- 						<groupId>eu.unicore.services</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>eu.unicore.services</groupId> -->
+<!-- 						<artifactId>use-wsrfclient</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 				</exclusions> -->
+<!-- 			</dependency> -->
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
@@ -214,7 +214,6 @@
 		<module>emir-core</module>
 		<module>xmltypes</module>
 		<module>emir-client</module>
-		<!-- <module>emir-securityLibrary</module> -->
 	</modules>
 	<build>
 		<pluginManagement>

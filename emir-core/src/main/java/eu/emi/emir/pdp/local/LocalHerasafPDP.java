@@ -129,7 +129,7 @@ public class LocalHerasafPDP implements RegistryPDP, PolicyListener
 		StringBuilder msg = new StringBuilder();
 		if (status.getStatusCode() != null)
 		{
-			msg.append("Decission status code: [");
+			msg.append("Decision status code: [");
 			msg.append(status.getStatusCode().getValue() + "]\n");
 		}
 		String m = status.getStatusMessage();

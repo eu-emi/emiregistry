@@ -112,10 +112,10 @@ public class ServerProperties extends PropertiesHelper {
 		META.put(PROP_GLOBAL_ETREMOVE, new PropertyMD("24").setDescription(""));
 		META.put(PROP_GLOBAL_SOFTSTATE_DELAY, new PropertyMD("2").setDescription(""));
 		META.put(PROP_PARENT_ADDRESS, new PropertyMD().setDescription(""));
-		META.put(PROP_MONGODB_HOSTNAME, new PropertyMD("localhost").setDescription(""));
-		META.put(PROP_MONGODB_PORT, new PropertyMD("27017").setInt().setDescription(""));
-		META.put(PROP_MONGODB_DB_NAME, new PropertyMD("emiregistry").setDescription(""));
-		META.put(PROP_MONGODB_COLLECTION_NAME, new PropertyMD("services").setDescription(""));
+		META.put(PROP_MONGODB_HOSTNAME, new PropertyMD("localhost").setDescription("MongoDB hostname"));
+		META.put(PROP_MONGODB_PORT, new PropertyMD("27017").setInt().setDescription("MongoDB port number"));
+		META.put(PROP_MONGODB_DB_NAME, new PropertyMD("emiregistry").setDescription("MongoDB database name"));
+		META.put(PROP_MONGODB_COLLECTION_NAME, new PropertyMD("services").setDescription("MongoDB collection name"));
 		META.put(PROP_MONGODB_USERNAME, new PropertyMD().setDescription(""));
 		META.put(PROP_MONGODB_PASSWORD, new PropertyMD().setSecret().setDescription(""));
 		META.put(PROP_RECORD_EXPIRY_DEFAULT, new PropertyMD("30").setDescription(""));
