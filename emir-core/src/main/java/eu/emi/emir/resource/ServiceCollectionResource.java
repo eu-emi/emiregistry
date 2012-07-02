@@ -166,10 +166,10 @@ public class ServiceCollectionResource {
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 
-		if (jArr.getCount() == BigInteger.ZERO) {
-			return Response.ok(jArr).status(Status.NO_CONTENT).build();
-		} else if (jArr == null) {
+		if (jArr == null) {
 			return Response.ok().status(Status.NO_CONTENT).build();
+		} else if (jArr.getCount() == BigInteger.ZERO) {
+			return Response.ok(jArr).status(Status.NO_CONTENT).build();
 		}
 
 		return Response.ok(jArr).build();
