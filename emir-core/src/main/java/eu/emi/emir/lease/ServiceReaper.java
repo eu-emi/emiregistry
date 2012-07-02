@@ -39,7 +39,12 @@ public class ServiceReaper implements Runnable {
 				logger.trace("purging service entry");
 			}
 			
+			if (sm==null) {
+				sm = new ServiceAdminManager();
+			}
 			sm.removeExpiredEntries();
+			
+			logger.info("Servive reaper is running");
 		} catch (Exception e) {
 			logger.warn(e.getCause());
 		}

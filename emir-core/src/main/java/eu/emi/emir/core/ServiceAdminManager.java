@@ -49,7 +49,7 @@ public class ServiceAdminManager {
 	private static Logger log = Log.getLogger(Log.EMIR_CORE, ServiceAdminManager.class);
 	
 	private ServiceDatabase serviceDB = null;
-	private String DBVersion = null;
+	private String dbVersion = null;
 
 	
 
@@ -59,14 +59,12 @@ public class ServiceAdminManager {
 	 */
 	public ServiceAdminManager(){
 		serviceDB = new MongoDBServiceDatabase();
-//		serviceDB = MongoDBServiceDatabase.getInstance();
-		DBVersion = serviceDB.getDBVersion();
+		dbVersion = serviceDB.getDBVersion();
 	}
 	
 	public ServiceAdminManager(MongoDBServiceDatabase mongoDB){
 		serviceDB = mongoDB;
-//		serviceDB = MongoDBServiceDatabase.getInstance();
-		DBVersion = serviceDB.getDBVersion();
+		dbVersion = serviceDB.getDBVersion();
 	}
 
 	/**
@@ -316,7 +314,7 @@ public class ServiceAdminManager {
 		List<ServiceObject> query2 = new ArrayList<ServiceObject>();
 		boolean oldMongoDBUse = true;
 
-		if (DBVersion.compareTo("2.0.1") >= 0) {
+		if (dbVersion.compareTo("2.0.1") >= 0) {
 			oldMongoDBUse = false;
 			// since 2.0.1 supported the "and" operation
 			/* Query structure:
