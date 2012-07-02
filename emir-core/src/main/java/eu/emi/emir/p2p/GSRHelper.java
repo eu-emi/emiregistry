@@ -20,7 +20,7 @@ import eu.emi.emir.event.EventTypes;
 public class GSRHelper {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE, GSRHelper.class);
 	
-	public void startGSRFunctions() {
+	public static void startGSRFunctions() {
 		// Neighbors event receiver start
 		RegistryThreadPool.getExecutorService().execute(
 				new NeighborsEventReciever());
@@ -67,7 +67,7 @@ public class GSRHelper {
 
 	}
 
-	protected void finalize(){
+	public static void stopGSRFunctions(){
 		logger.info("Send DELETE message to the neighbors.");
 		String myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 

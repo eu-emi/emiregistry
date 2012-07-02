@@ -81,7 +81,7 @@ public class EMIRServer {
 						} catch (Throwable e) {
 							Log.logException("shutdown hook", e);
 						} finally {
-							StartStopMethods.stopGSRFunctions();
+							GSRHelper.stopGSRFunctions();
 						}
 					}
 					threadLogger.debug("EMIR server stopped (shutdown hook)");
@@ -149,10 +149,12 @@ public class EMIRServer {
 		String type = "DSR";
 		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
 			type = "GSR";
-			new GSRHelper().startGSRFunctions();
+			GSRHelper.startGSRFunctions();
 		} else {
 			addParentDSR();
-		}	
+		}
+		System.out.println(type + "  EMIR server started");
+		logger.info(type + " EMIR server started");
 	}
 
 	/**
@@ -193,26 +195,18 @@ public class EMIRServer {
 	public void stop() {
 		try {
 			server.stop();
-			cleanUp();
-			System.out.println("DSR server stopped");
-			logger.info("DSR server stopped");
+			this.finalize();
+			System.out.println("EMIR server stopped");
+			logger.info("EMIR server stopped");
 		} catch (Exception e) {
 			System.err.println("Error shutting down the EMIR Server");
 			Log.logException("Error shutting down the EMIR Server", e, logger);
 		}
 	}
 	
-	protected void cleanUp(){
-		System.out.println("Send DELETE message to the neighbors.");
-		logger.info("Send DELETE message to the neighbors.");
-		String myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
-
-		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
-		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
-		try {
-			new MongoDBServiceDatabase().deleteByUrl(myURL);
-		} catch (Exception e) {
-			Log.logException("Error in the delete procedure ", e);
+	protected void finalize(){
+		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
+			GSRHelper.stopGSRFunctions();
 		}
 	}
 
