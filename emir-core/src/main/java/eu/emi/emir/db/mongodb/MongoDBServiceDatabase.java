@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
@@ -295,7 +294,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
 			logger.info("updated: " + sObj.getUrl());
-			// sending update event to the recievers
+			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
 			// sObj.toJSON()));

@@ -3,7 +3,6 @@
  */
 package eu.emi.emir.core;
 
-import java.util.Properties;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;

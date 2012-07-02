@@ -115,6 +115,7 @@ public class TestNeighborsManager {
 			DateUtil.setExpiryTime(myInfos, 3);
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
+			@SuppressWarnings("unused")
 			ClientResponse res = selfRegisterClient.accept(
 					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
 					message);
@@ -162,6 +163,7 @@ public class TestNeighborsManager {
 			DateUtil.setExpiryTime(myInfos, 3);
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
+			@SuppressWarnings("unused")
 			ClientResponse res = selfRegisterClient.accept(
 					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
 					message);
@@ -210,6 +212,7 @@ public class TestNeighborsManager {
 			DateUtil.setExpiryTime(myInfos, 3);
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
+			@SuppressWarnings("unused")
 			ClientResponse res = selfRegisterClient.accept(
 					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
 					message);
@@ -259,6 +262,7 @@ public class TestNeighborsManager {
 			DateUtil.setExpiryTime(myInfos, 3);
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
+			@SuppressWarnings("unused")
 			ClientResponse res = selfRegisterClient.accept(
 					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
 					message);

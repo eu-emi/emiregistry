@@ -115,7 +115,6 @@ public final class SecurityManager {
 		if(serverCert==null){
 			try{
 				serverCert=EMIRServer.getServerSecurityProperties().getCredential().getCertificateChain()[0];
-//				serverCert=DSRServer.getSecurityProperties().getCertificateChain()[0];
 				logger.info("Server identity: "+serverCert.getSubjectX500Principal().toString());
 			}catch(Exception e){
 				Log.logException("Could not get server certificate",e,logger);
@@ -133,7 +132,6 @@ makeAnonymousClient
 	 * @return an {@link X500Principal} or <code>null</code>
 	 */
 	public static X500Principal getServerIdentity(){
-//		ISecurityProperties secProps=DSRServer.getSecurityProperties();
 		ServerSecurityProperties secProps = EMIRServer.getServerSecurityProperties();
 		if(secProps.isSslEnabled() && secProps.getCredential()!=null){
 			return getServerCert().getSubjectX500Principal();
@@ -252,7 +250,6 @@ makeAnonymousClient
 	 * @throws Exception
 	 */
 	public static synchronized void createAttributeSource()throws Exception{
-//		attributeSource=new AttributeSourceFactory(DSRServer.getConfiguration().getProperties()).makeAttributeSource();
 		attributeSource=new AttributeSourceFactory(EMIRServer.getServerSecurityProperties().getRawProperties()).makeAttributeSource();
 		
 	}
@@ -408,7 +405,7 @@ makeAnonymousClient
 			Role r=getServerRole();
 			client.setRole(r);
 		} else {
-			//setup client with authorisation attributes
+			//setup client with authorization attributes
 			SubjectAttributesHolder subAttributes;
 			try {
 				subAttributes = establishAttributes(tokens);
@@ -448,18 +445,18 @@ makeAnonymousClient
 	
 	
 	/**
-	 * Typical authorisation is done here (when security is ON and we don't handle a local call).
+	 * Typical authorization is done here (when security is ON and we don't handle a local call).
 	 *
 	 * @param tokens - Security tokens
-	 * @return authorised Client object 
+	 * @return authorized Client object 
 	 */
 	private static Client createSecureClient(final SecurityTokens tokens) {
 		Client client=new Client();
 		String dn=null;
 		
 		//if (tokens.getEffectiveUserName() == null){
-			//no security info at all -> can't authorise
-			//throw new AuthorisationException("Can't authorise: no user cert available, " +
+			//no security info at all -> can't authorize
+			//throw new AuthorisationException("Can't authorize: no user cert available, " +
 				//"no trust delegation found, no consignor cert.");
 		//}
 
@@ -497,18 +494,18 @@ makeAnonymousClient
 	}
 	
 	/**
-	 * Create an authorised Client object. This will use the supplied
-	 * security tokens to make a call to an authoriser (such as the XUUDB)
+	 * Create an authorized Client object. This will use the supplied
+	 * security tokens to make a call to an authorizer (such as the XUUDB)
 	 * and set client attributes such as role, xlogin, etc based on the
 	 * authoriser's reply.<br/>
 	 * 
 	 * 
 	 * @param tokens - Security tokens
-	 * @return authorised Client object 
+	 * @return authorized Client object 
 	 */
 	public static Client createAndAuthoriseClient(final SecurityTokens tokens){
 		Client client=new Client();
-		// 4 cases: local call, no authorisation material, security is ON and security is OFF
+		// 4 cases: local call, no authorization material, security is ON and security is OFF
 		if(isLocalCall())
 			client = makeAnonymousClient("CN=Local_call");
 		else if (tokens == null)

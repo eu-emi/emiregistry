@@ -13,21 +13,18 @@ import org.eclipse.jetty.server.Server;
 
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
-import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.emir.event.Event;
-import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.infrastructure.ServiceCheckin;
 import eu.emi.emir.infrastructure.ServiceEventReceiver;
 import eu.emi.emir.jetty.HttpsServer;
 import eu.emi.emir.lease.ServiceReaper;
 import eu.emi.emir.p2p.GSRHelper;
-import eu.emi.emir.p2p.StartStopMethods;
 import eu.emi.emir.security.ClientSecurityProperties;
 import eu.emi.emir.security.ServerSecurityProperties;
 import eu.unicore.util.configuration.FilePropertiesHelper;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  * 
  */
 public class EMIRServer {
@@ -51,7 +48,7 @@ public class EMIRServer {
 	 */
 	public EMIRServer() {
 	}
-	//Following constructur is there is to keep the tests running
+	//Following constructor is there is to keep the tests running
 	public EMIRServer(Properties p){
 		serverProps = new ServerProperties(p, false);
 	}
@@ -158,7 +155,7 @@ public class EMIRServer {
 	}
 
 	/**
-	 * Starts the servicereaper thread to purge the expired service entries
+	 * Starts the service reaper thread to purge the expired service entries
 	 */
 	private void startServiceReaper(){
 		try {
@@ -177,7 +174,7 @@ public class EMIRServer {
 		String parentUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_PARENT_ADDRESS);
 		String serverUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		if (parentUrl != null) {
-			logger.info("adding parent dsr : " + parentUrl + " to: " + serverUrl);
+			logger.info("adding parent EMIR : " + parentUrl + " to: " + serverUrl);
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(parentUrl));
 			Long max = EMIRServer.getServerProperties().getLongValue(ServerProperties.PROP_RECORD_MAXIMUM);
@@ -185,7 +182,7 @@ public class EMIRServer {
 				RegistryThreadPool.getExecutorService().execute(
 						new ServiceCheckin(parentUrl, serverUrl, max));
 			} catch (Throwable e) {
-				logger.warn("The parent DSR is not available.");
+				logger.warn("The parent EMIR is not available.");
 			}
 
 		}

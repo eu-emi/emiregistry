@@ -37,6 +37,7 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 	public void setup() {
 		Properties p = new Properties();
 		p.setProperty("emir.address", "http://localhost:54321");
+		@SuppressWarnings("unused")
 		EMIRServer s = new EMIRServer(p);		
 		adminMgr = new ServiceAdminManager(new MongoDBServiceDatabase("localhost",27017, "emiregistry", "services"));
 		adminMgr.removeAll();

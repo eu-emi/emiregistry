@@ -42,6 +42,7 @@ public class ACLFilter implements ContainerRequestFilter {
 	private static Logger logger = Log.getLogger(Log.EMIR_SECURITY, ACLFilter.class);
 	private File aclFile = null;
 	private FileWatcher watchDog;
+	@SuppressWarnings("unused")
 	private boolean active;
 	// private final Set<String> acceptedDNs = new HashSet<String>();
 	private final Map<String, String> acceptedDNs = new HashMap<String, String>();
@@ -54,6 +55,7 @@ public class ACLFilter implements ContainerRequestFilter {
 
 	@Context
 	HttpServletRequest httpRequest;
+	@SuppressWarnings("unused")
 	private File aclFile2;
 
 	/**

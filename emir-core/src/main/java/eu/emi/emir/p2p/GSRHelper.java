@@ -15,6 +15,7 @@ import eu.emi.emir.event.EventTypes;
 
 /**
  * @author a.memon
+ * @author g.szigeti
  *
  */
 public class GSRHelper {
@@ -74,6 +75,7 @@ public class GSRHelper {
 		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
 		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
 		try {
+			// delete entry from own database
 			new MongoDBServiceDatabase().deleteByUrl(myURL);
 		} catch (Exception e) {
 			Log.logException("Error in the delete procedure ", e);

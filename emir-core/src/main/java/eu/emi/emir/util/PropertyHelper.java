@@ -57,7 +57,7 @@ public class PropertyHelper {
 	/**
 	 * filter the given properties using the supplied patterns
 	 */
-	public PropertyHelper(Map properties, String... patterns) {
+	public PropertyHelper(@SuppressWarnings("rawtypes") Map properties, String... patterns) {
 		this(properties,false,patterns);
 	}
 
@@ -68,7 +68,7 @@ public class PropertyHelper {
 	 * @param isRegexp - whether the patterns denote Java regular expressions
 	 * @param patterns - the accepted patterns
 	 */
-	public PropertyHelper(Map properties, boolean isRegexp, String... patterns) {
+	public PropertyHelper(@SuppressWarnings("rawtypes") Map properties, boolean isRegexp, String... patterns) {
 		this.properties = properties;
 		this.acceptedPatterns = patterns;
 		this.isRegexp=isRegexp;

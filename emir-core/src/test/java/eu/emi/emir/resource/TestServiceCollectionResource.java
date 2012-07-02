@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 
 import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;

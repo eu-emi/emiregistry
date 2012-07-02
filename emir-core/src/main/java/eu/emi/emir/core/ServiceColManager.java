@@ -30,6 +30,7 @@ import eu.eu_emi.emiregistry.QueryResult;
  * 
  */
 public class ServiceColManager {
+	@SuppressWarnings("unused")
 	private static final Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceColManager.class);
 	private ServiceDatabase serviceDB = null;

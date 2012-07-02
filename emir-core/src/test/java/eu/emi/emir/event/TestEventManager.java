@@ -3,9 +3,6 @@
  */
 package eu.emi.emir.event;
 
-import java.util.Properties;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.event.Event;

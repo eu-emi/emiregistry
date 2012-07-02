@@ -47,6 +47,7 @@ public class TestServiceReaper extends MongoDBTestBase{
 				"services"));
 		adminMgr.removeAll();
 		p = new Properties();
+		@SuppressWarnings("unused")
 		EMIRServer server = new EMIRServer(p);
 	}
 

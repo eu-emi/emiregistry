@@ -8,10 +8,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
@@ -38,7 +34,6 @@ import eu.eu_emi.emiregistry.QueryResult;
 import eu.unicore.security.canl.AuthnAndTrustProperties;
 import eu.unicore.security.canl.CredentialProperties;
 import eu.unicore.security.canl.TruststoreProperties;
-import eu.unicore.util.httpclient.DefaultClientConfiguration;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start

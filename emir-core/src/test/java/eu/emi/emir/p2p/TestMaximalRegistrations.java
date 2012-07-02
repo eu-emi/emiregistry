@@ -3,10 +3,6 @@ package eu.emi.emir.p2p;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
@@ -139,7 +135,6 @@ public class TestMaximalRegistrations {
 
 		if (serverUrl.substring(0, 5).equals("https")) {
 			Properties p = new Properties();
-			// keystore setting
 			// keystore setting
 			p.setProperty(ClientSecurityProperties.PREFIX
 					+ CredentialProperties.DEFAULT_PREFIX
