@@ -54,10 +54,7 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.security.AuthSSLProtocolSocketFactory;
-import eu.emi.emir.client.security.ISecurityProperties;
-import eu.emi.emir.client.security.util.KeystoreUtil;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.pdp.PDPResult;
 import eu.emi.emir.pdp.RegistryPDP;
@@ -74,7 +71,7 @@ import eu.emi.emir.security.util.ResourceDescriptor;
 public final class SecurityManager {
 
 	private static final Logger logger=Log.getLogger(Log.EMIR_SECURITY,SecurityManager.class);
-
+	public static final String CLIENT = "client";
 	/**
 	 * for unit testing, set this property to "true" to disable security
 	 */
@@ -117,7 +114,8 @@ public final class SecurityManager {
 	public static X509Certificate getServerCert(){
 		if(serverCert==null){
 			try{
-				serverCert=DSRServer.getSecurityProperties().getCertificateChain()[0];
+				serverCert=EMIRServer.getServerSecurityProperties().getCredential().getCertificateChain()[0];
+//				serverCert=DSRServer.getSecurityProperties().getCertificateChain()[0];
 				logger.info("Server identity: "+serverCert.getSubjectX500Principal().toString());
 			}catch(Exception e){
 				Log.logException("Could not get server certificate",e,logger);
@@ -135,8 +133,9 @@ makeAnonymousClient
 	 * @return an {@link X500Principal} or <code>null</code>
 	 */
 	public static X500Principal getServerIdentity(){
-		ISecurityProperties secProps=DSRServer.getSecurityProperties();
-		if(secProps.isSslEnabled() && secProps.getKeystore()!=null){
+//		ISecurityProperties secProps=DSRServer.getSecurityProperties();
+		ServerSecurityProperties secProps = EMIRServer.getServerSecurityProperties();
+		if(secProps.isSslEnabled() && secProps.getCredential()!=null){
 			return getServerCert().getSubjectX500Principal();
 		}
 		else{
@@ -179,65 +178,59 @@ makeAnonymousClient
 //		return gatewayCert;
 //	}
 	
-	private static String[]trustedCertDNs=null;
-	public static synchronized String[] getTrustedCertificateDNs(){
-		if(trustedCertDNs==null){
-			ISecurityProperties sp=DSRServer.getSecurityProperties();
-			if(sp.getTruststore()!=null){
-				try{
-					String type=sp.getProperty(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE);
-					String file=sp.getProperty(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE);
-					String password=sp.getProperty(ISecurityProperties.REGISTRY_SSL_TRUSTPASS);
-					KeyStore ks = KeystoreUtil.createKeyStore(file, password, type);
-					trustedCertDNs=KeystoreUtil.getTrustedCertDNs(ks);
-				}
-				catch(Exception e){
-					logger.error("Can't load trusted certs from truststore",e);
-				}
-			}
-		}
-		return trustedCertDNs;
-	}
+	
 
+	/**
+	 * get the XACML policy decision point
+	 * @return {@link XacmlPDP}
+	 */
+//	public static synchronized RegistryPDP getPDP(){
+//		if(pdp==null){
+//			String conf=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null);
+//			String conf=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null);
+//			String pdpClass=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP);
+//			String def=LocalHerasafPDP.class.getName();
+//			if(pdpClass==null)
+//			{
+//				//fallback to default
+//				pdpClass=def;
+//				logger.info("Using default value for property <"+DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP+">");
+//			}
+//			try{
+//				Class.forName(pdpClass);
+//			}catch(ClassNotFoundException cfe){
+//				logger.error("Cannot find PDP class <"+pdpClass+"> fallback to default : "+def);
+//				pdpClass=def;
+//			}
+//			
+//			try {
+//				Class<?> pdpClazz = Class.forName(pdpClass);
+//				Constructor<?> constructor = null;
+//				if (conf != null) {
+//					constructor = pdpClazz.getConstructor(String.class);
+//					pdp = (RegistryPDP)constructor.newInstance(conf);
+//				} else {
+//					constructor = pdpClazz.getConstructor();
+//					pdp = (RegistryPDP)constructor.newInstance();
+//				}
+//
+//				
+//				logger.info("Using PDP class <"+pdpClass+"> and config file <"+conf+">");	
+//			}catch(Exception e){
+//				logger.fatal("Can't create PDP.", e);
+//				throw new RuntimeException("Can't create a PDP: ",e);
+//			}
+//		}
+//		return pdp;
+//	}
+	
 	/**
 	 * get the XACML policy decision point
 	 * @return {@link XacmlPDP}
 	 */
 	public static synchronized RegistryPDP getPDP(){
 		if(pdp==null){
-			String conf=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, null);
-			String pdpClass=DSRServer.getProperty(DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP);
-			String def=LocalHerasafPDP.class.getName();
-			if(pdpClass==null)
-			{
-				//fallback to default
-				pdpClass=def;
-				logger.info("Using default value for property <"+DSRSecurityProperties.REGISTRY_CHECKACCESS_PDP+">");
-			}
-			try{
-				Class.forName(pdpClass);
-			}catch(ClassNotFoundException cfe){
-				logger.error("Cannot find PDP class <"+pdpClass+"> fallback to default : "+def);
-				pdpClass=def;
-			}
-			
-			try {
-				Class<?> pdpClazz = Class.forName(pdpClass);
-				Constructor<?> constructor = null;
-				if (conf != null) {
-					constructor = pdpClazz.getConstructor(String.class);
-					pdp = (RegistryPDP)constructor.newInstance(conf);
-				} else {
-					constructor = pdpClazz.getConstructor();
-					pdp = (RegistryPDP)constructor.newInstance();
-				}
-
-				
-				logger.info("Using PDP class <"+pdpClass+"> and config file <"+conf+">");	
-			}catch(Exception e){
-				logger.fatal("Can't create PDP.", e);
-				throw new RuntimeException("Can't create a PDP: ",e);
-			}
+			pdp = EMIRServer.getServerSecurityProperties().getPdp();
 		}
 		return pdp;
 	}
@@ -259,7 +252,9 @@ makeAnonymousClient
 	 * @throws Exception
 	 */
 	public static synchronized void createAttributeSource()throws Exception{
-		attributeSource=new AttributeSourceFactory(DSRServer.getConfiguration().getProperties()).makeAttributeSource();
+//		attributeSource=new AttributeSourceFactory(DSRServer.getConfiguration().getProperties()).makeAttributeSource();
+		attributeSource=new AttributeSourceFactory(EMIRServer.getServerSecurityProperties().getRawProperties()).makeAttributeSource();
+		
 	}
 	
 	
@@ -518,7 +513,9 @@ makeAnonymousClient
 			client = makeAnonymousClient("CN=Local_call");
 		else if (tokens == null)
 			client = makeAnonymousClient(null);
-		else if(!DSRServer.getConfiguration().getBooleanProperty(SecurityManager.DISABLE_SECURITY_AND_ACCESS_CONTROL,false))
+//		else if(!DSRServer.getConfiguration().getBooleanProperty(SecurityManager.DISABLE_SECURITY_AND_ACCESS_CONTROL,false))
+//			client = createSecureClient(tokens);
+		else if(EMIRServer.getServerSecurityProperties().isXACMLAccessControlEnabled())
 			client = createSecureClient(tokens);
 		else
 			client = makeAnonymousClient("CN=Security_is_disabled");
@@ -641,7 +638,7 @@ makeAnonymousClient
 	 * @param d - the resource being accessed
 	 */
 	public static void checkAuthentication(SecurityTokens tokens, String action, ResourceDescriptor d){
-		if(!DSRServer.getConfiguration().getBooleanProperty(ISecurityProperties.REGISTRY_REQUIRE_SIGNATURES))return;
+//		if(!DSRServer.getConfiguration().getBooleanProperty(ISecurityProperties.REGISTRY_REQUIRE_SIGNATURES))return;
 		for(AuthNCheckingStrategy s: authNCheckStrategies){
 			s.checkAuthentication(tokens, action, d);
 		}
@@ -816,47 +813,6 @@ makeAnonymousClient
 		return false;
 	}
 
-	public static X509Certificate getPeerCertificate(String url, ISecurityProperties security){
-		return getPeerCertificate(url, security, 0);
-	}
-
-
-	/**
-	 * helper to get the certificate on the other side of a SSL connection to "url"
-	 * @param url - the URL to connect to
-	 * @param security - the {@link IUASSecurityProperties} to use
-	 * @param timeout - the time to wait for a connection before giving up
-	 */
-	public static X509Certificate getPeerCertificate(String url, ISecurityProperties security, int timeout){
-		SSLSocket s=null;
-		try{
-			URL u=new URL(url);
-			int port=u.getPort()!=-1?u.getPort():u.getDefaultPort();
-			s=(SSLSocket)new AuthSSLProtocolSocketFactory(security).createSocket(u.getHost(), port);
-			X509Certificate peer=(X509Certificate)s.getSession().getPeerCertificates()[0];
-			if(logger.isDebugEnabled()){
-				try{
-					logger.debug("Got peer cert of <"+url+">,\nName: "+peer.getSubjectX500Principal().getName()+"\n" +
-							"Issued by: "+peer.getIssuerX500Principal().getName());
-				}
-				catch(Exception e){
-					Log.logException("Problem with certificate for <"+url+">",e,logger);
-					return null;
-				}
-			}
-			return peer;
-		}
-		catch(Exception e){
-			logger.debug("Can't get certificate for <"+url+">",e);
-		}
-		finally{
-			try{
-				if(s!=null)s.close();
-			}catch(IOException ignored){}
-		}
-		return null;
-	}
-
 	public static class NullAuthoriser implements IAttributeSource{
 		public NullAuthoriser(){}
 		public String getStatusDescription(){ return "(No attribute source configured)"; }
@@ -872,16 +828,17 @@ makeAnonymousClient
 	}
 
 	public static boolean isAccessControlEnabled() {
-		if(isAccessControlEnabled==null){
-			isAccessControlEnabled=Boolean.parseBoolean(DSRServer.getProperty(ISecurityProperties.REGISTRY_CHECKACCESS,"false"));
-		}
+//		if(isAccessControlEnabled==null){
+//			isAccessControlEnabled=Boolean.parseBoolean(DSRServer.getProperty(ISecurityProperties.REGISTRY_CHECKACCESS,"false"));
+//		}
+		isAccessControlEnabled = EMIRServer.getServerSecurityProperties().isXACMLAccessControlEnabled();
 		return isAccessControlEnabled;
 	}
 
-	public static void setAccessControlEnabled(boolean isAccessControlEnabled) {
-		SecurityManager.isAccessControlEnabled = isAccessControlEnabled;
-		DSRServer.getConfiguration().setProperty(ISecurityProperties.REGISTRY_CHECKACCESS,"true");
-	}
+//	public static void setAccessControlEnabled(boolean isAccessControlEnabled) {
+//		SecurityManager.isAccessControlEnabled = isAccessControlEnabled;
+//		DSRServer.getConfiguration().setProperty(ISecurityProperties.REGISTRY_CHECKACCESS,"true");
+//	}
 
 //	public static synchronized boolean isProxyModeEnabled() {
 //		if(isProxyModeEnabled==null){

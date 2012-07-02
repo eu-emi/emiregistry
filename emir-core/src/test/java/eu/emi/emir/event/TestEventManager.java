@@ -8,8 +8,6 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.core.Configuration;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventListener;
@@ -21,11 +19,7 @@ import static org.junit.Assert.*;
  * 
  */
 public class TestEventManager {
-	@Before
-	public void setup() {
-		Properties p = new Properties();
-		new DSRServer(new Configuration(p));
-	}
+	
 
 	@Test
 	public void test() {

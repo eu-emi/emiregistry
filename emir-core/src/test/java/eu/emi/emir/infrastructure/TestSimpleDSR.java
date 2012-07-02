@@ -30,12 +30,15 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.emir.client.ClientSecurityProperties;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.security.ClientSecurityProperties;
 import eu.emi.emir.util.DateUtil;
 import eu.eu_emi.emiregistry.QueryResult;
+import eu.unicore.security.canl.AuthnAndTrustProperties;
+import eu.unicore.security.canl.CredentialProperties;
+import eu.unicore.security.canl.TruststoreProperties;
+import eu.unicore.util.httpclient.DefaultClientConfiguration;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start
@@ -425,41 +428,48 @@ public class TestSimpleDSR {
 	
 	protected static WebResource getChildClient(String path) {
 		Properties p = new Properties();
+		// keystore setting
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ CredentialProperties.DEFAULT_PREFIX
+						+ CredentialProperties.PROP_PASSWORD, "emi");
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ CredentialProperties.DEFAULT_PREFIX
+						+ CredentialProperties.PROP_FORMAT,
+						CredentialProperties.CredentialFormat.pkcs12.toString());
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ CredentialProperties.DEFAULT_PREFIX
+						+ CredentialProperties.PROP_LOCATION,
+						"src/test/resources/certs/demo-user.p12");
 
-		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
-		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-				"src/test/resources/certs/demo-user.p12");
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-				"src/test/resources/certs/demo-server.jks");
-		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
-		ClientSecurityProperties csp = null;
-		try {
-			csp = new ClientSecurityProperties(p);
-		} catch (UnrecoverableKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		DSRClient c = new DSRClient(serverUrl + path, csp);
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ TruststoreProperties.DEFAULT_PREFIX
+						+ TruststoreProperties.PROP_TYPE,
+						TruststoreProperties.TruststoreType.keystore.toString());
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ TruststoreProperties.DEFAULT_PREFIX
+						+ TruststoreProperties.PROP_KS_PATH,
+						"src/test/resources/certs/demo-server.jks");
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ TruststoreProperties.DEFAULT_PREFIX
+						+ TruststoreProperties.PROP_KS_TYPE, "JKS");
+				p.setProperty(ClientSecurityProperties.PREFIX
+						+ TruststoreProperties.DEFAULT_PREFIX
+						+ TruststoreProperties.PROP_KS_PASSWORD, "emi");
+				
+				AuthnAndTrustProperties authn = new AuthnAndTrustProperties(p, ClientSecurityProperties.PREFIX
+						+ TruststoreProperties.DEFAULT_PREFIX, ClientSecurityProperties.PREFIX
+						+ CredentialProperties.DEFAULT_PREFIX);
+				
+				ClientSecurityProperties csp = new ClientSecurityProperties(p, authn); 
+		
+		
+		EMIRClient c = new EMIRClient(serverUrl + path, csp);		
+		
 		return c.getClientResource();
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9001" + path);
+		EMIRClient c = new EMIRClient("http://localhost:9001" + path);
 		return c.getClientResource();
 	}
 

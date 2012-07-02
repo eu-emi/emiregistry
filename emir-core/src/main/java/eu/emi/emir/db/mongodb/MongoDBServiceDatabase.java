@@ -12,11 +12,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;
 import eu.emi.emir.db.NonExistingResourceException;
@@ -32,6 +31,8 @@ import com.mongodb.MongoException.DuplicateKey;
 import com.mongodb.util.JSON;
 
 /**
+ * Mongodb integration class to proxy database operations 
+ * 
  * @author martoni
  * @author a.memon
  * @author g.szigeti
@@ -45,22 +46,17 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private DBCollection serviceCollection;
 
 	public MongoDBServiceDatabase() {
-		if (DSRServer.getConfiguration() == null) {
-			new DSRServer(new Configuration(new Properties()));
+		if (EMIRServer.getServerProperties() == null) {
+			new EMIRServer();
 		}
-		String hostname = DSRServer.getProperty(
-				ServerConstants.MONGODB_HOSTNAME, "localhost");
-		String port = DSRServer.getProperty(ServerConstants.MONGODB_PORT,
-				"27017");
-		String dbName = DSRServer.getProperty(ServerConstants.MONGODB_DB_NAME,
-				"emiregistry");
-		String colName = DSRServer.getProperty(
-				ServerConstants.MONGODB_COLLECTION_NAME, "services");
+		String hostname = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_HOSTNAME);
+		Integer port = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_MONGODB_PORT);
+		
+		String dbName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_DB_NAME);
+		String colName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_COLLECTION_NAME);
 
-		String dbUserName = DSRServer.getProperty(
-				ServerConstants.MONGODB_USERNAME, "");
-		String dbPassword = DSRServer.getProperty(
-				ServerConstants.MONGODB_PASSWORD, "");
+		String dbUserName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_USERNAME);
+		String dbPassword = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_PASSWORD);
 
 		try {
 			// connection = MongoConnection.get(hostname,
@@ -81,24 +77,27 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			database = connection.getDB(dbName);
 
-			if ((!dbUserName.equalsIgnoreCase(""))
-					&& (!dbPassword.equalsIgnoreCase(""))) {
-				if (!database
-						.authenticate(dbUserName, dbPassword.toCharArray())) {
-					
-					Log.logException("Cannot authenticate the user: " + dbUserName + "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again", new RuntimeException("MongoDB Authentication Failed"));
-					
-					System.out
-							.printf("%s:%s.%s.%s",
-									"Error occurred while starting the EMIR server",
-									"Cannot authenticate the database User: "
-											+ dbUserName,
-									" Provide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
-									" Stoppoing the EMIR server.");
-					System.exit(1);
-				}
+			if (dbUserName != null) {
+				if ((!dbUserName.equalsIgnoreCase(""))
+						&& (!dbPassword.equalsIgnoreCase(""))) {
+					if (!database
+							.authenticate(dbUserName, dbPassword.toCharArray())) {
+						
+						Log.logException("Cannot authenticate the user: " + dbUserName + "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again", new RuntimeException("MongoDB Authentication Failed"));
+						
+						System.out
+								.printf("%s:%s.%s.%s",
+										"Error occurred while starting the EMIR server",
+										"Cannot authenticate the database User: "
+												+ dbUserName,
+										" Provide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
+										" Stoppoing the EMIR server.");
+						System.exit(1);
+					}
 
+				}	
 			}
+			
 
 			serviceCollection = database.getCollection(colName);
 
@@ -136,15 +135,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public MongoDBServiceDatabase(String hostname, Integer port, String dbName,
 			String colName) {
 		try {
-			if (DSRServer.getConfiguration() == null) {
-				Properties serverProps = new Properties();
-				serverProps.put(ServerConstants.MONGODB_HOSTNAME, hostname);
-				serverProps.put(ServerConstants.MONGODB_PORT, port);
-				serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME,
-						colName);
-				serverProps.put(ServerConstants.MONGODB_DB_NAME, dbName);
-				new DSRServer(new Configuration(serverProps));
-			}
+			
 			if (connection == null) {
 				connection = new Mongo(hostname, port);
 			}
@@ -395,7 +386,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		DBObject o = (DBObject) JSON.parse(query);
 		DBCursor cur = serviceCollection.find(o);
 		JSONArray arr = new JSONArray();
-		logger.info(cur.size());
 		while (cur.hasNext()) {
 			arr.put(new JSONObject(JSON.serialize(cur.next())));
 		}
@@ -572,7 +562,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("delete by query: " + db.toString());
 		}
 		database.requestStart();
+		
 		serviceCollection.remove(db);
+		
 		database.requestDone();
 
 	}

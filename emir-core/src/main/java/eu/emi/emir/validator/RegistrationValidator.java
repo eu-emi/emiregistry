@@ -12,10 +12,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.util.ServiceUtil;
 
@@ -45,7 +45,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 
 			valid = true;
 		} catch (JSONException e) {
-			Log.logException(e);
+			Log.logException("",e);
 			return false;
 		}
 
@@ -81,7 +81,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 				// }
 
 			} catch (Exception e) {
-				Log.logException(new InvalidServiceDescriptionException(
+				Log.logException("",new InvalidServiceDescriptionException(
 						"invalid date format for the key: " + key, e));
 				valid = false;
 				return false;
@@ -140,7 +140,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 						Calendar cMax = Calendar.getInstance();
 						int max_def=0;
 						try {
-							max_def=Integer.valueOf(DSRServer.getProperty(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "730"));
+							max_def=EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_MAXIMUM);
 						} catch (NumberFormatException e) {
 							logger.warn("Error in reading the configuration property of maximum default expiry days - setting the value to 730 days");
 							max_def = 730;

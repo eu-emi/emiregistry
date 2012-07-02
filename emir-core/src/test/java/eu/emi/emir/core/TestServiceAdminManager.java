@@ -14,14 +14,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.MultipleResourceException;
 import eu.emi.emir.db.NonExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
+import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.util.ServiceUtil;
@@ -37,16 +36,9 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 	@Before
 	public void setup() {
 		Properties p = new Properties();
-		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
-		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
-		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
-//		p.put(ServerConstants.MONGODB_USERNAME, "abc");
-//		p.put(ServerConstants.MONGODB_PASSWORD, "def");
-		Configuration conf = new Configuration(p);
-		new DSRServer(conf);
-		adminMgr = new ServiceAdminManager();
+		p.setProperty("emir.address", "http://localhost:54321");
+		EMIRServer s = new EMIRServer(p);		
+		adminMgr = new ServiceAdminManager(new MongoDBServiceDatabase("localhost",27017, "emiregistry", "services"));
 		adminMgr.removeAll();
 		
 	}

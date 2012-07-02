@@ -27,7 +27,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.validator.ValidatorFactory;
 
 /**

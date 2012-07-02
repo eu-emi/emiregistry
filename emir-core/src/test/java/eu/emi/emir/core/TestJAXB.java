@@ -23,6 +23,11 @@ import org.ogf.schemas.glue._2009._03.spec_2.ExtensionT;
 import org.ogf.schemas.glue._2009._03.spec_2.ExtensionsT;
 import org.ogf.schemas.glue._2009._03.spec_2.ObjectFactory;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
+//import org.ogf.schemas.glue._2009._03.spec_2.EndpointT;
+//import org.ogf.schemas.glue._2009._03.spec_2.ExtensionT;
+//import org.ogf.schemas.glue._2009._03.spec_2.ExtensionsT;
+//import org.ogf.schemas.glue._2009._03.spec_2.ObjectFactory;
+//import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 import static org.junit.Assert.*;
 
 /**

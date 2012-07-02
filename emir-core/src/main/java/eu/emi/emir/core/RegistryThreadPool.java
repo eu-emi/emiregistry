@@ -15,8 +15,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import eu.emi.emir.DSRServer;
-
 /**
  * It lowers the overhead of extraordinary thread creation within a container
  * pre-configured size of thread pool. Most of the code is taken from
@@ -112,23 +110,9 @@ public class RegistryThreadPool {
 	}
 
 	protected static void configureScheduler() {
-		if (DSRServer.getConfiguration() == null) {
-			new DSRServer(new Configuration(new Properties()));
-		}
-		String corePoolSizeParam = DSRServer.getConfiguration().getProperty(
-				CORE_POOL_SIZE, "3");
-		int core = 3;
-		try {
-			core = Integer.parseInt(corePoolSizeParam);
-		} catch (Exception e) {
-		}
+		int core = 4;
 		scheduler = new ScheduledThreadPoolExecutor(core);
-		String idleParam = DSRServer.getConfiguration().getProperty(POOL_TIMEOUT, "50");
 		int idle = 50;
-		try {
-			idle = Integer.parseInt(idleParam);
-		} catch (Exception e) {
-		}
 		scheduler.setKeepAliveTime(idle, TimeUnit.MILLISECONDS);
 		scheduler.setThreadFactory(new ThreadFactory() {
 			final AtomicInteger threadNumber = new AtomicInteger(1);
@@ -142,29 +126,9 @@ public class RegistryThreadPool {
 	}
 
 	protected static void configureExecutor() {
-		String corePoolSizeParam = DSRServer.getConfiguration().getProperty(
-				EXEC_CORE_POOL_SIZE, "10");
 		int min = 10;
-		try {
-			min = Integer.parseInt(corePoolSizeParam);
-		} catch (Exception e) {
-		}
-
-		String maxPoolSizeParam = DSRServer.getConfiguration().getProperty(
-				EXEC_MAX_POOL_SIZE, "32");
 		int max = 32;
-		try {
-			max = Integer.parseInt(maxPoolSizeParam);
-		} catch (Exception e) {
-		}
-
-		String idleParam = DSRServer.getConfiguration().getProperty(EXEC_POOL_TIMEOUT,
-				"50");
 		int idle = 50;
-		try {
-			idle = Integer.parseInt(idleParam);
-		} catch (Exception e) {
-		}
 
 		executor = new ThreadPoolExecutor(min, max, idle,
 				TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),

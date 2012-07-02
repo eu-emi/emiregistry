@@ -18,12 +18,11 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
 
@@ -46,10 +45,10 @@ public class SelfRegistration implements Runnable {
 	 * 
 	 */
 	public SelfRegistration(String myUrl) throws Throwable {
-		DSRClient sc = new DSRClient(myUrl + "/serviceadmin");
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-			sc = new DSRClient(myUrl + "/serviceadmin",
-										DSRServer.getClientSecurityProperties());
+		EMIRClient sc = new EMIRClient(myUrl + "/serviceadmin");
+		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
+			sc = new EMIRClient(myUrl + "/serviceadmin",
+										EMIRServer.getClientSecurityProperties());
 		}
 		selfRegisterClient = sc.getClientResource();
 		firstUsage = true;
@@ -108,9 +107,7 @@ public class SelfRegistration implements Runnable {
 				logger.trace("self registration entry");
 			}
 			// update the expiration time
-			DateUtil.setExpiryTime(myInfos, Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
-							"1")));
+			DateUtil.setExpiryTime(myInfos, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT));
 			JSONArray message = new JSONArray();
 			message.put(myInfos);
 			// message sending

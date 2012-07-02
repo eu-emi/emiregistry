@@ -6,6 +6,7 @@ package eu.emi.emir.db.mongodb;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.DBObject;
@@ -22,7 +23,7 @@ import eu.emi.emir.util.ServiceUtil;
  * 
  */
 public class ServiceObject {
-
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, ServiceObject.class);
 	/**
 	 * 
 	 */
@@ -79,7 +80,7 @@ public class ServiceObject {
 					.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 							.getAttributeName()));
 		} catch (ParseException e) {
-			Log.logException(e);
+			Log.logException("",e,logger);
 		} catch (JSONException e) {
 			Log.logException("", e);
 		}
@@ -93,7 +94,7 @@ public class ServiceObject {
 					ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 							.getAttributeName())).get("$date").toString());
 		} catch (ParseException e) {
-			Log.logException(e);
+			Log.logException("",e,logger);
 		} catch (JSONException e) {
 			Log.logException("", e);
 		} catch (ClassCastException e){
@@ -110,7 +111,7 @@ public class ServiceObject {
 					.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 							.getAttributeName()));
 		} catch (ParseException e) {
-			Log.logException(e);
+			Log.logException("",e,logger);
 		} catch (JSONException e) {
 			Log.logException("", e);
 		}

@@ -14,6 +14,7 @@ import org.junit.Test;
 import eu.emi.emir.core.ServiceColManager;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.QueryException;
+import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
 /**
  * @author a.memon
@@ -23,7 +24,7 @@ public class TestServiceColManager extends MongoDBTestBase{
 	ServiceColManager mgr = null;
 	@Before
 	public void setup(){
-		mgr = new ServiceColManager();
+		mgr = new ServiceColManager(new MongoDBServiceDatabase("localhost", 27017, "emireistry", "services"));
 	}
 	@Test
 	public void testGetServiceByRefernces() {

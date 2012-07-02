@@ -45,6 +45,8 @@ import eu.emi.emir.security.util.AttributeSourcesChain;
  * 
  * @author schuller
  * @author golbi
+ * 
+ * 
  */
 public class AttributeSourceFactory {
 
@@ -53,7 +55,7 @@ public class AttributeSourceFactory {
 	/**
 	 * base for property names
 	 */
-	public static final String BASE="registry.security.attributes";
+	public static final String BASE="emir.security.attributes";
 	/**
 	 * attribute sources order property
 	 */

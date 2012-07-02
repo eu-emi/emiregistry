@@ -18,7 +18,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ExistingResourceException;
@@ -61,6 +62,12 @@ public class ServiceAdminManager {
 //		serviceDB = MongoDBServiceDatabase.getInstance();
 		DBVersion = serviceDB.getDBVersion();
 	}
+	
+	public ServiceAdminManager(MongoDBServiceDatabase mongoDB){
+		serviceDB = mongoDB;
+//		serviceDB = MongoDBServiceDatabase.getInstance();
+		DBVersion = serviceDB.getDBVersion();
+	}
 
 	/**
 	 * 
@@ -100,18 +107,15 @@ public class ServiceAdminManager {
 				if (log.isDebugEnabled()) {
 					log.debug("The expiry attribute is missing from the updated service information. The information will be expired in 1 day from now");
 				}
-				DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer
-						.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
-								"1")));
+				DateUtil.setExpiryTime(jo, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM));
 			}
 
 			serviceDB.insert(new ServiceObject(jo));
 			return jo;
 		} catch (PersistentStoreFailureException e) {
-			Log.logException(e);
+			Log.logException("",e,log);
 		}catch (ExistingResourceException e) {
-			if ("true".equalsIgnoreCase(DSRServer
-				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false")) ) {
+			if (EMIRServer.getServerProperties().isGlobalEnabled()) {
 				try {
 					if (serviceDB.getServiceByUrl(jo.getString(
 							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()))
@@ -130,11 +134,11 @@ public class ServiceAdminManager {
 						throw new ExistingResourceException(e);
 					}
 				} catch (MultipleResourceException e1) {
-					Log.logException(e);
+					Log.logException("",e,log);
 				} catch (NonExistingResourceException e1) {
-					Log.logException(e);
+					Log.logException("",e,log);
 				} catch (PersistentStoreFailureException e1) {
-					Log.logException(e);
+					Log.logException("",e,log);
 				}
 			} else {
 				// Throw forward/higher the exception.
@@ -155,8 +159,7 @@ public class ServiceAdminManager {
 	 * @throws JSONException 
 	 */
 	public void removeService(String url, String messageTime) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException{
-		if ("true".equalsIgnoreCase(DSRServer
-				.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))) {
+		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
 			// Update message will be contains only the URL and the update since attributes.
 			JSONObject newEntry = new JSONObject();
 			newEntry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -175,11 +178,11 @@ public class ServiceAdminManager {
 				EventDispatcher.notifyRecievers(new Event(
 						EventTypes.SERVICE_UPDATE, arr));
 			} catch (MultipleResourceException e) {
-				Log.logException(e);
+				Log.logException("",e,log);
 			} catch (NonExistingResourceException e) {
 				throw new WebApplicationException(Status.CONFLICT);
 			} catch (PersistentStoreFailureException e) {
-				Log.logException(e);
+				Log.logException("",e,log);
 			}
 		} else {
 			serviceDB.deleteByUrl(url);
@@ -204,9 +207,7 @@ public class ServiceAdminManager {
 			if (log.isDebugEnabled()) {
 				log.debug("The expiry attribute is missing from the updated service information. The information will be expired in 1 day from now");
 			}
-			DateUtil.setExpiryTime(jo, Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_EXPIRY_DEFAULT,
-							"1")));
+			DateUtil.setExpiryTime(jo, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT));
 		}
 		
 		// request json should not update the creation time
@@ -376,8 +377,7 @@ public class ServiceAdminManager {
 			query1 = serviceDB.query(jo.toString());
 			
 			// by DSR the second query does not need.
-			if ("false".equalsIgnoreCase(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false"))){
+			if (EMIRServer.getServerProperties().isGlobalEnabled()){
 				// Second query
 				// We accept every messages from GSRs if I was GSR.
 				Map<String, String> map2 = new HashMap<String, String>();

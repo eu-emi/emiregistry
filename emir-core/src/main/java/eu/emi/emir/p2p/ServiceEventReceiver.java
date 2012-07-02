@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventListener;
@@ -35,9 +35,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 	 */
 	public ServiceEventReceiver() {
 		filter = new Filters();
-		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 	}
 	
 	/*

@@ -14,7 +14,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 
 /**
@@ -26,7 +26,7 @@ public class TestChildrenResource extends TestRegistryBase {
 	@Test
 	public void emptyTest() throws Exception {
 		// get the list of children's
-		DSRClient client = new DSRClient(BaseURI + "/children");
+		EMIRClient client = new EMIRClient(BaseURI + "/children");
 		ClientResponse res = client.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(ClientResponse.class);
@@ -42,7 +42,7 @@ public class TestChildrenResource extends TestRegistryBase {
 
 	@Test
 	public void childCheckinTest() throws Exception {
-		DSRClient client = new DSRClient(BaseURI + "/children");
+		EMIRClient client = new EMIRClient(BaseURI + "/children");
 		// checkin one child
 		assertTrue(client.getClientResource()
 				.queryParam(
@@ -68,7 +68,7 @@ public class TestChildrenResource extends TestRegistryBase {
 	@Test
 	public void moreChildCheckinTest() throws Exception {
 		int modulo = 5;
-		DSRClient client = new DSRClient(BaseURI + "/children");
+		EMIRClient client = new EMIRClient(BaseURI + "/children");
 		// checkin more the one child
 		for (int i=0; i < 10; i++) {
 			assertTrue(client.getClientResource()
@@ -95,7 +95,7 @@ public class TestChildrenResource extends TestRegistryBase {
 	
 	@Test
 	public void firstCheckinTest() throws Exception {
-		DSRClient client = new DSRClient(BaseURI + "/children");
+		EMIRClient client = new EMIRClient(BaseURI + "/children");
 		// checkin one child
 		ClientResponse res = client.getClientResource()
 				.queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -107,7 +107,7 @@ public class TestChildrenResource extends TestRegistryBase {
 	
 	@Test
 	public void emptyURLCheckinTest() throws Exception {
-		DSRClient client = new DSRClient(BaseURI + "/children");
+		EMIRClient client = new EMIRClient(BaseURI + "/children");
 		// checkin one child
 		ClientResponse res = client.getClientResource()
 				.queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL

@@ -26,12 +26,11 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.infrastructure.InputFilter;
 import eu.emi.emir.util.DateUtil;
@@ -44,7 +43,7 @@ import eu.unicore.bugsreporter.annotation.FunctionalTest;
  *
  */
 public class TestServiceRecordFilters {
-	DSRServer s = null;
+	static EMIRServer server = null;
 	private static String URL = "http://localhost:54321";
 	private static String dbHostname = "localhost";
 	private static int    dbPort = 27017;
@@ -55,41 +54,29 @@ public class TestServiceRecordFilters {
     public static void setUpBeforeClass() throws Exception {
     	//should start the db before making any operations 
     	TestRegistryBase.startMongoDB();
-    	ServiceUtil.initLogger("src/test/resources/conf/log4j.properties");
+    	
  		final MongoDBServiceDatabase parentDB = new MongoDBServiceDatabase(
  				dbHostname, dbPort, dbName, dbCollectionName);
 		parentDB.deleteAll();
+		
 	}
     
 	@Before
 	public void setup() throws IOException, InterruptedException{
-		Properties serverProps = new Properties();
-		serverProps.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
-		serverProps.put(ServerConstants.REGISTRY_PORT, "54321");
-		serverProps.put(ServerConstants.REGISTRY_SCHEME, "http");
-		serverProps.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
-		serverProps.put(ServerConstants.JETTY_LOWTHREADS, "50");
-		serverProps.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
-		serverProps.put(ServerConstants.JETTY_MAXTHREADS, "1000");
-		serverProps.put(ServerConstants.LOGGER_CONF_PATH,
-				"src/test/resources/conf/log4j.properties");
-		serverProps.put(ServerConstants.MONGODB_HOSTNAME, dbHostname);
-		serverProps.put(ServerConstants.MONGODB_PORT, dbPort);
-		serverProps.put(ServerConstants.MONGODB_COLLECTION_NAME, dbCollectionName);
-		serverProps.put(ServerConstants.MONGODB_DB_NAME, dbName);
-		serverProps.put(ServerConstants.MONGODB_COL_CREATE, "true");
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_REQUEST, InputFilter.class.getName());
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_INPUTFILEPATH, "src/test/resources/conf/inputfilters_for_test");
-		serverProps.put(ServerConstants.REGISTRY_FILTERS_OUTPUTFILEPATH, "src/test/resources/conf/outputfilters_for_test");
-		Configuration c = new Configuration(serverProps);
-		s = new DSRServer(c);
-		s.startJetty();
+		Properties props = new Properties();
+		props = new Properties();
+		props.put(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS, URL);
+		props.put(ServerProperties.PREFIX+ServerProperties.PROP_RECORD_BLOCKLIST_INCOMING, "src/test/resources/conf/inputfilters_for_test");
+		props.put(ServerProperties.PREFIX+ServerProperties.PROP_RECORD_BLOCKLIST_OUTGOING, "src/test/resources/conf/outputfilters_for_test");
+		
+		server = new EMIRServer();
+		server.run(props);
 	}
 	
 	
 	@Test
 	public void testInputFilterSimpleValue() throws JSONException, IOException{
-		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		EMIRClient c = new EMIRClient(URL+"/serviceadmin");
 		
 		// simple value filter test
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
@@ -117,7 +104,7 @@ public class TestServiceRecordFilters {
 	@Test
 	@FunctionalTest(id="RunInputFilterTest", description="Test Filtering of incoming service records")
 	public void testInputFilterJSONArrayValue() throws JSONException, IOException{
-		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		EMIRClient c = new EMIRClient(URL+"/serviceadmin");
 		
 		// simple JSONArray value filter test
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
@@ -142,7 +129,7 @@ public class TestServiceRecordFilters {
 
 	@Test
 	public void testInputFilterArrayValue() throws JSONException, IOException{
-		DSRClient c = new DSRClient(URL+"/serviceadmin");
+		EMIRClient c = new EMIRClient(URL+"/serviceadmin");
 		
 		// simple JSONArray value filter test
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
@@ -169,13 +156,13 @@ public class TestServiceRecordFilters {
 	@FunctionalTest(id="RunOutputFilterTest", description="Test Filtering of outgoing service records")
 	public void testOutputFilter(){
 		//TODO add more functional code here
-		DSRClient c = new DSRClient(URL+"/ping");
+		EMIRClient c = new EMIRClient(URL+"/ping");
 		System.out.println(c.getClientResource().get(JSONObject.class));
 	}
 	
 	@After
 	public void cleanUp() throws InterruptedException{
-		s.stopJetty();
+		server.stop();
 		TestRegistryBase.stopMongoDB();
 	}
 	

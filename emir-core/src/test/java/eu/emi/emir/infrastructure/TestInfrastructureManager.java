@@ -3,22 +3,18 @@
  */
 package eu.emi.emir.infrastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Properties;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.infrastructure.EmptyIdentifierFailureException;
-import eu.emi.emir.infrastructure.InfrastructureManager;
-import eu.emi.emir.infrastructure.NullPointerFailureException;
 
 /**
  * @author szigeti
@@ -46,7 +42,7 @@ public class TestInfrastructureManager {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		manager = new InfrastructureManager(new Configuration(new Properties()));
+		manager = new InfrastructureManager();
 	}
 
 	/**

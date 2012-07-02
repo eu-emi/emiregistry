@@ -4,8 +4,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.core.ServerConstants;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 
 /**
  * Checking to the emiregistry and get list of childs
@@ -17,11 +17,10 @@ public class ParentResource {
 
 	@GET
 	public Response childDSRs(){
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(
-				ServerConstants.REGISTRY_GLOBAL_ENABLE, "false").toString())){
+		if (EMIRServer.getServerProperties().isGlobalEnabled()){
 			return Response.noContent().entity("Not supported method by the global DSR.").build();
 		}
-		String parent = DSRServer.getProperty(ServerConstants.REGISTRY_PARENT_URL);
+		String parent = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_PARENT_ADDRESS);
 		if ( parent == null || parent.isEmpty()) {
 			parent = "No parent set!";
 		}

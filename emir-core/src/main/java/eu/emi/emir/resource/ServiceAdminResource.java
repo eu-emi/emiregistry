@@ -27,10 +27,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.event.Event;
@@ -155,8 +155,9 @@ public class ServiceAdminResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException, JSONException {
-		Long max = Long.valueOf(DSRServer.getProperty(
-				ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"));
+		
+		Long max = EMIRServer.getServerProperties().getLongValue(ServerProperties.PROP_RECORD_MAXIMUM);
+		
 		if (serviceInfos.length() > max) {
 			return Response
 					.status(Status.FORBIDDEN)
@@ -412,8 +413,7 @@ public class ServiceAdminResource {
 			String owner = c.getDistinguishedName();
 			serviceurl = extractServiceUrlFromUri(infos);
 			String messageTime = extractServiceDateFromUri(infos);
-			if ("true".equalsIgnoreCase(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ENABLE, "false")) &&
+			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
 						messageTime == "unknown") {
 				// New entry and message generation time need, it is come from one DSR
 				messageTime = ServiceUtil.toUTCFormat(new Date());

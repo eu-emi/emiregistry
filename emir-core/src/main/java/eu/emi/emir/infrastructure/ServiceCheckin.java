@@ -18,10 +18,9 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
@@ -55,14 +54,14 @@ public class ServiceCheckin implements Runnable {
 		if (parentUrl.charAt(parentUrl.length()-1) == '/' ){
 			slash = "";
 		}
-		DSRClient cc = new DSRClient(parentUrl + slash + "children");
-		DSRClient sc = new DSRClient(parentUrl + slash + "serviceadmin");
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+		EMIRClient cc = new EMIRClient(parentUrl + slash + "children");
+		EMIRClient sc = new EMIRClient(parentUrl + slash + "serviceadmin");
+		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-			cc = new DSRClient(parentUrl + slash + "children",
-										DSRServer.getClientSecurityProperties());
-			sc = new DSRClient(parentUrl + slash + "serviceadmin",
-										DSRServer.getClientSecurityProperties());
+			cc = new EMIRClient(parentUrl + slash + "children",
+										EMIRServer.getClientSecurityProperties());
+			sc = new EMIRClient(parentUrl + slash + "serviceadmin",
+										EMIRServer.getClientSecurityProperties());
 		}
 		childClient = cc.getClientResource();
 		synchClient = sc.getClientResource();

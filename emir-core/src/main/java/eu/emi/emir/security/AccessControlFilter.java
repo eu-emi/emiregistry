@@ -17,10 +17,8 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.security.util.AuthZAttributeStore;
 import eu.emi.emir.security.util.ResourceDescriptor;
 
@@ -70,12 +68,11 @@ public class AccessControlFilter implements ContainerRequestFilter {
 		ResourceDescriptor resourceDescriptor = null;
 
 		try {
-			Boolean b = Boolean.valueOf(DSRServer.getProperty(
-					ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
+//			Boolean b = Boolean.valueOf(DSRServer.getProperty(
+//					ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
+			Boolean b = Boolean.valueOf(EMIRServer.getServerSecurityProperties().isSslEnabled());
 			// dealing with the principal
-			if (b
-					|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
-							.equalsIgnoreCase("https")) {
+			if (b) {
 				X509Certificate[] certArr = (X509Certificate[]) httpRequest
 						.getAttribute("javax.servlet.request.X509Certificate");
 				tokens = new SecurityTokens();
@@ -83,12 +80,11 @@ public class AccessControlFilter implements ContainerRequestFilter {
 						.generateCertPath(Arrays.asList(certArr));
 				tokens.setUser(cp);
 				tokens.setUserName(certArr[0].getSubjectX500Principal());
-			}
+			
 			client = SecurityManager.createAndAuthoriseClient(tokens);
-			httpRequest.setAttribute(ServerConstants.CLIENT, client);
+			httpRequest.setAttribute(SecurityManager.CLIENT, client);
 
-			if ("true".equalsIgnoreCase(DSRServer.getProperty(
-					ISecurityProperties.REGISTRY_CHECKACCESS, "false"))) {
+			if (EMIRServer.getServerSecurityProperties().isXACMLAccessControlEnabled()) {
 				AuthZAttributeStore.setTokens(tokens);
 				AuthZAttributeStore.setClient(client);
 				action = httpRequest.getMethod();
@@ -96,6 +92,8 @@ public class AccessControlFilter implements ContainerRequestFilter {
 				resourceDescriptor = new ResourceDescriptor(uriInfo.getPath(),
 						null, owner);
 				doCheck(tokens, client, action, resourceDescriptor);
+			}
+			
 			}
 
 		} catch (Exception e) {

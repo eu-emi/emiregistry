@@ -9,9 +9,9 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.util.DateUtil;
 
@@ -36,8 +36,7 @@ public class ValidityCheck implements Runnable {
 		mongoDB = new MongoDBServiceDatabase();
 
 		try {
-			etvalid = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETVALID));
+			etvalid = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_GLOBAL_ETVALID);
 			if (etvalid < 12) {
 				logger.info("Configured etvalid value (" + etvalid + ") is very low. Min value: 12 Default value will be used.");
 				etvalid = 12;

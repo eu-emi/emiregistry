@@ -18,14 +18,27 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>eu.eu-emi</groupId> -->
+<!-- 			<artifactId>emir-securityLibrary</artifactId> -->
+<!-- 			<version>${parent.version}</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		
+		<dependency>
+				<groupId>eu.unicore.security</groupId>
+				<artifactId>securityLibrary</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>pl.edu.icm.saml</groupId>
+						<artifactId>samly2</artifactId>						
+					</exclusion>
+				</exclusions>				
+		</dependency>
+		
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>

@@ -8,8 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.core.ServerConstants;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.p2p.NeighborsManager;
 
 /**
@@ -22,8 +21,7 @@ public class NeighborsResource {
 
 	@GET
 	public Response childDSRs(){
-		if ("false".equalsIgnoreCase(DSRServer.getProperty(
-							ServerConstants.REGISTRY_GLOBAL_ENABLE, "false").toString())){
+		if (EMIRServer.getServerProperties().isGlobalEnabled()){
 			return Response.noContent().entity("Not supported method by the federated DSR.").build();
 		}
 		List<String> resp;

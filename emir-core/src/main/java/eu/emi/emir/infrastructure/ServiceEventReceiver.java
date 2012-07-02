@@ -18,12 +18,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.Configuration;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventListener;
@@ -37,7 +35,6 @@ import eu.emi.emir.event.EventTypes;
 public class ServiceEventReceiver implements EventListener, Runnable {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceEventReceiver.class);
-	private static Configuration conf;
 	private final WebResource client;
 	private static InfrastructureManager infrastructure;
 	private static boolean parent_lost;
@@ -48,9 +45,8 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 	 * @param URL of the parent
 	 * @param configuration
 	 */
-	public ServiceEventReceiver(String parentUrl, Configuration config) {
-		conf = config;
-		infrastructure = new InfrastructureManager(conf);
+	public ServiceEventReceiver(String parentUrl) {
+		infrastructure = new InfrastructureManager();
 		try {
 			infrastructure.setParent(parentUrl);
 		} catch (EmptyIdentifierFailureException e) {
@@ -58,11 +54,11 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 		} catch (NullPointerFailureException e) {
 			logger.error("NULL point error by the parent URL!");
 		}
-		DSRClient c = new DSRClient(parentUrl + "/serviceadmin");
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+		EMIRClient c = new EMIRClient(parentUrl + "/serviceadmin");
+		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-			c = new DSRClient(parentUrl + "/serviceadmin",
-										DSRServer.getClientSecurityProperties());
+			c = new EMIRClient(parentUrl + "/serviceadmin",
+										EMIRServer.getClientSecurityProperties());
 		}
 
 		client = c.getClientResource();

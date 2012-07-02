@@ -9,9 +9,9 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.util.DateUtil;
 
@@ -36,8 +36,7 @@ public class RemoveCheck implements Runnable {
 		mongoDB = new MongoDBServiceDatabase();
 
 		try {
-			etremove = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_ETREMOVE));
+			etremove = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_GLOBAL_ETREMOVE);
 			if (etremove < 24) {
 				logger.info("Configured etremove value (" + etremove + ") is very low. Min value: 24 Default value will be used.");
 				etremove = 24;

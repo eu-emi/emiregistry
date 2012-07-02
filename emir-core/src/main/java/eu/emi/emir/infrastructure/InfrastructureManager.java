@@ -19,18 +19,17 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.ClientSecurityProperties;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.MultipleResourceException;
 import eu.emi.emir.db.NonExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.ServiceObject;
+import eu.emi.emir.security.ClientSecurityProperties;
 
 /**
  * @author g.szigeti
@@ -39,7 +38,6 @@ import eu.emi.emir.db.mongodb.ServiceObject;
 public class InfrastructureManager implements ServiceInfrastructure {
 	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
 			InfrastructureManager.class);
-	private Configuration conf;
 	private static Connection conn;
 	private static Statement stat;
 	private String dbname = "emiregistry";
@@ -47,12 +45,11 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	private List<String> parentsRoute;
 
 	/**
-	 * Constructor
-	 * Create connection to the H2 database.
+	 * Constructor Create connection to the H2 database.
+	 * 
 	 * @param configuration
 	 */
-	public InfrastructureManager(Configuration config) {
-		conf = config;
+	public InfrastructureManager() {
 		parentsRoute = new ArrayList<String>();
 		try {
 			Class.forName("org.h2.Driver");
@@ -60,7 +57,8 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			Log.logException("", e);
 		}
 		try {
-			String h2db = conf.getProperty(ServerConstants.H2_DBFILE_PATH);
+			String h2db = EMIRServer.getServerProperties().getValue(
+					ServerProperties.PROP_H2_DBFILE_PATH);
 			if (h2db == null || h2db.isEmpty()) {
 				h2db = "/var/lib/emi/emir/data/Emiregistry";
 			}
@@ -84,8 +82,8 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	}
 
 	/**
-	 * Destructor
-	 * Stop every open connection.
+	 * Destructor Stop every open connection.
+	 * 
 	 * @param None
 	 * @throws SQLException
 	 */
@@ -142,11 +140,9 @@ public class InfrastructureManager implements ServiceInfrastructure {
 		if (identifier.isEmpty())
 			throw new EmptyIdentifierFailureException();
 
-        logger.debug("Not implemented yet.");
+		logger.debug("Not implemented yet.");
 	}
 
-
-	
 	/*
 	 * @see
 	 * eu.emi.dsr.infrastructure.ServiceInfrastructure#setParent(java.util.String
@@ -179,24 +175,24 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsent registration message.
 	 * 
-	 * @param list of service
-	 *            identifier
+	 * @param list
+	 *            of service identifier
 	 * @return None
 	 */
 	public void handleRegistration(List<String> identifiers) {
 		logger.debug("handleRegistration called...");
-		for (int i=0; i<identifiers.size(); i++) {
+		for (int i = 0; i < identifiers.size(); i++) {
 			String identifier = identifiers.get(i);
 			logger.debug("next ID by the Registration: " + identifier);
 			try {
 				ResultSet rs;
-				rs = stat.executeQuery("select * from " + dbname + " where id = '"
-						+ identifier + "'");
+				rs = stat.executeQuery("select * from " + dbname
+						+ " where id = '" + identifier + "'");
 				if (!rs.first()) {
 					logger.debug(identifier
 							+ " is not in the list! Insert new record...");
-					stat.execute("insert into " + dbname + " values('" + identifier
-							+ "', 1, 0)");
+					stat.execute("insert into " + dbname + " values('"
+							+ identifier + "', 1, 0)");
 				} else {
 					logger.debug("The list contains this '" + identifier
 							+ "' ID! Update comming...");
@@ -212,24 +208,24 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	/**
 	 * Handle the unsent update message.
 	 * 
-	 * @param list of service
-	 *            identifier
+	 * @param list
+	 *            of service identifier
 	 * @return None
 	 */
 	public void handleUpdate(List<String> identifiers) {
 		logger.debug("handleUpdate called...");
-		for (int i=0; i<identifiers.size(); i++) {
+		for (int i = 0; i < identifiers.size(); i++) {
 			String identifier = identifiers.get(i);
 			logger.debug("next ID by the Update: " + identifier);
 			try {
 				ResultSet rs;
-				rs = stat.executeQuery("select * from " + dbname + " where id = '"
-						+ identifier + "'");
+				rs = stat.executeQuery("select * from " + dbname
+						+ " where id = '" + identifier + "'");
 				if (!rs.first()) {
 					logger.debug(identifier
 							+ " is not in the list! Insert new record...");
-					stat.execute("insert into " + dbname + " values('" + identifier
-							+ "', 0, 0)");
+					stat.execute("insert into " + dbname + " values('"
+							+ identifier + "', 0, 0)");
 				} else {
 					logger.debug("The list contains this '" + identifier
 							+ "' ID! Everything correct.");
@@ -285,7 +281,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	public boolean dbSynchronization(List<String> ids, Method method,
 			int responsestatus) {
 		logger.debug("DB synchronization started.");
-		for (int i=0; i<ids.size(); i++){
+		for (int i = 0; i < ids.size(); i++) {
 			String id = ids.get(i);
 			switch (method) {
 			case REGISTER:
@@ -294,8 +290,8 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				if (responsestatus == Status.OK.getStatusCode()) {
 					try {
 						logger.debug("register, delete");
-						stat.execute("delete from " + dbname + " where id='" + id
-								+ "'");
+						stat.execute("delete from " + dbname + " where id='"
+								+ id + "'");
 					} catch (SQLException e) {
 					}
 				} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
@@ -308,12 +304,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 				break;
 			case UPDATE:
-				logger.debug("UPDATE comming..., ID: " + id + ", response status: "
-						+ responsestatus);
+				logger.debug("UPDATE comming..., ID: " + id
+						+ ", response status: " + responsestatus);
 				if (responsestatus == Status.OK.getStatusCode()) {
 					try {
-						stat.execute("delete from " + dbname + " where id='" + id
-								+ "'");
+						stat.execute("delete from " + dbname + " where id='"
+								+ id + "'");
 					} catch (SQLException e) {
 					}
 				} else if (responsestatus == Status.CONFLICT.getStatusCode()) {
@@ -325,12 +321,12 @@ public class InfrastructureManager implements ServiceInfrastructure {
 				}
 				break;
 			case DELETE:
-				logger.debug("DELETE comming..., ID: " + id + ", response status: "
-						+ responsestatus);
+				logger.debug("DELETE comming..., ID: " + id
+						+ ", response status: " + responsestatus);
 				if (responsestatus == Status.OK.getStatusCode()) {
 					try {
-						stat.execute("delete from " + dbname + " where id='" + id
-								+ "'");
+						stat.execute("delete from " + dbname + " where id='"
+								+ id + "'");
 					} catch (SQLException e) {
 					}
 				}
@@ -341,21 +337,19 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			}
 		}
 		// Synchronization messages are sending
-		int maxMessageSize = Long.valueOf(conf
-				.getProperty(ServerConstants.REGISTRY_MAX_REGISTRATIONS, "100"))
-				.intValue();
+		int maxMessageSize = EMIRServer.getServerProperties().getIntValue(
+				ServerProperties.PROP_RECORD_MAXIMUM);
 		JSONArray jos;
 		// Registration messages
 		boolean register = true;
 		jos = search(1, 0);
 		if (jos.length() > 0) {
-			int i=0;
-			while (i<jos.length()) {
+			int i = 0;
+			while (i < jos.length()) {
 				// Create message part from the original
 				JSONArray sended = new JSONArray();
-				for (int index = i;
-						(index<(i+maxMessageSize))&&(index<jos.length());
-						index++) {
+				for (int index = i; (index < (i + maxMessageSize))
+						&& (index < jos.length()); index++) {
 					try {
 						sended.put(jos.getJSONObject(index));
 					} catch (JSONException e) {
@@ -363,22 +357,21 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					}
 				}
 				// Send
-				register = register&&send(sended, Method.REGISTER);
+				register = register && send(sended, Method.REGISTER);
 				// Next start index calculation
-				i+=maxMessageSize;
+				i += maxMessageSize;
 			}
 		}
 		// Update messages
 		boolean update = true;
 		jos = search(0, 0);
 		if (jos.length() > 0) {
-			int i=0;
-			while (i<jos.length()) {
+			int i = 0;
+			while (i < jos.length()) {
 				// Create message part from the original
 				JSONArray sended = new JSONArray();
-				for (int index = i;
-						(index<(i+maxMessageSize))&&(index<jos.length());
-						index++) {
+				for (int index = i; (index < (i + maxMessageSize))
+						&& (index < jos.length()); index++) {
 					try {
 						sended.put(jos.getJSONObject(index));
 					} catch (JSONException e) {
@@ -386,9 +379,9 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					}
 				}
 				// Send
-				update = update&&send(sended, Method.UPDATE);
+				update = update && send(sended, Method.UPDATE);
 				// Next start index calculation
-				i+=maxMessageSize;
+				i += maxMessageSize;
 			}
 		}
 		// Remove messages
@@ -430,11 +423,13 @@ public class InfrastructureManager implements ServiceInfrastructure {
 			return jo;
 		}
 
+		ServerProperties sp = EMIRServer.getServerProperties();
+
 		MongoDBServiceDatabase mongoDB = new MongoDBServiceDatabase(
-				conf.getProperty(ServerConstants.MONGODB_HOSTNAME),
-				Integer.valueOf(conf.getProperty(ServerConstants.MONGODB_PORT)),
-				conf.getProperty(ServerConstants.MONGODB_DB_NAME), conf
-						.getProperty(ServerConstants.MONGODB_COLLECTION_NAME));
+				sp.getValue(ServerProperties.PROP_MONGODB_HOSTNAME),
+				sp.getIntValue(ServerProperties.PROP_MONGODB_PORT),
+				sp.getValue(ServerProperties.PROP_MONGODB_DB_NAME),
+				sp.getValue(ServerProperties.PROP_MONGODB_COLLECTION_NAME));
 
 		ServiceObject so = null;
 		try {
@@ -468,22 +463,22 @@ public class InfrastructureManager implements ServiceInfrastructure {
 	 * @return boolean
 	 */
 	private boolean send(JSONArray jos, Method method) {
-		String parentUrl = conf
-				.getProperty(ServerConstants.REGISTRY_PARENT_URL);
-		DSRClient c = null;
+		ServerProperties sp = EMIRServer.getServerProperties();
+
+		String parentUrl = sp.getValue(ServerProperties.PROP_PARENT_ADDRESS);
+		EMIRClient c = null;
 		if (parentUrl.startsWith("https")) {
 			ClientSecurityProperties csp = null;
 			try {
-				csp = new ClientSecurityProperties(DSRServer
-						.getSecurityProperties().getProperties());
+				csp = EMIRServer
+						.getClientSecurityProperties();
 			} catch (Exception e) {
 				Log.logException("Error reading the security properties", e);
 			}
-			c = new DSRClient(parentUrl + "/serviceadmin", csp);
+			c = new EMIRClient(parentUrl + "/serviceadmin", csp);
 		} else {
-			c = new DSRClient(parentUrl + "/serviceadmin");
+			c = new EMIRClient(parentUrl + "/serviceadmin");
 		}
-		
 
 		WebResource client = c.getClientResource();
 		ClientResponse res = null;

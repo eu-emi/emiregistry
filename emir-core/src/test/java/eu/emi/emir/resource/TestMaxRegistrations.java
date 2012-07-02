@@ -19,7 +19,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 
 /**
@@ -35,7 +35,7 @@ public class TestMaxRegistrations extends TestRegistryBase{
 			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://"+UUID.randomUUID());
 			ja.put(new JSONObject(map));
 		}
-		DSRClient c = new DSRClient(BaseURI+"/serviceadmin");
+		EMIRClient c = new EMIRClient(BaseURI+"/serviceadmin");
 		
 		ClientResponse res = c.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)

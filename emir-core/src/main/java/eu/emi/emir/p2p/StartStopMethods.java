@@ -2,10 +2,10 @@ package eu.emi.emir.p2p;
 
 import org.apache.log4j.Logger;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventTypes;
@@ -15,7 +15,7 @@ import eu.emi.emir.event.EventTypes;
  * 
  */
 public class StartStopMethods {
-	private static Logger logger = Log.getLogger(Log.EMIR_CORE, DSRServer.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CORE, StartStopMethods.class);
 	private static String myURL = "";
 
 	public static void startGSRFunctions() {
@@ -28,9 +28,7 @@ public class StartStopMethods {
 				new eu.emi.emir.p2p.ServiceEventReceiver());
 
 		// Set own endpoint URL
-		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-		        DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-		        DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		
 		// Remove own entry from the local database
 		deleteOwnEntry();
@@ -47,8 +45,7 @@ public class StartStopMethods {
 		int timedelay;
 		// time delay for a validity methods, extend the time windows with this extra time
 		try {
-			timedelay = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_SOFTSTATE_DELAY));
+			timedelay = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_GLOBAL_SOFTSTATE_DELAY);
 			if (timedelay < 0) {
 				logger.info("Configured Soft-State timedelay value (" + timedelay + ") is very low. Min value: 0 Default value (2 hours) will be used.");
 				timedelay = 2;

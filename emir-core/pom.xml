@@ -60,11 +60,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.herasaf.xacml.core</groupId> -->
-		<!-- <artifactId>herasaf-xacml-core</artifactId> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
+		<dependency>
+		<groupId>org.herasaf.xacml.core</groupId>
+		<artifactId>herasaf-xacml-core</artifactId>
+		</dependency>
+<!-- 		<dependency> -->
 		<!-- <groupId>commons-io</groupId> -->
 		<!-- <artifactId>commons-io</artifactId> -->
 		<!-- </dependency> -->

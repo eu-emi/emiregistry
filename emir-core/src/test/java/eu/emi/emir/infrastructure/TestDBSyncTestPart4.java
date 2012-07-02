@@ -21,7 +21,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.DateUtil;
 
@@ -128,12 +128,12 @@ public class TestDBSyncTestPart4 {
 	}
 
 	protected WebResource getChildClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9000" + path);
+		EMIRClient c = new EMIRClient("http://localhost:9000" + path);
 		return c.getClientResource();
 	}
 
 	protected WebResource getParentClient(String path) {
-		DSRClient c = new DSRClient("http://localhost:9001" + path);
+		EMIRClient c = new EMIRClient("http://localhost:9001" + path);
 		return c.getClientResource();
 	}
 

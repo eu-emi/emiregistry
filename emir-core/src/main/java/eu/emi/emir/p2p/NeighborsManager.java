@@ -23,12 +23,11 @@ import org.codehaus.jettison.json.JSONObject;
 import com.mongodb.MongoException;
 import com.sun.jersey.api.client.ClientHandlerException;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
@@ -69,9 +68,7 @@ public class NeighborsManager {
 		neighbors = new ArrayList<String>();
 		unavailableNeighbors = new ArrayList<String>();
 		neighbors_count = 0;
-		myURL = DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME).toString() +"://"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString() +":"+
-				DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
+		myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		hash = new Hashtable<String, String>();
 		serviceDB = new MongoDBServiceDatabase();
 		// config parse
@@ -86,8 +83,7 @@ public class NeighborsManager {
 			logger.warn("Configured providerlist value is empty. Please set it!");
 		}
 		try {
-			sparsity = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_SPARSITY));
+			sparsity = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_GLOBAL_SPARSITY);
 			if (sparsity < 2) {
 				logger.info("Configured sparsity value (" + sparsity + ") is very low. Min value: 2 Default value will be used.");
 				sparsity = 2;
@@ -99,8 +95,7 @@ public class NeighborsManager {
 			sparsity = 2;
 		}
 		try {
-			retry = Integer.valueOf(DSRServer
-					.getProperty(ServerConstants.REGISTRY_GLOBAL_RETRY));
+			retry = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_GLOBAL_RETRY);
 			if (retry < 1) {
 				logger.info("Configured retry value (" + retry + ") is very low. Min value: 1 Default value will be used.");
 				retry = 5;
@@ -386,11 +381,11 @@ public class NeighborsManager {
 	 * @return list of GSRs
 	 */
 	private ArrayList<String> GSRList(String url, int retry){
-		DSRClient c = new DSRClient(url + "/services?Service_Type=GSR");
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+		EMIRClient c = new EMIRClient(url + "/services?Service_Type=GSR");
+		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-			c = new DSRClient(url + "/services?Service_Type=GSR",
-										DSRServer.getClientSecurityProperties());
+			c = new EMIRClient(url + "/services?Service_Type=GSR",
+										EMIRServer.getClientSecurityProperties());
 		}
 		logger.info("Get the list of GSRs from " + url);
 		for (int i=0; i<retry; i++){
@@ -452,10 +447,11 @@ public class NeighborsManager {
 			}
 			String ref = null;
 			// Fetch the DB from the GSR
-			DSRClient c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr);
-			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-				c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr,
-											DSRServer.getClientSecurityProperties());
+			EMIRClient c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr);
+			if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
+
+				c = new EMIRClient(list.get(j) + "/services/pagedquery",
+											EMIRServer.getClientSecurityProperties());
 			}
 			boolean found = false;
 			/*
@@ -492,10 +488,10 @@ public class NeighborsManager {
 								logger.warn("Some failure happend during the DB store.");
 							}
 							// next part of the database
-							c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref);
-							if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
-								c = new DSRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref,
-															DSRServer.getClientSecurityProperties());
+							c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref);
+							if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
+								c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref,
+															EMIRServer.getClientSecurityProperties());
 							}
 							break;
 						} catch (JSONException e) {
@@ -580,11 +576,11 @@ public class NeighborsManager {
 		ArrayList<String> providers = new ArrayList<String>();
 		for (int i=0; i<urls.size(); i++){
 			// Download the list of the URLs
-			DSRClient c = new DSRClient(urls.get(i));
-			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+			EMIRClient c = new EMIRClient(urls.get(i));
+			if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-				c = new DSRClient(urls.get(i),
-											DSRServer.getClientSecurityProperties());
+				c = new EMIRClient(urls.get(i),
+											EMIRServer.getClientSecurityProperties());
 			}
 			try {
 				String content = c.getClientResource()
@@ -618,7 +614,7 @@ public class NeighborsManager {
 	private List<String> GetInfoProvidersFromConfiguration(){
 		List<String> listOfURLs = new ArrayList<String>();
 		
-		String configValue = DSRServer.getProperty(ServerConstants.REGISTRY_GLOBAL_PROVIDERLIST, "");
+		String configValue = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_GLOBAL_PROVIDERLIST);
 		// Replace the following characters (' ', '[', ']', '\n') 
 		// with empty character.
 		configValue = configValue.replaceAll(" |\\[|\\]|\n", "");

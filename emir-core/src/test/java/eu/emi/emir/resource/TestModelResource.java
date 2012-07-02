@@ -11,7 +11,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.junit.Test;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 
 /**
  * @author a.memon
@@ -20,7 +20,7 @@ import eu.emi.emir.client.DSRClient;
 public class TestModelResource extends TestRegistryBase{
 	@Test
 	public void testModel(){
-		DSRClient cr1 = new DSRClient(BaseURI + "/model");
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/model");
 		JSONArray ja = cr1.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
 		assertTrue(ja.length() > 0);
 	}

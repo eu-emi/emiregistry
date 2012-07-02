@@ -17,14 +17,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.core.Configuration;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.NonExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
+import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.lease.ServiceReaper;
@@ -39,18 +38,16 @@ import eu.unicore.bugsreporter.annotation.FunctionalTest;
 public class TestServiceReaper extends MongoDBTestBase{
 	private static ServiceAdminManager adminMgr;
 	Properties p;
+	
+	
+	
 	@Before
 	public void setup() {
-		p = new Properties();
-		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
-		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
-		p.put(ServerConstants.MONGODB_PORT, "27017");
-		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
-		Configuration conf = new Configuration(p);
-		new DSRServer(conf);
-		adminMgr = new ServiceAdminManager();
+		adminMgr = new ServiceAdminManager(new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
+				"services"));
 		adminMgr.removeAll();
+		p = new Properties();
+		EMIRServer server = new EMIRServer(p);
 	}
 
 	@After
@@ -74,7 +71,7 @@ public class TestServiceReaper extends MongoDBTestBase{
 
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, 12);
+//		c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
@@ -88,14 +85,14 @@ public class TestServiceReaper extends MongoDBTestBase{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		Calendar c1 = Calendar.getInstance();
 		for (int i = 0; i < 2; i++) {
 			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), "http://"
 					+ UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
-			Calendar c1 = Calendar.getInstance();
-			c1.add(Calendar.SECOND, 3);
+			
+			c1.add(Calendar.SECOND, 1);
 			try {
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {
@@ -114,6 +111,8 @@ public class TestServiceReaper extends MongoDBTestBase{
 		ServiceReaper r = new ServiceReaper();
 		r.run();
 
+		System.out.println(adminMgr.findAll());
+		
 		int size1 = adminMgr.findAll().size();
 		assertEquals(0, size1);
 	}
@@ -143,7 +142,6 @@ public class TestServiceReaper extends MongoDBTestBase{
 	
 	@Test
 	public void testAddingMaxExpiry() throws Exception{
-		p.put(ServerConstants.REGISTRY_EXPIRY_MAXIMUM, "90");		
 		// adding service entries
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL

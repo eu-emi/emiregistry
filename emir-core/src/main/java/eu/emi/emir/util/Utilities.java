@@ -40,9 +40,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlCursor.TokenType;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.security.ISecurityProperties;
-import eu.emi.emir.core.ServerConstants;
 
 
 /**
@@ -95,19 +92,19 @@ public class Utilities {
 	}
 
 
-	/**
-	 * return the physical server address
-	 * @return a URL of the form scheme://host:port where 'scheme' is http or https
-	 */
-	public static String getPhysicalServerAddress(){
-		String host=DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString();
-		String port=DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
-		String proto="http";
-		if("true".equals(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED))){
-			proto="https";
-		};
-		return proto+"://"+host+":"+port;
-	}
+//	/**
+//	 * return the physical server address
+//	 * @return a URL of the form scheme://host:port where 'scheme' is http or https
+//	 */
+//	public static String getPhysicalServerAddress(){
+//		String host=DSRServer.getProperty(ServerConstants.REGISTRY_HOSTNAME).toString();
+//		String port=DSRServer.getProperty(ServerConstants.REGISTRY_PORT).toString();
+//		String proto="http";
+//		if("true".equals(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED))){
+//			proto="https";
+//		};
+//		return proto+"://"+host+":"+port;
+//	}
 
 
 	

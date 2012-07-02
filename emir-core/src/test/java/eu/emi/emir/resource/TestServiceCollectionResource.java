@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
@@ -90,7 +90,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindByType() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI + "/services?Service_Type=jms");
+			EMIRClient cr = new EMIRClient(BaseURI + "/services?Service_Type=jms");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 			JSONArray o = cr.getClientResource()
@@ -107,7 +107,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindNone() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services?Service_Type=blah");
 			JSONArray o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -124,7 +124,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testLimit20() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services?Service_Type=jms&limit=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
@@ -143,7 +143,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindLast30() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services?Service_Type=jms&skip=20");
 			// JSONObject o =
 			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
@@ -162,7 +162,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindLastHalfOf40() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services?Service_Type=jms&skip=20&limit=20");
 			JSONArray o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -177,7 +177,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 
 	@Test
 	public void testGetSupportedTypes() throws JSONException {
-		DSRClient cr = new DSRClient(BaseURI + "/services/types");
+		EMIRClient cr = new EMIRClient(BaseURI + "/services/types");
 		JSONArray o = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
 		System.out.println(o);
@@ -188,7 +188,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	@FunctionalTest(id="ServiceQueryJSONTest", description="Test querying the service records in JSON format")
 	public void testQueryJSON() throws JSONException {
-		DSRClient cr = new DSRClient(BaseURI);
+		EMIRClient cr = new EMIRClient(BaseURI);
 		
 		
 		//{ $or: [ { Service_Type: jms }, { Service_Endpoint_HealthState: ok } ] }
@@ -225,7 +225,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testPagedQuery() throws JSONException {
 		// starting page
-		DSRClient cr = new DSRClient(BaseURI
+		EMIRClient cr = new EMIRClient(BaseURI
 				+ "/services/pagedquery?Service_Type=jms&pageSize=10");
 		JSONObject o = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
@@ -234,7 +234,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		System.out.println(BaseURI
 				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
 				+ o.get("ref"));
-		cr = new DSRClient(BaseURI
+		cr = new EMIRClient(BaseURI
 				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
 				+ o.get("ref"));
 		o = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
@@ -244,7 +244,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		System.out.println(BaseURI
 				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
 				+ o.get("ref"));
-		cr = new DSRClient(BaseURI
+		cr = new EMIRClient(BaseURI
 				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
 				+ o.get("ref"));
 		o = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
@@ -257,7 +257,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@FunctionalTest(id="ServiceQueryGLUE2Test", description="Test querying the service records in GLUE 2.0 format")
 	public void testGlue2QueryCollection() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services/query.xml?Service_Type=jms");
 			QueryResult o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_XML_TYPE)
@@ -273,7 +273,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testGlue2QueryCollectionWithMIME() {
 		try {
-			DSRClient cr = new DSRClient(BaseURI + "/services?Service_Type=jms");
+			EMIRClient cr = new EMIRClient(BaseURI + "/services?Service_Type=jms");
 			QueryResult o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_XML_TYPE)
 					.get(QueryResult.class);
@@ -294,7 +294,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			ServiceObject so = new ServiceObject(entry1);
 			db.insert(so);
 
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services/query.xml?Service_Endpoint_URL=http://1");
 			QueryResult o = cr.getClientResource().get(QueryResult.class);
 			JAXB.marshal(o, System.out);
@@ -314,7 +314,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			ServiceObject so = new ServiceObject(entry1);
 			db.insert(so);
 
-			DSRClient cr = new DSRClient(BaseURI
+			EMIRClient cr = new EMIRClient(BaseURI
 					+ "/services?Service_Endpoint_URL=http://1");
 			QueryResult o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_XML_TYPE)

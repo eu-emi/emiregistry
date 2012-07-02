@@ -14,7 +14,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 
 /**
  * @author a.memon
@@ -24,7 +24,7 @@ public class TestPingResource extends TestRegistryBase {
 
 	@Test
 	public void test() throws Exception {
-		DSRClient cr1 = new DSRClient(BaseURI + "/ping");
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/ping");
 		assertTrue(cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.get(ClientResponse.class).getStatus() == Status.OK

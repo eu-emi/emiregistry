@@ -25,10 +25,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
 import eu.emi.emir.TestRegistryBaseWithSecurity;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.util.ServiceUtil;
-import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
  * @author a.memon
@@ -62,14 +61,16 @@ public class TestServiceAdminResourceWithSecurity extends
 	public void testRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin",getSecurityProperties_1());
+		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin",getSecurityProperties_2());
+		
+		
 		
 		cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(getDummyServiceDesc());
-		DSRClient cr1 = new DSRClient(BaseURI
+		EMIRClient cr1 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
-				getSecurityProperties_1());
+				getSecurityProperties_2());
 		JSONObject jo1 = cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		assertEquals("http://1",
@@ -83,7 +84,7 @@ public class TestServiceAdminResourceWithSecurity extends
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
 		JSONArray jo = getDummyServiceDesc();
-		DSRClient cr = new DSRClient(BaseURI
+		EMIRClient cr = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {
@@ -96,7 +97,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		}
 
 		System.out.println("/serviceadmin");
-		DSRClient cr1 = new DSRClient(BaseURI
+		EMIRClient cr1 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {

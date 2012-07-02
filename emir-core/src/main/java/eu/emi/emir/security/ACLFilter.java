@@ -5,6 +5,7 @@ package eu.emi.emir.security;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -26,10 +27,8 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.core.ServerConstants;
 import eu.emi.emir.util.FileWatcher;
 
 /**
@@ -41,9 +40,9 @@ import eu.emi.emir.util.FileWatcher;
  */
 public class ACLFilter implements ContainerRequestFilter {
 	private static Logger logger = Log.getLogger(Log.EMIR_SECURITY, ACLFilter.class);
-	private final File aclFile;
-	private final FileWatcher watchDog;
-	private final boolean active;
+	private File aclFile = null;
+	private FileWatcher watchDog;
+	private boolean active;
 	// private final Set<String> acceptedDNs = new HashSet<String>();
 	private final Map<String, String> acceptedDNs = new HashMap<String, String>();
 	private static Set<String> roles = new HashSet<String>();
@@ -55,22 +54,21 @@ public class ACLFilter implements ContainerRequestFilter {
 
 	@Context
 	HttpServletRequest httpRequest;
+	private File aclFile2;
 
 	/**
+	 * @throws IOException 
 	 * 
 	 */
 	public ACLFilter() throws IOException {
-		// this(new File("conf", "emir.acl"));
-			this(new File(
-					DSRServer.getProperty(ISecurityProperties.REGISTRY_ACL_FILE,"")));
-				
+			this(new File(EMIRServer.getServerSecurityProperties().getACLConfigurationFile()));	
 	}
 
 	/**
 	 * @param file
 	 * @throws IOException
 	 */
-	public ACLFilter(File aclFile) throws IOException {
+	public ACLFilter(File aclFile) {
 		this.aclFile = aclFile;
 		if (!aclFile.exists()) {
 			logger.warn("ACL not active: file <" + aclFile + "> does not exist");
@@ -81,12 +79,17 @@ public class ACLFilter implements ContainerRequestFilter {
 			active = true;
 			logger.info("EMIR using ACL file " + aclFile);
 			readACL();
-			watchDog = new FileWatcher(aclFile, new Runnable() {
-				public void run() {
-					readACL();
-				}
-			});
-			watchDog.schedule(3000, TimeUnit.MILLISECONDS);
+			try {
+				watchDog = new FileWatcher(aclFile, new Runnable() {
+					public void run() {
+						readACL();
+					}
+				});
+				watchDog.schedule(3000, TimeUnit.MILLISECONDS);
+			} catch (FileNotFoundException e) {
+				Log.logException("Invalid file path: "+aclFile, e, logger);
+			}
+			
 		}
 	}
 
@@ -102,13 +105,12 @@ public class ACLFilter implements ContainerRequestFilter {
 			throws WebApplicationException {
 		Client client = null;
 		Role role = new Role();
-		Boolean b = Boolean.valueOf(DSRServer.getProperty(
-				ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
+//		Boolean b = Boolean.valueOf(DSRServer.getProperty(
+//				ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
+		Boolean b = EMIRServer.getServerSecurityProperties().isSslEnabled();
 		String path = request.getPath();
-
-		if (b
-				|| DSRServer.getProperty(ServerConstants.REGISTRY_SCHEME)
-						.equalsIgnoreCase("https")) {
+		//double check if the acl is enabled
+		if (b && EMIRServer.getServerSecurityProperties().isACLAccessControlEnabled()) {
 			X509Certificate[] certArr = (X509Certificate[]) httpRequest
 					.getAttribute("javax.servlet.request.X509Certificate");
 			String userName = certArr[0].getSubjectX500Principal()
@@ -133,11 +135,14 @@ public class ACLFilter implements ContainerRequestFilter {
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Accessing resource: '" + request.getPath()
-					+ "' with DN: " + client.getDistinguishedName());
+			if (!request.getPath().equalsIgnoreCase("favicon.ico")) {
+				logger.debug("Accessing resource: '" + request.getPath()
+						+ "' with DN: " + client.getDistinguishedName());	
+			}
+			
 		}
 
-		httpRequest.setAttribute(ServerConstants.CLIENT, client);
+		httpRequest.setAttribute(SecurityManager.CLIENT, client);
 
 		return request;
 	}
@@ -191,12 +196,9 @@ public class ACLFilter implements ContainerRequestFilter {
 						try {
 							String[] pair = line.split("::");
 							X500Principal p = new X500Principal(pair[0].trim());
-							// X500Principal p = new X500Principal(line);
-							// acceptedDNs.add(p.getName());
 							acceptedDNs.put(p.getName(), pair[1].trim());
 							logger.info("Allowing admin access for <" + line
 									+ ">");
-
 						} catch (Exception ex) {
 							logger.warn("Invalid entry <" + line + ">", ex);
 						}

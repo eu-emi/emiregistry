@@ -20,7 +20,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
@@ -72,7 +72,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@FunctionalTest(id="ServiceRegistrationTest", description="Test registration of a service record")
 	public void testRegisterService() throws JSONException,
 			InterruptedException {
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
+		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin");
 
 		ClientResponse res = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -143,7 +143,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 	@Test
 	public void testUpdateService() throws JSONException {
-		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/serviceadmin");
 
 
 		cr1.getClientResource()
@@ -152,7 +152,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 						);
 		
 
-		DSRClient cr = new DSRClient(BaseURI + "/serviceadmin");
+		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin");
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
@@ -168,7 +168,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		
 		System.out.println("being updated json document: "+j.toString(2));
 		
-		DSRClient cr2 = new DSRClient(BaseURI
+		EMIRClient cr2 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		JSONObject jo1 = cr2.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
@@ -187,16 +187,16 @@ public class TestServiceAdminResource extends TestRegistryBase {
 	@Test
 	@FunctionalTest(id="ServiceDeletionTest", description="Test deletion of a service record")
 	public void testDeleteResource() throws JSONException {
-		DSRClient cr1 = new DSRClient(BaseURI + "/serviceadmin");
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/serviceadmin");
 		
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(getDummyServiceDesc());
-		DSRClient cr = new DSRClient(BaseURI
+		EMIRClient cr = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		cr.getClientResource().delete();
 
-		DSRClient cr2 = new DSRClient(BaseURI
+		EMIRClient cr2 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1");
 		try {
 			cr2.getClientResource().get(javax.ws.rs.core.Response.class);

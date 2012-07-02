@@ -44,7 +44,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
-import eu.emi.emir.DSRServer;
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.AttributeSourceConfigurator;
 import eu.emi.emir.security.AttributeSourceFactory;
@@ -187,7 +187,7 @@ public class AttributeSourcesChain implements IAttributeSource{
 		String[] authzNames=orderString.split(" +");
 		
 		if (properties == null)
-			properties = DSRServer.getConfiguration().getProperties();
+			properties = EMIRServer.getRawProperties();
 		
 		for(String auth: authzNames){
 			chain.add(AttributeSourceConfigurator.configureAttributeSource(auth, 

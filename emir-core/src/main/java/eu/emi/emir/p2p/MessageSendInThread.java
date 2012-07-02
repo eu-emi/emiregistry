@@ -15,10 +15,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.security.ISecurityProperties;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventTypes;
@@ -125,11 +124,11 @@ public class MessageSendInThread extends Thread {
 	}
 	
 	protected WebResource getClient(String url) {
-		DSRClient c = new DSRClient(url + "/serviceadmin");
-		if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+		EMIRClient c = new EMIRClient(url + "/serviceadmin");
+		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-			c = new DSRClient(url + "/serviceadmin",
-										DSRServer.getClientSecurityProperties());
+			c = new EMIRClient(url + "/serviceadmin",
+										EMIRServer.getClientSecurityProperties());
 		}
 		return c.getClientResource();
 	}

@@ -30,7 +30,7 @@ import eu.eu_emi.emiregistry.QueryResult;
  * 
  */
 public class ServiceColManager {
-	private static Logger logger = Log.getLogger(Log.EMIR_CORE,
+	private static final Logger logger = Log.getLogger(Log.EMIR_CORE,
 			ServiceColManager.class);
 	private ServiceDatabase serviceDB = null;
 
@@ -40,6 +40,10 @@ public class ServiceColManager {
 	 */
 	public ServiceColManager(){
 		serviceDB = new MongoDBServiceDatabase();
+	}
+	
+	public ServiceColManager(MongoDBServiceDatabase mongodb){
+		serviceDB = mongodb;
 	}
 
 	public JSONArray getServiceReferences() throws JSONException, QueryException,
@@ -140,8 +144,7 @@ public class ServiceColManager {
 	 * @throws JSONToGlue2MappingException 
 	 */
 	public QueryResult queryGlue2(Map<String, Object> m) throws QueryException, PersistentStoreFailureException, JSONException, DatatypeConfigurationException, ParseException, JSONToGlue2MappingException {
-		JSONArray ja = query(m);
-		logger.debug("array"+ja);
+		JSONArray ja = query(m);		
 		Glue2Mapper gm = new Glue2Mapper();
 		QueryResult qr = gm.toQueryResult(ja);
 		return qr;

@@ -13,9 +13,8 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.client.DSRClient;
-import eu.emi.emir.client.security.ISecurityProperties;
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.client.EMIRClient;
 
 
 
@@ -114,11 +113,11 @@ public class ChildrenManager {
 		Iterator<String> it=s.iterator();
 		while(it.hasNext()) {
             String key=it.next();
-			DSRClient c = new DSRClient(key + "/ping");
-			if ("true".equalsIgnoreCase(DSRServer.getProperty(ISecurityProperties.REGISTRY_SSL_ENABLED, "false"))) {
+			EMIRClient c = new EMIRClient(key + "/ping");
+			if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-				c = new DSRClient(key + "/ping",
-											DSRServer.getClientSecurityProperties());
+				c = new EMIRClient(key + "/ping",
+											EMIRServer.getClientSecurityProperties());
 			}
 			ClientResponse res = c.getClientResource().accept(MediaType.TEXT_PLAIN)
 					.get(ClientResponse.class);
