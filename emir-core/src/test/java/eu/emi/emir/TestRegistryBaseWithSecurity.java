@@ -120,7 +120,7 @@ public class TestRegistryBaseWithSecurity {
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.file","src/test/resources/conf/users/testUdb-strict.xml");
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
-	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_ACL, "src/test/resources/conf/emir.acl");    
+//	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_ACL, "src/test/resources/conf/emir.acl");    
 	    
 	    //p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 //		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());

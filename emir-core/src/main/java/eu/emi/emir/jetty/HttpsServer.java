@@ -72,7 +72,7 @@ public class HttpsServer {
 			logger.info("*    Version "+v);
 		}		
 		logger.info("******************************************");
-		
+		logger.info("");
 		//if ssl is enabled then set the authentication properties
 		if (props.getProperty(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS).startsWith("https")) {
 			props.setProperty(EMIRJettyProperties.PREFIX+EMIRJettyProperties.REQUIRE_CLIENT_AUTHN, "true");
@@ -111,7 +111,6 @@ public class HttpsServer {
 		
 	}	
 	
-
 	/**
 	 * sets up a watchdog that checks for changes to the log4j configuration file,
 	 * and re-configures log4j if that file has changed

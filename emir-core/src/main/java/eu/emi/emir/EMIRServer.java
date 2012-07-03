@@ -3,12 +3,17 @@
  */
 package eu.emi.emir;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.LogManager;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 
 import eu.emi.emir.client.util.Log;
@@ -43,17 +48,21 @@ public class EMIRServer {
 	
 	private static Properties rawProps;
 	
+	
 	/**
 	 * 
 	 */
 	public EMIRServer() {
+		init();
 	}
 	//Following constructor is there is to keep the tests running
 	public EMIRServer(Properties p){
+		init();
 		serverProps = new ServerProperties(p, false);
 	}
 	
 	public static void main(String[] args) {
+		init();
 		if (args.length == 0)
 			printUsage();
 		else {
@@ -139,6 +148,28 @@ public class EMIRServer {
 
 	}
 	
+	private static void init(){
+		final String logConfig=System.getProperty("log4j.configuration");
+		if(logConfig==null){
+			logger.debug("No log4j config defined.");
+			return;
+		} else {
+			PropertyConfigurator.configure(logConfig);
+			LogManager l = LogManager.getLogManager();
+			try {
+				l.readConfiguration(new FileInputStream(new File(logConfig)));
+			} catch (SecurityException e) {
+				Log.logException("", e);
+			} catch (FileNotFoundException e) {
+				Log.logException("", e);
+			} catch (IOException e) {
+				Log.logException("", e);
+			}
+		}	
+	}
+	
+	
+	
 	/**
 	 * 
 	 */
@@ -150,8 +181,8 @@ public class EMIRServer {
 		} else {
 			addParentDSR();
 		}
-		System.out.println(type + "  EMIR server started");
-		logger.info(type + " EMIR server started");
+		System.out.println("EMIR Server Started [TYPE: "+type+"]");
+		logger.info("EMIR Server Started [TYPE: "+type+"]");
 	}
 
 	/**
