@@ -4,9 +4,9 @@
 package eu.emi.emir.infrastructure;
 
 import java.io.File;
+import java.util.Properties;
 
-import eu.emi.emir.DSRServer;
-import eu.emi.emir.core.Configuration;
+import eu.emi.emir.EMIRServer;
 
 /**
  * @author a.memon
@@ -14,7 +14,7 @@ import eu.emi.emir.core.Configuration;
  *
  */
 public class ChildServer extends AbstractServer{
-	private static DSRServer client = null;
+	private static EMIRServer client = null;
 	private static ChildServer cs = null;
 	
 	public static void main(String[] args) {
@@ -60,23 +60,19 @@ public class ChildServer extends AbstractServer{
 	    		}
 	    	}
 	    }
-	    Configuration c = getConfiguration("localhost", 9000, "localhost",
+	    Properties c = getConfiguration("localhost", 9000, "localhost",
 				27017, "emiregistry-childdb", false, "http://localhost:9001",
 				h2FileName);
 		
-		client = new DSRServer(c);	
+		client = new EMIRServer();	
 		
-		
-		client.startJetty();
-		url = client.getBaseUrl();
+		client.run(c);
 		System.err.println("ChildServer started.");
 	}
 	
 	public void stop(){
-		if (client.isStarted()){
-			client.stopJetty();
-			System.err.println("ChildServer stopped");
-		}
+		client.stop();
+		System.err.println("ChildServer stopped");
 	}
 
 }

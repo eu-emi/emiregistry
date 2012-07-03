@@ -59,7 +59,7 @@ public class HttpsServer {
 	}
 	
 	public HttpsServer(Properties props) throws Exception {
-		startLogConfigWatcher();
+		startLogConfigWatcher(props);
 		
 		
 		
@@ -115,8 +115,8 @@ public class HttpsServer {
 	 * sets up a watchdog that checks for changes to the log4j configuration file,
 	 * and re-configures log4j if that file has changed
 	 */
-	private void startLogConfigWatcher(){
-		final String logConfig=System.getProperty("log4j.configuration");
+	private void startLogConfigWatcher(Properties p){
+		final String logConfig=p.getProperty(ServerProperties.PREFIX+ServerProperties.PROP_LOGGER_CONFIGPATH);
 		if(logConfig==null){
 			logger.debug("No log4j config defined.");
 			return;
