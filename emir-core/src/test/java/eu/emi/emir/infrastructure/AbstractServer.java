@@ -35,6 +35,7 @@ public abstract class AbstractServer {
 			String h2path) {
 		Properties p = new Properties();
 
+		p.put(ServerProperties.PREFIX+ServerProperties.PROP_LOGGER_CONFIGPATH, "src/test/resources/conf/log4j.properties");
 		if (!secure) {
 			p.put(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS, "http://"+jettyHostname+":"+jettyPort);
 		} else {
@@ -88,7 +89,6 @@ public abstract class AbstractServer {
 		}
 		
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_H2_DBFILE_PATH, h2path);
-		p.put(ServerProperties.PREFIX+ServerProperties.PROP_REQUEST_INTERCEPTORS, "eu.emi.emir.infrastructure.InputFilter");
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_RECORD_BLOCKLIST_INCOMING, "src/test/resources/conf/inputfilters");
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_RECORD_BLOCKLIST_OUTGOING, "src/test/resources/conf/outputfilters");
 
