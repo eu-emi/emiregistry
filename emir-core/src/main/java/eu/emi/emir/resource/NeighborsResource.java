@@ -21,7 +21,7 @@ public class NeighborsResource {
 
 	@GET
 	public Response childDSRs(){
-		if (EMIRServer.getServerProperties().isGlobalEnabled()){
+		if (!EMIRServer.getServerProperties().isGlobalEnabled()){
 			return Response.noContent().entity("Not supported method by the federated DSR.").build();
 		}
 		List<String> resp;
