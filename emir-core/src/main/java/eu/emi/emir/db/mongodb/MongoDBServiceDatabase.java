@@ -100,9 +100,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection = database.getCollection(colName);
 
-			// setting index and uniquesness on "serviceUrl"
+			// setting index and unique constraint on "service endpoint id"
 			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
 					"1");
 
