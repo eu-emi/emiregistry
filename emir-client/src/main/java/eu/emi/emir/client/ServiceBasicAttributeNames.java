@@ -58,7 +58,7 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_CONTACT_TYPE("ContactType",null,"GLUE 2.0 Service Contact Type"),
 			SERVICE_ID("Service_ID",null,"GLUE 2.0 Service ID"),
 			SERVICE_ENDPOINT_ID("Service_Endpoint_ID",null,"GLUE 2.0 Service Endpoint ID"),
-			;
+			SERVICE_ENDPOINT_ACCESSPOLICY_RULE("Service_Endpoint_AccessPolicy_Rule",JSONArray.class,"VO Name");
 
 	private String attributeName;
 	private Class<?> attributeType;

@@ -74,6 +74,8 @@ public class Client implements Serializable {
 	//list of VOs the user is a member of
 	private String[] vos;
 	
+	private static Client client;
+	
 //	private Queue queue;
 	
 	
@@ -92,6 +94,19 @@ public class Client implements Serializable {
 		setSubjectAttributes(new SubjectAttributesHolder());		
 //		vos = new String[0];
 //		queue = new Queue();
+	}
+	
+	public static Client getAnonymousClient(){
+		if (client == null) {
+			client = new Client();
+			client.setDistinguishedName("CN=ANONYMOUS,O=UNKNOWN,OU=UNKNOWN");
+			// in non-protected access the role by default is "admin", this is
+			// mainly for testing purpose
+			Role role = new Role();
+			role.setName("admin");
+			client.setRole(role);	
+		}
+		return client;
 	}
 	
 	public String toString() {

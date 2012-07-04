@@ -38,6 +38,7 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
+import eu.emi.emir.security.Role;
 import eu.emi.emir.util.ServiceUtil;
 
 /**
@@ -52,6 +53,8 @@ public class ServiceAdminResource {
 			ServiceAdminResource.class);
 
 	private ServiceAdminManager serviceAdmin;
+	
+	private static Client client;
 
 	@Context
 	HttpServletRequest req;
@@ -126,6 +129,9 @@ public class ServiceAdminResource {
 
 		try {
 			Client c = (Client) req.getAttribute("client");
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+				c = Client.getAnonymousClient();
+			}
 			serviceInfo
 					.put(ServiceBasicAttributeNames.SERVICE_OWNER
 							.getAttributeName(), c.getDistinguishedName());
@@ -188,6 +194,9 @@ public class ServiceAdminResource {
 				}
 				
 				Client c = (Client) req.getAttribute("client");
+				if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+					c = Client.getAnonymousClient();
+				}
 				JSONObject res = null;
 				// let the admin add entries from others
 				if (c.getRole().getName().equalsIgnoreCase("admin")) {
@@ -248,6 +257,9 @@ public class ServiceAdminResource {
 			throws WebApplicationException, JSONException {
 		try {
 			Client c = (Client) req.getAttribute("client");
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+				c = Client.getAnonymousClient();
+			}
 			String owner = c.getDistinguishedName();
 			String url = serviceInfo
 					.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -311,9 +323,12 @@ public class ServiceAdminResource {
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
+			Client c = (Client) req.getAttribute("client");
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+				c = Client.getAnonymousClient();
+			}
 			for (int i = 0; i < serviceInfos.length(); i++) {
-				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
-				Client c = (Client) req.getAttribute("client");
+				JSONObject serviceInfo = serviceInfos.getJSONObject(i);				
 				String owner = c.getDistinguishedName();
 				String url = serviceInfo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
@@ -410,6 +425,9 @@ public class ServiceAdminResource {
 		String serviceurl = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+				c = Client.getAnonymousClient();
+			}
 			String owner = c.getDistinguishedName();
 			serviceurl = extractServiceUrlFromUri(infos);
 			String messageTime = extractServiceDateFromUri(infos);
@@ -466,5 +484,5 @@ public class ServiceAdminResource {
 						.getAttributeName());
 		return value;
 	}
-
+	
 }

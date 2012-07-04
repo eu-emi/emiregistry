@@ -61,8 +61,6 @@ public class HttpsServer {
 	public HttpsServer(Properties props) throws Exception {
 		startLogConfigWatcher();
 		
-		
-		
 		String v=ServerProperties.class.getPackage().getImplementationVersion();
 		
 		logger.info("");
@@ -173,7 +171,7 @@ public class HttpsServer {
 		StringBuilder sb = new StringBuilder();
 		
 		String s = serverProps
-				.getValue(ServerProperties.PROP_REQUEST_INTERCEPTORS);
+				.getValue(ServerProperties.PROP_RESPONSE_INTERCEPTORS);
 		
 		sb.append(GZIPContentEncodingFilter.class.getName());
 		if (s != null) {
@@ -190,7 +188,7 @@ public class HttpsServer {
 	private String getRequestFilters() {
 		StringBuilder sb = new StringBuilder();
 		String s = serverProps
-				.getValue(ServerProperties.PROP_RESPONSE_INTERCEPTORS);
+				.getValue(ServerProperties.PROP_REQUEST_INTERCEPTORS);
 		
 		//always add access control filters when ssl is enabled
 		if (serverSecProps.isSslEnabled()) {
@@ -201,7 +199,7 @@ public class HttpsServer {
 				// setting ACL filter
 				sb.append(ACLFilter.class.getName()).append(";");
 			}	
-		}
+		} 
 		
 		
 		// adding the service record filter

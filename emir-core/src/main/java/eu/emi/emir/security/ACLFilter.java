@@ -107,8 +107,6 @@ public class ACLFilter implements ContainerRequestFilter {
 			throws WebApplicationException {
 		Client client = null;
 		Role role = new Role();
-//		Boolean b = Boolean.valueOf(DSRServer.getProperty(
-//				ISecurityProperties.REGISTRY_SSL_ENABLED, "false"));
 		Boolean b = EMIRServer.getServerSecurityProperties().isSslEnabled();
 		String path = request.getPath();
 		//double check if the acl is enabled
@@ -127,14 +125,7 @@ public class ACLFilter implements ContainerRequestFilter {
 				client = new Client();
 				client.setDistinguishedName(userName);
 			}
-		} else {
-			client = new Client();
-			client.setDistinguishedName("CN=ANONYMOUS,O=UNKNOWN,OU=UNKNOWN");
-			// in non-protected access the role by default is "admin", this is
-			// mainly for testing purpose
-			role.setName("admin");
-			client.setRole(role);
-		}
+		} 
 
 		if (logger.isDebugEnabled()) {
 			if (!request.getPath().equalsIgnoreCase("favicon.ico")) {
