@@ -40,15 +40,15 @@ public class HttpServer {
 		
 		EMIRJettyProperties jettyProperties = new EMIRJettyProperties(props);
 		
-		String parentAddress = serverProps.getValue(ServerProperties.PROP_ADDRESS);
+		String httpsServerAddress = serverProps.getValue(ServerProperties.PROP_ADDRESS);
 		
-		URL parentUrl = new URL(parentAddress);
+		URL httpsServerUrl = new URL(httpsServerAddress);
 		
 		String port = serverProps.getValue(ServerProperties.PROP_ANONYMOUS_PORT);
 		
-		String address = "http://"+parentUrl.getHost()+":"+port;
+		String address = "http://"+httpsServerUrl.getHost()+":"+port;
 		
-		if (port.startsWith("https")) {
+		if (address.startsWith("https")) {
 			System.err.println("The system address must starts with 'http'");
 		}
 		
