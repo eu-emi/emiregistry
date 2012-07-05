@@ -48,10 +48,6 @@ public class HttpServer {
 		
 		String address = "http://"+httpsServerUrl.getHost()+":"+port;
 		
-		if (address.startsWith("https")) {
-			System.err.println("The system address must starts with 'http'");
-		}
-		
 		URL[] url = {new URL(address)};
 		
 		server = new JettyServer(url, null, jettyProperties, getJerseyInitParams());		
