@@ -121,8 +121,6 @@ public class EMIRServer {
 			
 			server = new HttpsServer(props);
 			
-			anonymousServer = new HttpServer(props);
-
 			secProps = server.getServerSecProps();
 
 			serverProps = server.getServerProps();
@@ -133,7 +131,11 @@ public class EMIRServer {
 			
 			server.start();
 			
-			anonymousServer.start();
+			if (serverProps.isAnonymousAccessEnabled()) {
+				anonymousServer = new HttpServer(props);
+				anonymousServer.start();	
+			}
+			
 
 			this.server = server.getJettyServer().getServer();
 			

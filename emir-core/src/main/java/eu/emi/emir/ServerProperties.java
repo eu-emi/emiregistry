@@ -113,7 +113,7 @@ public class ServerProperties extends PropertiesHelper {
 	static
 	{
 		META.put(PROP_ADDRESS, new PropertyMD("http://localhost:0").setDescription(""));
-		META.put(PROP_ANONYMOUS_PORT, new PropertyMD("http://localhost:0").setDescription(""));
+		META.put(PROP_ANONYMOUS_PORT, new PropertyMD("").setDescription(""));
 		META.put(PROP_GLOBAL_ENABLE, new PropertyMD("false").setBoolean().setDescription(""));
 		META.put(PROP_GLOBAL_PROVIDERLIST, new PropertyMD().setDescription(""));
 		META.put(PROP_GLOBAL_SPARSITY, new PropertyMD("2").setInt().setBounds(2, 100).setDescription(""));
@@ -143,6 +143,13 @@ public class ServerProperties extends PropertiesHelper {
 	
 	public Boolean isGlobalEnabled(){
 		return getBooleanValue(PROP_GLOBAL_ENABLE);
+	}
+	
+	public Boolean isAnonymousAccessEnabled(){
+		if (getValue(PROP_ANONYMOUS_PORT).isEmpty() || getValue(PROP_ANONYMOUS_PORT) == null) {
+			return false;
+		}
+		return true;
 	}
 	
 	public String parentAddress(){

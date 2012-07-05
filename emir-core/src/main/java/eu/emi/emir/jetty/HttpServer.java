@@ -44,8 +44,6 @@ public class HttpServer {
 		
 		URL parentUrl = new URL(parentAddress);
 		
-		
-		
 		String port = serverProps.getValue(ServerProperties.PROP_ANONYMOUS_PORT);
 		
 		String address = "http://"+parentUrl.getHost()+":"+port;
