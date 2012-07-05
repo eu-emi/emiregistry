@@ -35,7 +35,7 @@ public abstract class AbstractServer {
 			String h2path) {
 		Properties p = new Properties();
 
-		p.put(ServerProperties.PREFIX+ServerProperties.PROP_LOGGER_CONFIGPATH, "src/test/resources/conf/log4j.properties");
+		System.setProperty("log4j.configuration","src/test/resources/conf/log4j.properties");
 		if (!secure) {
 			p.put(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS, "http://"+jettyHostname+":"+jettyPort);
 		} else {
