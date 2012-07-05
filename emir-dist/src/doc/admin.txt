@@ -73,8 +73,8 @@ change the logging configuration, CONF/log4j.properties should be reviewed by th
 Authentication with X.509 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The authentication of the client in EMIR is based on PKI, thus using X.509 standard is used to
-authenticate the client as well as the server. However this implies the EMIR client and the server
+The authentication of the client in EMIR is based on PKI, therefore X.509 standard is used to
+authenticate the client as well as the server. The EMIR client and the server
 should own a X.509 certificate issued by a mutually trusted certificate authority (CA).
 
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
@@ -89,14 +89,13 @@ should own a X.509 certificate issued by a mutually trusted certificate authorit
 |registry.ssl.clientauthentication|true or false|true|If set the server will attempt to authenticate the client
 |=========================
 
-
 Authorization
 ~~~~~~~~~~~~~
 
 The EMIR offers two mutually exclusive options to authorize its clients.
 
 	* Using Access Control List (ACL)
-	* XACML based authorization
+	* XACML Policy based authorization
 
 ACL Based Authorization
 ~~~~~~~~~~~~~~~~~~~~~~~

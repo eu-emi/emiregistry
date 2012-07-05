@@ -302,49 +302,6 @@
 
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution>
-						<id>svn</id>
-						<phase>pre-site</phase>
-						<configuration>
-							<executable>svn</executable>
-							<arguments>
-								<argument>export</argument>
-								<argument>https://unicore.svn.sourceforge.net/svnroot/unicore/tools/docman/trunk</argument>
-								<argument>target/docman</argument>
-								<argument>--force</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>run</id>
-						<phase>pre-site</phase>
-						<configuration>
-							<target>
-								<property name="doc.relversion" value="${project.version}" />
-								<ant antfile="${basedir}/target/docman/doc-build.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<executions>
@@ -372,7 +329,7 @@
 					<dependency>
 						<groupId>eu.unicore</groupId>
 						<artifactId>maven-bugsreporter-plugin</artifactId>
-						<version>1.2</version>
+						<version>1.3</version>
 					</dependency>
 				</dependencies>
 			</plugin>

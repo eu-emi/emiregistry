@@ -3,54 +3,55 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>emir-distribution</artifactId>
-	<description>Enable building EMIR distribution for Redhat, general Linux/Unix environments, and Debian</description>
+	<description>Enable building EMIR distribution for Redhat, Scientific Linux 5, Scientific Linux 6, general Linux/Unix environments, and Debian 6</description>
 	<inceptionYear>2011</inceptionYear>
 	<url>https://github.com/eu-emi/emiregistry</url>
 	<name>Distribution of the EMIR server</name>
 	<!-- this is the "release" version -->
-	<version>1.1.2-SNAPSHOT</version>
-
+	<version>1.2.0</version>
+	<packaging>pom</packaging>
 	<parent>
 		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
-		<version>1.1.2-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 
 	<distributionManagement>
 		<site>
-			<id>gh-pages</id> 
+			<id>gh-pages</id>
 			<!-- path to the local repo -->
 			<url>file:///${basedir}/../../emiregistry-pages/documentation/registry-${version}</url>
 		</site>
 	</distributionManagement>
 
 	<properties>
-		<ux.version>${parent.version}</ux.version>
+		<emir.version>${parent.version}</emir.version>
 		<!-- this is the version we are packaging -->
 		<releaseVersion>${version}</releaseVersion>
 		<!-- configuration of the "docman" tool -->
 		<docman.enabled />
-		<doc.src>src/doc/manual.txt</doc.src>
-		<doc.target>emir-manual</doc.target>
+		<doc.includeBundle>file:src/doc/emir-documentation.properties</doc.includeBundle>
+        <doc.src>src/doc/manual.txt</doc.src>
+        <doc.target>emir-manual</doc.target>
 		<doc.template>emi-nonunicore</doc.template>
 		<exec.maven.plugin.version>1.2.1</exec.maven.plugin.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>eu.eu-emi</groupId>
 			<artifactId>emir-core</artifactId>
-			<version>${ux.version}</version>
+			<version>${emir.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.eu-emi</groupId>
 			<artifactId>xmltypes</artifactId>
-			<version>${ux.version}</version>
+			<version>${emir.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.eu-emi</groupId>
 			<artifactId>emir-client</artifactId>
-			<version>${ux.version}</version>
+			<version>${emir.version}</version>
 		</dependency>
 	</dependencies>
 	<profiles>
@@ -82,37 +83,6 @@
 							</execution>
 						</executions>
 					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>run</id>
-								<phase>package</phase>
-								<configuration>
-									<target>
-										<ant antfile="${basedir}/target/package/main.xml">
-											<target name="main" />
-										</ant>
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-						<!-- TODO: required currently on Debian 6 (??) -->
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.maven.wagon</groupId>
-								<artifactId>wagon-http</artifactId>
-								<version>2.0</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-					
 				</plugins>
 			</build>
 		</profile>
@@ -123,6 +93,49 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>svn</id>
+						<phase>pre-site</phase>
+						<configuration>
+							<executable>svn</executable>
+							<arguments>
+								<argument>export</argument>
+								<argument>https://unicore.svn.sourceforge.net/svnroot/unicore/tools/docman/trunk</argument>
+								<argument>target/docman</argument>
+								<argument>--force</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>run</id>
+						<phase>pre-site</phase>
+						<configuration>
+							<target>
+								<property name="doc.relversion" value="${project.version}" />
+								<ant antfile="${basedir}/target/docman/doc-build.xml" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
