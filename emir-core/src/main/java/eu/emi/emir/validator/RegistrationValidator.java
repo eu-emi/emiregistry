@@ -140,7 +140,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 						Calendar cMax = Calendar.getInstance();
 						int max_def=0;
 						try {
-							max_def=EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_MAXIMUM);
+							max_def=EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM);
 						} catch (NumberFormatException e) {
 							logger.warn("Error in reading the configuration property of maximum default expiry days - setting the value to 730 days");
 							max_def = 730;
