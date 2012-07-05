@@ -74,7 +74,6 @@ public class HttpsServer {
 		//if ssl is enabled then set the authentication properties
 		if (props.getProperty(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS).startsWith("https")) {
 			props.setProperty(EMIRJettyProperties.PREFIX+EMIRJettyProperties.REQUIRE_CLIENT_AUTHN, "true");
-			props.setProperty(EMIRJettyProperties.PREFIX+EMIRJettyProperties.REQUIRE_CLIENT_AUTHN, "true");
 			props.setProperty(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_SSL_ENABLED, "true");
 			
 		} else {
