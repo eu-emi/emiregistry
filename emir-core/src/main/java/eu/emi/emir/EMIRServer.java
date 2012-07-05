@@ -131,7 +131,8 @@ public class EMIRServer {
 			
 			server.start();
 			
-			if (serverProps.isAnonymousAccessEnabled()) {
+			if (serverProps.isAnonymousAccessEnabled()
+					&& secProps.isSslEnabled()) {
 				anonymousServer = new HttpServer(props);
 				anonymousServer.start();	
 			}
