@@ -20,6 +20,7 @@ import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
 import eu.emi.emir.infrastructure.ServiceCheckin;
 import eu.emi.emir.infrastructure.ServiceEventReceiver;
+import eu.emi.emir.jetty.HttpServer;
 import eu.emi.emir.jetty.HttpsServer;
 import eu.emi.emir.lease.ServiceReaper;
 import eu.emi.emir.p2p.GSRHelper;
@@ -53,16 +54,16 @@ public class EMIRServer {
 	 * 
 	 */
 	public EMIRServer() {
-		init();
+		initLogging();
 	}
 	//Following constructor is there is to keep the tests running
 	public EMIRServer(Properties p){
-		init();
+		initLogging();
 		serverProps = new ServerProperties(p, false);
 	}
 	
 	public static void main(String[] args) {
-		init();
+		initLogging();
 		if (args.length == 0)
 			printUsage();
 		else {
@@ -115,9 +116,12 @@ public class EMIRServer {
 
 	public void run(Properties props) {
 		HttpsServer server = null;
+		HttpServer anonymousServer = null;
 		try {
 			
 			server = new HttpsServer(props);
+			
+			anonymousServer = new HttpServer(props);
 
 			secProps = server.getServerSecProps();
 
@@ -125,11 +129,11 @@ public class EMIRServer {
 			
 			clientSecProps = server.getClientSecProps();
 
-			runningSince = new Date();
-			
 			rawProps = props;
 			
 			server.start();
+			
+			anonymousServer.start();
 
 			this.server = server.getJettyServer().getServer();
 			
@@ -148,7 +152,8 @@ public class EMIRServer {
 
 	}
 	
-	private static void init(){
+	private static void initLogging(){
+		runningSince = new Date();
 		final String logConfig=System.getProperty("log4j.configuration");
 		if(logConfig==null){
 			logger.debug("No log4j config defined.");

@@ -30,16 +30,24 @@ public class JettyServer extends JettyServerBase{
 	private static final Logger logger = Log.getLogger(Log.HTTP_SERVER, JettyServer.class);
 	Map<String, String> jerseyParams = null;
 	
-	public JettyServer(URL[] listenUrls, AuthnAndTrustProperties securityCfg, 
-			EMIRJettyProperties jettyCfg, Map<String, String> map) throws Exception {
-		super(listenUrls, securityCfg, jettyCfg, EMIRJettyLogger.class);
-		this.jerseyParams = map;
-		initServer();
-	}
+//	public JettyServer(URL[] listenUrls, AuthnAndTrustProperties securityCfg, 
+//			EMIRJettyProperties jettyCfg, Map<String, String> map) throws Exception {
+//		super(listenUrls, securityCfg, jettyCfg, EMIRJettyLogger.class);
+//		this.jerseyParams = map;
+//		initServer();
+//	}
 	
 	public JettyServer(URL listenUrl, ServerSecurityProperties securityCfg, 
 			EMIRJettyProperties jettyCfg, Map<String, String> map) throws Exception {
 		super(listenUrl, securityCfg, jettyCfg);
+		this.jerseyParams = map;
+		initServer();
+	}	
+	
+
+	public JettyServer(URL[] listenUrl, ServerSecurityProperties securityCfg, 
+			EMIRJettyProperties jettyCfg, Map<String, String> map) throws Exception {
+		super(listenUrl, securityCfg, jettyCfg, EMIRJettyLogger.class);
 		this.jerseyParams = map;
 		initServer();
 	}	

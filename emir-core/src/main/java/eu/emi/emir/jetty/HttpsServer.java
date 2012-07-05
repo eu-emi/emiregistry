@@ -65,7 +65,7 @@ public class HttpsServer {
 		
 		logger.info("");
 		logger.info("******************************************");
-		logger.info("*    EMI Service Registry");
+		logger.info("*    EMI Service Endpoint Registry");
 		if(v!=null){
 			logger.info("*    Version "+v);
 		}		
@@ -77,9 +77,7 @@ public class HttpsServer {
 			props.setProperty(EMIRJettyProperties.PREFIX+EMIRJettyProperties.WANT_CLIENT_AUTHN, "true");
 			props.setProperty(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_SSL_ENABLED, "true");
 			
-		} else {
-			
-		}
+		} 
 		
 		serverSecProps = new ServerSecurityProperties(props);
 		
@@ -98,7 +96,7 @@ public class HttpsServer {
 		
 		URL[] url = {new URL(address)};
 
-		server = new JettyServer(url[0], serverSecProps, jettyProperties, getJerseyInitParams());
+		server = new JettyServer(url, serverSecProps, jettyProperties, getJerseyInitParams());
 		
 		
 

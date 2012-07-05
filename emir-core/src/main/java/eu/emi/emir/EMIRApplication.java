@@ -8,6 +8,8 @@ import javax.ws.rs.ApplicationPath;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 
 /**
+ * The Jersey application class to initialize the rest resources.
+ * 
  * @author a.memon
  *
  */

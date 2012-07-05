@@ -34,6 +34,15 @@ public class ServerProperties extends PropertiesHelper {
 	 * 
 	 */
 	public static final String PROP_ADDRESS = "address";
+	
+	
+	/**
+	 * 
+	 * This is the EMIR server URL, where clients can contact with public resources. The URL should
+	 * not end with slash "/"
+	 * 
+	 */
+	public static final String PROP_ANONYMOUS_PORT = "address.anonymousPort";
 
 	// GSR Properties //
 	/**
@@ -104,6 +113,7 @@ public class ServerProperties extends PropertiesHelper {
 	static
 	{
 		META.put(PROP_ADDRESS, new PropertyMD("http://localhost:0").setDescription(""));
+		META.put(PROP_ANONYMOUS_PORT, new PropertyMD("http://localhost:0").setDescription(""));
 		META.put(PROP_GLOBAL_ENABLE, new PropertyMD("false").setBoolean().setDescription(""));
 		META.put(PROP_GLOBAL_PROVIDERLIST, new PropertyMD().setDescription(""));
 		META.put(PROP_GLOBAL_SPARSITY, new PropertyMD("2").setInt().setBounds(2, 100).setDescription(""));
