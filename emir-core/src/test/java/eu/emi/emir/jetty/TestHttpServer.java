@@ -25,6 +25,7 @@ public class TestHttpServer extends MongoDBTestBase{
 	@Before
 	public void setup() throws Exception{
 		Properties p = new Properties();
+		@SuppressWarnings("unused")
 		EMIRServer server = new EMIRServer(p);
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS, "http://localhost:54321");
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_ANONYMOUS_PORT, "8080");
