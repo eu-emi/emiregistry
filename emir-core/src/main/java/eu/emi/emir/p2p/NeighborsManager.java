@@ -22,6 +22,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
@@ -475,6 +476,10 @@ public class NeighborsManager {
 						state = 3;
 						logger.debug("DB query, unreachable host: " + list.get(j));
 						continue;
+					} catch (UniformInterfaceException e) {
+						// No more entry get from the server.
+						found = true;
+						break;
 					}
 					state = 2;
 					if (!o.isNull("result")){
