@@ -31,8 +31,8 @@
 		<!-- configuration of the "docman" tool -->
 		<docman.enabled />
 		<doc.includeBundle>file:src/doc/emir-documentation.properties</doc.includeBundle>
-        <doc.src>src/doc/manual.txt</doc.src>
-        <doc.target>emir-manual</doc.target>
+		<doc.src>src/doc/manual.txt</doc.src>
+		<doc.target>emir-manual</doc.target>
 		<doc.template>emi-nonunicore</doc.template>
 		<exec.maven.plugin.version>1.2.1</exec.maven.plugin.version>
 	</properties>
@@ -83,6 +83,35 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>run</id>
+								<phase>package</phase>
+								<configuration>
+									<target>
+										<ant antfile="${basedir}/target/package/main.xml">
+											<target name="main" />
+										</ant>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<!-- TODO: required currently on Debian 6 (??) -->
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.wagon</groupId>
+								<artifactId>wagon-http</artifactId>
+								<version>2.0</version>
+							</dependency>
+						</dependencies>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -97,7 +126,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>${exec.maven.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>svn</id>
@@ -128,6 +157,7 @@
 						<configuration>
 							<target>
 								<property name="doc.relversion" value="${project.version}" />
+								<property name="compile.classpath" refid="maven.compile.classpath" />
 								<ant antfile="${basedir}/target/docman/doc-build.xml" />
 							</target>
 						</configuration>
@@ -137,6 +167,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

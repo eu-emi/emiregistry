@@ -1,77 +1,31 @@
 Configuration
 -------------
 
-The EMIR server comes with a configuration file, a well documented file containing a 
-number of options (security, database, multi-node setup etc...). The options are well 
-defined and can be sufficient to setup and start-up the server in non-production 
-environment, however the administrator needs to review before deploying on the
-production environment (DCI).    
+The EMIR server comes with a well documented configuration file, containing a 
+number of options to setup registry hierarchy, p2p, security, http server, and database. The configuration 
+file (CONF/emir.config) comes with pre-defined settings to start-up the server in 
+non-production environment, however the administrator needs to review before deploying on the
+production Grid environments.    
 
-Server Configuration
+General Configuration
 ~~~~~~~~~~~~~~~~~~~~
 
-The server configuration options are:
+The server configuration options in the CONF/emir.config are:
 
-	*  Server host, port and scheme (plain or SSL)
-	*  Settings of the type of the registry node, i.e. whether the current registry instance
-	   is a child of some other (a parent) regitsry node or a global registry.
+	*  Server address (plain or SSL)
+	*  Settings of the type of the registry node, i.e. whether the current EMIR server instance
+	   is a child of some other (a parent) EMIR server node or a top/global registry in a hierarchy.
 	      
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
 4+^e|Server general settings
-|registry.scheme|http or https|https|The selected scheme which will be used.
-|registry.hostname|string|localhost|The host name of the machine on which the registry is running.
-4+^e|Service Record Filter Settings
-|registry.filters.input|string|CONF/inputfilters|This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file
-|registry.filters.output|string|CONF/outputfilters|Restrict the amount of service records sent to the parent registry node would be defined in the output filters file
-|registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
-|registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
-4+^e|EMIR Topology Settings
-|registry.global.enable|boolean|true or false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the 'registry.parent.url' property. This implies the current instance will not have parent.
-|registry.global.providerlist|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
-|registry.global.sparsity|Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
-|registry.global.retry|Integer|5|It specifies a number of attempts if communication to another GSR is failed.
-|registry.global.etvalid|Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).
-|registry.global.softstate.delay|Integer|2|Extend the expiration time with this time delay in hours.
-|registry.global.etremove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
-|registry.parent.url|URI|-|The URI of the parent registry node where the state of this suppose to be aggregated.
-4+^e|Service record management
-|registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
-|registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
+|emir.address|string|http://localhost:9126|The address/URL of the EMIR server on which it receives registration and query requests. It should either start with http or https (SSL/TLS) mode, if "https" mode is selected the Authentication and Authorisation properties must be properly configured
+|emir.anonymousPort|Unsigned Integer|9127|The anonymous http port number. Setting the property will start an additional 'http' server (without SSL/TLS) only if the above server address is 'https' (with SSL/TLS). It will provide 'anonymous' access to the query interface (i.e. /services REST Web Service).   
 |=========================
 
-
-
-MongoDB Configuration
-~~~~~~~~~~~~~~~~~~~~~~
-
-The registry uses MongoDB to store and index the service records. Thus it is 
-necessary to setup the Database before starting the EMIR.
-
-[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
-|===========================================================
-|Property name|Type|Default value|Description
-|mongodb.hostname|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
-|mongodb.port|Integer|27017|The port number
-|mongodb.dbname|string|emiregistry|The name of the database to store the entries
-|mongodb.colname|string|services|The name of the collection in which the records will be stored 
-|========================= 
-
-Logging Configuration
-~~~~~~~~~~~~~~~~~~~~~~
-
-The EMIR server provides log facilities to record all but some of the server activities. In order to 
-change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.
-
-[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
-|===========================================================
-|Property name|Type|Default value|Description
-|logger.conf.path|URI|CONF/log4j.properties|The log4j configuration
-|=========================
-
-Authentication with X.509 
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Authentication and Trust Configuration 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The authentication of the client in EMIR is based on PKI, therefore X.509 standard is used to
 authenticate the client as well as the server. The EMIR client and the server
@@ -89,21 +43,24 @@ should own a X.509 certificate issued by a mutually trusted certificate authorit
 |registry.ssl.clientauthentication|true or false|true|If set the server will attempt to authenticate the client
 |=========================
 
+TODO: Write me
+
 Authorization
 ~~~~~~~~~~~~~
 
-The EMIR offers two mutually exclusive options to authorize its clients.
+The EMIR offers two alternative options to authorise its' clients.
 
 	* Using Access Control List (ACL)
 	* XACML Policy based authorization
 
 ACL Based Authorization
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
-This is the standard mechanism in EMIR to authorize the clients. The incoming requests' subject is matched against the 
-pre-defined ACL file (CONF/emir.acl). The ACL file has a list of DN/role pairs separated by *::*, see the example below
+This is the default mechanism in EMIR to access control the _Create_,_Update_, and _Delete_ operations on SER database. The requesting subject's 
+distinguished name (DN) is matched against the pre-defined ACL file (CONF/emir.acl). The file contains a list of DN and role pairs, separated 
+*::* symbol, see the example below:
 
-.emir.acl
+.Example emir.acl
 -----------------
 emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
 emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
@@ -149,3 +106,95 @@ policies. In order to enable the given authorization following property must be 
 |registry.security.accesscontrol.pdp.config|URI|CONF/xacml2.config|The path to XACML2 configuration, containing the rules of executing the policies
 |registry.security.accesscontrol.pdp|string|eu.unicore.uas.pdp.local.LocalHerasafPDP|The name of the pdp class to endorse, for the xacml2 policies execution
 |===========================================================
+
+
+
+
+Topology
+~~~~~~~~
+
+EMIR allows building a network of registries participating in a Grid infrastructure or federation. The network can be of type hierarchical 
+or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are aggregated at the root level - the Global Service Registry (GSR). All the
+registries residing below the GSR, are intermediate EMIR registry servers participating in building an hierarchy - called Domain Service registries (DSR). 
+Each DSR has only one parent, either DSR or GSR to which it pushes its' SER collections. The P2P network is a loosely coupled DHT, which can be configured 
+only at the GSR (or top) level. Multiple GSRs can replicate their information among each other by referring a pre-configured +Global list+. The global
+list contains a listing of URLs of all the GSRs, each of which must be able to access the URLs. 
+      
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+4+^e|EMIR's DSR settings
+|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR server to which it propagates its information
+4+^e|General GSR Settings
+|emir.global.enable|boolean|false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries (GSRs), the 'emir.parentAddress' property will be ignored (if enabled), as the root registry does not contain any parent.
+|emir.global.sparsity|Unsigned Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
+|emir.global.retry|Unsigned Integer|5|It specifies a number of attempts if communication to another GSR is failed.
+|emir.global.etValid|Unsigned Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keeps them).
+|emir.global.softStateDelay|Integer|2|Extend the expiration time with this time delay in hours.
+|emir.global.etRemove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
+4+^e|Global List Settings
+|emir.global.providerList|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
+|=========================
+
+How to Add DSR in a EMIR Network?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO: Write Me!
+
+How to Add GSR in a EMIR Network?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO: Write Me!
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+4+^e|DSR settings
+|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR server to which it propagates its information
+4+^e|Service Record Filter Settings
+|registry.filters.input|string|CONF/inputfilters|This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file
+|registry.filters.output|string|CONF/outputfilters|Restrict the amount of service records sent to the parent registry node would be defined in the output filters file
+|registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
+|registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
+4+^e|EMIR Topology Settings
+|registry.global.enable|boolean|true or false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the 'registry.parent.url' property. This implies the current instance will not have parent.
+|registry.global.providerlist|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
+|registry.global.sparsity|Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
+|registry.global.retry|Integer|5|It specifies a number of attempts if communication to another GSR is failed.
+|registry.global.etvalid|Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).
+|registry.global.softstate.delay|Integer|2|Extend the expiration time with this time delay in hours.
+|registry.global.etremove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
+|registry.parent.url|URI|-|The URI of the parent registry node where the state of this suppose to be aggregated.
+4+^e|Service record management
+|registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
+|registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
+|=========================
+
+
+
+MongoDB Database Configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The EMIR uses MongoDB to store and index the SER collections. The necessary settings can be found in CONF/emir.config.
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|mongodb.hostname|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
+|mongodb.port|Integer|27017|The port number
+|mongodb.dbname|string|emiregistry|The name of the database to store the entries
+|mongodb.colname|string|services|The name of the collection in which the records will be stored 
+|========================= 
+
+Logging Configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The EMIR server provides log facilities to record all but some of the server activities. In order to 
+change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|logger.conf.path|URI|CONF/log4j.properties|The log4j configuration
+|=========================

@@ -1,14 +1,18 @@
 EMI Registry Manual
 ===================
-EMIR Team <emir@niif.hu>
-v1.1.1-rc1, April 2012
-:revnumber: 1.0.3
+EMIR Product Team
+v1.2.0, July 2012
+:revnumber: 1.2.0
 :numbered:
 
 Overview
 --------
 
-The EMI Registry is a federated service registry based on REST-ful interfaces. The major functionalities of the registry includes 
+EMI Service Registry is a Service Endpoint Registry conceived during the EMI project. Its main goal is to discover all the Service Endpoints that exist. 
+It consists of a collection of services that enables storing service records in a federated manner. Each of the record is a Service Endpoint Record (SER) 
+complying with the OGF's GLUE 2.0 standard. The deployment of EMIR (which implies building an EMIR network over WAN) is bipartite: 1) Building a rooted 
+hierarchy with a single EMIR server aggregating all the information within a federation 2) Sharing the information at the root level among peered 
+EMIR servers (using P2P), thus enabling intra-federation discovery.
  
    
 
@@ -16,28 +20,26 @@ The EMI Registry is a federated service registry based on REST-ful interfaces. T
 Features
 --------
 
-The registry provides following features:
+The EMIR provides following features:
 
-*	the service registration includes the management of the services' information.
+*	the service endpoint record registration includes the management of the services' endpoint information.
 *	Powerful data back-end based on MongoDB
 *	Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
 *	REST-ful API to browse the service registrations
 *	Security
 **	PKI governed authentication
-**	Distinguished Name based authorization using XACML driven PDP
+**	Policy based authorisation
 
 
-For more information about EMI visit http://www.eu-emi.eu[http://www.eu-emi.eu].
-
-include::emir.txt[]
-
-include::developer.txt[]
+For more information about EMIR, visit EMI's TWiki[https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry].
 
 include::install.txt[]
 
 include::admin.txt[]
 
 include::client.txt[]
+
+include::developer.txt[]
 
 include::appendix1.txt[]
 

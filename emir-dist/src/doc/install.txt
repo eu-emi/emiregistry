@@ -3,7 +3,7 @@ Installation
 
 In order to install EMIR, it is required to install 
 the SUN or OpenJDK Java 6 (JRE or SDK). If not installed 
-on your system, you can download it from http://java.oracle.com[http://java.oracle.com]
+on the target system, it can be downloaded from http://java.oracle.com[http://java.oracle.com]
 
 * Linux based operating system
 * MongoDB[www.mongodb.org]
@@ -18,23 +18,49 @@ EMIR is distributed in the following formats:
 .IMPORTANT NOTE ON PATHS
 =========================================================
 The location of the installation and configuration files differ 
-depending on type of bundle (see the above section).
+depending on the type of bundle (see the above section).
 
-If RPM bundle is chosen, the following paths will be used:
+If RPM bundle is being installed, the following paths will be used:
   
   CONF=/etc/emi/emir
   BIN=/usr/sbin
   LOG=/var/log/emi/emir
   
-The platform independent binary bundles all the files under
-single directory. Thus if extracted:
+The platform independent binary places all the files under
+single directory. The contents will be:
 
-  CONF=INST/conf
-  BIN=INST/bin
-  LOG=INST/logs
+  CONF=INST/conf/
+  BIN=INST/bin/
+  LOG=INST/logs/
   
 The above variables (CONF, BIN and LOG) will be used throughout the rest of this manual.
 =========================================================
+
+Installation using the RPM bundle (RedHat Distributions)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Download EMIR Server's RPM distribution from the EMI's http://emisoft.web.cern.ch/emisoft/[emisoft] and install it
+using the rpm or yum command.
+
+.Example
+------------
+yum install -y emi-emir
+------------
+
+Installation using the Debian bundle (Centos/Debian Distributions)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Download EMIR DEB distribution from the EMI's http://emisoft.web.cern.ch/emisoft/[emisoft] and install it
+using the apt-get command.
+ 
+
+Database Installation
+~~~~~~~~~~~~~~~~~~~~~
+
+EMIR server uses MongoDB database as a backbone to store and indexe SER collections. The database dependency
+will automatically be fetched from the *emisoft* repository, while installing the EMIR Server. Otherwise it
+should be installed and configured before installing the EMIR. The installation and configuration 
+instructions to setup the MongoDB database can be found on MongoDB's http://www.mongodb.org/display/DOCS/Quickstart[Web site].
 
 Installation from the self-contained archive (tar.gz)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,24 +73,10 @@ steps written below:
 . go to *SOURCE_ROOT/emir-dist* directory
 . run *mvn assembly:assembly -DskipTests*
 
-The archive can then be found inside the *SOURCE_ROOT/target/emir-distribution-x.y.z-a-all.(tar.gz/zip)*, 
+The archive can be found inside the *SOURCE_ROOT/target/emir-distribution-x.y.z-a-all.(tar.gz/zip)*, 
 that contains all the necessary files for installation thus no special actions will be required except 
 extraction to the target folder.
 
-Installation using the RPM bundle (RedHat Distributions)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Download the RPM distribution from the EMI's http://emisoft.web.cern.ch/emisoft/[emisoft] and install it
-using the rpm or yum command.
- 
-
-Database Installation
-~~~~~~~~~~~~~~~~~~~~~
-
-EMIR uses MongoDB to store the service records, therefore it is highly recommended to install 
-and configure the database before starting the EMIR server. The installation and configuration 
-instructions to setup the MongoDB database can be found 
-on their http://www.mongodb.org/display/DOCS/Quickstart[Web site].
   
 
  
