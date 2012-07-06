@@ -106,11 +106,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 							.getAttributeName(),
 					"1");
 
-			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
-					"1");
-
 			serviceCollection.ensureIndex(obj,
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), true);
 		} catch (MongoException e) {
 			Log.logException("", e);
@@ -145,12 +142,19 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			// setting index and uniquesness on service url
 			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
 					"1");
+			
+//			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
+//					"1");
+//			
+//			obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
+//					
+//			obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
 
 			serviceCollection.ensureIndex(obj,
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), true);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Unique index created: " + obj);
@@ -164,27 +168,28 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public void insert(ServiceObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
-		@SuppressWarnings("unused")
-		List<String> lstError = new CopyOnWriteArrayList<String>();
 		try {
 			if (logger.isDebugEnabled()) {
 				logger.debug("inserting: " + item.toDBObject());
 			}
 			database.requestStart();
+			
 			DBObject db = item.toDBObject();
 			// db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 			// .getAttributeName(), new Date());
 
 			serviceCollection.insert(db, WriteConcern.SAFE);
+			
 			database.requestDone();
-			logger.info("inserted: " + item.getUrl());
+			
+			logger.info("inserted Service Endpoint record with ID: " + item.getEndpointID());
 			// EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
 			// item
 			// .toJSON()));
 		} catch (MongoException e) {
 			if (e instanceof DuplicateKey) {
-				throw new ExistingResourceException("Service with URL: "
-						+ item.getUrl() + " - already exists", e);
+				throw new ExistingResourceException("Endpoint record with ID: "
+						+ item.getEndpointID() + " - already exists", e);
 			} else {
 				throw new PersistentStoreFailureException(e);
 			}
@@ -202,10 +207,18 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				logger.debug("inserting: " + item);
 			}
 			DBObject db = item;
+			
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
+			database.requestStart();
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
+			database.requestDone();
+			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
+//			"1");
+//	
+//	obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
+//			
+//	obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
 			// item
 			// .toJSON()));
 		} catch (MongoException e) {
@@ -242,27 +255,52 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		return so;
 	}
+	
+	@Override
+	public ServiceObject getServiceByEndpointID(String identifier)
+			throws MultipleResourceException, NonExistingResourceException,
+			PersistentStoreFailureException {
+		ServiceObject so = null;
+		try {
+			System.out.println(findAll());
+			DBObject db = serviceCollection.findOne(new BasicDBObject(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+							.getAttributeName(), identifier));
+			if (db == null) {
+				return null;
+			}
+			so = new ServiceObject(db);
+
+		} catch (MongoException e) {
+			Log.logException("", e);
+		} catch (JSONException e) {
+			throw new NonExistingResourceException(e);
+		}
+
+		return so;
+	}
 
 	@Override
-	public void deleteByUrl(String url) throws MultipleResourceException,
+	public void deleteByEndpointID(String endpointID) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		database.requestStart();
+		database.requestEnsureConnection();
 		BasicDBObject query = new BasicDBObject();
-		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), url);
+		query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+				.getAttributeName(), endpointID);
 		DBObject d = serviceCollection.findAndRemove(query);
 
 		database.requestDone();
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
-				String msg = "No service description with the URL:" + url
+				String msg = "No service description with the Endpoint ID:" + endpointID
 						+ " exists";
 				logger.debug(msg);
 			}
 			throw new NonExistingResourceException(
-					"No service description with the URL:" + url + " exists");
+					"No service description with the Endpoint ID:" + endpointID + " exists");
 		}
-		logger.info("deleted: " + url);
+		logger.info("deleted: " + endpointID);
 		// sending update event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
@@ -281,19 +319,19 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service description: " + sObj);
 			}
-			database.requestEnsureConnection();
 			database.requestStart();
+			database.requestEnsureConnection();
 			DBObject dbObj = sObj.toDBObject();
 			// change the update date
 			// dbObj.put(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 			// .getAttributeName(), new Date());
 			BasicDBObject query = new BasicDBObject();
-			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName(), sObj.getUrl());
+			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), sObj.getEndpointID());
 
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
-			logger.info("updated: " + sObj.getUrl());
+			logger.info("updated Service Endpoint Record with ID: " + sObj.getUrl());
 			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,

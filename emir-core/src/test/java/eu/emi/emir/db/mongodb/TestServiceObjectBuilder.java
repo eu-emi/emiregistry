@@ -23,10 +23,10 @@ public class TestServiceObjectBuilder {
 	@Test
 	public void test1() throws JSONException{
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://service1");
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), "http://service1");
 		JSONObject o = new JSONObject(map);
 		ServiceObject so = ServiceObjectBuilder.build(o);
-		assertEquals("http://service1", so.getUrl());
+		assertEquals("http://service1", so.getEndpointID());
 	}
 }
 

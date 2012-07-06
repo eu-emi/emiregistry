@@ -43,7 +43,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		// Create information to be stored
 		JSONObject entry = new JSONObject();
 		try {
-			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), "http://1");
 			entry.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -52,7 +52,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 
 			db.insert(s);
 
-			assertEquals("http://1", db.getServiceByUrl("http://1").getUrl());
+			assertEquals("http://1", db.getServiceByEndpointID("http://1").getEndpointID());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -61,17 +61,17 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 	}
 
 	@Test(expected = NonExistingResourceException.class)
-	public void testDeleteNonExistingServiceByURL()
+	public void testDeleteNonExistingServiceByEndpointID()
 			throws MultipleResourceException, NonExistingResourceException,
 			PersistentStoreFailureException {
-		db.deleteByUrl("http://NA");
+		db.deleteByEndpointID("http://NA");
 	}
 
 	@Test(expected = ExistingResourceException.class)
 	public void testRedundantServiceEntries() throws JSONException,
 			PersistentStoreFailureException, ExistingResourceException {
 		JSONObject entry = new JSONObject();
-		entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName(), "http://1");
 		entry.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_1");
@@ -79,7 +79,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		db.insert(s1);
 
 		JSONObject entry1 = new JSONObject();
-		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName(), "http://1");
 		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_2");
@@ -87,7 +87,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		db.insert(s2);
 
 		JSONObject entry2 = new JSONObject();
-		entry2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		entry2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName(), "http://2");
 		entry2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_3");
@@ -97,20 +97,20 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 	}
 
 	@Test
-	public void testDeleteServiceByUrl() throws MultipleResourceException,
+	public void testDeleteServiceByEndpointID() throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException,
 			JSONException, ExistingResourceException {
 		JSONObject entry1 = new JSONObject();
-		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName(), "http://2");
 		entry1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"some_service_2");
 		ServiceObject so = new ServiceObject(entry1);
 		db.insert(so);
-		ServiceObject s = db.getServiceByUrl("http://2");
-		assertEquals("http://2", s.getUrl());
-		db.deleteByUrl("http://2");
-		ServiceObject s1 = db.getServiceByUrl("http://2");
+		ServiceObject s = db.getServiceByEndpointID("http://2");
+		assertEquals("http://2", s.getEndpointID());
+		db.deleteByEndpointID("http://2");
+		ServiceObject s1 = db.getServiceByEndpointID("http://2");
 		assertTrue(s1 == null);
 	}
 

@@ -52,7 +52,7 @@ public class ServiceObject {
 		String owner = null;
 		try {
 			owner = jo
-					.get(ServiceBasicAttributeNames.SERVICE_OWNER
+					.get(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 							.getAttributeName()).toString();
 		} catch (JSONException e) {
 			Log.logException("serviceOwner not exist!", e);
@@ -70,6 +70,30 @@ public class ServiceObject {
 			Log.logException("", e);
 		}
 		return serviceUrl;
+	}
+	
+	public String getEndpointID() {
+		String serviceEndpointID = null;
+		try {
+			serviceEndpointID = jo.get(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName())
+					.toString();
+		} catch (JSONException e) {
+			Log.logException("", e);
+		}
+		return serviceEndpointID;
+	}
+	
+	public String getServiceID() {
+		String serviceID = null;
+		try {
+			serviceID = jo.get(
+					ServiceBasicAttributeNames.SERVICE_ID.getAttributeName())
+					.toString();
+		} catch (JSONException e) {
+			Log.logException("", e);
+		}
+		return serviceID;
 	}
 
 	public Date getCreationTime() {

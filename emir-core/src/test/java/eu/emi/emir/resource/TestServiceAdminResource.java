@@ -58,7 +58,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
 
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
 				"http://1");		
 
 		JSONObject jo = new JSONObject(map);
@@ -124,7 +124,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 				"sms");
 
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+		map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
 				"http://1");
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();

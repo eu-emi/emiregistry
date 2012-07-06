@@ -132,7 +132,7 @@ public class ServiceAdminResource {
 				c = Client.getAnonymousClient();
 			}
 			serviceInfo
-					.put(ServiceBasicAttributeNames.SERVICE_OWNER
+					.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 							.getAttributeName(), c.getDistinguishedName());
 			JSONObject res = serviceAdmin.addService(serviceInfo);
 			return Response.ok(res).build();
@@ -200,11 +200,11 @@ public class ServiceAdminResource {
 				// let the admin add entries from others
 				if (c.getRole().getName().equalsIgnoreCase("admin")) {
 					if (!serviceInfo
-							.has(ServiceBasicAttributeNames.SERVICE_OWNER
+							.has(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 									.getAttributeName())) {
 
 						serviceInfo.put(
-								ServiceBasicAttributeNames.SERVICE_OWNER
+								ServiceBasicAttributeNames.SERVICE_OWNER_DN
 										.getAttributeName(), c
 										.getDistinguishedName());
 
@@ -216,7 +216,7 @@ public class ServiceAdminResource {
 				} else {
 					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
 						// add if the owner is missing
-						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 								.getAttributeName(), c.getDistinguishedName());
 						res = serviceAdmin.addService(serviceInfo);
 					}
@@ -265,7 +265,7 @@ public class ServiceAdminResource {
 					.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 							.getAttributeName());
 			serviceInfo
-					.put(ServiceBasicAttributeNames.SERVICE_OWNER
+					.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 							.getAttributeName(), c.getDistinguishedName());
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service by url: " + url + ", Owned by: "
@@ -333,7 +333,7 @@ public class ServiceAdminResource {
 				String url = serviceInfo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 								.getAttributeName());
-				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER
+				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 						.getAttributeName(), c.getDistinguishedName());
 				if (logger.isDebugEnabled()) {
 					logger.debug("updating service by url: " + url

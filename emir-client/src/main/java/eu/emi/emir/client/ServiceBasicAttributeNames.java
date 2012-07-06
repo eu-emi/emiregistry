@@ -11,9 +11,10 @@ import org.codehaus.jettison.json.JSONArray;
  * 
  */
 public enum ServiceBasicAttributeNames {
-	        SERVICE_NAME("Service_Name", null, "Service Name"), 
-	        SERVICE_TYPE("Service_Type", null, "Service Type"), 
-	        SERVICE_ENDPOINT_URL("Service_Endpoint_URL", null, "Service Unique URL (Mandatory Attribute)"), 
+	        SERVICE_ID("Service_ID",null,"GLUE 2.0 Service ID",true),
+	        SERVICE_NAME("Service_Name", null, "Service Name",true), 
+	        SERVICE_TYPE("Service_Type", null, "Service Type",true), 
+	        SERVICE_ENDPOINT_URL("Service_Endpoint_URL", null, "Service Unique URL (Mandatory Attribute)",true), 
 	        SERVICE_CREATED_ON("Service_CreationTime", Date.class), 
 	        SERVICE_CAPABILITY("Service_Capability"), 
 	        SERVICE_QUALITYLEVEL("Service_QualityLevel"), 
@@ -22,13 +23,14 @@ public enum ServiceBasicAttributeNames {
 	        SERVICE_VALIDITY("Service_Validity",Long.class), 
 	        SERVICE_EXPIRE_ON("Service_ExpireOn", Date.class), 
 	        SERVICE_UPDATE_SINCE("updateSince", Date.class), 
-	        SERVICE_OWNER("serviceOwner"), 
+	        SERVICE_OWNER_DN("serviceOwner"), 
 	        SERVICE_DN("Service_DN"),
-	        SERVICE_EXTENSIONS("Service_Extensions", JSONArray.class), 
-			SERVICE_ENDPOINT_CAPABILITY("Service_Endpoint_Capability"), 
+	        SERVICE_EXTENSIONS("Service_Extensions", JSONArray.class),
+	        SERVICE_ENDPOINT_ID("Service_Endpoint_ID",null,"GLUE 2.0 Service Endpoint ID",true),
+			SERVICE_ENDPOINT_CAPABILITY("Service_Endpoint_Capability",JSONArray.class,"Service Endpoint Capabilities",true), 
 			SERVICE_ENDPOINT_TECHNOLOGY("Service_Endpoint_Technology"), 
-			SERVICE_ENDPOINT_IFACENAME("Service_Endpoint_InterfaceName"), 
-			SERVICE_ENDPOINT_IFACE_VER("Service_Endpoint_InterfaceVersion"), 
+			SERVICE_ENDPOINT_IFACENAME("Service_Endpoint_InterfaceName",null,"Service Endpoint Interface Name",true), 
+			SERVICE_ENDPOINT_IFACE_VER("Service_Endpoint_InterfaceVersion",null,"Service Endpoint Interface Version",true),
 			SERVICE_ENDPOINT_IFACE_EXT("Service_Endpoint_InterfaceExtension"), 
 			SERVICE_ENDPOINT_WSDL("Service_Endpoint_WSDL"), 
 			SERVICE_ENDPOINT_SUPPORTED_PROFILE("Service_Endpoint_SupportedProfile", JSONArray.class), 
@@ -56,13 +58,12 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_CONTACT("Service_Contact",JSONArray.class,"GLUE 2.0 Service Contact information as Array"),
 			SERVICE_CONTACT_DETAIL("Detail",null,"GLUE 2.0 Service Contact Detail"),
 			SERVICE_CONTACT_TYPE("ContactType",null,"GLUE 2.0 Service Contact Type"),
-			SERVICE_ID("Service_ID",null,"GLUE 2.0 Service ID"),
-			SERVICE_ENDPOINT_ID("Service_Endpoint_ID",null,"GLUE 2.0 Service Endpoint ID"),
 			SERVICE_ENDPOINT_ACCESSPOLICY_RULE("Service_Endpoint_AccessPolicy_Rule",JSONArray.class,"VO Name");
 
 	private String attributeName;
 	private Class<?> attributeType;
 	private String attributeDesc;
+	private boolean mandatory = false;
 
 	/**
 	 * 
@@ -81,6 +82,14 @@ public enum ServiceBasicAttributeNames {
 		this.attributeName = attr;
 		this.attributeType = type;
 		this.attributeDesc = description;
+	}
+	
+	private ServiceBasicAttributeNames(String attr, Class<?> type,
+			String description, boolean mandatory) {
+		this.attributeName = attr;
+		this.attributeType = type;
+		this.attributeDesc = description;
+		this.mandatory = mandatory;
 	}
 
 	/**
@@ -110,6 +119,13 @@ public enum ServiceBasicAttributeNames {
 			return "Description Undefined";
 		}
 		return attributeDesc;
+	}
+	
+	/**
+	 * @return the mandatory
+	 */
+	public boolean isMandatory() {
+		return mandatory;
 	}
 
 }

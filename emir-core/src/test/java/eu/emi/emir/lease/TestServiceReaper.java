@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
@@ -35,16 +36,14 @@ import eu.unicore.bugsreporter.annotation.FunctionalTest;
  * @author a.memon
  * 
  */
-public class TestServiceReaper extends MongoDBTestBase{
+public class TestServiceReaper /* extends MongoDBTestBase*/ {
 	private static ServiceAdminManager adminMgr;
 	Properties p;
-	
-	
-	
+
 	@Before
 	public void setup() {
-		adminMgr = new ServiceAdminManager(new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
-				"services"));
+		adminMgr = new ServiceAdminManager(new MongoDBServiceDatabase(
+				"localhost", 27017, "emiregistry", "services"));
 		adminMgr.removeAll();
 		p = new Properties();
 		@SuppressWarnings("unused")
@@ -57,113 +56,71 @@ public class TestServiceReaper extends MongoDBTestBase{
 	}
 
 	@Test
-	@FunctionalTest(id="RunTTLTest", description="Test TTL of a service record")
-	public void testReaping() throws InvalidServiceDescriptionException,
-			JSONException, InterruptedException, ExistingResourceException {
-		// adding service entries
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"someservice-type");
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				"http://1");
-
+	@FunctionalTest(id = "RunTTLTest", description = "Test TTL of a service record")
+	public void testReaping() throws Exception {
 		JSONObject date = new JSONObject();
 		Calendar c = Calendar.getInstance();
-//		c.add(Calendar.MONTH, 12);
+		// c.add(Calendar.MONTH, 12);
 		try {
 			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		JSONObject jo = new JSONObject(map);
-		try {
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-					.getAttributeName(), date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		Calendar c1 = Calendar.getInstance();
+		
+		JSONObject jo1 = TestValueConstants.getJSONWithMandatoryAttributes();
 		for (int i = 0; i < 2; i++) {
-			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName(), "http://"
-					+ UUID.randomUUID().toString());
+			jo1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
+					 UUID.randomUUID().toString());
 			JSONObject date1 = new JSONObject();
-			
+
 			c1.add(Calendar.SECOND, 1);
 			try {
 				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+			jo1.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), date1);
-			adminMgr.addService(jo);
+			adminMgr.addService(jo1);
 		}
+		
 
 		int size = adminMgr.findAll().size();
+		
 		assertEquals(2, size);
-		
+
 		Thread.sleep(3000);
-		
+
 		ServiceReaper r = new ServiceReaper();
+
 		r.run();
 
-		System.out.println(adminMgr.findAll());
-		
 		int size1 = adminMgr.findAll().size();
 		assertEquals(0, size1);
 	}
 
 	@Test
-	public void testAddingDefaultExpiry() throws JSONException, InvalidServiceDescriptionException, NonExistingResourceException, PersistentStoreFailureException, ExistingResourceException {
-		// adding service entries
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"someservice-type");
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-				"http://1");
-
-		JSONObject jo = new JSONObject(map);
-		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-		
+	public void testAddingDefaultExpiry() throws Exception {
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		jo.remove(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+						.getAttributeName());
 		adminMgr.addService(jo);
-		
 		JSONObject r = adminMgr.findServiceByUrl("http://1");
-		assertTrue(r.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName()));
-		
+		assertTrue(r.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+				.getAttributeName()));
+
 	}
-	
+
 	@Test
-	public void testAddingMaxExpiry() throws Exception{
-		// adding service entries
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-						.getAttributeName(), "http://1");
-
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-						"someservice-type");
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
-						"http://1");
-
-		JSONObject jo = new JSONObject(map);
-		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-						.getAttributeName(), "http://1");
-		DateUtil.setExpiryTime(jo, 10);		
+	public void testAddingExpiry() throws Exception {
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		DateUtil.setExpiryTime(jo, 10);
 		adminMgr.addService(jo);
 		JSONObject r = adminMgr.findServiceByUrl("http://1");
-		assertTrue(r.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName()));
+		assertTrue(r.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+				.getAttributeName()));
 	}
-	
-	
-	
-	
 
 }

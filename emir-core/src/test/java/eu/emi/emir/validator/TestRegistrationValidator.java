@@ -3,43 +3,61 @@
  */
 package eu.emi.emir.validator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
+import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
-import eu.emi.emir.validator.ValidatorFactory;
 
 /**
  * @author a.memon
  *
  */
 public class TestRegistrationValidator {
-	@Test
-	public void testValidateExpiryInfo() throws JSONException, IOException{
-		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
-		DateUtil.setExpiryTime(jo, 365);
-		assertTrue(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+	
+	@Before
+	public void setup(){
+		EMIRServer s = new EMIRServer(new Properties());
 	}
 	
 	@Test
-	public void testInvalidExpiryInfo() throws JSONException, IOException{
-		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
+	public void testValidateInfo() throws Exception{
+		assertTrue(ValidatorFactory.getRegistrationValidator().validateInfo(TestValueConstants.getJSONWithMandatoryAttributes()));
+	}
+	
+	@Test (expected = InvalidServiceDescriptionException.class)
+	public void testInvalidExpiryInfo_ExceedsDefault() throws Exception{
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		DateUtil.setExpiryTime(jo, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM)+10);
+		System.out.println(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+	}
+	
+	@Test (expected = InvalidServiceDescriptionException.class)
+	public void testInvalidExpiryInfo_NegativeValue() throws Exception{
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		DateUtil.setExpiryTime(jo, -EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM));
+		System.out.println(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	
 	@Test
-	public void testInvalidDateType() throws JSONException, IOException{
+	public void testInvalidDateType() throws Exception{
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH,12);
@@ -49,10 +67,5 @@ public class TestRegistrationValidator {
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START.getAttributeName(), new Date());
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
-	@Test
-	public void testInvalidArrays() throws JSONException, IOException{
-		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
-		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_TRUSTEDCA.getAttributeName(), "dn1");
-		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
-	}
+	
 }

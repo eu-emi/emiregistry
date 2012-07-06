@@ -37,6 +37,7 @@ import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
+import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * Class to perform Service Provider related functions
@@ -74,13 +75,16 @@ public class ServiceAdminManager {
 	/**
 	 * @param jo
 	 * @return the inserted service description
-	 * @throws JSONException
-	 * @throws InvalidServiceDescriptionException
-	 * @throws ExistingResourceException
+	 * @throws InvalidServiceDescriptionException 
+	 * @throws JSONException 
+	 * @throws ExistingResourceException 
+	 * @throws ParseException 
+	 * @throws ConfigurationException 
+	 * @throws Exception 
 	 * 
 	 * 	 */
-	public JSONObject addService(JSONObject jo)
-			throws InvalidServiceDescriptionException, JSONException, ExistingResourceException {
+	public JSONObject addService(JSONObject jo) throws InvalidServiceDescriptionException, JSONException, ExistingResourceException, ConfigurationException, ParseException
+			 {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes");
@@ -183,7 +187,7 @@ public class ServiceAdminManager {
 				Log.logException("",e,log);
 			}
 		} else {
-			serviceDB.deleteByUrl(url);
+			serviceDB.deleteByEndpointID(url);
 		}
 	}
 
@@ -191,11 +195,13 @@ public class ServiceAdminManager {
 	 * @param jo
 	 * @throws JSONException
 	 * @throws InvalidServiceDescriptionException
+	 * @throws ParseException 
+	 * @throws ConfigurationException 
 	 * @throws NonExistingResourceException
 	 * @throws MultipleResourceException
 	 */
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
-			InvalidServiceDescriptionException, JSONException, WebApplicationException {
+			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
 		if (!ServiceUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes: serviceurl and servicetype");
@@ -254,6 +260,30 @@ public class ServiceAdminManager {
 		ServiceObject so = null;
 		try {
 			so = serviceDB.getServiceByUrl(url);
+		} catch (MultipleResourceException e) {
+			Log.logException("", e);
+		}
+		if (so == null) {
+			return null;
+		}
+		return so.toJSON();
+	}
+	
+	
+	/**
+	 * Finding a service by endpoint id
+	 * 
+	 * @param string
+	 * @throws NonExistingResourceException
+	 * @throws MultipleResourceException
+	 * @throws PersistentStoreFailureException
+	 */
+	public JSONObject findServiceByEndpointID(String endpointID)
+			throws NonExistingResourceException,
+			PersistentStoreFailureException {
+		ServiceObject so = null;
+		try {
+			so = serviceDB.getServiceByEndpointID(endpointID);
 		} catch (MultipleResourceException e) {
 			Log.logException("", e);
 		}
@@ -327,7 +357,7 @@ public class ServiceAdminManager {
 			// AND1 structure
 			JSONArray and1 = new JSONArray();
 			JSONObject andParam1 = new JSONObject();
-			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(), owner);
+			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(), owner);
 			and1.put(andParam1);
 
 			JSONObject andParam2 = new JSONObject();
@@ -365,7 +395,7 @@ public class ServiceAdminManager {
 			// First query
 			Map<String, String> map = new HashMap<String, String>();
 			
-			map.put(ServiceBasicAttributeNames.SERVICE_OWNER.getAttributeName(),
+			map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
 					owner);
 			
 			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);

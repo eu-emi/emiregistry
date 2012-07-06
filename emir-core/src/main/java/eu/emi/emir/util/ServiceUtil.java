@@ -27,7 +27,9 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
+import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.validator.ValidatorFactory;
+import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * 
@@ -61,10 +63,12 @@ public class ServiceUtil {
 	 * service attributes
 	 * 
 	 * @param serviceDesc
+	 * @throws ParseException 
+	 * @throws ConfigurationException 
 	 * @throws JSONException
 	 */
 	public synchronized static boolean isValidServiceInfo(JSONObject jo)
-			throws JSONException {
+			throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException {
 		return ValidatorFactory.getRegistrationValidator().validateInfo(jo);
 	}
 

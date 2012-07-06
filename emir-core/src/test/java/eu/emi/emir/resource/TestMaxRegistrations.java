@@ -5,13 +5,12 @@ package eu.emi.emir.resource;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
@@ -19,6 +18,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 
@@ -28,12 +28,11 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
  */
 public class TestMaxRegistrations extends TestRegistryBase{
 	@Test
-	public void test(){
+	public void test() throws JSONException{
 		JSONArray ja =new JSONArray();
-		Map<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < 110; i++) {
-			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://"+UUID.randomUUID());
-			ja.put(new JSONObject(map));
+			JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes().put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), "http://"+UUID.randomUUID());
+			ja.put(jo);
 		}
 		EMIRClient c = new EMIRClient(BaseURI+"/serviceadmin");
 		

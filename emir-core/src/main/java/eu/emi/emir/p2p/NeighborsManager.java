@@ -522,6 +522,7 @@ public class NeighborsManager {
 	 * @param list of the DB entries
 	 * 
 	 * @return boolean, all elements can be stored without any failure or not.
+	 * @throws Exception 
 	 */
 	private boolean DBStore(JSONArray newDB){
 		ServiceAdminManager serviceAdmin = new ServiceAdminManager();
@@ -554,7 +555,7 @@ public class NeighborsManager {
 				}
 				retval = false;
 			} catch (InvalidServiceDescriptionException e) {	//addService
-				Log.logException("", e);
+				Log.logException("", e,logger);
 				retval = false;
 			} catch (ExistingResourceException e) {
 				if (logger.isDebugEnabled()) {
@@ -562,11 +563,13 @@ public class NeighborsManager {
 				}
 				retval = false;
 			} catch (QueryException e) {	//checkMessageGenerationTime
-				Log.logException("", e);
+				Log.logException("", e,logger);
 				retval = false;
 			} catch (PersistentStoreFailureException e) {	//checkMessageGenerationTime
-				Log.logException("", e);
+				Log.logException("", e,logger);
 				retval = false;
+			} catch (Exception e) {
+				Log.logException("", e,logger);
 			}
 		}
 		return retval;

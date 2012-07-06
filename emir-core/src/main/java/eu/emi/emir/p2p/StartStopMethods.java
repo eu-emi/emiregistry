@@ -81,7 +81,7 @@ public class StartStopMethods {
 	
 	private static void deleteOwnEntry(){
 		try {
-			new MongoDBServiceDatabase().deleteByUrl(myURL);
+			new MongoDBServiceDatabase().deleteByEndpointID(myURL);
 		} catch (Exception e) {
 			Log.logException("Error in the delete procedure ", e);
 		}

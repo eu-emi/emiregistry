@@ -47,7 +47,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 100; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID()+Math.random());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -80,7 +80,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -102,7 +102,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -124,7 +124,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -143,7 +143,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 30; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
@@ -185,7 +185,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 		for (int i = 0; i < 100; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(),
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
 					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),

@@ -52,6 +52,25 @@ public interface ServiceDatabase {
 	public ServiceObject getServiceByUrl(String identifier)
 			throws MultipleResourceException, NonExistingResourceException,
 			PersistentStoreFailureException;
+	
+	/**
+	 * Get an item from the persistent store
+	 * 
+	 * @param identifier
+	 *            unique identifier of an object in the persistent store (url)
+	 * @return the stored content of the specified object
+	 * @throws MultipleResourceException
+	 *             throws exception if the identifier specifies more than one
+	 *             item
+	 * @throws NonExistingResourceException
+	 *             throws exception if the item specified by identifier is not
+	 *             existing in the persistent store
+	 * @throws PersistentStoreFailureException
+	 *             throws exception if persistent store level error occurs
+	 */
+	public ServiceObject getServiceByEndpointID(String identifier)
+			throws MultipleResourceException, NonExistingResourceException,
+			PersistentStoreFailureException;
 
 	/**
 	 * Delete multiple items from the persistent store
@@ -68,7 +87,7 @@ public interface ServiceDatabase {
 	 *             throws exception if persistent store level error occurs TODO:
 	 *             support list of urls
 	 */
-	public void deleteByUrl(String url) throws MultipleResourceException,
+	public void deleteByEndpointID(String url) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException;
 
 	public void deleteAll();

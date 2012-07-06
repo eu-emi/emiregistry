@@ -76,7 +76,7 @@ public class GSRHelper {
 		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
 		try {
 			// delete entry from own database
-			new MongoDBServiceDatabase().deleteByUrl(myURL);
+			new MongoDBServiceDatabase().deleteByEndpointID(myURL);
 		} catch (Exception e) {
 			Log.logException("Error in the delete procedure ", e);
 		}

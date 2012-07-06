@@ -3,7 +3,13 @@
  */
 package eu.emi.emir.validator;
 
+import java.text.ParseException;
+
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import eu.emi.emir.exception.InvalidServiceDescriptionException;
+import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * @author a.memon
@@ -15,12 +21,12 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 	
 	
 	@Override
-	public Boolean validateInfo(JSONObject jo){
+	public Boolean validateInfo(JSONObject jo) throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException{
 		valid = false;
 		this.jo = jo;
 		
 		
-		if (checkUrl() && checkDateTypes() && checkExpiryTime() && checkArrays()) {
+		if (checkMandatoryAttributes() && checkDateTypes() && checkExpiryTime()) {
 			return true;
 		} else {
 			return false;
@@ -30,11 +36,16 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 	/**
 	 * @return
 	 */
-	abstract boolean checkArrays();
+//	abstract boolean checkArrays();
 	/**
 	 * 
 	 */
-	abstract Boolean checkUrl();
-	abstract Boolean checkDateTypes();
-	abstract Boolean checkExpiryTime();
+//	abstract Boolean checkUrl();
+	abstract Boolean checkDateTypes() throws InvalidServiceDescriptionException ;
+	abstract Boolean checkExpiryTime() throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException ;
+	/**
+	 * Check service mandatory attributes (see mandatory attributes <a href="https://twiki.cern.ch/twiki/bin/view/EMI/EMIRSERDesc">EMIR Mandatory Attributes</a>)
+	 * */
+	abstract Boolean checkMandatoryAttributes() throws InvalidServiceDescriptionException;
+	
 }
