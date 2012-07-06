@@ -38,7 +38,6 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
-import eu.emi.emir.security.Role;
 import eu.emi.emir.util.ServiceUtil;
 
 /**
@@ -54,8 +53,6 @@ public class ServiceAdminResource {
 
 	private ServiceAdminManager serviceAdmin;
 	
-	private static Client client;
-
 	@Context
 	HttpServletRequest req;
 
@@ -90,6 +87,7 @@ public class ServiceAdminResource {
 			result = serviceAdmin
 					.findServiceByUrl(extractServiceUrlFromUri(infos));
 		} catch (Exception e) {
+			Log.logException("Error in getting Service by URL", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response
@@ -106,6 +104,7 @@ public class ServiceAdminResource {
 				.getAttributeName();
 		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
 		if (key == "unknown") {
+			Log.logException("Error in getting Service by URL", new IllegalArgumentException("illegal argument"), logger);
 			throw new IllegalArgumentException();
 		}
 		String value = mm
@@ -242,6 +241,7 @@ public class ServiceAdminResource {
 			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
 		}
 		if (errorArray.length() > 0) {
+			logger.warn("Conflict found in service registration");
 			return Response.status(Status.CONFLICT).entity(errorArray).build();
 		}
 		return Response.ok(arr).build();
@@ -405,6 +405,7 @@ public class ServiceAdminResource {
 			}
 			return Response.ok(arr).build();
 		} catch (Exception e) {
+			Log.logException("Error in updating the services", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response
@@ -456,6 +457,9 @@ public class ServiceAdminResource {
 			}
 
 		} catch (IllegalArgumentException e) {
+			Log.logException("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
+					+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName() + " = <SERVICE URL>", e, logger);
 			return Response
 					.status(Status.BAD_REQUEST)
 					.entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
@@ -463,6 +467,7 @@ public class ServiceAdminResource {
 									.getAttributeName() + " = <SERVICE URL>")
 					.build();
 		} catch (Exception e) {
+			Log.logException("Error in deleting the service",e,logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response

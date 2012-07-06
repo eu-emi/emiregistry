@@ -3,7 +3,6 @@
  */
 package eu.emi.emir.resource;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +39,9 @@ public class ModelResource {
 		try {
 			IOUtils.copy(is, writer);
 			jo = new JSONArray(writer.toString()); 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.logException("", e);
-		} catch (JSONException e) {
-			Log.logException("", e);
-		}
+		} 
 	}
 	
 	@Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON})
@@ -90,8 +87,9 @@ public class ModelResource {
 		
 		try {
 			b.append(jo.toString(2));
-		} catch (JSONException e) {			
+		} catch (JSONException e) {
 			Log.logException("", e);
+			throw new WebApplicationException(e,Response.Status.BAD_REQUEST);
 		}
 		b.append("</textarea>");		
 		b.append("</body></html>");

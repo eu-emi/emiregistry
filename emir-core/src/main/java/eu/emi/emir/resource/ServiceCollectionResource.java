@@ -56,6 +56,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.getServiceReferences();
 		} catch (Exception e) {
+			Log.logException("Error in doing query for service urls in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
@@ -77,6 +78,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.getDistinctTypes();
 		} catch (Exception e) {
+			Log.logException("Error in doing query for service types in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
@@ -107,6 +109,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.query(m);
 		} catch (Exception e) {
+			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
@@ -136,6 +139,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.query(queryDocument);
 		} catch (Exception e) {
+			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
@@ -163,6 +167,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.queryGlue2(queryDocument);
 		} catch (Exception e) {
+			Log.logException("Error in doing query for services in XML format", e, logger);
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 
@@ -196,6 +201,7 @@ public class ServiceCollectionResource {
 		try {
 			qr = col.queryGlue2(m);
 		} catch (Exception e) {
+			Log.logException("Error in doing query for services in XML format", e, logger);
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 		if (qr.getCount() == BigInteger.ZERO) {
@@ -224,6 +230,7 @@ public class ServiceCollectionResource {
 		try {
 			qr = col.queryGlue2(m);
 		} catch (Exception e) {
+			Log.logException("Error in doing query for services in XML format", e, logger);
 			throw new WebApplicationException(e);
 		}
 
@@ -252,6 +259,7 @@ public class ServiceCollectionResource {
 		try {
 			jArr = col.pagedQuery(m);
 		} catch (Exception e) {
+			Log.logException("Error in doing paged query", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());

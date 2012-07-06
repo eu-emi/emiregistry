@@ -159,7 +159,9 @@ public class ServiceColManager {
 	}
 	
 	
-
+	/**
+	 * Add pagination to the query interface 
+	 * */
 	public JSONObject pagedQuery(Map<String, Object> m) throws JSONException {
 		Integer pageSize = 0;
 		String ref = null;
