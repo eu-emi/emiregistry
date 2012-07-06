@@ -3,11 +3,10 @@
  */
 package eu.emi.emir.lease;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -21,13 +20,8 @@ import eu.emi.emir.EMIRServer;
 import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.core.ServiceAdminManager;
-import eu.emi.emir.db.ExistingResourceException;
-import eu.emi.emir.db.NonExistingResourceException;
-import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
-import eu.emi.emir.lease.ServiceReaper;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
@@ -36,7 +30,7 @@ import eu.unicore.bugsreporter.annotation.FunctionalTest;
  * @author a.memon
  * 
  */
-public class TestServiceReaper /* extends MongoDBTestBase*/ {
+public class TestServiceReaper extends MongoDBTestBase {
 	private static ServiceAdminManager adminMgr;
 	Properties p;
 
