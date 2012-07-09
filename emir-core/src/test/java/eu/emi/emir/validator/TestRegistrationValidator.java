@@ -7,11 +7,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +26,7 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
+import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * @author a.memon
@@ -65,6 +69,16 @@ public class TestRegistrationValidator {
 		d.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), d);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START.getAttributeName(), new Date());
+		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+	}
+	
+	@Test
+	public void testZeroLengthArray() throws JSONException, InvalidServiceDescriptionException, ConfigurationException, ParseException{
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		System.out.println(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
+		jo.remove(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
+		JSONArray ja = new JSONArray();
+		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(),ja);
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	

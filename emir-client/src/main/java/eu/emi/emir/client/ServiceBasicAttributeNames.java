@@ -127,5 +127,13 @@ public enum ServiceBasicAttributeNames {
 	public boolean isMandatory() {
 		return mandatory;
 	}
+	
+	/* (non-Javadoc)
+			 * @see java.lang.Enum#toString()
+			 */
+			@Override
+	public String toString() {
+		return getAttributeName();
+	}
 
 }

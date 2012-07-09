@@ -224,7 +224,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 	Boolean checkMandatoryAttributes()
 			throws InvalidServiceDescriptionException {
 		StringBuilder sb = new StringBuilder(
-				"Following mandatory Service Endpoint Record attributes are eith 'missing', 'NULL', or 'wrongly defined' assigned: \n");
+				"Following mandatory Service Endpoint Record attributes are either 'missing', 'NULL', or 'wrongly' defined: \n");
 		List<Boolean> list = new ArrayList<Boolean>();
 		for (ServiceBasicAttributeNames s : ServiceBasicAttributeNames.values()) {
 			if (s.isMandatory()) {
@@ -243,6 +243,12 @@ public class RegistrationValidator extends AbstractInfoValidator {
 							if (!(jo.get(s.getAttributeName()) instanceof JSONArray)) {
 								sb.append("* " + s.getAttributeName())
 										.append(" MUST be defined as JSON Array, e.g. [\"value1\",\"value2\"...]");
+								
+								list.add(false);
+							}
+							if (jo.getJSONArray(s.getAttributeName()).length() <= 0) {
+								sb.append("* " + s.getAttributeName())
+								.append(" JSON Array at least contain single element, e.g. [\"value1\",\"value2\"...]");
 								list.add(false);
 							}
 
