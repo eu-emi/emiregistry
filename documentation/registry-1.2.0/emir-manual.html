@@ -1669,7 +1669,7 @@ cellspacing="0" cellpadding="4">
 <td class="icon">
 <div class="title">Important</div>
 </td>
-<td class="content">Do not set <strong>emir.jetty.requireClientAuthn</strong> and <strong>emir.jetty.wantClientAuthn</strong>  in CONF/emir.config file, as they are automatically set by the</td>
+<td class="content">Do not set <strong>emir.jetty.requireClientAuthn</strong> and <strong>emir.jetty.wantClientAuthn</strong>  in CONF/emir.config file, as they are automatically set by the EMIR server on start-up.</td>
 </tr></table>
 </div>
 <div class="tableblock">
@@ -2077,19 +2077,14 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div class="paragraph"><p>The service record JSON template of EMIR interface.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>[
+<pre><tt>[       //Example Service Endpoints Records (belonging to the same service)
         {
                 "Service_ID":"s1",
                 "Service_Name":"ComputingService",
                 "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Type":"job-management",
                 "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
-                "Service_Capability":["capability1","capability2"],
-                "Service_QualityLevel":"production",
-                "Service_Complexity":"complexity",
-                "Service_Validity": 12313,
-                "Service_Extensions":[{"key":"value"},{"key":"value"}],
-                "Service_Endpoint_ID":"se1",
+                "Service_Endpoint_ID":"se1", //this should be unique
                 "Service_Endpoint_URL":"http://1",
                 "Service_Endpoint_Capability":["capability1","capability2"],
                 "Service_Endpoint_Technology":"technology",
@@ -2103,8 +2098,6 @@ defined as <strong>application/xml</strong> instead.</p></div>
                 "Service_Endpoint_HealthStateInfo":"state info",
                 "Service_Endpoint_ServingState":"production",
                 "Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24Z"},
-                "Service_Endpoint_IssuerCA":"issuer-dn",
-                "Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
                 "Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
@@ -2115,22 +2108,17 @@ defined as <strong>application/xml</strong> instead.</p></div>
                 "Service_Location_PostCode":"53119",
                 "Service_Location_Latitude":53.3,
                 "Service_Location_Longitude":4,
-                "Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
+                "Service_ExpireOn":{"$date":"2020-07-21T11:47:24Z"}
 
         },
         {
-                "Service_ID":"s2",
+                "Service_ID":"s1",
                 "Service_Name":"ComputingService",
                 "Service_CreationTime":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Type":"job-management",
                 "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
-                "Service_Capability":["capability1","capability2"],
-                "Service_QualityLevel":"production",
-                "Service_Complexity":"complexity",
-                "Service_Validity": 12313,
-                "Service_Extensions":[{"key":"value"},{"key":"value"}],
-                "Service_Endpoint_ID":"se2",
-                "Service_Endpoint_URL":"http://2",
+                "Service_Endpoint_ID":"se2", //this should be unique
+                "Service_Endpoint_URL":"http://1",
                 "Service_Endpoint_Capability":["capability1","capability2"],
                 "Service_Endpoint_Technology":"technology",
                 "Service_Endpoint_InterfaceName":"interface",
@@ -2143,20 +2131,18 @@ defined as <strong>application/xml</strong> instead.</p></div>
                 "Service_Endpoint_HealthStateInfo":"state info",
                 "Service_Endpoint_ServingState":"production",
                 "Service_Endpoint_StartTime":{"$date":"2011-07-21T11:47:24Z"},
-                "Service_Endpoint_IssuerCA":"issuer-dn",
-                "Service_Endpoint_TrustedCA":["dn1","dn2","dn3"],
                 "Service_Endpoint_DowntimeAnnounce":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Endpoint_DowntimeStart":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Endpoint_DowntimeEnd":{"$date":"2011-07-21T11:47:24Z"},
                 "Service_Endpoint_QualityLevel":"production",
                 "Service_Location_Address":"A Street 1",
-                "Service_Location_Place":"Bonn",
+                "Service_Location_Place":"Berlin",
                 "Service_Location_Country":"Germany",
-                "Service_Location_PostCode":"53119",
-                "Service_Location_Latitude":53.3,
+                "Service_Location_PostCode":"53011",
+                "Service_Location_Latitude":53.5,
                 "Service_Location_Longitude":4,
-                "Service_ExpireOn":{"$date":"2011-07-21T11:47:24Z"}
-        },
+                "Service_ExpireOn":{"$date":"2020-07-21T11:47:24Z"}
+        }
 
 ]</tt></pre>
 </div></div>
@@ -2308,7 +2294,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-09 16:56:25 CEST
+Last updated 2012-07-09 17:53:10 CEST
 </div>
 </div>
 </body>
