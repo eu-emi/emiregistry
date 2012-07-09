@@ -6,7 +6,7 @@ the SUN or OpenJDK Java 6 (JRE or SDK). If not installed
 on the target system, it can be downloaded from http://java.oracle.com[http://java.oracle.com]
 
 * Linux based operating system
-* MongoDB[www.mongodb.org]
+* http://www.mongodb.org[MongoDB]
 
 EMIR is distributed in the following formats:
 

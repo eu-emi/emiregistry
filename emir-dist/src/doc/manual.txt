@@ -15,8 +15,6 @@ hierarchy with a single EMIR server aggregating all the information within a fed
 EMIR servers (using P2P), thus enabling intra-federation discovery.
  
    
-
-
 Features
 --------
 

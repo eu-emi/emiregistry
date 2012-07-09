@@ -1,5 +1,5 @@
-EMIR Client Daemon (EMIRD)
---------------------------
+EMIR Service Endpoint Record Publisher (EMIR-SERP) Client 
+---------------------------------------------------------
 
 About the EMIRD
 ~~~~~~~~~~~~~~~
@@ -10,10 +10,10 @@ or even the containers executing them provide a way to do this but not
 all of them. For those that are unable to register themselves
 automatically and periodically the EMIRD is available.
 
-The EMIRD is a daemon like service that can be executed next to these
+The EMIRD is a daemon like (background) service that can be executed next to these
 services (preferably on the same machine) and able to perform the
-automatical and periodical registration and update against the
-configured EMI Registry service instead of the service itself. This
+automatic and periodical registration and update against the
+configured EMI Registry service on behalf of the service itself. This
 client uses exactly the same, standard RESTful API as the other clients
 do.
 

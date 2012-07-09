@@ -1,10 +1,9 @@
 Configuration
 -------------
 
-The EMIR server comes with a well documented configuration file, containing a 
-number of options to setup registry hierarchy, p2p, security, http server, and database. The configuration 
-file (CONF/emir.config) comes with pre-defined settings to start-up the server in 
-non-production environment, however the administrator needs to review before deploying on the
+The EMIR server comes with a well documented configuration file (CONF/emir.config), containing a 
+number of options to setup registry hierarchy, p2p, security, http server, and database. The settings in the configuration file 
+are pre-defined to start-up the server in a non-production environment, however the administrator needs to review before deploying on the
 production Grid environments.    
 
 General Configuration
@@ -24,26 +23,81 @@ The server configuration options in the CONF/emir.config are:
 |emir.anonymousPort|Unsigned Integer|9127|The anonymous http port number. Setting the property will start an additional 'http' server (without SSL/TLS) only if the above server address is 'https' (with SSL/TLS). It will provide 'anonymous' access to the query interface (i.e. /services REST Web Service).   
 |=========================
 
-Authentication and Trust Configuration 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PKI Trust Settings Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The authentication of the client in EMIR is based on PKI, therefore X.509 standard is used to
-authenticate the client as well as the server. The EMIR client and the server
-should own a X.509 certificate issued by a mutually trusted certificate authority (CA).
+EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI's CaNL (JAVA version). The validation is performed
+when a connection with a remote peer is initiated over the network, using the SSL (or TLS) protocol, i.e. +emir.address+ value has _https_ scheme.
 
-[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
-|===========================================================
-|Property name|Type|Default value|Description
-|registry.ssl.keystore|URI|CONF/certs/demo-server.p12|The location of the server key-store
-|registry.ssl.keytype|string|pkcs12|The type of the key-store 
-|registry.ssl.keypass|URI|emi|The password of the key-store
-|registry.ssl.truststore|URI|CONF/certs/demo-server.jks|The location of the server key store
-|registry.ssl.truststorepass|string|emi|The password of the trust-store 
-|registry.ssl.truststoretype|string|JKS|The type of the trust-store
-|registry.ssl.clientauthentication|true or false|true|If set the server will attempt to authenticate the client
-|=========================
+Certificates validation is primarily configured using a set of initially trusted certificates of so called 
+Certificate Authorities (CAs). Those trusted certificates are also known as _trust anchors_ and their collection
+is called as a _trust store_. 
 
-TODO: Write me
+The validation mechanism except the _trust anchors_ can use additional input for checking if a certificate being checked 
+was not revoked and if its subject is in a permitted namesapce.
+
+EMIR allows for different types of trust stores. All of them are configured using a set of properties.
+
+include::sec-ref-trustProperties.txt[]
+
+Examples
+^^^^^^^^
+
+Directory truststore, with complete set of options:
+
+ emir.security.truststore.type=directory
+ emir.security.truststore.allowProxy=DENY
+ emir.security.truststore.updateInterval=1234
+ emir.security.truststore.directoryLocations=/trust/dir/*.pem http://caserver/ca.pem
+ emir.security.truststore.directoryEncoding=PEM
+ emir.security.truststore.directoryConnectionTimeout=100
+ emir.security.truststore.directoryDiskCachePath=/tmp
+ emir.security.truststore.crlLocations=/trust/dir/*.crl http://caserver/crl.pem
+ emir.security.truststore.crlUpdateInterval=400
+ emir.security.truststore.crlMode=REQUIRE
+ emir.security.truststore.crlConnectionTimeout=200
+ emir.security.truststore.crlDiskCachePath=/tmp
+
+Openssl truststore:
+
+ emir.security.truststore.type=openssl
+ emir.security.truststore.opensslPath=path/to/truststores/openssl
+ emir.security.truststore.opensslNsMode=EUGRIDPMA_GLOBUS_REQUIRE
+ emir.security.truststore.allowProxy=ALLOW
+ emir.security.truststore.updateInterval=1234
+ emir.security.truststore.crlMode=IF_VALID
+
+Java keystore used as a trust store:
+
+ emir.security.truststore.type=keystore
+ emir.security.truststore.keystorePath=path/to/truststores/emir-truststore.jks
+ emir.security.truststore.keystoreFormat=JKS
+ emir.security.truststore.keystorePassword=xxxxxx
+
+
+Configuring the Credentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EMIR uses private key and a corresponding certificate (called together as a _credential_) 
+to identify clients and servers. The credentials can be provided in several formats. The following table list all possible 
+variants and corresponding parameters.
+
+include::sec-ref-credProperties.txt[]
+
+Examples
+^^^^^^^^
+
+Credential as a pair of DER files:
+
+ credential.format=der
+ credential.password=emi
+ credential.path=path/to/credentials/cert-1.der
+ credential.keyPath=path/to/credentials/pk-1.der
+
+Credential as a JKS file (type can be autodetected in almost every case):
+
+ credential.path=path/to/credentials/server1.jks
+ credential.password=xxxxxx
 
 Authorization
 ~~~~~~~~~~~~~
@@ -56,145 +110,200 @@ The EMIR offers two alternative options to authorise its' clients.
 ACL Based Authorization
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-This is the default mechanism in EMIR to access control the _Create_,_Update_, and _Delete_ operations on SER database. The requesting subject's 
-distinguished name (DN) is matched against the pre-defined ACL file (CONF/emir.acl). The file contains a list of DN and role pairs, separated 
-*::* symbol, see the example below:
-
-.Example emir.acl
------------------
-emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
-emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
------------------
+This is the default mechanism to access control the _Create_,_Update_, and _Delete_ operations on EMIR's SER database. The client SERP or child DSR
+registering SERPs with a parent DSR/GSR get authorised while matching it's distinguished name (DN) against the pre-defined ACL file (CONF/emir.acl). 
+Whereas the file contains a list of DN and role pairs, separated by *'::'* symbol, see the example below:
 
 the property in the +CONF/emir.config+ file
 
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|registry.acl.file|URI|CONF/emir.acl|The location of the acl file
+|emir.security.accesscontrol.acl|filesystem path|CONF/emir.acl|The location of the ACL file
 |===========================================================
 
-There are only two pre-defined roles in EMIR that can be selected: the _administrator_ who can 
-change any registration, while the _serviceowner_ is only allowed to change (modify/delete) her
-already created registrations.
+.ACL file contents
+-----------------
+emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
+emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
+-----------------
 
-IMPORTANT: The server should be running on SSL mode to anable the authorization
+The public key certificate or DN should be sent to the DSR administrator for successfull SER registrations. 
+
+_Roles:_ There are only two pre-defined roles within the scope of ACL file: 
+
+	* the +admin+ is a super user who can change any registration, owned by anyone, and
+	* the +serviceowner+ is only allowed to create new or modify his created SERPs.
+
+IMPORTANT: The ACL based authorisation is only activated when the DSR/GSR is running on SSL/TLS mode
 
 
-Fine Grained Authorization with XACML
+Policy Based Authorization with XACML
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using XACML 2.0 is an alternative way to authorize the subjects in a fine grained manner. The administrator should 
-review the policies defined in the +CONF/xacml2Policies/+ folder and change them according to the infrastructure
+Using XACML 2.0 is an alternative way to authorize clients (User, EMIR-SERP, DSR, or GSR) in a fine grained manner. The administrator should 
+review the policies defined in the +CONF/xacml2Policies/+ folder and change them according to her infrastructure
 needs. However the already defined policies provides a good starting point to the administrators to define/modify the
-policies. In order to enable the given authorization following property must be set
+policies. 
 
-.Settings of the Attribute Sources
+IMPORTANT: the XACML policy based authorization will be ignored, if the ACL based authorisation is activated
+
+In order to enable the XACML based authorization: attribute sources and policies must be configured.
+
+Setting Attribute Sources
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+EMIR only supports file based attribute sources; the client DNs can be included in the attributes file.
+
+.File Attribute Source Settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|registry.security.attributes.order|string|FILE|This property is a space separated list of attribute source names, which are then configured in detail below. The named attribute sources are queried in the given order.
-|registry.security.attributes.FILE.class|string|eu.unicore.uas.security.file.FileAttributeSource|configuration of the 'FILE' attribute source
-|registry.security.attributes.FILE.file|URI|CONF/users/testUd.strict.xml|The path to the file containing subjects' DNs
+|emir.security.attributes.order|string|FILE|This property is a space separated list of attribute source names, which are then configured in detail below. The named attribute sources are queried in the given order.
+|emir.security.attributes.FILE.class|string|eu.emi.emir.aip.FileAttributeSource|configuration of the 'FILE' attribute source
+|emir.security.attributes.FILE.matching|[strict, regexp]|-|Specifies the matching or client DNs
+|emir.security.attributes.FILE.file|filesystem path|CONF/users/testUd-strict.xml or CONF/users/testUd-regexp.xml|The path to the file containing subjects' DNs. The file suffixed with +strict+ use strict checking of DNs, whereas the file suffixed with +regexp+ contain entries using regualr expressions
 |===========================================================
 
-.Access Control Settings
+
+Setting XACML Policies
+^^^^^^^^^^^^^^^^^^^^^^
+
+.Policy settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|registry.security.accesscontrol|true or false|true|Enable/disable authorisation. Server should running on https with valid client and server certificates, see 'Authentication' properties above.
-|registry.security.accesscontrol.pdp.config|URI|CONF/xacml2.config|The path to XACML2 configuration, containing the rules of executing the policies
-|registry.security.accesscontrol.pdp|string|eu.unicore.uas.pdp.local.LocalHerasafPDP|The name of the pdp class to endorse, for the xacml2 policies execution
+|emir.security.accesscontrol.pdpConfig|filesystem path|CONF/xacml2.config|The path to the XACML2 configuration, containing the rules of executing the policies
+|emir.security.accesscontrol.pdp|string|eu.unicore.uas.pdp.local.LocalHerasafPDP|The name of the pdp class to endorse, for the xacml2 policies execution
 |===========================================================
 
 
+The +CONF/xacml2.config+ file contains raw xacml polices, enable EMIR (DSR or GSR) administrators to write their own rules.
+
+MongoDB Database Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The EMIR uses MongoDB to store and index the SER collections. It must be configured and running before deploying any EMIR (DSR or GSR) server.
+
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+4+^e|Connection Settings
+|mongodb.hostName|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
+|mongodb.port|Integer|27017|The port number
+4+^e|Database Settings
+|mongodb.dbName|string|emiregistry|The name of the database to store the SERP records
+|mongodb.colName|string|services|The name of the collection (of the database) in which the records will be stored 
+4+^e|Login Settings
+|mongodb.userName|string|-|The username to access the MongoDB database 
+|mongodb.password|string|-|The password to access the MongoDB database 
+|========================= 
+
+For high loads, especially at the GSR level, it is recommended to setup MongoDB http://www.mongodb.org/display/DOCS/Replication[replication] for enhanced scalability and performance.
 
 
-Topology
-~~~~~~~~
+Building EMIR Network
+~~~~~~~~~~~~~~~~~~~~~
 
 EMIR allows building a network of registries participating in a Grid infrastructure or federation. The network can be of type hierarchical 
-or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are aggregated at the root level - the Global Service Registry (GSR). All the
-registries residing below the GSR, are intermediate EMIR registry servers participating in building an hierarchy - called Domain Service registries (DSR). 
-Each DSR has only one parent, either DSR or GSR to which it pushes its' SER collections. The P2P network is a loosely coupled DHT, which can be configured 
-only at the GSR (or top) level. Multiple GSRs can replicate their information among each other by referring a pre-configured +Global list+. The global
-list contains a listing of URLs of all the GSRs, each of which must be able to access the URLs. 
+or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are propagated from leaf DSR node to the top level root node, called GSR.
+Each DSR has only one parent, either DSR or GSR to which it pushes it's SER collections. At the root level the P2P network of GSR is formed to replicate
+the SER collections among multiple GSRs by referring a pre-configured +Global list+. The global list contains a listing of URLs of all the GSRs, each of which should be able to access the URLs. 
       
+How to Setup DSR?
+^^^^^^^^^^^^^^^^^
 
+In order to build hierarchy of DSRs must be able to propagate the SER collections to any *single* parent DSR or a GSR.
+
+.Parent DSR Settings
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+4+^e|EMIR's DSR settings
+|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR DSR server to which it propagates its SER collection
+|=========================
+
+IMPORTANT: Add DN of child DSR into the parent DSRs CONF/emir.acl or CONF/users/testUd-(strict | regsexp).xml
+
+How to Setup GSR?
+^^^^^^^^^^^^^^^^^
+
+The root level GSR has two primary functions:
+
+	* aggregation of children DSR SER collections
+	* replicating the SER collections among other GSRs (visible of _Global List_)
+
+.GSR Settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
 4+^e|EMIR's DSR settings
 |emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR server to which it propagates its information
 4+^e|General GSR Settings
-|emir.global.enable|boolean|false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries (GSRs), the 'emir.parentAddress' property will be ignored (if enabled), as the root registry does not contain any parent.
+|emir.global.enable|boolean|false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries (GSRs), the 'emir.parentAddress' property will be ignored (if enabled), as the root registry should not contain any parent.
 |emir.global.sparsity|Unsigned Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
 |emir.global.retry|Unsigned Integer|5|It specifies a number of attempts if communication to another GSR is failed.
 |emir.global.etValid|Unsigned Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keeps them).
 |emir.global.softStateDelay|Integer|2|Extend the expiration time with this time delay in hours.
 |emir.global.etRemove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
 4+^e|Global List Settings
-|emir.global.providerList|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
+|emir.global.providerList|URL or filesystem path|-|Link to the document listing GSR URLs. The URL(s) is/are important for building the GSR's P2P network at the global level.
 |=========================
 
-How to Add DSR in a EMIR Network?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IMPORTANT: Add DN of child DSR into the GSRs CONF/emir.acl or CONF/users/testUd-(strict | regsexp).xml
 
-TODO: Write Me!
 
-How to Add GSR in a EMIR Network?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Service Endpoint Record (SER) Management
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO: Write Me!
+Setting Service Endpoint Records (SER) Lifetime
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+In EMIR, every SER has associated lifetime or (Time-To-Live) TTL. The settings can be defined in DSR or GSR to restrict the maximum assignable lifetime and assign default lifetime if missing from the registration.
+
+.SER TTL Settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-4+^e|DSR settings
-|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR server to which it propagates its information
-4+^e|Service Record Filter Settings
-|registry.filters.input|string|CONF/inputfilters|This property scans the incoming registration requests and filter out the matched Service records, defined in the input filters file
-|registry.filters.output|string|CONF/outputfilters|Restrict the amount of service records sent to the parent registry node would be defined in the output filters file
-|registry.filters.request|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while receiving the request.
-|registry.filters.response|Fully qualified java class names separated by a space|none|Invoke the class's +run()+ method while sending the response.
-4+^e|EMIR Topology Settings
-|registry.global.enable|boolean|true or false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries while ignoring the 'registry.parent.url' property. This implies the current instance will not have parent.
-|registry.global.providerlist|URI|-|List of URLs for the list of InfoProviders. This URL(s) is/are important for the connection into the global network.
-|registry.global.sparsity|Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.
-|registry.global.retry|Integer|5|It specifies a number of attempts if communication to another GSR is failed.
-|registry.global.etvalid|Integer|12|Specifies period in hours for checking the entries in the soft state database and strip the expired entries (but still keep them).
-|registry.global.softstate.delay|Integer|2|Extend the expiration time with this time delay in hours.
-|registry.global.etremove|Integer|24|Specifies period in hours for checking the entries in the soft state database and remove the expired entries.
-|registry.parent.url|URI|-|The URI of the parent registry node where the state of this suppose to be aggregated.
-4+^e|Service record management
-|registry.expiry.url|Integer (in days)|365|Maximum assignable lifetime for the service end-point records containing the Service_ExpireOn property, defined in days, minimum value: 1.
-|registry.expiry.default|Integer|1|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
-|=========================
+|emir.record.expiryMaximum|Unsigned Integer (in days)|-|Maximum assignable lifetime for the SERs containing the Service_ExpireOn property, defined in days, minimum value: 1.
+|emir.record.expiryDefault|Unsigned Integer|-|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
+|===========================================================
 
+Filtering Service Endpoint Records (SER)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+EMIR offers a way to block 
 
-MongoDB Database Configuration
-~~~~~~~~~~~~~~~~~~~~~~
+	* SERs from being registered via DSR or EMIR-SERP
+	* SERs from being propagated to it's parent DSR or GSR
 
-The EMIR uses MongoDB to store and index the SER collections. The necessary settings can be found in CONF/emir.config.
-
+.SER Filter Settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|mongodb.hostname|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
-|mongodb.port|Integer|27017|The port number
-|mongodb.dbname|string|emiregistry|The name of the database to store the entries
-|mongodb.colname|string|services|The name of the collection in which the records will be stored 
-|========================= 
+|emir.record.blockList.incoming|filesystem path|CONF/inputfilters|The file containing list of SER IDs, matching services will be blocked from registration to it's index
+|emir.record.blockList.outgoing|filesystem path|CONF/outputfilters|The file containing list of SER IDs, matching services will be blocked from propagation to it's parent DSR
+|===========================================================
+
 
 Logging Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The EMIR server provides log facilities to record all but some of the server activities. In order to 
+The EMIR server uses http://logging.apache.org/log4j/1.2/index.html[log4j] to provide log facilities to record all but some of the server activities. In order to 
 change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.
 
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|logger.conf.path|URI|CONF/log4j.properties|The log4j configuration
+|log4j.configuration|filesystem path|STARTUP_SCRIPT|The log4j configuration
 |=========================
+
+
+Advanced HTTP Server Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EMIR uses Eclipse's Jetty server to host REST Web services. Following table lists the important properties.
+
+IMPORTANT: Do not set *emir.jetty.requireClientAuthn* and *emir.jetty.wantClientAuthn*  in CONF/emir.config file, as they are automatically set by the 
+
+include::sec-ref-jettyProperties.txt[]
