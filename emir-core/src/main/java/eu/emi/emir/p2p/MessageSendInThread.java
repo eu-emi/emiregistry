@@ -100,7 +100,9 @@ public class MessageSendInThread extends Thread {
 		if (method.equals(EventTypes.SERVICE_DELETE)){
 			String deleteEndpointID;
 			try {
-				deleteEndpointID = message.getJSONObject(0).getString("Service_Endpoint_ID");
+				deleteEndpointID = message.getJSONObject(0)
+							.getString(ServiceBasicAttributeNames.
+											SERVICE_ENDPOINT_ID.getAttributeName());
 				String updateSince = ((JSONObject)message.getJSONObject(0)
 							.get("updateSince")).getString("$date");
 				res = client.queryParam(
