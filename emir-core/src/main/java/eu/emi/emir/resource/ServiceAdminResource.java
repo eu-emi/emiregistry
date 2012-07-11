@@ -346,13 +346,13 @@ public class ServiceAdminResource {
 			for (int i = 0; i < serviceInfos.length(); i++) {
 				JSONObject serviceInfo = serviceInfos.getJSONObject(i);				
 				String owner = c.getDistinguishedName();
-				String url = serviceInfo
-						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				String sendpointID = serviceInfo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName());
 				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 						.getAttributeName(), c.getDistinguishedName());
 				if (logger.isDebugEnabled()) {
-					logger.debug("updating service by url: " + url
+					logger.debug("updating service by ID: " + sendpointID
 							+ ", Owned by: " + owner);
 				}
 				
@@ -364,7 +364,7 @@ public class ServiceAdminResource {
 									.getAttributeName())).getString("$date");
 				}
 				if (c.getRole().getName().equalsIgnoreCase("admin")
-						&& serviceAdmin.checkMessageGenerationTime(messageTime, url)) {
+						&& serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID)) {
 					// let the admin update any service
 					JSONObject res;
 					try {
@@ -382,9 +382,9 @@ public class ServiceAdminResource {
 								.checkOwner(
 										owner,
 										serviceInfo
-												.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+												.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 														.getAttributeName()))
-								&& serviceAdmin.checkMessageGenerationTime(messageTime, url)) {
+								&& serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID)) {
 					JSONObject res;
 					try {
 						res = serviceAdmin.updateService(serviceInfo);
@@ -398,17 +398,17 @@ public class ServiceAdminResource {
 					// return Response.ok(res).build();
 				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Service with url: "
+						logger.debug("Service with endpointID: "
 								+ serviceInfo
-										.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+										.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 												.getAttributeName())
 								+ " does not exist or the update message is too old.");
 					}
 					return Response
 							.status(Status.UNAUTHORIZED)
 							.entity("Access denied for DN - " + owner
-									+ " to update service with the URL - "
-									+ url).build();
+									+ " to update service with the endpointID - "
+									+ sendpointID).build();
 				}
 			}
 			if (arr.length() > 0){
