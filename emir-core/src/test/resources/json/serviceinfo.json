@@ -9,7 +9,7 @@
 	"Service_Complexity":"complexity",
 	"Service_Validity": 12313,
 	"Service_Extensions":[{"key1":"value1"},{"key2":"value2"}],
-    "Service_Endpoint_ID":"endpoint id value",
+    "Service_Endpoint_ID":"endpoint_id_value",
     "Service_Endpoint_URL":"http://1",
     "Service_Endpoint_Capability":["capability1","capability2"],
 	"Service_Endpoint_Technology":"technology",

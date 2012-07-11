@@ -68,21 +68,22 @@ public class TestSimpleDSR {
 	private static JSONObject jo = null;
 	private static JSONObject jo2 = null;
 	private String child = "http://chirld.url";
+	private static boolean gsr = false;
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 		jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		jo2 = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo2.json")));
 
 		//Delete all elements
-		String url = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		String seID = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName());
-		String url2 = jo2.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		String seID2 = jo2.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName());
 		try{
-			getChildClient("/serviceadmin?Service_Endpoint_URL=" + url).delete();	
-			System.out.println("clean up: " + url);
-			getChildClient("/serviceadmin?Service_Endpoint_URL=" + url2).delete();	
-			System.out.println("clean up: " + url2);
+			getChildClient("/serviceadmin?Service_Endpoint_ID=" + seID).delete();	
+			System.out.println("clean up: " + seID);
+			getChildClient("/serviceadmin?Service_Endpoint_ID=" + seID2).delete();	
+			System.out.println("clean up: " + seID2);
 		} catch (UniformInterfaceException e){
 			System.out.println("DB clean");
 		} catch (ClientHandlerException e){
@@ -172,7 +173,9 @@ public class TestSimpleDSR {
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 
 		String jo = res.getEntity(String.class);
-		
+		if ( jo.equals("Not supported method by the global DSR.") ) {
+			gsr = true;
+		}
 		System.out.println("	"+jo);
 		System.out.println("	"+"OK");
 	}
@@ -210,7 +213,9 @@ public class TestSimpleDSR {
 		//System.out.println("registering: " + jos.toString());
 		ClientResponse res = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(ClientResponse.class, jos);
-		assertTrue(res.getStatus() == Status.OK.getStatusCode());
+		System.out.println("registering: " + res.toString());
+		assertTrue((res.getStatus() == Status.OK.getStatusCode()) || 
+				(gsr && res.getStatus() == Status.CONFLICT.getStatusCode()));
 
 		JSONArray rjo = res.getEntity(JSONArray.class);
 		System.out.println("	"+rjo.toString());
@@ -261,9 +266,9 @@ public class TestSimpleDSR {
 	@Test
 	public void testServiceadminDELETE() throws JSONException, IOException, InterruptedException{
 		System.out.println("/serviceadmin DELETE test");
-		String url = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		String seID = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName());
-		getChildClient("/serviceadmin?Service_Endpoint_URL=" + url).delete();	
+		getChildClient("/serviceadmin?Service_Endpoint_ID=" + seID).delete();	
 		System.out.println("	"+"OK");
 
 		System.out.println("registration again the entry for the next resource");
@@ -272,6 +277,10 @@ public class TestSimpleDSR {
 
 		ClientResponse res = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(ClientResponse.class, jos);
+		if (res.getStatus() == 500) {
+			res = getChildClient("/serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE)
+					.put(ClientResponse.class, jos);
+		}
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
 	
 	}
@@ -422,8 +431,10 @@ public class TestSimpleDSR {
 	}
 	
 	protected static WebResource getChildClient(String path) {
-		Properties p = new Properties();
-		// keystore setting
+		EMIRClient c = new EMIRClient(serverUrl + path);
+		if (serverUrl.substring(0, 5).equals("https")) {
+			Properties p = new Properties();
+			// keystore setting
 				p.setProperty(ClientSecurityProperties.PREFIX
 						+ CredentialProperties.DEFAULT_PREFIX
 						+ CredentialProperties.PROP_PASSWORD, "emi");
@@ -455,10 +466,10 @@ public class TestSimpleDSR {
 						+ TruststoreProperties.DEFAULT_PREFIX, ClientSecurityProperties.PREFIX
 						+ CredentialProperties.DEFAULT_PREFIX);
 				
-				ClientSecurityProperties csp = new ClientSecurityProperties(p, authn); 
-		
-		
-		EMIRClient c = new EMIRClient(serverUrl + path, csp);		
+				ClientSecurityProperties csp = new ClientSecurityProperties(p, authn);
+				
+				c = new EMIRClient(serverUrl + path, csp);
+		}		
 		
 		return c.getClientResource();
 	}
