@@ -132,71 +132,10 @@ public class EMIRClient {
 
 	}
 
-//	private void _initSec() {
-//		ClientConfig config = new DefaultClientConfig();
-//
-//		SSLContext ctx;
-//		try {
-//			ctx = SSLContext.getInstance("SSL");
-//
-//			// setting keystore
-//			KeyStore ks = KeyStore.getInstance(sProps.getKeystoreType());
-//			FileInputStream fis = new FileInputStream(new File(
-//					sProps.getKeystore()));
-//			ks.load(fis, sProps.getKeystorePassword().toCharArray());
-//			fis.close();
-//
-//			KeyManagerFactory kmf = KeyManagerFactory
-//					.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-//			kmf.init(ks, sProps.getKeystorePassword().toCharArray());
-//
-//			// setting truststore
-//			KeyStore ts = KeyStore.getInstance(sProps.getTruststoreType());
-//			FileInputStream fis1 = new FileInputStream(new File(
-//					sProps.getTruststore()));
-//			ts.load(fis1, sProps.getTruststorePassword().toCharArray());
-//			fis1.close();
-//			TrustManagerFactory tmf = TrustManagerFactory
-//					.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-//			tmf.init(ts);
-//
-//			SecureRandom se = new SecureRandom();
-//			ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), se);
-//
-//			HostnameVerifier hv = new HostnameVerifier() {
-//
-//				public boolean verify(String arg0, SSLSession arg1) {
-//					return true;
-//				}
-//			};
-//
-//			config.getProperties().put(
-//					HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
-//					new HTTPSProperties(hv, ctx));
-//
-//			cr = Client.create(config);
-//		} catch (NoSuchAlgorithmException e) {
-//			Log.logException("", e);
-//		} catch (KeyStoreException e) {
-//			Log.logException("", e);
-//		} catch (FileNotFoundException e) {
-//			Log.logException("", e);
-//		} catch (KeyManagementException e) {
-//			Log.logException("", e);
-//		} catch (CertificateException e) {
-//			Log.logException("", e);
-//		} catch (IOException e) {
-//			Log.logException("", e);
-//		} catch (UnrecoverableKeyException e) {
-//			Log.logException("", e);
-//		}
-//
-//	}
-
 	public WebResource getClientResource() {
 		return cr.resource(url);
 	}
-
+	
 	public Client getClient() {
 		return cr;
 	}
