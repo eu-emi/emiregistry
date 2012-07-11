@@ -173,7 +173,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				logger.debug("inserting: " + item.toDBObject());
 			}
 			database.requestStart();
-			
+			database.requestEnsureConnection();
 			DBObject db = item.toDBObject();
 			// db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 			// .getAttributeName(), new Date());
@@ -211,6 +211,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), new Date());
 			database.requestStart();
+			database.requestEnsureConnection();
 			serviceCollection.insert(db, WriteConcern.SAFE);
 			database.requestDone();
 			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
@@ -600,7 +601,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			logger.debug("delete by query: " + db.toString());
 		}
 		database.requestStart();
-		
+		database.requestEnsureConnection();
 		serviceCollection.remove(db);
 		
 		database.requestDone();

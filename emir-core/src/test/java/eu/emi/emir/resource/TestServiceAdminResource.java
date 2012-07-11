@@ -20,6 +20,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ServiceDatabase;
@@ -34,21 +35,6 @@ import static org.junit.Assert.*;
  * 
  */
 public class TestServiceAdminResource extends TestRegistryBase {
-
-	private static JSONArray getDummyServiceDesc() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"jms");
-
-		JSONObject jo = new JSONObject(map);
-		
-		JSONArray arr = new JSONArray();
-		arr.put(jo);
-		
-		return arr;
-	}
 
 	@SuppressWarnings("unused")
 	private static JSONObject getOutdatedServiceDesc() {
@@ -76,69 +62,48 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 		ClientResponse res = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(ClientResponse.class, getDummyServiceDesc());
+				.post(ClientResponse.class, TestValueConstants.getJSONArrayWithMandatoryAttributes());
 		JSONArray resArr = res.getEntity(JSONArray.class);
 		assertNotNull(resArr);
 
-		JSONObject jo = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://1").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertEquals("http://1",
-				jo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/services");
+		
+		JSONArray jo = cr1.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), "1").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+		assertEquals("1",
+				jo.getJSONObject(0).get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName()));
 		
 		System.out.println(jo);
 		
 		//adding second service
-		JSONArray j = getDummyServiceDesc();
-		JSONObject j1 = new JSONObject();
-		
-		j1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2");
-		
+		JSONArray j = new JSONArray();
+		JSONObject j1 = TestValueConstants.getJSONWithMandatoryAttributes();
+		j1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), "2");
 		j.put(j1);
 		System.out.println(j);
 		ClientResponse cRes = cr.getClientResource()
 		.accept(MediaType.APPLICATION_JSON_TYPE)
 		.post(ClientResponse.class, j);
+		
+		
 		if (cRes.getStatus() == Status.OK.getStatusCode()) {
 			JSONArray resJo = cRes.getEntity(JSONArray.class);
 			System.out.println("insert response: "+resJo);
-			assertTrue(resJo.getJSONObject(0).getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()).equalsIgnoreCase("http://2"));
+			assertTrue(resJo.getJSONObject(0).getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()).equalsIgnoreCase("2"));
 			
 			
-			JSONObject res1 = cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://2").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-			assertEquals("http://2",
-					res1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+			JSONArray res1 = cr1.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), "2").accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+			assertEquals("2",
+					res1.getJSONObject(0).get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName()));
 			System.out.println(res1);	
 		} else {
-			assertTrue(Status.fromStatusCode(cRes.getStatus()).compareTo(Status.CONFLICT) == 0);
+			
+			if(Status.fromStatusCode(cRes.getStatus()).compareTo(Status.CONFLICT) == 0)
+				fail();
 		}
 		
 
-	}
-
-	private static JSONArray getUpdatedServiceDesc() {
-		
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"sms");
-
-		map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
-				"http://1");
-		JSONObject date = new JSONObject();
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, 12);
-		try {
-			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		JSONObject jo = new JSONObject(map);
-		JSONArray jArr = new JSONArray();
-		jArr.put(jo);
-		return jArr;
 	}
 
 	@Test
@@ -148,20 +113,14 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(getDummyServiceDesc()
+				.post(TestValueConstants.getJSONArrayWithMandatoryAttributes()
 						);
 		
 
 		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"sms");
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-		//removing the expiry time
-		JSONObject j = getUpdatedServiceDesc().getJSONObject(0);
+		JSONObject j = TestValueConstants.getJSONWithMandatoryAttributes();
+		j.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), "sms");
 		JSONArray ja = new JSONArray();
-		j.remove(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName());
 		ja.put(j);
 		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
 				.put(ja);
@@ -169,7 +128,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		System.out.println("being updated json document: "+j.toString(2));
 		
 		EMIRClient cr2 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1");
+				+ "/serviceadmin?Service_Endpoint_ID=1");
 		JSONObject jo1 = cr2.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
 		System.out.println(jo1);
@@ -191,13 +150,13 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(getDummyServiceDesc());
+				.post(TestValueConstants.getJSONArrayWithMandatoryAttributes());
 		EMIRClient cr = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1");
-		cr.getClientResource().delete();
+				+ "/serviceadmin");
+		cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString(), "1").delete();
 
 		EMIRClient cr2 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1");
+				+ "/serviceadmin?Service_Endpoint_ID=1");
 		try {
 			cr2.getClientResource().get(javax.ws.rs.core.Response.class);
 		} catch (UniformInterfaceException e) {

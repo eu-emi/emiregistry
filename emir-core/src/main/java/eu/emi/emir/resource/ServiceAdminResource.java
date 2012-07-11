@@ -79,15 +79,18 @@ public class ServiceAdminResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public JSONObject getServicebyUrl(@Context UriInfo infos)
+	public JSONObject getServicebyID(@Context UriInfo infos)
 			throws WebApplicationException, JSONException {
-		logger.debug("getting service by url");
 		final JSONObject result;
 		try {
+			String id = extractServiceEndpointIDFromUri(infos);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Finding Service by Endpoint ID: "+id);	
+			}
 			result = serviceAdmin
-					.findServiceByUrl(extractServiceUrlFromUri(infos));
+					.findServiceByEndpointID(extractServiceEndpointIDFromUri(infos));			
 		} catch (Exception e) {
-			Log.logException("Error in getting Service by URL", e, logger);
+			Log.logException("Error in finding SER by Endpoint ID", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response
@@ -95,22 +98,6 @@ public class ServiceAdminResource {
 		}
 
 		return result;
-	}
-
-	private String extractServiceUrlFromUri(UriInfo infos)
-			throws IllegalArgumentException {
-		MultivaluedMap<String, String> mm = infos.getQueryParameters();
-		String attrName = ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName();
-		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
-		if (key == "unknown") {
-			Log.logException("Error in getting Service by URL", new IllegalArgumentException("illegal argument"), logger);
-			throw new IllegalArgumentException();
-		}
-		String value = mm
-				.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-						.getAttributeName());
-		return value;
 	}
 	
 	private String extractServiceEndpointIDFromUri(UriInfo infos)
@@ -197,8 +184,11 @@ public class ServiceAdminResource {
 					throw new WebApplicationException(Status.FORBIDDEN);
 				}
 				// Get the Endpoint URL and a time of the message from the entry
-				String serviceurl = serviceInfo
-						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+//				String serviceurl = serviceInfo
+//						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+//								.getAttributeName());
+				String serviceID = serviceInfo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName());
 				String messageTime = "";
 				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
@@ -225,12 +215,12 @@ public class ServiceAdminResource {
 										.getDistinguishedName());
 
 					}
-					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceID)){
 						res = serviceAdmin.addService(serviceInfo);
 					}
 
 				} else {
-					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceID)){
 						// add if the owner is missing
 						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 								.getAttributeName(), c.getDistinguishedName());
@@ -247,6 +237,7 @@ public class ServiceAdminResource {
 			} catch (Exception e) {
 				JSONObject jErr = new JSONObject();
 				jErr.put("error", e.getCause());
+				Log.logException("Error in registering the information", e, logger);
 				throw new WebApplicationException(Response
 						.status(Status.INTERNAL_SERVER_ERROR).entity(jErr)
 						.build());

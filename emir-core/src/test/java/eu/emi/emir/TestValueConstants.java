@@ -30,4 +30,10 @@ public class TestValueConstants {
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER.getAttributeName(), "1");
 		return jo;
 	}
+	
+	public static JSONArray getJSONArrayWithMandatoryAttributes() throws JSONException{
+		JSONArray ja = new JSONArray();
+		ja.put(getJSONWithMandatoryAttributes());
+		return ja;
+	}
 }

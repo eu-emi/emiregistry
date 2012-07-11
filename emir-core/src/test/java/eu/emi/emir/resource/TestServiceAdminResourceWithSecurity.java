@@ -3,15 +3,15 @@
  */
 package eu.emi.emir.resource;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
@@ -25,9 +25,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
 import eu.emi.emir.TestRegistryBaseWithSecurity;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.util.ServiceUtil;
 
 /**
  * @author a.memon
@@ -35,41 +35,21 @@ import eu.emi.emir.util.ServiceUtil;
  */
 public class TestServiceAdminResourceWithSecurity extends
 		TestRegistryBaseWithSecurity {
-	private static JSONArray getDummyServiceDesc() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-				.getAttributeName(), "http://1");
-		map.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-				"jms");
-
-		JSONObject date = new JSONObject();
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, 12);
-		try {
-			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		JSONObject jo = new JSONObject(map);
-		JSONArray jArr = new JSONArray();
-		jArr.put(jo);
-		return jArr;
-	}
-
 	@Test	
 	public void testRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
 		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin",getSecurityProperties_2());
 		
-		
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		JSONArray ja = new JSONArray();
+		ja.put(jo);
 		
 		cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(getDummyServiceDesc());
+				.post(ja);
 		EMIRClient cr1 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				+ "/serviceadmin?Service_Endpoint_ID=1",
 				getSecurityProperties_2());
 		JSONObject jo1 = cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
@@ -83,13 +63,15 @@ public class TestServiceAdminResourceWithSecurity extends
 	public void testUnAuthzRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		JSONArray jo = getDummyServiceDesc();
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		JSONArray ja = new JSONArray();
+		ja.put(jo);
 		EMIRClient cr = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_URL=http://1",
 				getSecurityProperties_2());
 		try {
 			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(ClientResponse.class,jo).getStatus());
+					.post(ClientResponse.class,ja).getStatus());
 		} catch (UniformInterfaceException e) {
 			e.printStackTrace();
 			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
