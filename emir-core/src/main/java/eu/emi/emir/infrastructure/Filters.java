@@ -133,8 +133,8 @@ public class Filters {
 	            		found = true;
 	            		if (logger.isDebugEnabled()) {
 	            			logger.debug("Positive "+ ((path.equals(inputFilterPath)) ? "input" : "output") + " filter matching!  "
-	            					+ "Service_Endpoint_URL: " + serviceInfos.getJSONObject(i).
-	            					    getString("Service_Endpoint_URL")+ ", Name of attribute: "
+	            					+ "Service_Endpoint_ID: " + serviceInfos.getJSONObject(i).
+	            					    getString("Service_Endpoint_ID")+ ", Name of attribute: "
 	            					    + (String)m.getKey() + ", Value: "
 	            					    + serviceInfos.getJSONObject(i).getString((String)m.getKey()));
 	            		}

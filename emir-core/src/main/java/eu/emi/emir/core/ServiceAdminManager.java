@@ -119,8 +119,8 @@ public class ServiceAdminManager {
 		}catch (ExistingResourceException e) {
 			if (EMIRServer.getServerProperties().isGlobalEnabled()) {
 				try {
-					if (serviceDB.getServiceByUrl(jo.getString(
-							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName()))
+					if (serviceDB.getServiceByEndpointID(jo.getString(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()))
 									.getServiceOwner() == null ){
 						/* 
 						 * The stored entry was removed and it contains very base

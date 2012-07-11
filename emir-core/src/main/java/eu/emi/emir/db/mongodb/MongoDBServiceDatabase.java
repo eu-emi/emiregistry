@@ -331,7 +331,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
-			logger.info("updated Service Endpoint Record with ID: " + sObj.getUrl());
+			logger.info("updated Service Endpoint Record with ID: " + sObj.getEndpointID());
 			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
