@@ -657,10 +657,7 @@ It consists of a collection of services that enables storing service records in 
 complying with the OGF&#8217;s GLUE 2.0 standard. The deployment of EMIR (which implies building an EMIR network over WAN) is bipartite: 1) Building a rooted
 hierarchy with a single EMIR server aggregating all the information within a federation 2) Sharing the information at the root level among peered
 EMIR servers (using P2P), thus enabling intra-federation discovery.</p></div>
-</div>
-<h2 id="_features">2. Features</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>The EMIR provides following features:</p></div>
+<div class="paragraph"><p>Feature Highlights:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -702,7 +699,7 @@ Policy based authorisation
 </ul></div>
 <div class="paragraph"><p>For more information about EMIR, visit EMI&#8217;s TWiki[<a href="https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry">https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry</a>].</p></div>
 </div>
-<h2 id="_installation">3. Installation</h2>
+<h2 id="_installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>In order to install EMIR, it is required to install
 the SUN or OpenJDK Java 6 (JRE or SDK). If not installed
@@ -765,7 +762,7 @@ LOG=INST/logs/</tt></pre>
 </td>
 </tr></table>
 </div>
-<h3 id="_installation_using_the_rpm_bundle_redhat_distributions">3.1. Installation using the RPM bundle (RedHat Distributions)</h3><div style="clear:left"></div>
+<h3 id="_installation_using_the_rpm_bundle_redhat_distributions">2.1. Installation using the RPM bundle (RedHat Distributions)</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Download EMIR Server&#8217;s RPM distribution from the EMI&#8217;s <a href="http://emisoft.web.cern.ch/emisoft/">emisoft</a> and install it
 using the rpm or yum command.</p></div>
 <div class="listingblock">
@@ -773,15 +770,15 @@ using the rpm or yum command.</p></div>
 <div class="content">
 <pre><tt>yum install -y emi-emir</tt></pre>
 </div></div>
-<h3 id="_installation_using_the_debian_bundle_centos_debian_distributions">3.2. Installation using the Debian bundle (Centos/Debian Distributions)</h3><div style="clear:left"></div>
+<h3 id="_installation_using_the_debian_bundle_centos_debian_distributions">2.2. Installation using the Debian bundle (Centos/Debian Distributions)</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Download EMIR DEB distribution from the EMI&#8217;s <a href="http://emisoft.web.cern.ch/emisoft/">emisoft</a> and install it
 using the apt-get command.</p></div>
-<h3 id="_database_installation">3.3. Database Installation</h3><div style="clear:left"></div>
+<h3 id="_database_installation">2.3. Database Installation</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR server uses MongoDB database as a backbone to store and indexe SER collections. The database dependency
 will automatically be fetched from the <strong>emisoft</strong> repository, while installing the EMIR Server. Otherwise it
 should be installed and configured before installing the EMIR. The installation and configuration
 instructions to setup the MongoDB database can be found on MongoDB&#8217;s <a href="http://www.mongodb.org/display/DOCS/Quickstart">Web site</a>.</p></div>
-<h3 id="_installation_from_the_self_contained_archive_tar_gz">3.4. Installation from the self-contained archive (tar.gz)</h3><div style="clear:left"></div>
+<h3 id="_installation_from_the_self_contained_archive_tar_gz">2.4. Installation from the self-contained archive (tar.gz)</h3><div style="clear:left"></div>
 <div class="paragraph"><p>In order to generate, build and install the self contained binary it is required to follow the
 steps written below:</p></div>
 <div class="olist arabic"><div class="title">Creating the Bundle</div><ol class="arabic">
@@ -805,13 +802,13 @@ run <strong>mvn assembly:assembly -DskipTests</strong>
 that contains all the necessary files for installation thus no special actions will be required except
 extraction to the target folder.</p></div>
 </div>
-<h2 id="_configuration">4. Configuration</h2>
+<h2 id="_configuration">3. Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The EMIR server comes with a well documented configuration file (CONF/emir.config), containing a
 number of options to setup registry hierarchy, p2p, security, http server, and database. The settings in the configuration file
 are pre-defined to start-up the server in a non-production environment, however the administrator needs to review before deploying on the
 production Grid environments.</p></div>
-<h3 id="_general_configuration">4.1. General Configuration</h3><div style="clear:left"></div>
+<h3 id="_general_configuration">3.1. General Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The server configuration options in the CONF/emir.config are:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -862,7 +859,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h3 id="_pki_trust_settings_configuration">4.2. PKI Trust Settings Configuration</h3><div style="clear:left"></div>
+<h3 id="_pki_trust_settings_configuration">3.2. PKI Trust Settings Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI&#8217;s <a href="https://twiki.cern.ch/twiki/bin/view/EMI/EMIcaNl">caNL</a> (JAVA version). The validation is performed
 when a connection with a remote peer is initiated over the network, using the SSL (or TLS) protocol, i.e. <tt>emir.address</tt> value has <em>https</em> scheme.</p></div>
 <div class="paragraph"><p>Certificates validation is primarily configured using a set of initially trusted certificates of so called
@@ -871,22 +868,22 @@ is called as a <em>truststore</em>.</p></div>
 <div class="paragraph"><p>The validation mechanism except the <em>trust anchors</em> can use additional input for checking if a certificate being checked
 was not revoked and if its subject is in a permitted namesapce.</p></div>
 <div class="paragraph"><p>EMIR allows different types of truststores. All of them are configured using a set of specific properties in <em>CONF/emir.config</em> file.</p></div>
-<h4 id="_openssl_truststore">4.2.1. OpenSSL Truststore</h4>
+<h4 id="_openssl_truststore">3.2.1. OpenSSL Truststore</h4>
 <div class="paragraph"><p>It allows using a directory with CA certificates stored in PEM format, with precisely
 defined names: Certificate Authorities (CA), Certificate Revocation List (CRL), signing policy and namespaces files are named as
 &lt;hash&gt;.0, &lt;hash&gt;.r0, &lt;hash&gt;.signing_policy and &lt;hash&gt;.namespaces respectively. Hash is the old hash of the trusted CA certificate
 subject name - in OpenSSL version newer than 1.0.0 use -suject_hash_old switch to generate it. If multiple certificates
 have the same hash then the default zero number must be incremented. It is suggested when a common truststore with EMI (and Globus)
 middlewares is needed.</p></div>
-<h4 id="_directory_truststore">4.2.2. Directory Truststore</h4>
+<h4 id="_directory_truststore">3.2.2. Directory Truststore</h4>
 <div class="paragraph"><p>It allows to use a list of wildcard expressions, concrete paths of files, or URLs to remote files as a set of trusted
 CAs and CRLs. The truststore is configured as a directory containing all the trusted certificates (or with a
 specified extension). The directory with stored IGTF trust anchors can be set as a EMIR truststore for instance.</p></div>
-<h4 id="_java_keystore_jks_truststore">4.2.3. Java Keystore (JKS) Truststore</h4>
+<h4 id="_java_keystore_jks_truststore">3.2.3. Java Keystore (JKS) Truststore</h4>
 <div class="paragraph"><p>A single repository (or a binary file) of X.509 public key certificates with (optionally) accompanying private key certificates.
 The Java JDK already bundles <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html">keytool</a> utility - a certificate manage utility
 to create JKS truststores.</p></div>
-<h4 id="_pkcs_12_truststore">4.2.4. PKCS#12 Truststore</h4>
+<h4 id="_pkcs_12_truststore">3.2.4. PKCS#12 Truststore</h4>
 <div class="paragraph"><p>Similar to JKS trustore, single binary file can be used to store X.509 public with (optionally) accompanying private key certificates. The <strong>OpenSSL pkcs12</strong>
 command can be used to parse, read, and create these files; the extension for PKCS#12 files is ".p12".</p></div>
 <div class="tableblock">
@@ -1066,7 +1063,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h4 id="_examples">4.2.5. Examples</h4>
+<h4 id="_examples">3.2.5. Examples</h4>
 <div class="paragraph"><p>Directory truststore, with a minimal set of options:</p></div>
 <div class="literalblock">
 <div class="content">
@@ -1108,7 +1105,7 @@ emir.security.truststore.keystorePath=path/to/truststores/emir-truststore.jks
 emir.security.truststore.keystoreFormat=JKS
 emir.security.truststore.keystorePassword=xxxxxx</tt></pre>
 </div></div>
-<h3 id="_configuring_the_credentials">4.3. Configuring the Credentials</h3><div style="clear:left"></div>
+<h3 id="_configuring_the_credentials">3.3. Configuring the Credentials</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR uses private key and a corresponding certificate (called together as a <em>credential</em>)
 to identify clients and servers. The credentials can be provided in several formats. The following table list all possible
 variants and corresponding parameters.</p></div>
@@ -1169,7 +1166,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h4 id="_examples_2">4.3.1. Examples</h4>
+<h4 id="_examples_2">3.3.1. Examples</h4>
 <div class="paragraph"><p>Credential as a pair of DER files:</p></div>
 <div class="literalblock">
 <div class="content">
@@ -1184,7 +1181,7 @@ credential.keyPath=path/to/credentials/pk-1.der</tt></pre>
 <pre><tt>credential.path=path/to/credentials/server1.jks
 credential.password=xxxxxx</tt></pre>
 </div></div>
-<h3 id="_authorization">4.4. Authorization</h3><div style="clear:left"></div>
+<h3 id="_acl_based_authorization">3.4. ACL Based Authorization</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The EMIR offers two alternative options to authorise its' clients.</p></div>
 <div class="ulist"><ul>
 <li>
@@ -1198,7 +1195,6 @@ XACML Policy based authorization
 </p>
 </li>
 </ul></div>
-<h4 id="_acl_based_authorization">4.4.1. ACL Based Authorization</h4>
 <div class="paragraph"><p>This is the default mechanism to access control the <em>Create</em>,<em>Update</em>, and <em>Delete</em> operations on EMIR&#8217;s SER database. The client SERP or child DSR
 registering SERPs with a parent DSR/GSR get authorised while matching it&#8217;s distinguished name (DN) against the pre-defined ACL file (CONF/emir.acl).
 Whereas the file contains a list of DN and role pairs, separated by <strong><em>::</em></strong> symbol, see the example below:</p></div>
@@ -1231,7 +1227,7 @@ cellspacing="0" cellpadding="4">
 </table>
 </div>
 <div class="listingblock">
-<div class="title">ACL file contents</div>
+<div class="title">Example ACL file contents</div>
 <div class="content">
 <pre><tt>emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
 emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin</tt></pre>
@@ -1258,7 +1254,7 @@ the <tt>serviceowner</tt> is only allowed to create new or modify his created SE
 <td class="content">The ACL based authorisation is only activated when the DSR/GSR is running on SSL/TLS mode</td>
 </tr></table>
 </div>
-<h3 id="_policy_based_authorization_with_xacml">4.5. Policy Based Authorization with XACML</h3><div style="clear:left"></div>
+<h3 id="_policy_based_authorization_with_xacml">3.5. Policy Based Authorization with XACML</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Using XACML 2.0 is an alternative way to authorize clients (User, EMIR-SERP, DSR, or GSR) in a fine grained manner. The administrator should
 review the policies defined in the <tt>CONF/xacml2Policies/</tt> folder and change them according to her infrastructure
 needs. However the already defined policies provides a good starting point to the administrators to define/modify the
@@ -1272,7 +1268,7 @@ policies.</p></div>
 </tr></table>
 </div>
 <div class="paragraph"><p>In order to enable the XACML based authorization: attribute sources and policies must be configured.</p></div>
-<h4 id="_setting_attribute_sources">4.5.1. Setting Attribute Sources</h4>
+<h4 id="_setting_attribute_sources">3.5.1. Setting Attribute Sources</h4>
 <div class="paragraph"><p>EMIR only supports file based attribute sources; the client DNs can be included in the attributes file.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -1320,7 +1316,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h4 id="_setting_xacml_policies">4.5.2. Setting XACML Policies</h4>
+<h4 id="_setting_xacml_policies">3.5.2. Setting XACML Policies</h4>
 <div class="tableblock">
 <table rules="all"
 width="100%"
@@ -1356,7 +1352,7 @@ cellspacing="0" cellpadding="4">
 </table>
 </div>
 <div class="paragraph"><p>The <tt>CONF/xacml2.config</tt> file contains raw xacml polices, enable EMIR (DSR or GSR) administrators to write their own rules.</p></div>
-<h3 id="_mongodb_database_configuration">4.6. MongoDB Database Configuration</h3><div style="clear:left"></div>
+<h3 id="_mongodb_database_configuration">3.6. MongoDB Database Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The EMIR uses MongoDB to store and index the SER collections. It must be configured and running before deploying any EMIR (DSR or GSR) server.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -1425,12 +1421,12 @@ cellspacing="0" cellpadding="4">
 </table>
 </div>
 <div class="paragraph"><p>For high loads, especially at the GSR level, it is recommended to setup MongoDB <a href="http://www.mongodb.org/display/DOCS/Replication">replication</a> for enhanced scalability and performance.</p></div>
-<h3 id="_building_emir_network">4.7. Building EMIR Network</h3><div style="clear:left"></div>
+<h3 id="_building_emir_network">3.7. Building EMIR Network</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR allows building a network of registries participating in a Grid infrastructure or federation. The network can be of type hierarchical
 or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are propagated from leaf DSR node to the top level root node, called GSR.
 Each DSR has only one parent, either DSR or GSR to which it pushes it&#8217;s SER collections. At the root level the P2P network of GSR is formed to replicate
 the SER collections among multiple GSRs by referring a pre-configured <tt>Global list</tt>. The global list contains a listing of URLs of all the GSRs, each of which should be able to access the URLs.</p></div>
-<h4 id="_how_to_setup_dsr">4.7.1. How to Setup DSR?</h4>
+<h4 id="_how_to_setup_dsr">3.7.1. How to Setup DSR?</h4>
 <div class="paragraph"><p>In order to build hierarchy of DSRs must be able to propagate the SER collections to any <strong>single</strong> parent DSR or a GSR.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -1471,7 +1467,7 @@ cellspacing="0" cellpadding="4">
 <td class="content">Add DN of child DSR into the parent DSRs CONF/emir.acl or CONF/users/testUd-(strict | regsexp).xml</td>
 </tr></table>
 </div>
-<h4 id="_how_to_setup_gsr">4.7.2. How to Setup GSR?</h4>
+<h4 id="_how_to_setup_gsr">3.7.2. How to Setup GSR?</h4>
 <div class="paragraph"><p>The root level GSR has two primary functions:</p></div>
 <div class="ulist"><ul>
 <li>
@@ -1572,8 +1568,8 @@ cellspacing="0" cellpadding="4">
 <td class="content">Add DN of child DSR into the GSRs CONF/emir.acl or CONF/users/testUd-(strict | regsexp).xml</td>
 </tr></table>
 </div>
-<h3 id="_service_endpoint_record_ser_management">4.8. Service Endpoint Record (SER) Management</h3><div style="clear:left"></div>
-<h4 id="_setting_service_endpoint_records_ser_lifetime">4.8.1. Setting Service Endpoint Records (SER) Lifetime</h4>
+<h3 id="_service_endpoint_record_ser_management">3.8. Service Endpoint Record (SER) Management</h3><div style="clear:left"></div>
+<h4 id="_setting_service_endpoint_records_ser_lifetime">3.8.1. Setting Service Endpoint Records (SER) Lifetime</h4>
 <div class="paragraph"><p>In EMIR, every SER has associated lifetime or (Time-To-Live) TTL. The settings can be defined in DSR or GSR to restrict the maximum assignable lifetime and assign default lifetime if missing from the registration.</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -1609,7 +1605,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h4 id="_filtering_service_endpoint_records_ser">4.8.2. Filtering Service Endpoint Records (SER)</h4>
+<h4 id="_filtering_service_endpoint_records_ser">3.8.2. Filtering Service Endpoint Records (SER)</h4>
 <div class="paragraph"><p>EMIR offers a way to block</p></div>
 <div class="ulist"><ul>
 <li>
@@ -1657,7 +1653,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h3 id="_logging_configuration">4.9. Logging Configuration</h3><div style="clear:left"></div>
+<h3 id="_logging_configuration">3.9. Logging Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The EMIR server uses <a href="http://logging.apache.org/log4j/1.2/index.html">log4j</a> to provide log facilities to record all but some of the server activities. In order to
 change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.</p></div>
 <div class="tableblock">
@@ -1687,7 +1683,7 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h3 id="_advanced_http_server_settings">4.10. Advanced HTTP Server Settings</h3><div style="clear:left"></div>
+<h3 id="_advanced_http_server_settings">3.10. Advanced HTTP Server Settings</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR uses Eclipse&#8217;s Jetty server to host REST Web services. Following table lists the important properties.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -1797,9 +1793,9 @@ cellspacing="0" cellpadding="4">
 </table>
 </div>
 </div>
-<h2 id="_emir_service_endpoint_record_publisher_emir_serp_client">5. EMIR Service Endpoint Record Publisher (EMIR-SERP) Client</h2>
+<h2 id="_emir_service_endpoint_record_publisher_emir_serp_client">4. EMIR Service Endpoint Record Publisher (EMIR-SERP) Client</h2>
 <div class="sectionbody">
-<h3 id="_about_the_emird">5.1. About the EMIRD</h3><div style="clear:left"></div>
+<h3 id="_about_the_emird">4.1. About the EMIRD</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The UMD services need to be registered into the EMI Registry service
 infrastructure to be discoverable for the clients. Most of the services
 or even the containers executing them provide a way to do this but not
@@ -1825,13 +1821,13 @@ mandatory element is the Service_Endpoint_URL.</p></div>
 <div class="paragraph"><p>The advanced entries can contains any kind of key value pairs that are
 accepted by the EMI Regisrty services and can be configured in the form
 of whole, formatted <strong>json</strong> documents.</p></div>
-<h3 id="_installation_2">5.2. Installation</h3><div style="clear:left"></div>
+<h3 id="_installation_2">4.2. Installation</h3><div style="clear:left"></div>
 <div class="paragraph"><p><a id="anchor-emird-installation"></a></p></div>
 <div class="paragraph"><p>The installation of the EMIRD client is trivial. The only thing to do is
 to install the <tt>emir-daemon</tt> package from the EMI repository by
 executing:</p></div>
 <div class="paragraph"><p><tt>yum instlal emir-daemon</tt></p></div>
-<h3 id="_configuration_2">5.3. Configuration</h3><div style="clear:left"></div>
+<h3 id="_configuration_2">4.3. Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p><a id="anchor-emird-config"></a></p></div>
 <div class="paragraph"><p>The configuration of EMIRD can be performed by editing its configuration
 file or files. The configuration can be found basically in one file
@@ -1847,7 +1843,7 @@ the daemon scoped options while the others are to describe the different
 service entries to be registered. In these cases the exact name is
 indifferent, they just have to differ from eachother and must avoid the
 <tt>emir</tt> name as well.</p></div>
-<h4 id="_configuration_options">5.3.1. Configuration options</h4>
+<h4 id="_configuration_options">4.3.1. Configuration options</h4>
 <div class="paragraph"><p>Note: The option names are case-insensitives.</p></div>
 <h5 id="_url">url</h5>
 <div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
@@ -1947,19 +1943,19 @@ recommended place for these files is under the <tt>/etc/emi/emird/</tt>
 directory and naming them after the name of the given service with
 <tt>.json</tt> extension.</p></div>
 </div>
-<h2 id="_rest_api">6. REST API</h2>
+<h2 id="_how_to_use_emir_api">5. How to use EMIR API</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The EMI Registry allows Services to register/publish their capabilities
 while the Service Consumers are able to find the deployed services.</p></div>
 <div class="paragraph"><p>This section contains the description of the REST-ful interface, that allows the
 management of the service information (or entries) by exposing the individual
 URIs. The normative description of the API cab also be defined as Web Application Description Language (WADL) document <a href="#appendixii">WADL</a>.</p></div>
-<h3 id="_register_new_services">6.1. Register new Services</h3><div style="clear:left"></div>
+<h3 id="_register_new_services">5.1. Register new Services</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : POST</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
 <div class="paragraph"><p><tt>Security Implications</tt> : Requires authenticated "and" authorized user access to perform this operation</p></div>
-<h4 id="_request">6.1.1. Request</h4>
+<h4 id="_request">5.1.1. Request</h4>
 <div class="paragraph"><p>The message body contain a JSON Array containing the JSON objects (see below), each of which
 would be a service entry in the EMI registry.</p></div>
 <div class="paragraph"><p>Service description is defined as a <a href="#appendixi">[appendixi]</a> document.</p></div>
@@ -1971,27 +1967,27 @@ would be a service entry in the EMI registry.</p></div>
 <td class="content">The only mandatory attribute is <strong>Service_Endpoint_URL</strong>, which should be unique</td>
 </tr></table>
 </div>
-<h4 id="_response">6.1.2. Response</h4>
+<h4 id="_response">5.1.2. Response</h4>
 <div class="paragraph"><p>The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_updating_the_service_information">6.2. Updating the Service information</h3><div style="clear:left"></div>
+<h3 id="_updating_the_service_information">5.2. Updating the Service information</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : PUT</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
 <div class="paragraph"><p><tt>Security Implications</tt> : Requires an authenticated "and" authorized user access to perform this operation</p></div>
-<h4 id="_request_2">6.2.1. Request</h4>
+<h4 id="_request_2">5.2.1. Request</h4>
 <div class="paragraph"><p>The request body contain a similar JSON array object as defined POST method that contains the
 description of the Services to be updated. The Service Entries
 identified by the <em>Service_Endpoint_URL</em> key in the individual JSON
 objects will be updated respectively.</p></div>
-<h4 id="_response_2">6.2.2. Response</h4>
+<h4 id="_response_2">5.2.2. Response</h4>
 <div class="paragraph"><p>The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_delete_existing_services">6.3. Delete existing Services</h3><div style="clear:left"></div>
+<h3 id="_delete_existing_services">5.3. Delete existing Services</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : DELETE</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
 <div class="paragraph"><p><tt>Security Implications</tt> : Requires an authenticated "and" authorized user access to perform this operation</p></div>
-<h4 id="_request_3">6.3.1. Request</h4>
+<h4 id="_request_3">5.3.1. Request</h4>
 <div class="paragraph"><p>The Service Entry matching the Endpoint ID will be deleted from the
 registry only if the client executing the action has authorised access and the
 method is allowed by the security plugins.</p></div>
@@ -2000,13 +1996,13 @@ method is allowed by the security plugins.</p></div>
 <div class="sidebar-content">
 <div class="paragraph"><p><strong>Example</strong> : /serviceadmin?Service_Endpoint_ID=urn:endpoint:emi1</p></div>
 </div></div>
-<h4 id="_response_3">6.3.2. Response</h4>
+<h4 id="_response_3">5.3.2. Response</h4>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_querying_the_emir">6.4. Querying the EMIR</h3><div style="clear:left"></div>
+<h3 id="_querying_the_emir">5.4. Querying the EMIR</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /services</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
-<h4 id="_request_4">6.4.1. Request</h4>
+<h4 id="_request_4">5.4.1. Request</h4>
 <div class="paragraph"><p>The request contains the key-value pairs separated by ampersand <tt>&amp;</tt></p></div>
 <div class="paragraph"><p><tt>Query Parameters</tt> : AttributeName=&lt;Attribute_Value&gt;&amp;AttributeName=&lt;Attribute_Value&gt;&amp;&#8230;</p></div>
 <div class="sidebarblock">
@@ -2038,22 +2034,22 @@ method is allowed by the security plugins.</p></div>
 <div class="paragraph"><p><em>limit</em> defines the maximum number of result containing the service entries</p></div>
 <div class="paragraph"><p>The response contains an array of service entries packed in a JSON array object</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_rich_querying_in_emir">6.5. Rich Querying in EMIR</h3><div style="clear:left"></div>
+<h3 id="_rich_querying_in_emir">5.5. Rich Querying in EMIR</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /services</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
-<h4 id="_request_5">6.5.1. Request</h4>
+<h4 id="_request_5">5.5.1. Request</h4>
 <div class="paragraph"><p>The request contains the JSON document including with support for defining advanced clauses, the
 <a href="http://www.mongodb.org/display/DOCS/Advanced+Queries">http://www.mongodb.org/display/DOCS/Advanced+Queries</a>, MongoDB Advanced Queries[MongoDB JSON Query Language] describes the various types of queries</p></div>
 <div class="paragraph"><p>Additional keys (skip, limit) can also be added to paginate the returning results.</p></div>
-<h4 id="_response_4">6.5.2. Response</h4>
+<h4 id="_response_4">5.5.2. Response</h4>
 <div class="paragraph"><p>The response contains the array of service entries packed in a JSON array object</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_querying_the_emir_for_glue_2_0_xml_documents">6.6. Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
+<h3 id="_querying_the_emir_for_glue_2_0_xml_documents">5.6. Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /services</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/xml</p></div>
-<h4 id="_request_6">6.6.1. Request</h4>
+<h4 id="_request_6">5.6.1. Request</h4>
 <div class="paragraph"><p>The request contains the key-value pairs separated by ampersand <tt>&amp;</tt></p></div>
 <div class="paragraph"><p><tt>Query Parameters</tt> : AttributeName=&lt;Attribute_Value&gt;&amp;AttributeName=&lt;Attribute_Value&gt;&amp;&#8230;</p></div>
 <div class="sidebarblock">
@@ -2072,32 +2068,32 @@ method is allowed by the security plugins.</p></div>
 <pre><tt>limit=Integer value</tt></pre>
 </div></div>
 <div class="paragraph"><p><em>limit</em> defines the maximum number of result containing the service entries</p></div>
-<h4 id="_response_5">6.6.2. Response</h4>
+<h4 id="_response_5">5.6.2. Response</h4>
 <div class="paragraph"><p>The response contains an XML document containing service entries in GLUE 2.0 format</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_rich_querying_the_emir_for_glue_2_0_xml_documents">6.7. Rich Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
+<h3 id="_rich_querying_the_emir_for_glue_2_0_xml_documents">5.7. Rich Querying the EMIR for GLUE 2.0 XML Documents</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The request and response interface is same as defined above, however the content type must be
 defined as <strong>application/xml</strong> instead.</p></div>
-<h3 id="_viewing_the_service_information_template">6.8. Viewing the Service information template</h3><div style="clear:left"></div>
+<h3 id="_viewing_the_service_information_template">5.8. Viewing the Service information template</h3><div style="clear:left"></div>
 <div class="paragraph"><p>This To view the GLUE 2.0&#8217;s JSON flavored service model.</p></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /model</p></div>
 <div class="paragraph"><p><tt>Content Type</tt> : application/json</p></div>
-<h4 id="_request_7">6.8.1. Request</h4>
+<h4 id="_request_7">5.8.1. Request</h4>
 <div class="paragraph"><p>N/A</p></div>
-<h4 id="_response_6">6.8.2. Response</h4>
+<h4 id="_response_6">5.8.2. Response</h4>
 <div class="paragraph"><p>JSON document, as described in the <tt>/serviceadmin</tt> POST method</p></div>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
-<h3 id="_monitoring_the_registry">6.9. Monitoring the Registry</h3><div style="clear:left"></div>
+<h3 id="_monitoring_the_registry">5.9. Monitoring the Registry</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Allows registry users to view the registry status</p></div>
 <div class="paragraph"><p><tt>HTTP Method</tt> : GET</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /ping</p></div>
-<h4 id="_request_8">6.9.1. Request</h4>
+<h4 id="_request_8">5.9.1. Request</h4>
 <div class="paragraph"><p>N/A</p></div>
-<h4 id="_response_7">6.9.2. Response</h4>
+<h4 id="_response_7">5.9.2. Response</h4>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
 </div>
-<h2 id="appendixi">7. Appendix I</h2>
+<h2 id="appendixi">6. Appendix I</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The service record JSON template of EMIR interface.</p></div>
 <div class="listingblock">
@@ -2172,7 +2168,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 ]</tt></pre>
 </div></div>
 </div>
-<h2 id="appendixii">8. Appendix II</h2>
+<h2 id="appendixii">7. Appendix II</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The EMIR WADL document to define the REST-ful API</p></div>
 <div class="listingblock">
@@ -2319,7 +2315,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-11 13:59:15 CEST
+Last updated 2012-07-11 23:44:25 CEST
 </div>
 </div>
 </body>
