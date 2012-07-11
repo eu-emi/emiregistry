@@ -642,7 +642,7 @@ footnotes: function () {
 <h1>EMI Registry Manual</h1>
 <span id="author">EMIR Product Team</span><br />
 <span id="revnumber">version 1.2.0,</span>
-<span id="revdate">09 07 2012</span>
+<span id="revdate">11 07 2012</span>
 <br /><span id="revremark">component version: 1.2.0</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -863,14 +863,32 @@ cellspacing="0" cellpadding="4">
 </table>
 </div>
 <h3 id="_pki_trust_settings_configuration">4.2. PKI Trust Settings Configuration</h3><div style="clear:left"></div>
-<div class="paragraph"><p>EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI&#8217;s CaNL (JAVA version). The validation is performed
+<div class="paragraph"><p>EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI&#8217;s <a href="https://twiki.cern.ch/twiki/bin/view/EMI/EMIcaNl">caNL</a> (JAVA version). The validation is performed
 when a connection with a remote peer is initiated over the network, using the SSL (or TLS) protocol, i.e. <tt>emir.address</tt> value has <em>https</em> scheme.</p></div>
 <div class="paragraph"><p>Certificates validation is primarily configured using a set of initially trusted certificates of so called
 Certificate Authorities (CAs). Those trusted certificates are also known as <em>trust anchors</em> and their collection
-is called as a <em>trust store</em>.</p></div>
+is called as a <em>truststore</em>.</p></div>
 <div class="paragraph"><p>The validation mechanism except the <em>trust anchors</em> can use additional input for checking if a certificate being checked
 was not revoked and if its subject is in a permitted namesapce.</p></div>
-<div class="paragraph"><p>EMIR allows for different types of trust stores. All of them are configured using a set of properties.</p></div>
+<div class="paragraph"><p>EMIR allows different types of truststores. All of them are configured using a set of specific properties in <em>CONF/emir.config</em> file.</p></div>
+<h4 id="_openssl_truststore">4.2.1. OpenSSL Truststore</h4>
+<div class="paragraph"><p>It allows using a directory with CA certificates stored in PEM format, with precisely
+defined names: Certificate Authorities (CA), Certificate Revocation List (CRL), signing policy and namespaces files are named as
+&lt;hash&gt;.0, &lt;hash&gt;.r0, &lt;hash&gt;.signing_policy and &lt;hash&gt;.namespaces respectively. Hash is the old hash of the trusted CA certificate
+subject name - in OpenSSL version newer than 1.0.0 use -suject_hash_old switch to generate it. If multiple certificates
+have the same hash then the default zero number must be incremented. It is suggested when a common truststore with EMI (and Globus)
+middlewares is needed.</p></div>
+<h4 id="_directory_truststore">4.2.2. Directory Truststore</h4>
+<div class="paragraph"><p>It allows to use a list of wildcard expressions, concrete paths of files, or URLs to remote files as a set of trusted
+CAs and CRLs. The truststore is configured as a directory containing all the trusted certificates (or with a
+specified extension). The directory with stored IGTF trust anchors can be set as a EMIR truststore for instance.</p></div>
+<h4 id="_java_keystore_jks_truststore">4.2.3. Java Keystore (JKS) Truststore</h4>
+<div class="paragraph"><p>A single repository (or a binary file) of X.509 public key certificates with (optionally) accompanying private key certificates.
+The Java JDK already bundles <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html">keytool</a> utility - a certificate manage utility
+to create JKS truststores.</p></div>
+<h4 id="_pkcs_12_truststore">4.2.4. PKCS#12 Truststore</h4>
+<div class="paragraph"><p>Similar to JKS trustore, single binary file can be used to store X.509 public with (optionally) accompanying private key certificates. The <strong>OpenSSL pkcs12</strong>
+command can be used to parse, read, and create these files; the extension for PKCS#12 files is ".p12".</p></div>
 <div class="tableblock">
 <table rules="all"
 width="100%"
@@ -1048,7 +1066,14 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<h4 id="_examples">4.2.1. Examples</h4>
+<h4 id="_examples">4.2.5. Examples</h4>
+<div class="paragraph"><p>Directory truststore, with a minimal set of options:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>truststore.type=directory
+truststore.directoryLocations=/trust/dir/*.pem
+truststore.crlLocations=/trust/dir/*.crl</tt></pre>
+</div></div>
 <div class="paragraph"><p>Directory truststore, with complete set of options:</p></div>
 <div class="literalblock">
 <div class="content">
@@ -1075,7 +1100,7 @@ emir.security.truststore.allowProxy=ALLOW
 emir.security.truststore.updateInterval=1234
 emir.security.truststore.crlMode=IF_VALID</tt></pre>
 </div></div>
-<div class="paragraph"><p>Java keystore used as a trust store:</p></div>
+<div class="paragraph"><p>Java keystore used as a truststore:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>emir.security.truststore.type=keystore
@@ -1967,13 +1992,13 @@ objects will be updated respectively.</p></div>
 <div class="paragraph"><p><tt>URI</tt> : /serviceadmin</p></div>
 <div class="paragraph"><p><tt>Security Implications</tt> : Requires an authenticated "and" authorized user access to perform this operation</p></div>
 <h4 id="_request_3">6.3.1. Request</h4>
-<div class="paragraph"><p>The Service Entry matching the Endpoint URL will be deleted from the
-database only if the client executing the action has authorized access and the
+<div class="paragraph"><p>The Service Entry matching the Endpoint ID will be deleted from the
+registry only if the client executing the action has authorised access and the
 method is allowed by the security plugins.</p></div>
-<div class="paragraph"><p><tt>Query Parameters</tt> : Service_Endpoint_URL= <em>&lt;service unique URL&gt;</em></p></div>
+<div class="paragraph"><p><tt>Query Parameters</tt> : Service_Endpoint_ID= <em>&lt;Service unique Endpoint ID&gt;</em></p></div>
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="paragraph"><p><strong>Example</strong> : /serviceadmin?Service_Endpoint_URL=http://1</p></div>
+<div class="paragraph"><p><strong>Example</strong> : /serviceadmin?Service_Endpoint_ID=urn:endpoint:emi1</p></div>
 </div></div>
 <h4 id="_response_3">6.3.2. Response</h4>
 <div class="paragraph"><p><tt>Status Code</tt> : OK / 200</p></div>
@@ -2294,7 +2319,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-09 17:53:10 CEST
+Last updated 2012-07-11 13:59:15 CEST
 </div>
 </div>
 </body>
