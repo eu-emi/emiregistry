@@ -1,4 +1,5 @@
 {
+	"Service_ID":"service id value4",
 	"Service_Name":"ComputingService",
     "Service_CreationTime":{"$date":"2011-07-21T11:47:24.111Z"},
     "Service_Contact": [{"ContactType":"sysadmin", "Detail":"http://contactlink"},{"ContactType":"developer", "Detail":"http://contactlink"}],
@@ -7,7 +8,8 @@
 	"Service_QualityLevel":"production",
 	"Service_Complexity":"complexity",
 	"Service_Validity": 12313,
-	"Service_Extensions":[{"key":"value"},{"key":"value"}],
+	"Service_Extensions":[{"key1":"value"},{"key2":"value"}],
+	"Service_Endpoint_ID":"endpoint_id_value4",
     "Service_Endpoint_URL":"http://4",
     "Service_Endpoint_Capability":["capability1","capability2"],
 	"Service_Endpoint_Technology":"technology",
