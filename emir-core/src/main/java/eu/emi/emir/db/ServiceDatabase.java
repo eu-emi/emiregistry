@@ -57,7 +57,7 @@ public interface ServiceDatabase {
 	 * Get an item from the persistent store
 	 * 
 	 * @param identifier
-	 *            unique identifier of an object in the persistent store (url)
+	 *            unique identifier of an object in the persistent store ( enpointID )
 	 * @return the stored content of the specified object
 	 * @throws MultipleResourceException
 	 *             throws exception if the identifier specifies more than one
