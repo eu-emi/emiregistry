@@ -12,9 +12,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.infrastructure.ChildrenManager;
 import eu.emi.emir.infrastructure.EmptyIdentifierFailureException;
 import eu.emi.emir.infrastructure.NullPointerFailureException;
@@ -26,10 +28,10 @@ import eu.emi.emir.infrastructure.NullPointerFailureException;
  */
 @Path("/children")
 public class ChildrenResource {
-
+	private static final Logger logger = Log.getLogger(Log.EMIR_HTTPSERVER, ChildrenResource.class);
 	@POST
 	public Response checkin(@Context UriInfo infos){
-		System.out.println("checkin !!");
+		logger.debug("checkin !!");
 		try {
 			if ( ChildrenManager.getInstance().addChildDSR(extractServiceUrlFromUri(infos)) ) {
 				return Response.ok().entity(new String("First registration")).build();
@@ -46,7 +48,7 @@ public class ChildrenResource {
 	
 	@GET
 	public Response childDSRs(){
-		System.out.println("checkout !!");
+		logger.debug("checkout !!");
 		List<String> resp;
 		try {
 			resp = ChildrenManager.getInstance().getChildDSRs();
@@ -56,7 +58,7 @@ public class ChildrenResource {
 		}
 		JSONArray respArray = new JSONArray();
 		for (int i=0; i< resp.size(); i++){
-			System.out.println(i +". value: " + resp.get(i));
+			logger.debug(i +". value: " + resp.get(i));
 			respArray.put(resp.get(i));
 		}
 		return Response.ok().entity(respArray).build();
