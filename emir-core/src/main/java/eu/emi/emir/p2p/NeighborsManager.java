@@ -531,10 +531,10 @@ public class NeighborsManager {
 			JSONObject jo = null;
 			try {
 				jo = new JSONObject(newDB.getString(i));
-				String serviceurl = jo
-						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+				String sendpointID = jo
+						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName());
-				if (serviceurl.equals(myURL)) {
+				if (sendpointID.equals(myURL)) {
 					continue;
 				}
 				String messageTime = "";
@@ -544,7 +544,7 @@ public class NeighborsManager {
 							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 									.getAttributeName())).getString("$date");
 				}
-				if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl)){
+				if (serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID)){
 					// Insert the entry to the database
 					@SuppressWarnings("unused")
 					JSONObject res = serviceAdmin.addService(jo);

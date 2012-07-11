@@ -151,7 +151,7 @@ public class ServiceAdminManager {
 	}
 
 	/**
-	 * Removing the service by url
+	 * Removing the service by endpoint ID
 	 * 
 	 * @param url
 	 * @param messageTime
@@ -160,12 +160,12 @@ public class ServiceAdminManager {
 	 * @throws MultipleResourceException
 	 * @throws JSONException 
 	 */
-	public void removeService(String url, String messageTime) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException{
+	public void removeService(String endpointID, String messageTime) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException{
 		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
 			// Update message will be contains only the URL and the update since attributes.
 			JSONObject newEntry = new JSONObject();
-			newEntry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-							.getAttributeName(),url);
+			newEntry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+							.getAttributeName(),endpointID);
 			
 			JSONObject date = new JSONObject();
 			date.put("$date", messageTime);
@@ -187,7 +187,7 @@ public class ServiceAdminManager {
 				Log.logException("",e,log);
 			}
 		} else {
-			serviceDB.deleteByEndpointID(url);
+			serviceDB.deleteByEndpointID(endpointID);
 		}
 	}
 
@@ -332,13 +332,13 @@ public class ServiceAdminManager {
 
 	/**
 	 * @param owner
-	 * @param serviceurl 
+	 * @param sendpointID 
 	 * @return
 	 * @throws PersistentStoreFailureException
 	 * @throws QueryException
 	 * @throws JSONException 
 	 */
-	public boolean checkOwner(String owner, String serviceurl) throws QueryException,
+	public boolean checkOwner(String owner, String sendpointID) throws QueryException,
 			PersistentStoreFailureException, JSONException {
 		List<ServiceObject> query1 = new ArrayList<ServiceObject>();
 		List<ServiceObject> query2 = new ArrayList<ServiceObject>();
@@ -349,7 +349,7 @@ public class ServiceAdminManager {
 			// since 2.0.1 supported the "and" operation
 			/* Query structure:
 			 *        {"$or":[{"$and":[{"serviceOwner":"<DN>"},
-			 *                         {"Service_Endpoint_URL":"<URL>"}]},
+			 *                         {"Service_Endpoint_ID":"<ID>"}]},
 			 *                {"$and":[{"Service_DN":"<DN>"},
 			 *                         {"Service_Type":"GSR"}]}
 			 *                 ]}
@@ -361,7 +361,7 @@ public class ServiceAdminManager {
 			and1.put(andParam1);
 
 			JSONObject andParam2 = new JSONObject();
-			andParam2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+			andParam2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
 			and1.put(andParam2);
 
 			JSONObject orParam1 = new JSONObject();
@@ -398,7 +398,7 @@ public class ServiceAdminManager {
 			map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
 					owner);
 			
-			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
 			
 			JSONObject jo = new JSONObject(map);
 			
@@ -426,16 +426,16 @@ public class ServiceAdminManager {
 	
 	/**
 	 * @param messageGenerationTime
-	 * @param serviceurl 
+	 * @param sendpointID 
 	 * @return
 	 * @throws PersistentStoreFailureException
 	 * @throws QueryException
 	 */
-	public boolean checkMessageGenerationTime(String messageTime, String serviceurl) throws QueryException,
+	public boolean checkMessageGenerationTime(String messageTime, String sendpointID) throws QueryException,
 			PersistentStoreFailureException {
 		Map<String, String> map = new HashMap<String, String>();
 			
-		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), serviceurl);
+		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
 		
 		JSONObject jo = new JSONObject(map);
 		List<ServiceObject> storedEntries = serviceDB.query(jo.toString());

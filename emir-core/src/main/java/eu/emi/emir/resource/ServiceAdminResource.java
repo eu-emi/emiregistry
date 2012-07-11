@@ -112,6 +112,22 @@ public class ServiceAdminResource {
 						.getAttributeName());
 		return value;
 	}
+	
+	private String extractServiceEndpointIDFromUri(UriInfo infos)
+			throws IllegalArgumentException {
+		MultivaluedMap<String, String> mm = infos.getQueryParameters();
+		String attrName = ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+				.getAttributeName();
+		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
+		if (key == "unknown") {
+			Log.logException("Error in getting Service by ID", new IllegalArgumentException("illegal argument"), logger);
+			throw new IllegalArgumentException();
+		}
+		String value = mm
+				.getFirst(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+						.getAttributeName());
+		return value;
+	}
 
 	/**
 	 * adding only one entry
@@ -417,54 +433,54 @@ public class ServiceAdminResource {
 	 * Deleting the service description
 	 * 
 	 * @param infos
-	 *            contains a ..?SERVICE_ENDPOINT_URL=http://serviceurl
+	 *            contains a ..?SERVICE_ENDPOINT_ID=http://serviceurl
 	 * @throws JSONException
 	 * */
 	@DELETE
 	public Response deleteService(@Context UriInfo infos)
 			throws WebApplicationException, JSONException {
-		String serviceurl = null;
+		String sendpointID = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
 			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
 				c = Client.getAnonymousClient();
 			}
 			String owner = c.getDistinguishedName();
-			serviceurl = extractServiceUrlFromUri(infos);
+			sendpointID = extractServiceEndpointIDFromUri(infos);
 			String messageTime = extractServiceDateFromUri(infos);
 			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
 						messageTime == "unknown") {
 				// New entry and message generation time need, it is come from one DSR
 				messageTime = ServiceUtil.toUTCFormat(new Date());
 			}
-			logger.debug("deleting service by url: " + serviceurl
+			logger.debug("deleting service by ID: " + sendpointID
 					+ ", Owned by: " + owner);
 			if (c.getRole().getName().equalsIgnoreCase("admin")) {
 				// let the admin delete everything
-				serviceAdmin.removeService(serviceurl, messageTime);
+				serviceAdmin.removeService(sendpointID, messageTime);
 			} else if ((owner != null)
-					&& (serviceAdmin.checkOwner(owner, serviceurl))
-						&& (serviceAdmin.checkMessageGenerationTime(messageTime, serviceurl))) {
+					&& (serviceAdmin.checkOwner(owner, sendpointID))
+						&& (serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID))) {
 
-				serviceAdmin.removeService(serviceurl, messageTime);
+				serviceAdmin.removeService(sendpointID, messageTime);
 
 			} else {
 				return Response
 						.status(Status.UNAUTHORIZED)
 						.entity("Access denied for DN - " + owner
-								+ " to update service with the URL - "
-								+ serviceurl).build();
+								+ " to remove service with the ID - "
+								+ sendpointID).build();
 			}
 
 		} catch (IllegalArgumentException e) {
 			Log.logException("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
-					+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName() + " = <SERVICE URL>", e, logger);
+					+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName() + " = <SERVICE ENDPOINT ID>", e, logger);
 			return Response
 					.status(Status.BAD_REQUEST)
 					.entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
-							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-									.getAttributeName() + " = <SERVICE URL>")
+							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+									.getAttributeName() + " = <SERVICE ENDPOINT ID>")
 					.build();
 		} catch (Exception e) {
 			Log.logException("Error in deleting the service",e,logger);
