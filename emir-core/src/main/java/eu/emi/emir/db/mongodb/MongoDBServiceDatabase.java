@@ -316,6 +316,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		try {
+			String  id = sObj.getServiceID();
 			if (logger.isDebugEnabled()) {
 				logger.debug("updating service description: " + sObj);
 			}
@@ -331,13 +332,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			serviceCollection.update(query, dbObj);
 			database.requestDone();
-			logger.info("updated Service Endpoint Record with ID: " + sObj.getEndpointID());
+			logger.info("updated Service Endpoint Record with ID: " + id);
 			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
 			// sObj.toJSON()));
 		} catch (MongoException e) {
-			Log.logException("", e);
+			Log.logException("Error updating the Service Record in MongoDB: "+sObj, e, logger);
 		}
 
 	}
