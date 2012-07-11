@@ -304,6 +304,6 @@ Advanced HTTP Server Settings
 
 EMIR uses Eclipse's Jetty server to host REST Web services. Following table lists the important properties.
 
-IMPORTANT: Do not set *emir.jetty.requireClientAuthn* and *emir.jetty.wantClientAuthn*  in CONF/emir.config file, as they are automatically set by the 
+IMPORTANT: Do not set *emir.jetty.requireClientAuthn* and *emir.jetty.wantClientAuthn*  in CONF/emir.config file, as they are automatically set by the EMIR server on start-up.
 
 include::sec-ref-jettyProperties.txt[]
