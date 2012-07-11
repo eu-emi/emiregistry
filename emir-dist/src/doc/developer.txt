@@ -75,14 +75,14 @@ Delete existing Services
 Request
 ^^^^^^^
 
-The Service Entry matching the Endpoint URL will be deleted from the
-database only if the client executing the action has authorized access and the 
+The Service Entry matching the Endpoint ID will be deleted from the
+registry only if the client executing the action has authorised access and the 
 method is allowed by the security plugins.
 
-+Query Parameters+ : Service_Endpoint_URL= _<service unique URL>_
++Query Parameters+ : Service_Endpoint_ID= _<Service unique Endpoint ID>_
 
 ******
-*Example* : /serviceadmin?Service_Endpoint_URL=http://1
+*Example* : /serviceadmin?Service_Endpoint_ID=urn:endpoint:emi1
 ******
 
 Response
