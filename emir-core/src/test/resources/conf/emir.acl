@@ -1,5 +1,5 @@
 #
-# example EMIR ACL file
+# EMIR ACL file
 #
 # - the trusted subjects are listed as a pair of DN and role (separated by "::"), one per line
 # 

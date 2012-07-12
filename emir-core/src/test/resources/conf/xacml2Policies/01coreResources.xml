@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd" PolicyId="emiregistryPolicy:01coreResources" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
   <Description>
-    This is the default access control policy for the EMI Registry.
+    This is the default access control policy for the EMIR
 
     There are the following rules (the first applicable rule takes effect):
 
      
-     - The TargetSystemFactory is accessible for all authorized users
-     - Read access to the CIS properties and listing information,  which is allowed for all the authenticated users     
+     - Admin may do any changes to any SERP registration
+     - Read access to all the authenticated users to all the Web services except "serviceadmin"     
   	</Description>
   <Target/>
 
@@ -26,8 +26,7 @@
 
   <Rule RuleId="Permit:Service_write-access" Effect="Permit">
     <Description> Read/Write Access to the "serviceadmin",   
- is granted for authenticated users, i.e. users with a valid certificate 
- regardless of the possessed role (or even without a role when user is not in XUUDB)
+ is granted for authenticated users, i.e. users with a valid certificate and roles defined in the attributes file 
    </Description>
      <Target>
       <Subjects>

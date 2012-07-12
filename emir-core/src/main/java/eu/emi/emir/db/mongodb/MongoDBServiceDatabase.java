@@ -110,9 +110,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), true);
 		} catch (MongoException e) {
-			Log.logException("", e);
+			Log.logException("", e, logger);
 			logger.warn(e.getCause());
-		} catch (Exception e) {
+		} catch (Exception e) {			
 			logger.error("Error in connecting the MongoDB database", e);
 		}
 

@@ -199,7 +199,7 @@ public class EMIRServer {
 	private void startServiceReaper(){
 		try {
 			RegistryThreadPool.getScheduledExecutorService()
-			.scheduleWithFixedDelay(new ServiceReaper(), 10, 5,
+			.scheduleWithFixedDelay(new ServiceReaper(), 10, 30,
 					TimeUnit.SECONDS);	
 		} catch (Exception e) {
 			logger.warn("Cannot start service record reaper", e);

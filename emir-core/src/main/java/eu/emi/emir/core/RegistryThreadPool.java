@@ -32,29 +32,29 @@ public class RegistryThreadPool {
 	 * property key for setting the core thread pool size for the scheduled
 	 * execution service
 	 */
-	public static final String CORE_POOL_SIZE = "registry.scheduled.size";
+	public static final String CORE_POOL_SIZE = "emir.scheduled.size";
 
 	/**
 	 * property key for setting the timeout in millis for removing idle threads
 	 */
-	public static final String POOL_TIMEOUT = "registry.scheduled.idletime";
+	public static final String POOL_TIMEOUT = "emir.scheduled.idletime";
 
 	/**
 	 * property key for setting the minimum thread pool size for the scheduled
 	 * execution service
 	 */
-	public static final String EXEC_CORE_POOL_SIZE = "registry.executor.minsize";
+	public static final String EXEC_CORE_POOL_SIZE = "emir.executor.minsize";
 
 	/**
 	 * property key for setting the maximum thread pool size for the scheduled
 	 * execution service
 	 */
-	public static final String EXEC_MAX_POOL_SIZE = "registry.executor.maxsize";
+	public static final String EXEC_MAX_POOL_SIZE = "emir.executor.maxsize";
 
 	/**
 	 * property key for setting the timeout in millis for removing idle threads
 	 */
-	public static final String EXEC_POOL_TIMEOUT = "registry.executor.idletime";
+	public static final String EXEC_POOL_TIMEOUT = "emir.executor.idletime";
 
 	private RegistryThreadPool() {
 	}
@@ -136,7 +136,7 @@ public class RegistryThreadPool {
 
 					public Thread newThread(Runnable r) {
 						Thread t = new Thread(r);
-						t.setName("registry-executor-"
+						t.setName("emir-executor-"
 								+ threadNumber.getAndIncrement());
 						return t;
 					}
