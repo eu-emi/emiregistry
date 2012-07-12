@@ -287,7 +287,7 @@ public class Glue2Mapper {
 							.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 									.getAttributeName())
 							: null);
-
+					
 					// location attributes
 					lt.setAddress(jo
 							.has(ServiceBasicAttributeNames.SERVICE_LOCATION_ADDRESS
@@ -324,6 +324,14 @@ public class Glue2Mapper {
 							.getString(ServiceBasicAttributeNames.SERVICE_LOCATION_POSTCODE
 									.getAttributeName())
 							: null);
+					
+					//In EMIR there is only version for the interface
+					if ((et.getInterfaceVersion().size() <= 0)
+							&& (jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER
+									.getAttributeName()))) {
+						et.getInterfaceVersion().add(0, jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER
+												.getAttributeName()));
+					}
 
 					// arrays
 					if ((et.getCapability().size() <= 0)

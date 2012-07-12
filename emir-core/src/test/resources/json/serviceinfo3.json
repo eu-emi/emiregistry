@@ -13,7 +13,7 @@
     "Service_Endpoint_Capability":["capability1","capability2"],
 	"Service_Endpoint_Technology":"technology",
 	"Service_Endpoint_InterfaceName":"interface",
-	"Service_Endpoint_InterfaceVersion":["version1","version2"],
+	"Service_Endpoint_InterfaceVersion":"version1",
 	"Service_Endpoint_InterfaceExtension":["extension1","extension2"],
 	"Service_Endpoint_WSDL":"http//1.wsdl",
 	"Service_Endpoint_SupportedProfile":["profile1","profile2"],
