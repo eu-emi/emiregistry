@@ -5,11 +5,6 @@
 #
 
 #
-# PID file
-#
-PID=LAST_PID
-
-#
 # Installation Directory
 #
 dir=`dirname $0`
@@ -36,6 +31,10 @@ INST=${INST:-.}
 
 cd $INST
 
+#
+# Read basic settings
+#
+. conf/startup.properties
 
 if [ ! -e $PID ]
 then
@@ -50,7 +49,7 @@ cat $PID | xargs kill -SIGTERM
 # wait for shutdown
 # 
 P=$(cat $PID)
-echo "Waiting for server to stop..."
+echo "Waiting for EMIR server to stop..."
 stopped="no"
 until [ "$stopped" = "" ]; do
   stopped=$(ps -p $P | grep $P)
@@ -61,6 +60,6 @@ until [ "$stopped" = "" ]; do
   sleep 2
 done
 
-echo "Server stopped."
+echo "EMIR Server stopped."
 
 rm -f $PID

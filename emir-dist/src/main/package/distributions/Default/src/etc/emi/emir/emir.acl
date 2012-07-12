@@ -1,5 +1,5 @@
 #
-# example EMIR ACL file
+# EMIR ACL file
 #
 # - the trusted subjects are listed as a pair of DN and role (separated by "::"), one per line
 # 
@@ -7,8 +7,15 @@
 #
 # - the subject name must not be duplicated and defined according to RFC 2253 format
 #
-# - to extract the subject name from a certificate, use
+# - to extract the subject name from certificate (PEM format), use
 #
-#    openssl x509 -subject -noout -nameopt RFC2253 -in <certfile>
+#    openssl x509 -subject -noout -nameopt RFC2253 -in <target_certificate>.pem
 #
-emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin
+# - to extract the subject name from certificate (PKCS#12 format), follow the two steps below:
+#    
+#    1. openssl pkcs12 -in <source_certficate>.p12 -out <target_certificate>.pem -passin pass:<password> -passout pass:<password>
+#    2. openssl x509 -subject -noout -nameopt RFC2253 -in <target_certificate>.pem 
+#
+#
+#emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
+#emailAddress=emiregistry2@user.eu,CN=EMIRegistry-Demo-User-2,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin

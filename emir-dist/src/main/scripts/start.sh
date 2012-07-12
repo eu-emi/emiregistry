@@ -1,11 +1,12 @@
 #!/bin/sh
 
 #
-#Startup script for the EMI Registry Server
+# Startup script for EMIR
 #
 
+
 #
-#Installation Directory
+# Installation Directory
 #
 dir=`dirname $0`
 if [ "$dir" != "." ]
@@ -23,62 +24,47 @@ fi
 
 INST=${INST:-.}
 
-#
-#Alternatively specify the installation dir here
-#
-#INST=
-
-
 cd $INST
 
 #
-#Java command 
+# Read basic settings
 #
-#JAVA="java -javaagent:lib/aspectjweaver-1.5.3.jar"
-
-
-#
-#Options to the Java VM
-#
-
-#set this one if you have ssl problems and need debug info
-#OPTS=$OPTS" -Djavax.net.debug=ssl,handshake"
-
+. conf/startup.properties
 
 #
-#enable JMX (use jconsole to connect)
+# check whether the server might be already running
 #
-#OPTS=$OPTS" -Dcom.sun.management.jmxremote"
+if [ -e $PID ] 
+ then 
+  if [ -d /proc/$(cat $PID) ]
+   then
+     echo "A EMIR instance may be already running with process id "$(cat $PID)
+     echo "If this is not the case, delete the file $INST/$PID and re-run this script"
+     exit 1
+   fi
+fi
 
 #
-#Memory for the VM
+# setup classpath
 #
-MEM=-Xmx256m
-
-#
-#put all jars in lib/ on the classpath
-#
-JARS=lib/*.jar
-CP=.
+JARS=${LIB}/*.jar
+CP=
 for JAR in $JARS ; do 
     CP=$CP:$JAR
 done
 
-cd $INST
-
 PARAM=$*
 if [ "$PARAM" = "" ]
 then
-  PARAM=conf/emir.config
+  PARAM=${CONF}/emir.config
 fi
 
 #
-#go
+# go
 #
 
-if [ ! -d  logs ]
-then
-  mkdir -p logs
-fi
+CLASSPATH=$CP; export CLASSPATH
 
-nohup java ${MEM} ${OPTS} ${DEFS} -cp ${CP} eu.emi.dsr.DSRServer ${PARAM} > logs/startup.log 2>&1 & echo $! > LAST_PID
+nohup $JAVA ${MEM} ${OPTS} ${DEFS} eu.emi.emir.EMIRServer ${PARAM} EMIR > ${STARTLOG} 2>&1  & echo $! > ${PID}
+
+echo "EMIR starting"

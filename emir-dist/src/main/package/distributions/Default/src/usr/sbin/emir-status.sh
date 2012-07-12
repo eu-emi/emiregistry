@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Check status of EMIR
+# Check status of EMIR Server
 #
 # before use, make sure that the "service name" used in 
 # this file is the same as in the corresponding start.sh file
@@ -9,48 +9,22 @@
 # service name
 SERVICE=emir
 
-#
-# Installation Directory
-#
-dir=`dirname $0`
-if [ "$dir" != "." ]
-then
-  INST=`dirname $dir`
-else
-  pwd | grep -e 'bin$' > /dev/null
-  if [ $? = 0 ]
-  then
-    INST=".."
-  else
-    INST=`dirname $dir`
-  fi
-fi
-
-INST=${INST:-.}
-
-#
-# Alternatively specify the installation dir here
-#
-#INST=
-
-cd $INST
-
 # PID file
-PID_FILE=/var/run/emir/emir.pid
+PID=/var/run/emi/emir.pid
 
-if [ ! -e $PID_FILE ]
+if [ ! -e $PID ]
 then
  echo "EMIR not running (no PID file)"
  exit 7
 fi
 
-PID=$(cat $PID_FILE)
+PIDV=$(cat $PID)
 
-if ps axww | grep -v grep | grep $PID > /dev/null 2>&1 ; then
- echo "EMIR running with PID ${PID}"
+if ps axww | grep -v grep | grep $PIDV > /dev/null 2>&1 ; then
+ echo "EMIR running with PID ${PIDV}"
  exit 0
 fi
 
 #else not running, but PID found
-echo "warn: EMIR not running, but PID file $PID_FILE found"
+echo "warn: EMIR not running, but PID file $PID found"
 exit 3

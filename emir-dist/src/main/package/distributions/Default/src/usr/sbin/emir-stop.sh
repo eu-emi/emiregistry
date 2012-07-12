@@ -1,41 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 #
-# Shutdown script for EMI Registry
+# Shutdown script for EMIR Server
 #
+
 
 #
 # PID file
 #
-PID=/var/run/emi/emir/emir.pid
-
-#
-# Installation Directory
-#
-dir=`dirname $0`
-if [ "$dir" != "." ]
-then
-  INST=`dirname $dir`
-else
-  pwd | grep -e 'bin$' > /dev/null
-  if [ $? = 0 ]
-  then
-    INST=".."
-  else
-    INST=`dirname $dir`
-  fi
-fi
-
-INST=${INST:-.}
-
-#
-# Alternatively specify the installation dir here
-#
-#INST=
-
-
-cd $INST
-
+PID=/var/run/emi/emir.pid
 
 if [ ! -e $PID ]
 then
@@ -50,7 +23,7 @@ cat $PID | xargs kill -SIGTERM
 # wait for shutdown
 # 
 P=$(cat $PID)
-echo "Waiting for server to stop..."
+echo "Waiting for EMIR Server to stop..."
 stopped="no"
 until [ "$stopped" = "" ]; do
   stopped=$(ps -p $P | grep $P)
@@ -61,6 +34,6 @@ until [ "$stopped" = "" ]; do
   sleep 2
 done
 
-echo "Server stopped."
+echo "EMIR Server stopped!"
 
 rm -f $PID

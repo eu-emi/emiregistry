@@ -1,84 +1,45 @@
-#!/bin/sh
+#!/bin/bash
 
 #
-#Startup script for the EMI Registry Server
+# Startup script for UNICORE/X
 #
 
 #
-#Installation Directory
+# Read basic configuration parameters
 #
-dir=`dirname $0`
-if [ "$dir" != "." ]
-then
-  INST=`dirname $dir`
-else
-  pwd | grep -e 'bin$' > /dev/null
-  if [ $? = 0 ]
-  then
-    INST=".."
-  else
-    INST=`dirname $dir`
-  fi
+. /etc/emi/emir/startup.properties
+
+
+#
+# check whether the server might be already running
+#
+if [ -e $PID ] 
+ then 
+  if [ -d /proc/$(cat $PID) ]
+   then
+     echo "A EMIR instance may be already running with process id "$(cat $PID)
+     echo "If this is not the case, delete the file $INST/$PID and re-run this script"
+     exit 1
+   fi
 fi
 
-INST=${INST:-.}
-
 #
-#Alternatively specify the installation dir here
+# setup classpath
 #
-#INST=
-
-
-cd $INST
-
-#
-#Java command 
-#
-#JAVA="java -javaagent:lib/aspectjweaver-1.5.3.jar"
-
-
-#
-#Options to the Java VM
-#
-
-#set this one if you have ssl problems and need debug info
-#OPTS=$OPTS" -Djavax.net.debug=ssl,handshake"
-
-
-#
-#enable JMX (use jconsole to connect)
-#
-#OPTS=$OPTS" -Dcom.sun.management.jmxremote"
-
-#
-#Memory for the VM
-#
-MEM=-Xmx256m
-
-#
-#put all jars in lib/ on the classpath
-#
-JARS=/usr/share/emi/emir/lib/*.jar
-CP=.
-for JAR in $JARS ; do 
-    CP=$CP:$JAR
-done
-
-cd $INST
+CP=.$(find "$LIB" -name "*.jar" -exec printf ":{}" \;)
 
 PARAM=$*
 if [ "$PARAM" = "" ]
 then
-  PARAM=/etc/emi/emir/emir.config
+  PARAM=${CONF}/emir.config
 fi
 
 #
-#go
+# go
 #
 
-if [ ! -d  /var/log/emi/emir ]
-then
-  mkdir -p /var/log/emi/emir
-fi
+CLASSPATH=$CP ; export CLASSPATH
 
-nohup java ${MEM} ${OPTS} ${DEFS} -cp ${CP} eu.emi.dsr.DSRServer ${PARAM} > /var/log/emi/emir/startup.log 2>&1 & echo $! > /var/run/emi/emir/emir.pid
+nohup $JAVA ${MEM} ${OPTS} ${DEFS} eu.emi.emir.EMIRServer ${PARAM} EMIR > $STARTLOG 2>&1  & echo $! > $PID
+
+echo "EMIR starting..."
