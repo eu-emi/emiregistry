@@ -1,0 +1,34 @@
+EMIR's Service Endpoint Record Publisher (EMIR-SERP) 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The UMD services need to be registered into the EMI Registry service
+infrastructure to be discoverable for the clients. Most of the services
+or even the containers executing them provide a way to do this but not
+all of them. For those that are unable to register themselves
+automatically and periodically the EMIR-SERP is available.
+
+The EMIR-SERP is a daemon like (background) service that can be executed next to these
+services (preferably on the same machine) and able to perform the
+automatic and periodical registration and update against the
+configured EMI Registry service on behalf of the service itself. This
+client uses exactly the same, standard RESTful API as the other clients
+do.
+
+Most of the parameters of these registrations and updates can be
+configured. For the details see the <<anchor-emir-serp-config,Configuration section>>!
+
+After the successful registration until the termination of the daemon,
+the EMIR-SERP client do the periodical updates then finally, when the execution of
+the daemon is over, it attempts to delete the service entries from the
+remote database.
+
+The service entries can be simple or advanced ones.
+
+The simple service entries contain only the mandatory and easily configurable
+attributes that are the following: Service_Name, Service_Type,
+Service_Endpoint_URL, Service_Endpoint_InterfaceName. Here, the single
+mandatory element is the Service_Endpoint_URL.
+
+The advanced entries can contains any kind of key value pairs that are
+accepted by the EMI Regisrty services and can be configured in the form
+of whole, formatted *json* documents.

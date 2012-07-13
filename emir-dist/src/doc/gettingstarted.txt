@@ -1,0 +1,167 @@
+Getting Started in 5 Minutes
+----------------------------
+
+Domain Service Registry (DSR)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This sections explains how to setup a Domain Service Registry (DSR) for a site. As a prerequisite, any SL6 host, either real of virtual is required.
+
+Installing the DSR
+^^^^^^^^^^^^^^^^^^
+anchor:anchor-quick-dsr-installation[]
+
+Install the EMI release package
+
+----
+rpm -Uvh http://emisoft.web.cern.ch/emisoft/dist/EMI/2/sl6/x86_64/base/emi-release-2.0.0-1.sl6.noarch.rpm
+----
+
+Install the EMI Registry package.
+
+----
+yum install -y emi-emir
+----
+
+Configure the DSR
+^^^^^^^^^^^^^^^^^
+
+Edit the file 
+
+----
+/etc/emi/emir/emir.config 
+----
+
+and set the hostname and port.
+
+----
+emir.address=http://dsr.domain.invalid:9126
+----
+
+Set the DSR parent attribute.
+
+----
+emir.parentAddress=http://parent.dsr.domain.invalid:9126
+----
+
+Start the services
+
+----
+service mongod start
+services emi-emir start
+----
+
+Test the DSR
+^^^^^^^^^^^^
+
+Check that the DSR is running
+
+----
+http://dsr.domain.invalid:9126/ping
+----
+
+Global Service Registry (GSR)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing the DSR
+^^^^^^^^^^^^^^^^^^
+
+Same as <<anchor-quick-dsr-installation,DSR>>
+
+Configuration
+^^^^^^^^^^^^^
+
+Edit the file 
+
+----
+/etc/emi/emir/emir.config 
+----
+
+and set the hostname and port.
+
+----
+emir.address=http://gsr.domain.invalid:9126
+----
+
+set the global GSR flag
+
+----
+emir.global.enable=true
+----
+
+
+Start the services
+
+----
+service mongod start
+services emi-emir start
+----
+
+Test the GSR
+^^^^^^^^^^^^
+
+Check that the GSR is running
+
+----
+http://gsr.domain.invalid:9126/ping
+----
+
+
+Service Endpoint Record Publisher (EMIR-SERP)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing the EMIR-SERP
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install the emir-serp.
+
+----
+yum install emir-serp
+----
+
+Install the service translator.
+
+----
+rpm -Uvh http://cern.ch/lfield/ginfo-0.1.5-1.noarch.rpm
+---- 
+
+Configure the EMIR-SERP (publisher)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Edit the file /etc/emi/emir-serp/emir-serp.ini and set the url for yor DSR.
+
+----
+url = http://dsr.domain.invalid:9126
+----
+
+Set the json_dir_location
+
+----
+json_dir_location = /var/cache/emir-serp/services
+----
+
+Create the json directory.
+
+----
+mkdir -p /var/cache/emir-serp/services
+----
+
+Create a hourly cron job to run the following command, where host.invalid is the host name of a site BDII.
+
+----
+ginfo --host bdii.domain.invalid --emi > /var/cache/emir-serp/services/example
+----
+
+Start the service
+
+----
+service emir-serp start
+----
+
+Test the EMIR-SERP
+^^^^^^^^^^^^^^^^^^
+
+Check the expected services are published
+
+----
+http://dsr.domain.invalid:9126/services
+----

@@ -1,0 +1,10 @@
+Installing the Publisher Client: EMIR-SERP 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+anchor:anchor-emir-serp-installation[]
+
+The installation of the EMIR-SERP client is trivial. The only thing to do is
+to install the +emir-serp+ package from the EMI repository by
+executing:
+
+`yum instlal emir-serp`

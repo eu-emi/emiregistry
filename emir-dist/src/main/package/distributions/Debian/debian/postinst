@@ -26,6 +26,9 @@ case "$1" in
 	chown emi:emi /etc/emi/emir/xacml2Policies
 	chmod 750 /etc/emi/emir/xacml2Policies
 
+	chown emi:emi /etc/emi/emir/startup.properties
+	chmod 644 /etc/emi/emir/startup.properties
+	
 	chown emi:emi /etc/emi/emir/log4j.properties
 	chmod 644 /etc/emi/emir/log4j.properties
 	
