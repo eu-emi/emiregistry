@@ -67,7 +67,7 @@ public class TestServiceAdminResourceWithSecurity extends
 		JSONArray ja = new JSONArray();
 		ja.put(jo);
 		EMIRClient cr = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				+ "/serviceadmin?Service_Endpoint_ID=1",
 				getSecurityProperties_2());
 		try {
 			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
@@ -80,7 +80,7 @@ public class TestServiceAdminResourceWithSecurity extends
 
 		System.out.println("/serviceadmin");
 		EMIRClient cr1 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_URL=http://1",
+				+ "/serviceadmin?Service_Endpoint_ID=1",
 				getSecurityProperties_2());
 		try {
 			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr1.getClientResource()

@@ -29,6 +29,7 @@ public class TestValueConstants {
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACENAME.getAttributeName(), "1");
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER.getAttributeName(), "1");
 		jo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(), "cn=anonym,o=org");
+		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_TECHNOLOGY.getAttributeName(), "webservices");
 		return jo;
 	}
 	

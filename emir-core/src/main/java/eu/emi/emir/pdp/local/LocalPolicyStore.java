@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,7 +84,6 @@ public class LocalPolicyStore
 	public LocalPolicyStore(PolicyListener pdp, String configurationFile, int interval) 
 		throws IOException, SyntaxException, JAXBException, SAXException
 	{
-		//uhhh herasf developers are OO gurus...
 		SimplePDPFactory.getSimplePDP();
 		
 		this.configurationFile = configurationFile;
@@ -95,9 +93,10 @@ public class LocalPolicyStore
 		JAXBMarshallerConfiguration jmc = new JAXBMarshallerConfiguration();
 		jmc.setValidateParsing(true);
 		//dirty trick to overcome stupid .getClass.getClassloader() in herasf code
-		URL url = LocalPolicyStore.class.getResource("/local/xacmlpolicy-2.0.xsd");
-		jmc.setSchemaByPath("url:" + url.toExternalForm());
-		PolicyMarshaller.setJAXBMarshallerConfiguration(jmc);
+		//no need for this
+//		URL url = LocalPolicyStore.class.getResource("local/xacmlpolicy-2.0.xsd");
+//		jmc.setSchemaByPath("/eu/emi/emir/pdp/local/xacmlpolicy-2.0.xsd");
+//		PolicyMarshaller.setJAXBMarshallerConfiguration(jmc);
 		initPolicyNameMap();
 		reload();
 		startConfigWatcher(interval);
