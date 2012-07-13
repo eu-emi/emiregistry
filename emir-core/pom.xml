@@ -104,6 +104,10 @@
 		</plugins>
 		<resources>
 			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
 				<filtering>false</filtering>
 				<directory>src/main/java</directory>
 				<includes>

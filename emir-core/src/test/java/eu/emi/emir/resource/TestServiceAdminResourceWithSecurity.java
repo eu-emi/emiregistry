@@ -56,6 +56,18 @@ public class TestServiceAdminResourceWithSecurity extends
 		assertEquals("http://1",
 				jo1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
+		
+		
+	}
+	
+	@Test
+	public void testServices(){
+		//what about services?
+				EMIRClient cr2 = new EMIRClient(BaseURI + "/services",getSecurityProperties_2());
+				JSONArray o = cr2.getClientResource()
+						.accept(MediaType.APPLICATION_JSON_TYPE)
+						.get(JSONArray.class);
+				System.out.println(o);
 	}
 	
 	

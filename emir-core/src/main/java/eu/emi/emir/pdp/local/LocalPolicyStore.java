@@ -12,6 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.log4j.Logger;
 import org.herasaf.xacml.core.SyntaxException;
@@ -94,9 +98,11 @@ public class LocalPolicyStore
 		jmc.setValidateParsing(true);
 		//dirty trick to overcome stupid .getClass.getClassloader() in herasf code
 		//no need for this
-//		URL url = LocalPolicyStore.class.getResource("local/xacmlpolicy-2.0.xsd");
-//		jmc.setSchemaByPath("/eu/emi/emir/pdp/local/xacmlpolicy-2.0.xsd");
+//		URL url = LocalPolicyStore.class.getClassLoader().getResource("xacmlpolicy-2.0.xsd");
+//		String s = url.toExternalForm();
+//		jmc.setSchemaByPath(url.toExternalForm());
 //		PolicyMarshaller.setJAXBMarshallerConfiguration(jmc);
+		
 		initPolicyNameMap();
 		reload();
 		startConfigWatcher(interval);
