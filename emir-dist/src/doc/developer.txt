@@ -1,5 +1,5 @@
-REST API
---------
+How to use EMIR API?
+--------------------
 
 The EMI Registry allows Services to register/publish their capabilities
 while the Service Consumers are able to find the deployed services.

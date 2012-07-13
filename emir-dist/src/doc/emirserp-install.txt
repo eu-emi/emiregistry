@@ -1,0 +1,10 @@
+Installing the Publisher Client: EMIR-SERP 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+anchor:anchor-emird-installation[]
+
+The installation of the EMIRD client is trivial. The only thing to do is
+to install the +emir-daemon+ package from the EMI repository by
+executing:
+
+`yum instlal emir-daemon`

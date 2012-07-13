@@ -1,53 +1,5 @@
-EMIR Service Endpoint Record Publisher (EMIR-SERP) Client 
----------------------------------------------------------
-
-About the EMIRD
-~~~~~~~~~~~~~~~
-
-The UMD services need to be registered into the EMI Registry service
-infrastructure to be discoverable for the clients. Most of the services
-or even the containers executing them provide a way to do this but not
-all of them. For those that are unable to register themselves
-automatically and periodically the EMIRD is available.
-
-The EMIRD is a daemon like (background) service that can be executed next to these
-services (preferably on the same machine) and able to perform the
-automatic and periodical registration and update against the
-configured EMI Registry service on behalf of the service itself. This
-client uses exactly the same, standard RESTful API as the other clients
-do.
-
-Most of the parameters of these registrations and updates can be
-configured. For the details see the <<anchor-emird-config,Configuration section>>!
-
-After the successful registration until the termination of the daemon,
-the EMIRD client do the periodical updates then finally, when the execution of
-the daemon is over, it attempts to delete the service entries from the
-remote database.
-
-The service entries can be simple or advanced ones.
-
-The simple service entries contain only the mandatory and easily configurable
-attributes that are the following: Service_Name, Service_Type,
-Service_Endpoint_URL, Service_Endpoint_InterfaceName. Here, the single
-mandatory element is the Service_Endpoint_URL.
-
-The advanced entries can contains any kind of key value pairs that are
-accepted by the EMI Regisrty services and can be configured in the form
-of whole, formatted *json* documents.
-
-Installation
-~~~~~~~~~~~~
-anchor:anchor-emird-installation[]
-
-The installation of the EMIRD client is trivial. The only thing to do is
-to install the +emir-daemon+ package from the EMI repository by
-executing:
-
-`yum instlal emir-daemon`
-
-Configuration
-~~~~~~~~~~~~~
+EMIR-SERP Configuration
+-----------------------
 anchor:anchor-emird-config[]
 
 The configuration of EMIRD can be performed by editing its configuration
@@ -65,16 +17,20 @@ use to have +.json+ extension.
 The main configuration file has INI format. The +emir+ section contains
 the daemon scoped options while the others are to describe the different
 service entries to be registered. In these cases the exact name is
-indifferent, they just have to differ from eachother and must avoid the
+indifferent, they just have to differ from each other and must avoid the
 +emir+ name as well.
 
 Configuration options
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
-Note: The option names are case-insensitives.
+[NOTE]
+========
+The optional names are case-insensitive.
+========
 
 url
-+++
+^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ _No default value_
@@ -96,7 +52,8 @@ url = https://emiregistry2.grid.niif.hu
 url = https://emiregistry2.grid.niif.hu:54321
 
 period
-++++++
+^^^^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ _No default value_
@@ -109,7 +66,8 @@ The period of the registration/update messages. Its value is given in
 minutes.
 
 validity
-++++++++
+^^^^^^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ _No default value_
@@ -121,7 +79,8 @@ validity
 The validity of the registration entries. Its value is given in minutes.
 
 cert
-++++
+^^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ /etc/grid-security/hostcert.pem
@@ -134,7 +93,8 @@ User certificate file location in PEM format. Only used and checked if the proto
 the url option is 'https'.
 
 key
-+++
+^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ /etc/grid-security/hostkey.pem
@@ -147,7 +107,8 @@ User key file location in PEM format. Only used and checked if the protocol in
 the url option is 'https'.
 
 cadir
-+++++
+^^^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ /etc/grid-security/certificates
@@ -161,7 +122,8 @@ Certificate Authorities can be found. Only used and checked if the protocol in
 the url option is 'https'.
 
 verbosity
-+++++++++
+^^^^^^^^^
+
 +Location:+ +emir+ section
 
 +Default value:+ error
@@ -176,7 +138,8 @@ into the log file that can be found in the _/var/log/emi/emird_
 directory by default.
 
 Service_Endpoint_URL
-++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^
+
 +Location:+ simple service entry section
 
 +Default value:+ _No default value_
@@ -189,7 +152,8 @@ The Service Endpoint URL to be propagated. If this option is missing an
 error message will be raised.
 
 Service_Name
-++++++++++++
+^^^^^^^^^^^^
+
 +Location:+ simple service entry section
 
 +Default value:+ _No default value_
@@ -202,7 +166,8 @@ The Service Name to be propagated. If this option is missing then the
 service entry will contains no such component.
 
 Service_Type
-++++++++++++
+^^^^^^^^^^^^
+
 +Location:+ simple service entry section
 
 +Default value:+ _No default value_
@@ -215,7 +180,8 @@ The Service Type to be propagated. If this option is missing then the
 service entry will contains no such component.
 
 Service_Endpoint_InterfaceName
-++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 +Location:+ simple service entry section
 
 +Default value:+ _No default value_
@@ -228,7 +194,8 @@ The Service Endpoint Interface Name to be propagated. If this option is missing 
 service entry will contains no such component.
 
 json_file_location
-++++++++++++++++++
+^^^^^^^^^^^^^^^^^^
+
 +Location:+ advanced service entry section
 
 +Default value:+ _No default value_

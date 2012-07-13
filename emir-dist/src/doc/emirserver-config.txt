@@ -1,5 +1,5 @@
-Configuration
--------------
+EMIR Server Configuration
+-------------------------
 
 The EMIR server comes with a well documented configuration file (CONF/emir.config), containing a 
 number of options to setup registry hierarchy, p2p, security, http server, and database. The settings in the configuration file 
@@ -26,22 +26,59 @@ The server configuration options in the CONF/emir.config are:
 PKI Trust Settings Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI's CaNL (JAVA version). The validation is performed
+EMIR endorses Public Key Infrastructure (PKI) trust settings to validate certificates using EMI's https://twiki.cern.ch/twiki/bin/view/EMI/EMIcaNl[caNL] (JAVA version). The validation is performed
 when a connection with a remote peer is initiated over the network, using the SSL (or TLS) protocol, i.e. +emir.address+ value has _https_ scheme.
 
 Certificates validation is primarily configured using a set of initially trusted certificates of so called 
 Certificate Authorities (CAs). Those trusted certificates are also known as _trust anchors_ and their collection
-is called as a _trust store_. 
+is called as a _truststore_. 
 
 The validation mechanism except the _trust anchors_ can use additional input for checking if a certificate being checked 
 was not revoked and if its subject is in a permitted namesapce.
 
-EMIR allows for different types of trust stores. All of them are configured using a set of properties.
+EMIR allows different types of truststores. All of them are configured using a set of specific properties in _CONF/emir.config_ file.
+
+OpenSSL Truststore
+^^^^^^^^^^^^^^^^^^
+
+It allows using a directory with CA certificates stored in PEM format, with precisely
+defined names: Certificate Authorities (CA), Certificate Revocation List (CRL), signing policy and namespaces files are named as 
+<hash>.0, <hash>.r0, <hash>.signing_policy and <hash>.namespaces respectively. Hash is the old hash of the trusted CA certificate
+subject name - in OpenSSL version newer than 1.0.0 use -suject_hash_old switch to generate it. If multiple certificates
+have the same hash then the default zero number must be incremented. It is suggested when a common truststore with EMI (and Globus) 
+middlewares is needed.
+
+Directory Truststore
+^^^^^^^^^^^^^^^^^^^^
+
+It allows to use a list of wildcard expressions, concrete paths of files, or URLs to remote files as a set of trusted 
+CAs and CRLs. The truststore is configured as a directory containing all the trusted certificates (or with a 
+specified extension). The directory with stored IGTF trust anchors can be set as a EMIR truststore for instance.
+
+Java Keystore (JKS) Truststore
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A single repository (or a binary file) of X.509 public key certificates with (optionally) accompanying private key certificates. 
+The Java JDK already bundles http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html[keytool] utility - a certificate manage utility 
+to create JKS truststores.
+
+PKCS#12 Truststore
+^^^^^^^^^^^^^^^^^^
+
+Similar to JKS trustore, single binary file can be used to store X.509 public with (optionally) accompanying private key certificates. The *OpenSSL pkcs12*
+command can be used to parse, read, and create these files; the extension for PKCS#12 files is ".p12".
+
 
 include::sec-ref-trustProperties.txt[]
 
 Examples
 ^^^^^^^^
+
+Directory truststore, with a minimal set of options:
+	
+	 truststore.type=directory
+	 truststore.directoryLocations=/trust/dir/*.pem
+	 truststore.crlLocations=/trust/dir/*.crl
 
 Directory truststore, with complete set of options:
 
@@ -67,7 +104,7 @@ Openssl truststore:
  emir.security.truststore.updateInterval=1234
  emir.security.truststore.crlMode=IF_VALID
 
-Java keystore used as a trust store:
+Java keystore used as a truststore:
 
  emir.security.truststore.type=keystore
  emir.security.truststore.keystorePath=path/to/truststores/emir-truststore.jks
@@ -99,16 +136,13 @@ Credential as a JKS file (type can be autodetected in almost every case):
  credential.path=path/to/credentials/server1.jks
  credential.password=xxxxxx
 
-Authorization
-~~~~~~~~~~~~~
+ACL Based Authorization
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The EMIR offers two alternative options to authorise its' clients.
 
 	* Using Access Control List (ACL)
 	* XACML Policy based authorization
-
-ACL Based Authorization
-^^^^^^^^^^^^^^^^^^^^^^^
 
 This is the default mechanism to access control the _Create_,_Update_, and _Delete_ operations on EMIR's SER database. The client SERP or child DSR
 registering SERPs with a parent DSR/GSR get authorised while matching it's distinguished name (DN) against the pre-defined ACL file (CONF/emir.acl). 
@@ -122,7 +156,7 @@ the property in the +CONF/emir.config+ file
 |emir.security.accesscontrol.acl|filesystem path|CONF/emir.acl|The location of the ACL file
 |===========================================================
 
-.ACL file contents
+.Example ACL file contents
 -----------------
 emailAddress=emiregistry@user.eu,CN=EMIRegistry-Demo-User,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: serviceowner
 emailAddress=emiregistry@user.eu-admin,CN=EMIRegistry-Demo-User-Admin,OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE :: admin   
@@ -237,8 +271,6 @@ The root level GSR has two primary functions:
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-4+^e|EMIR's DSR settings
-|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR server to which it propagates its information
 4+^e|General GSR Settings
 |emir.global.enable|boolean|false|If set to true, indicating the registry node is global. It will then replicate the state among peer global registries (GSRs), the 'emir.parentAddress' property will be ignored (if enabled), as the root registry should not contain any parent.
 |emir.global.sparsity|Unsigned Integer|2|It determines the number of neighbors as a function of the actual number of member nodes of the network.

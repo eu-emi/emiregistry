@@ -8,6 +8,9 @@ v1.2.0, July 2012
 Overview
 --------
 
+EMIR Server (DSR or GSR)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 EMI Service Registry is a Service Endpoint Registry conceived during the EMI project. Its main goal is to discover all the Service Endpoints that exist. 
 It consists of a collection of services that enables storing service records in a federated manner. Each of the record is a Service Endpoint Record (SER) 
 complying with the OGF's GLUE 2.0 standard. The deployment of EMIR (which implies building an EMIR network over WAN) is bipartite: 1) Building a rooted 
@@ -15,10 +18,7 @@ hierarchy with a single EMIR server aggregating all the information within a fed
 EMIR servers (using P2P), thus enabling intra-federation discovery.
  
    
-Features
---------
-
-The EMIR provides following features:
+Feature Highlights:
 
 *	the service endpoint record registration includes the management of the services' endpoint information.
 *	Powerful data back-end based on MongoDB
@@ -29,13 +29,19 @@ The EMIR provides following features:
 **	Policy based authorisation
 
 
-For more information about EMIR, visit EMI's TWiki[https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry].
+For more information about EMIR, visit EMI's https://twiki.cern.ch/twiki/bin/view/EMI/EMIRegistry[TWiki].
+
+include::emirserp-overview.txt[]
+
+include::gettingstarted.txt[]
 
 include::install.txt[]
 
-include::admin.txt[]
+include::emirserp-install.txt[]
 
-include::client.txt[]
+include::emirserver-config.txt[]
+
+include::emirserp-config.txt[]
 
 include::developer.txt[]
 

@@ -45,6 +45,7 @@ This package contains the EMIR server.
 %dir %attr(755 emi emi) "/etc/emi/emir"
 %dir %attr(755 emi emi) "/etc/emi/emir/users"
 %dir %attr(755 emi emi) "/etc/emi/emir/xacml2Policies"
+%config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/startup.properties"
 %config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/log4j.properties"
 %config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/users/testUdb-strict.xml"
 %config(noreplace) %attr(0644 emi emi) "/etc/emi/emir/users/testUdb-regexp.xml"
