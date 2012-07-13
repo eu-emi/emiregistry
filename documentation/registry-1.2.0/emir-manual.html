@@ -704,17 +704,17 @@ Policy based authorisation
 infrastructure to be discoverable for the clients. Most of the services
 or even the containers executing them provide a way to do this but not
 all of them. For those that are unable to register themselves
-automatically and periodically the EMIRD is available.</p></div>
-<div class="paragraph"><p>The EMIRD is a daemon like (background) service that can be executed next to these
+automatically and periodically the EMIR-SERP is available.</p></div>
+<div class="paragraph"><p>The EMIR-SERP is a daemon like (background) service that can be executed next to these
 services (preferably on the same machine) and able to perform the
 automatic and periodical registration and update against the
 configured EMI Registry service on behalf of the service itself. This
 client uses exactly the same, standard RESTful API as the other clients
 do.</p></div>
 <div class="paragraph"><p>Most of the parameters of these registrations and updates can be
-configured. For the details see the <a href="#anchor-emird-config">Configuration section</a>!</p></div>
+configured. For the details see the <a href="#anchor-emir-serp-config">Configuration section</a>!</p></div>
 <div class="paragraph"><p>After the successful registration until the termination of the daemon,
-the EMIRD client do the periodical updates then finally, when the execution of
+the EMIR-SERP client do the periodical updates then finally, when the execution of
 the daemon is over, it attempts to delete the service entries from the
 remote database.</p></div>
 <div class="paragraph"><p>The service entries can be simple or advanced ones.</p></div>
@@ -803,10 +803,10 @@ services emi-emir start</tt></pre>
 </div></div>
 <h3 id="_service_endpoint_record_publisher_emir_serp">2.3. Service Endpoint Record Publisher (EMIR-SERP)</h3><div style="clear:left"></div>
 <h4 id="_installing_the_emir_serp">2.3.1. Installing the EMIR-SERP</h4>
-<div class="paragraph"><p>Install the emird.</p></div>
+<div class="paragraph"><p>Install the emir-serp.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>yum install emird</tt></pre>
+<pre><tt>yum install emir-serp</tt></pre>
 </div></div>
 <div class="paragraph"><p>Install the service translator.</p></div>
 <div class="listingblock">
@@ -814,7 +814,7 @@ services emi-emir start</tt></pre>
 <pre><tt>rpm -Uvh http://cern.ch/lfield/ginfo-0.1.5-1.noarch.rpm</tt></pre>
 </div></div>
 <h4 id="_configure_the_emir_serp_publisher">2.3.2. Configure the EMIR-SERP (publisher)</h4>
-<div class="paragraph"><p>Edit the file /etc/emi/emird/emird.ini and set the url for yor DSR.</p></div>
+<div class="paragraph"><p>Edit the file /etc/emi/emir-serp/emir-serp.ini and set the url for yor DSR.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>url = http://dsr.domain.invalid:9126</tt></pre>
@@ -837,7 +837,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>Start the service</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>service emird start</tt></pre>
+<pre><tt>service emir-serp start</tt></pre>
 </div></div>
 <h4 id="_test_the_emir_serp">2.3.3. Test the EMIR-SERP</h4>
 <div class="paragraph"><p>Check the expected services are published</p></div>
@@ -952,11 +952,11 @@ run <strong>mvn assembly:assembly -DskipTests</strong>
 that contains all the necessary files for installation thus no special actions will be required except
 extraction to the target folder.</p></div>
 <h3 id="_installing_the_publisher_client_emir_serp">3.2. Installing the Publisher Client: EMIR-SERP</h3><div style="clear:left"></div>
-<div class="paragraph"><p><a id="anchor-emird-installation"></a></p></div>
-<div class="paragraph"><p>The installation of the EMIRD client is trivial. The only thing to do is
-to install the <tt>emir-daemon</tt> package from the EMI repository by
+<div class="paragraph"><p><a id="anchor-emir-serp-installation"></a></p></div>
+<div class="paragraph"><p>The installation of the EMIR-SERP client is trivial. The only thing to do is
+to install the <tt>emir-serp</tt> package from the EMI repository by
 executing:</p></div>
-<div class="paragraph"><p><tt>yum instlal emir-daemon</tt></p></div>
+<div class="paragraph"><p><tt>yum instlal emir-serp</tt></p></div>
 </div>
 <h2 id="_emir_server_configuration">4. EMIR Server Configuration</h2>
 <div class="sectionbody">
@@ -1942,129 +1942,373 @@ cellspacing="0" cellpadding="4">
 </div>
 <h2 id="_emir_serp_configuration">5. EMIR-SERP Configuration</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><a id="anchor-emird-config"></a></p></div>
-<div class="paragraph"><p>The configuration of EMIRD can be performed by editing its configuration
-file or files. The configuration can be found basically in one file
-that default location is <tt>/etc/emi/emird/emird.ini</tt>.</p></div>
-<div class="paragraph"><p>This file contains every configuration options that can be the EMIRD daemon
-control by, like <em>service url</em>, <em>logging verbosity</em>, <em>credential
-location</em>, etc.</p></div>
-<div class="paragraph"><p>The advanced service entries to be propagated can be described in
+<div class="paragraph"><p><a id="anchor-emir-serpd-config"></a></p></div>
+<div class="paragraph"><p>The configuration of EMIR-SERP can be performed by editing its configuration
+  file or files. The configuration can be found basically in one file
+  that default location is <tt>/etc/emi/emir-serp/emir-serp.ini</tt>.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>This file contains every configuration options that can be the EMIR-SERP daemon
+control by, like _service url_, _logging verbosity_, _credential
+location_, etc.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The advanced service entries to be propagated can be described in
 separated configuration files preferably also under this directory and
-use to have <tt>.json</tt> extension.</p></div>
-<div class="paragraph"><p>The main configuration file has INI format. The <tt>emir</tt> section contains
+use to have +.json+ extension.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The main configuration file has INI format. The +emir-serp+ section contains
 the daemon scoped options while the others are to describe the different
 service entries to be registered. In these cases the exact name is
 indifferent, they just have to differ from each other and must avoid the
-<tt>emir</tt> name as well.</p></div>
-<h3 id="_configuration_options">5.1. Configuration options</h3><div style="clear:left"></div>
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<div class="paragraph"><p>The optional names are case-insensitive.</p></div>
-</td>
-</tr></table>
-</div>
-<h4 id="_url">5.1.1. url</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>URL of the EMIR service to connect in a
-protocol://domain:port format.</p></div>
-<div class="paragraph"><p>The protocol part is not mandatory if https (default)
++emir+ name as well.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Configuration options
+~~~~~~~~~~~~~~~~~~~~~</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[NOTE]
+========
+The optional names are case-insensitive.
+========</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>url
+^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ Yes</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>URL of the EMIR service to connect in a
+protocol://domain:port format.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The protocol part is not mandatory if https (default)
 The port part is not mandatory if 54321 (default)
-The domain part is mandatory</p></div>
-<div class="paragraph"><p>Examples:
+The domain part is mandatory</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Examples:
 url = emiregistry2.grid.niif.hu
-url = <a href="https://emiregistry2.grid.niif.hu">https://emiregistry2.grid.niif.hu</a>
-url = <a href="https://emiregistry2.grid.niif.hu:54321">https://emiregistry2.grid.niif.hu:54321</a></p></div>
-<h4 id="_period">5.1.2. period</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The period of the registration/update messages. Its value is given in
-minutes.</p></div>
-<h4 id="_validity">5.1.3. validity</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The validity of the registration entries. Its value is given in minutes.</p></div>
-<h4 id="_cert">5.1.4. cert</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/hostcert.pem</p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>User certificate file location in PEM format. Only used and checked if the protocol in
-the url option is <em>https</em>.</p></div>
-<h4 id="_key">5.1.5. key</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/hostkey.pem</p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>User key file location in PEM format. Only used and checked if the protocol in
-the url option is <em>https</em>.</p></div>
-<h4 id="_cadir">5.1.6. cadir</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> /etc/grid-security/certificates</p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>A path pointing to the store where the PEM certificate of the trusted
+url = https://emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu:54321</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>period
+^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ Yes</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The period of the registration/update messages. Its value is given in
+minutes.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>validity
+^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ Yes</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The validity of the registration entries. Its value is given in minutes.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>cert
+^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ /etc/grid-security/hostcert.pem</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>User certificate file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>key
+^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ /etc/grid-security/hostkey.pem</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>User key file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>cadir
+^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ /etc/grid-security/certificates</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>A path pointing to the store where the PEM certificate of the trusted
 Certificate Authorities can be found. Only used and checked if the protocol in
-the url option is <em>https</em>.</p></div>
-<h4 id="_verbosity">5.1.7. verbosity</h4>
-<div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> error</p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>Logging verbosity. The parameter is optional. If missing or an invalid
+the url option is 'https'.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>verbosity
+^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ +emir+ section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ error</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Logging verbosity. The parameter is optional. If missing or an invalid
 value is given, the default value will be used. The logs are written
-into the log file that can be found in the <em>/var/log/emi/emird</em>
-directory by default.</p></div>
-<h4 id="_service_endpoint_url">5.1.8. Service_Endpoint_URL</h4>
-<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The Service Endpoint URL to be propagated. If this option is missing an
-error message will be raised.</p></div>
-<h4 id="_service_name">5.1.9. Service_Name</h4>
-<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The Service Name to be propagated. If this option is missing then the
-service entry will contains no such component.</p></div>
-<h4 id="_service_type">5.1.10. Service_Type</h4>
-<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The Service Type to be propagated. If this option is missing then the
-service entry will contains no such component.</p></div>
-<h4 id="_service_endpoint_interfacename">5.1.11. Service_Endpoint_InterfaceName</h4>
-<div class="paragraph"><p><tt>Location:</tt> simple service entry section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> No</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The Service Endpoint Interface Name to be propagated. If this option is missing then the
-service entry will contains no such component.</p></div>
-<h4 id="_json_file_location">5.1.12. json_file_location</h4>
-<div class="paragraph"><p><tt>Location:</tt> advanced service entry section</p></div>
-<div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
-<div class="paragraph"><p><tt>Mandatory:</tt> Yes</p></div>
-<div class="paragraph"><p><tt>Description:</tt></p></div>
-<div class="paragraph"><p>The service entry can be also defined in a single external json formatted
-file per service. Any allowed json attributes are allowed in this way.
-The location of this file must be defined in this ini variable. The
-recommended place for these files is under the <tt>/etc/emi/emird/</tt>
+into the log file that can be found in the _/var/log/emi/emir-serp_
+directory by default.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Service_Endpoint_URL
+^^^^^^^^^^^^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ simple service entry section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ Yes</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The Service Endpoint URL to be propagated. If this option is missing an
+error message will be raised.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Service_Name
+^^^^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ simple service entry section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The Service Name to be propagated. If this option is missing then the
+service entry will contains no such component.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Service_Type
+^^^^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ simple service entry section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The Service Type to be propagated. If this option is missing then the
+service entry will contains no such component.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Service_Endpoint_InterfaceName
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ simple service entry section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ No</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The Service Endpoint Interface Name to be propagated. If this option is missing then the
+service entry will contains no such component.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>json_file_location
+^^^^^^^^^^^^^^^^^^</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Location:+ advanced service entry section</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Default value:+ _No default value_</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Mandatory:+ Yes</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>+Description:+</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>  The service entry can be also defined in a single external json formatted
+  file per service. Any allowed json attributes are allowed in this way.
+  The location of this file must be defined in this ini variable. The
+recommended place for these files is under the +/etc/emi/emir-serp/+
 directory and naming them after the name of the given service with
-<tt>.json</tt> extension.</p></div>
++.json+ extension.</tt></pre>
+</div></div>
 </div>
 <h2 id="_how_to_use_emir_api">6. How to use EMIR API?</h2>
 <div class="sectionbody">
@@ -2438,7 +2682,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-13 12:41:47 CEST
+Last updated 2012-07-13 16:34:02 CEST
 </div>
 </div>
 </body>
