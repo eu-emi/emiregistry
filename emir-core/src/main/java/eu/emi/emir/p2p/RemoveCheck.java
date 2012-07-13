@@ -57,14 +57,14 @@ public class RemoveCheck implements Runnable {
 	@Override
 	public void run() {
 		/** remove all GSRs from the database that are contains only the following elements:
-		 *        Service_Endpoint_URL
+		 *        Service_Endpoint_ID
 		 *        updateSince
 		 *  and not contains the following elements:
 		 *        Service_CreationTime
 		 *        Service_ExpireOn
 		 */
 		String query = "{ $and: [ "+
-		"{ $and: [ { Service_Endpoint_URL : { $exists : true } }, { updateSince : { $exists : true } } ] }" +
+		"{ $and: [ { Service_Endpoint_ID : { $exists : true } }, { updateSince : { $exists : true } } ] }" +
 		"," +
 		"{ $and: [ { Service_CreationTime : { $exists : false } }, { Service_ExpireOn : { $exists : false } } ] }" +
 		"] }";
