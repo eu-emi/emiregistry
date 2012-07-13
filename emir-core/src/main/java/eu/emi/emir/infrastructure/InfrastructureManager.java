@@ -504,7 +504,7 @@ public class InfrastructureManager implements ServiceInfrastructure {
 					logger.debug("send delete");
 					res = client
 							.queryParam(
-									ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+									ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 											.getAttributeName(),
 									jos.getString(i)).delete(
 									ClientResponse.class);
@@ -539,42 +539,42 @@ public class InfrastructureManager implements ServiceInfrastructure {
 
 			if (res.getStatus() == Status.CONFLICT.getStatusCode()) {
 				int failedIndex = 0;
-				String failedURL = "";
+				String failedSEID = "";
 				JSONArray failedJSONs = res.getEntity(JSONArray.class);
 				try {
-					failedURL = failedJSONs
+					failedSEID = failedJSONs
 							.getJSONObject(failedIndex)
-							.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+							.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 									.getAttributeName()).toString();
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
-				String currentURL = "";
+				String currentSEID = "";
 				int j = 0;
 				while (j != jos.length()) {
 					try {
-						currentURL = jos
+						currentSEID = jos
 								.getJSONObject(j)
-								.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+								.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 										.getAttributeName()).toString();
 					} catch (JSONException e) {
 						Log.logException("", e);
 						break;
 					}
-					if (!currentURL.equals(failedURL)) {
+					if (!currentSEID.equals(failedSEID)) {
 						// The 'currentURL' was successfully synchronized
-						deleteentry(currentURL);
+						deleteentry(currentSEID);
 					} else {
 						// Error happened in the synchronization
 						failedIndex++;
 						if (failedIndex < failedJSONs.length()) {
 							try {
 								// next failed URL calculation
-								failedURL = failedJSONs
+								failedSEID = failedJSONs
 										.getJSONObject(failedIndex)
-										.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+										.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 												.getAttributeName()).toString();
 							} catch (JSONException e) {
 								Log.logException("", e);

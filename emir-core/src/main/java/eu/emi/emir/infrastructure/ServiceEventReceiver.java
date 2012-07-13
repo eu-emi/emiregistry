@@ -84,7 +84,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 		}
 		try {
 			for (int i=0; i<jos.length(); i++){
-				IDs.add(jos.getJSONObject(i).getString("Service_Endpoint_URL"));
+				IDs.add(jos.getJSONObject(i).getString("Service_Endpoint_ID"));
 			}
 		} catch (JSONException e1) {
 			if (logger.isDebugEnabled()) {
@@ -107,7 +107,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 							JSONArray errors = res.getEntity(JSONArray.class);
 							for (int i=0; i<errors.length(); i++){
 								try {
-									IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_URL"));
+									IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_ID"));
 								} catch (JSONException e) {
 									Log.logException("", e);
 								}
@@ -138,7 +138,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 						if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
 							JSONArray errors = res.getEntity(JSONArray.class);
 							for (int i=0; i<errors.length(); i++){
-								IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_URL"));
+								IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_ID"));
 							}
 						}
 						// DB sync
@@ -158,18 +158,18 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			if (logger.isDebugEnabled()) {
 				logger.debug("service added delete event fired");
 			}
-			String deleteURL = null;
+			String deleteSEID = null;
 			try{
-				deleteURL = ((JSONObject) event.getData()).getString("Service_Endpoint_URL");
+				deleteSEID = ((JSONObject) event.getData()).getString("Service_Endpoint_ID");
 				ClientResponse res = client.queryParam(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
-							deleteURL).delete(ClientResponse.class);
+							deleteSEID).delete(ClientResponse.class);
 				if ( res.getStatus() == Status.OK.getStatusCode() ){
 					if (parent_lost){
 						// DB sync
 						List<String> ID = new ArrayList<String>();
-						ID.add(deleteURL);
+						ID.add(deleteSEID);
 						parent_lost = !infrastructure.dbSynchronization(ID, Method.DELETE, res.getStatus());
 					}
 				} else if ( res.getStatus() == Status.UNAUTHORIZED.getStatusCode() ) {
@@ -177,7 +177,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 				}
 			} catch(ClientHandlerException e){
 				parent_lost = true;
-				infrastructure.handleDelete(deleteURL);
+				infrastructure.handleDelete(deleteSEID);
 			} catch (JSONException e) {
 				logger.warn(e.getCause());
 			}
