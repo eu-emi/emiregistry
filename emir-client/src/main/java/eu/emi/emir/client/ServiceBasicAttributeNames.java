@@ -28,7 +28,7 @@ public enum ServiceBasicAttributeNames {
 	        SERVICE_EXTENSIONS("Service_Extensions", JSONArray.class),
 	        SERVICE_ENDPOINT_ID("Service_Endpoint_ID",null,"GLUE 2.0 Service Endpoint ID",true),
 			SERVICE_ENDPOINT_CAPABILITY("Service_Endpoint_Capability",JSONArray.class,"Service Endpoint Capabilities",true), 
-			SERVICE_ENDPOINT_TECHNOLOGY("Service_Endpoint_Technology"), 
+			SERVICE_ENDPOINT_TECHNOLOGY("Service_Endpoint_Technology",null,"Technology used by the Endpoint",true), 
 			SERVICE_ENDPOINT_IFACENAME("Service_Endpoint_InterfaceName",null,"Service Endpoint Interface Name",true), 
 			SERVICE_ENDPOINT_IFACE_VER("Service_Endpoint_InterfaceVersion",null,"Service Endpoint Interface Version",true),
 			SERVICE_ENDPOINT_IFACE_EXT("Service_Endpoint_InterfaceExtension"), 
