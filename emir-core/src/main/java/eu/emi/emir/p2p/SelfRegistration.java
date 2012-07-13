@@ -75,12 +75,27 @@ public class SelfRegistration implements Runnable {
 		}
 		// Fill the infos
 		myInfos = new JSONObject();
-		myInfos.put("Service_Endpoint_URL", myUrl);
-		myInfos.put("Service_Name", "IndexService");
-		myInfos.put("Service_Type", "GSR");
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ID.getAttributeName(), myUrl);
+		myInfos.put("Service_Name", "EMI IndexService");
+		myInfos.put("Service_Type", "GSR");	// in GLUE2 ServiceType_t syntax: eu.emi.emir.gsr
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), myUrl);
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), myUrl);
+		JSONArray capability = new JSONArray();
+		capability.put("information.model");
+		capability.put("information.discovery");
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(), capability);
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_TECHNOLOGY.getAttributeName(), "webservice");
+		String ifaceName = "http";
+		if (myUrl.substring(0, 5).equals("https")) {
+			ifaceName += "s";
+		}
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACENAME.getAttributeName(), ifaceName);
+		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER.getAttributeName(), "1.0.0");
+
+		System.err.println(myInfos.toString());
 		try {
 			String DN = eu.emi.emir.security.SecurityManager.getServerDistinguishedName();
-			myInfos.put("Service_DN", DN);
+			myInfos.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(), DN);
 			logger.info("Server's DN: "+DN);
 				
 		} catch(NullPointerException e){

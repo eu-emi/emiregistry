@@ -50,7 +50,6 @@ public class ServiceAdminManager {
 	private static Logger log = Log.getLogger(Log.EMIR_CORE, ServiceAdminManager.class);
 	
 	private ServiceDatabase serviceDB = null;
-	private String dbVersion = null;
 
 	
 
@@ -60,12 +59,10 @@ public class ServiceAdminManager {
 	 */
 	public ServiceAdminManager(){
 		serviceDB = new MongoDBServiceDatabase();
-		dbVersion = serviceDB.getDBVersion();
 	}
 	
 	public ServiceAdminManager(MongoDBServiceDatabase mongoDB){
 		serviceDB = mongoDB;
-		dbVersion = serviceDB.getDBVersion();
 	}
 
 	/**
@@ -340,85 +337,54 @@ public class ServiceAdminManager {
 	 */
 	public boolean checkOwner(String owner, String sendpointID) throws QueryException,
 			PersistentStoreFailureException, JSONException {
-		List<ServiceObject> query1 = new ArrayList<ServiceObject>();
-		List<ServiceObject> query2 = new ArrayList<ServiceObject>();
-		boolean oldMongoDBUse = true;
+		List<ServiceObject> query = new ArrayList<ServiceObject>();
 
-		if (dbVersion.compareTo("2.0.1") >= 0) {
-			oldMongoDBUse = false;
-			// since 2.0.1 supported the "and" operation
-			/* Query structure:
-			 *        {"$or":[{"$and":[{"serviceOwner":"<DN>"},
-			 *                         {"Service_Endpoint_ID":"<ID>"}]},
-			 *                {"$and":[{"Service_DN":"<DN>"},
-			 *                         {"Service_Type":"GSR"}]}
-			 *                 ]}
-			 */
-			// AND1 structure
-			JSONArray and1 = new JSONArray();
-			JSONObject andParam1 = new JSONObject();
-			andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(), owner);
-			and1.put(andParam1);
+		// since 2.0.1 supported the "and" operation
+		/* Query structure:
+		 *        {"$or":[{"$and":[{"serviceOwner":"<DN>"},
+		 *                         {"Service_Endpoint_ID":"<ID>"}]},
+		 *                {"$and":[{"Service_DN":"<DN>"},
+		 *                         {"Service_Type":"GSR"}]}
+		 *                 ]}
+		 */
+		// AND1 structure
+		JSONArray and1 = new JSONArray();
+		JSONObject andParam1 = new JSONObject();
+		andParam1.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(), owner);
+		and1.put(andParam1);
 
-			JSONObject andParam2 = new JSONObject();
-			andParam2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
-			and1.put(andParam2);
+		JSONObject andParam2 = new JSONObject();
+		andParam2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
+		and1.put(andParam2);
 
-			JSONObject orParam1 = new JSONObject();
-			orParam1.put("$and", and1);
+		JSONObject orParam1 = new JSONObject();
+		orParam1.put("$and", and1);
 			
-			// AND2 structure
-			JSONArray and2 = new JSONArray();
-			JSONObject andParam21 = new JSONObject();
-			andParam21.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(), owner);
-			and2.put(andParam21);
+		// AND2 structure
+		JSONArray and2 = new JSONArray();
+		JSONObject andParam21 = new JSONObject();
+		andParam21.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(), owner);
+		and2.put(andParam21);
 
-			JSONObject andParam22 = new JSONObject();
-			andParam22.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
-			and2.put(andParam22);
+		JSONObject andParam22 = new JSONObject();
+		andParam22.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
+		and2.put(andParam22);
 
-			JSONObject orParam2 = new JSONObject();
-			orParam2.put("$and", and2);
+		JSONObject orParam2 = new JSONObject();
+		orParam2.put("$and", and2);
 
-			JSONArray or = new JSONArray();
-			or.put(orParam1);
-			or.put(orParam2);
+		JSONArray or = new JSONArray();
+		or.put(orParam1);
+		or.put(orParam2);
 
-			// OR structure
-			JSONObject OR = new JSONObject();
-			OR.put("$or", or);
-			//System.out.println(OR.toString());
-			query1 = serviceDB.query(OR.toString());
-			//System.out.println(objects.toString());
+		// OR structure
+		JSONObject OR = new JSONObject();
+		OR.put("$or", or);
+		//System.out.println(OR.toString());
+		query = serviceDB.query(OR.toString());
+		//System.out.println(objects.toString());
 
-		} else {
-			// First query
-			Map<String, String> map = new HashMap<String, String>();
-			
-			map.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN.getAttributeName(),
-					owner);
-			
-			map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
-			
-			JSONObject jo = new JSONObject(map);
-			
-			query1 = serviceDB.query(jo.toString());
-			
-			// by DSR the second query does not need.
-			if (EMIRServer.getServerProperties().isGlobalEnabled()){
-				// Second query
-				// We accept every messages from GSRs if I was GSR.
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(),
-						owner);			
-				map2.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "GSR");
-				
-				JSONObject jo2 = new JSONObject(map2);
-				query2 = serviceDB.query(jo2.toString());
-			}
-		}
-
-		if (!query1.isEmpty() || (oldMongoDBUse && !query2.isEmpty()) )
+		if (!query.isEmpty())
 			return true;
 		else
 			return false;
