@@ -257,67 +257,6 @@ public class ServiceAdminResource {
 		return Response.ok(arr).build();
 	}
 
-	/**
-	 * updating only one entry
-	 * 
-	 * @throws JSONException
-	 * */
-
-	public Response updateService(JSONObject serviceInfo)
-			throws WebApplicationException, JSONException {
-		try {
-			Client c = (Client) req.getAttribute("client");
-			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
-				c = Client.getAnonymousClient();
-			}
-			String owner = c.getDistinguishedName();
-			String url = serviceInfo
-					.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-							.getAttributeName());
-			serviceInfo
-					.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
-							.getAttributeName(), c.getDistinguishedName());
-			if (logger.isDebugEnabled()) {
-				logger.debug("updating service by url: " + url + ", Owned by: "
-						+ owner);
-			}
-
-			if (owner != null
-					&& serviceAdmin
-							.checkOwner(
-									owner,
-									serviceInfo
-											.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-													.getAttributeName()))) {
-				JSONObject res;
-				try {
-					res = serviceAdmin.updateService(serviceInfo);
-				} catch (UnknownServiceException e) {
-					return Response.status(Status.NOT_FOUND).build();
-				}
-				return Response.ok(res).build();
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Service with url: "
-							+ serviceInfo
-									.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-											.getAttributeName())
-							+ " does not exist.");
-				}
-				return Response
-						.status(Status.UNAUTHORIZED)
-						.entity("Access denied for DN - " + owner
-								+ " to update service with the URL - " + url)
-						.build();
-			}
-
-		} catch (Exception e) {
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
-		}
-	}
 
 	/**
 	 * updating array of entries
