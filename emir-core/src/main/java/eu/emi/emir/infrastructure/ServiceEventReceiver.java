@@ -84,7 +84,9 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 		}
 		try {
 			for (int i=0; i<jos.length(); i++){
-				IDs.add(jos.getJSONObject(i).getString("Service_Endpoint_ID"));
+				IDs.add(jos.getJSONObject(i).getString(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+									.getAttributeName()));
 			}
 		} catch (JSONException e1) {
 			if (logger.isDebugEnabled()) {
@@ -107,7 +109,9 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 							JSONArray errors = res.getEntity(JSONArray.class);
 							for (int i=0; i<errors.length(); i++){
 								try {
-									IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_ID"));
+									IDs.remove(errors.getJSONObject(i).getString(
+											ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+													.getAttributeName()));
 								} catch (JSONException e) {
 									Log.logException("", e);
 								}
@@ -138,7 +142,9 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 						if ( res.getStatus() == Status.CONFLICT.getStatusCode() ){
 							JSONArray errors = res.getEntity(JSONArray.class);
 							for (int i=0; i<errors.length(); i++){
-								IDs.remove(errors.getJSONObject(i).getString("Service_Endpoint_ID"));
+								IDs.remove(errors.getJSONObject(i).getString(
+											ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+												.getAttributeName()));
 							}
 						}
 						// DB sync
@@ -160,7 +166,9 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 			}
 			String deleteSEID = null;
 			try{
-				deleteSEID = ((JSONObject) event.getData()).getString("Service_Endpoint_ID");
+				deleteSEID = ((JSONObject) event.getData()).getString(
+											ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+													.getAttributeName());
 				ClientResponse res = client.queryParam(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
