@@ -77,6 +77,9 @@ public class ServiceAdminResource {
 		return p;
 	}
 
+	/**
+	 * Only for testing purpose
+	 * */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public JSONObject getServicebyID(@Context UriInfo infos)
