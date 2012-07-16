@@ -6,10 +6,14 @@ package eu.emi.emir.resource;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXB;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -19,7 +23,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mongodb.QueryBuilder;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
 import eu.emi.emir.TestRegistryBase;
+import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;
@@ -40,13 +48,14 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 
 	public static MongoDBServiceDatabase db;
 
-	@Before
-	public void setUp() throws JSONException, ExistingResourceException,
+//	@Before
+	public void _setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, 12);
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
-				"services-test");
+				"services");
 		JSONObject date = new JSONObject();
 		date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
 		for (int i = 0; i < 50; i++) {
@@ -76,6 +85,35 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			db.insert(so);
 		}
 	}
+	
+	@Before
+	public void setUp() throws JSONException, ExistingResourceException,
+			PersistentStoreFailureException {
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
+				"services");
+		db.deleteAll();
+		for (int i = 0; i < 50; i++) {
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), "http://" + UUID.randomUUID());
+			jo.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"jms");
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "critical");
+			ServiceObject so = new ServiceObject(jo);
+			db.insert(so);
+		}
+		for (int i = 0; i < 50; i++) {
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), "http://" + UUID.randomUUID());
+			jo.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"sms");
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "ok");
+			ServiceObject so = new ServiceObject(jo);
+			db.insert(so);
+		}		
+	}
 
 	@After
 	public void cleanUp() throws JSONException {
@@ -89,16 +127,17 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindByType() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI + "/services?Service_Type=jms");
-			// JSONObject o =
-			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-			JSONArray o = cr.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);
+			EMIRClient cr = new EMIRClient(BaseURI);
+			MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+			java.util.List<String> lst = new ArrayList<String>();
+			lst.add("jms");
+			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
+			JSONArray o = cr.queryByQueryParams(map);
+			System.out.println(o);
 			assertTrue(o.length() == 50);
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
+			fail();
 		}
 
 	}
@@ -106,12 +145,13 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindNone() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services?Service_Type=blah");
-			JSONArray o = cr.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);
-
+			EMIRClient cr = new EMIRClient(BaseURI);
+			MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+			java.util.List<String> lst = new ArrayList<String>();
+			lst.add("blah");
+			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
+			JSONArray o = cr.queryByQueryParams(map);
+			System.out.println(o);
 			assertTrue(o.length() == 0);
 		} catch (Exception e) {
 			fail();
@@ -123,18 +163,19 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testLimit20() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services?Service_Type=jms&limit=20");
-			// JSONObject o =
-			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-			JSONArray o = cr.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);
-			System.out.println(o.length());
+			EMIRClient cr = new EMIRClient(BaseURI);
+			MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+			java.util.List<String> lst = new ArrayList<String>();
+			lst.add("jms");
+			java.util.List<String> lstLimit = new ArrayList<String>();
+			lstLimit.add("20");
+			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
+			map.put("limit", lstLimit);
+			JSONArray o = cr.queryByQueryParams(map);
 			assertTrue(o.length() == 20);
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
+			fail();
 		}
 
 	}
@@ -142,18 +183,20 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindLast30() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services?Service_Type=jms&skip=20");
-			// JSONObject o =
-			// cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-			JSONArray o = cr.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);
+			EMIRClient cr = new EMIRClient(BaseURI);
+			MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+			java.util.List<String> lst = new ArrayList<String>();
+			lst.add("jms");
+			java.util.List<String> lstSkip = new ArrayList<String>();
+			lstSkip.add("20");
+			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
+			map.put("skip", lstSkip);
+			JSONArray o = cr.queryByQueryParams(map);
 			System.out.println(o.length());
 			assertTrue(o.length() == 30);
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
+			fail();			
 		}
 
 	}
@@ -161,17 +204,24 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testFindLastHalfOf40() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services?Service_Type=jms&skip=20&limit=20");
-			JSONArray o = cr.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(JSONArray.class);
-
-			assertEquals(20, o.length());
+			EMIRClient cr = new EMIRClient(BaseURI);
+			MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+			java.util.List<String> lst = new ArrayList<String>();
+			lst.add("jms");
+			java.util.List<String> lstLimit = new ArrayList<String>();
+			lstLimit.add("20");
+			java.util.List<String> lstSkip = new ArrayList<String>();
+			lstSkip.add("20");
+			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
+			map.put("skip", lstSkip);
+			map.put("limit", lstLimit);
+			JSONArray o = cr.queryByQueryParams(map);
+			System.out.println(o.length());
+			assertTrue(o.length() == 20);
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail();			
 		}
-
 	}
 
 	@Test
@@ -264,8 +314,8 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			JAXB.marshal(o, System.out);
 			assertTrue(o.getCount().equals(new BigInteger("50")));
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
+			fail();
 		}
 	}
 
@@ -279,50 +329,30 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			JAXB.marshal(o, System.out);
 			assertTrue(o.getCount().equals(new BigInteger("50")));
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
-		}
-	}
-
-	@Test
-	public void testGlue2QueryCollection1() {
-		try {
-			JSONObject entry1 = new JSONObject();
-			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName(), "http://1");
-			ServiceObject so = new ServiceObject(entry1);
-			db.insert(so);
-
-			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services/query.xml?Service_Endpoint_URL=http://1");
-			QueryResult o = cr.getClientResource().get(QueryResult.class);
-			JAXB.marshal(o, System.out);
-			assertTrue(o.getCount().equals(new BigInteger("1")));
-		} catch (Exception e) {
 			fail();
-			e.printStackTrace();
 		}
 	}
 
 	@Test
 	public void testGlue2QueryCollectionWithParamMIMEType() {
 		try {
-			JSONObject entry1 = new JSONObject();
+			JSONObject entry1 = TestValueConstants.getJSONWithMandatoryAttributes();
 			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-					.getAttributeName(), "http://1");
+					.getAttributeName(), "http://3");
 			ServiceObject so = new ServiceObject(entry1);
 			db.insert(so);
 
 			EMIRClient cr = new EMIRClient(BaseURI
-					+ "/services?Service_Endpoint_URL=http://1");
+					+ "/services?Service_Endpoint_URL=http://3");
 			QueryResult o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_XML_TYPE)
 					.get(QueryResult.class);
 			JAXB.marshal(o, System.out);
 			assertTrue(o.getCount().equals(new BigInteger("1")));
 		} catch (Exception e) {
-			fail();
 			e.printStackTrace();
+			fail();
 		}
 	}
 

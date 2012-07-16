@@ -4,7 +4,6 @@
 package eu.emi.emir.resource;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 import eu.emi.emir.TestRegistryBaseWithSecurity;
 import eu.emi.emir.TestValueConstants;
@@ -35,19 +33,18 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
  */
 public class TestServiceAdminResourceWithSecurity extends
 		TestRegistryBaseWithSecurity {
-	@Test	
+	@Test
 	public void testRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin",getSecurityProperties_2());
-		
+		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin",
+				getSecurityProperties_2());
+
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		JSONArray ja = new JSONArray();
 		ja.put(jo);
-		
-		cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(ja);
+
+		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).post(ja);
 		EMIRClient cr1 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_ID=1",
 				getSecurityProperties_2());
@@ -56,53 +53,43 @@ public class TestServiceAdminResourceWithSecurity extends
 		assertEquals("http://1",
 				jo1.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 						.getAttributeName()));
-		
-		
+
 	}
-	
+
 	@Test
-	public void testServices(){
-		//what about services?
-				EMIRClient cr2 = new EMIRClient(BaseURI + "/services",getSecurityProperties_2());
-				JSONArray o = cr2.getClientResource()
-						.accept(MediaType.APPLICATION_JSON_TYPE)
-						.get(JSONArray.class);
-				System.out.println(o);
+	public void testAccessAuthecticatedServices() {
+		// EMIRClient cr2 = new EMIRClient(BaseURI +
+		// the undefined users should be able to access the services
+		EMIRClient cr1 = new EMIRClient(BaseURI + "/services",
+				getSecurityProperties_2());
+		JSONArray o = cr1.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+		System.out.println(o);
+		assertTrue(o != null);
+
+		// and the users should be able to access the services too
+		EMIRClient cr2 = new EMIRClient(BaseURI + "/services",
+				getSecurityProperties_2());
+		JSONArray o1 = cr2.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+		assertTrue(o1 != null);
+
 	}
-	
-	
+
 	@Test
 	public void testUnAuthzRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
-		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
-		JSONArray ja = new JSONArray();
-		ja.put(jo);
-		EMIRClient cr = new EMIRClient(BaseURI
+		EMIRClient cr2 = new EMIRClient(BaseURI
 				+ "/serviceadmin?Service_Endpoint_ID=1",
-				getSecurityProperties_2());
-		try {
-			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-					.post(ClientResponse.class,ja).getStatus());
-		} catch (UniformInterfaceException e) {
-			e.printStackTrace();
-			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
-					.compareTo(e.getResponse().getStatus()) == 0);
-		}
+				getSecurityProperties_3());
 
-		System.out.println("/serviceadmin");
-		EMIRClient cr1 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_ID=1",
-				getSecurityProperties_2());
-		try {
-			assertNotSame(ClientResponse.Status.OK.getStatusCode(), cr1.getClientResource()
-					.accept(MediaType.APPLICATION_JSON_TYPE)
-					.get(ClientResponse.class));
-		} catch (UniformInterfaceException e) {
-			assertTrue(new Integer(Status.UNAUTHORIZED.getStatusCode())
-					.compareTo(e.getResponse().getStatus()) == 0);
-		}
-		
+		assertEquals(
+				Status.UNAUTHORIZED,
+				Status.fromStatusCode(cr2.getClientResource()
+						.accept(MediaType.APPLICATION_JSON_TYPE)
+						.get(ClientResponse.class).getStatus()));
+
 	}
 
 }

@@ -167,6 +167,45 @@ public class TestRegistryBaseWithSecurity {
 		return csp;
 	}
 	
+	public static ClientSecurityProperties getSecurityProperties_3(){
+		Properties p = new Properties();
+		// keystore setting
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ CredentialProperties.DEFAULT_PREFIX
+				+ CredentialProperties.PROP_PASSWORD, "emi");
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ CredentialProperties.DEFAULT_PREFIX
+				+ CredentialProperties.PROP_FORMAT,
+				CredentialProperties.CredentialFormat.pkcs12.toString());
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ CredentialProperties.DEFAULT_PREFIX
+				+ CredentialProperties.PROP_LOCATION,
+				"src/test/resources/certs/demo-user-2.p12");
+
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ TruststoreProperties.DEFAULT_PREFIX
+				+ TruststoreProperties.PROP_TYPE,
+				TruststoreProperties.TruststoreType.keystore.toString());
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ TruststoreProperties.DEFAULT_PREFIX
+				+ TruststoreProperties.PROP_KS_PATH,
+				"src/test/resources/certs/demo-server.jks");
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ TruststoreProperties.DEFAULT_PREFIX
+				+ TruststoreProperties.PROP_KS_TYPE, "JKS");
+		p.setProperty(ClientSecurityProperties.PREFIX
+				+ TruststoreProperties.DEFAULT_PREFIX
+				+ TruststoreProperties.PROP_KS_PASSWORD, "emi");
+		
+		AuthnAndTrustProperties authn = new AuthnAndTrustProperties(p, ClientSecurityProperties.PREFIX
+				+ TruststoreProperties.DEFAULT_PREFIX, ClientSecurityProperties.PREFIX
+				+ CredentialProperties.DEFAULT_PREFIX);
+		
+		ClientSecurityProperties csp = new ClientSecurityProperties(p, authn); 
+		
+		return csp;
+	}
+	
 
 //	private static void setGeneralSettings(Properties p) {
 //		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");

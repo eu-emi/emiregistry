@@ -174,7 +174,7 @@ public class EMIRClient {
 		ClientResponse res = getClientResource()
 				.path("serviceadmin")
 				.queryParam(
-						ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName(),
 						url).delete(ClientResponse.class);
 		return res;

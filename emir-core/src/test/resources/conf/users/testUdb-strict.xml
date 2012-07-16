@@ -6,7 +6,7 @@
 			<value>serviceowner</value>
 		</attribute>				
 	</entry>
-	<entry key="EMAILADDRESS=emiregistry2@user.eu, CN=EMIRegistry-Demo-User-2, OU=JSC, O=Forschungszentrum Juelich GmbH, L=Juelich, C=DE">
+	<entry key="EMAILADDRESS=xyz@user.eu, CN=EMIRegistry-Demo-User-2, OU=JSC, O=Forschungszentrum Juelich GmbH, L=Juelich, C=DE">
 		<attribute name="role">
 		    <!-- admin can change all the services -->
 			<value>admin</value>

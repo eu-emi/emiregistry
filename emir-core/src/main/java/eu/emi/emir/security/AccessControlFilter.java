@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
@@ -100,8 +101,13 @@ public class AccessControlFilter implements ContainerRequestFilter {
 			Log.logException("Error setting up authorisation check", e, logger);
 			AuthZAttributeStore.removeClient();
 			AuthZAttributeStore.removeTokens();
-			throw new AuthorisationException("Authorisation failed. Reason: "
-					+ e.getMessage());
+			AuthorisationException ae = new AuthorisationException("Authorisation failed. Reason: "
+					+ e.getMessage(), e);
+			Response res = Response
+			.status(Status.UNAUTHORIZED)
+			.entity("Error performing access control or Unauthorised access: \n" + e).build();
+			throw new WebApplicationException(ae, res);
+			
 		}
 	}
 
