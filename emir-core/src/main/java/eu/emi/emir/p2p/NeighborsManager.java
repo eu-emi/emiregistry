@@ -201,7 +201,9 @@ public class NeighborsManager {
 		} else {
 			for (int i=0; i<entries.length(); i++){
 				try {
-					if (!hash.containsValue(entries.getJSONObject(i).get("Service_Endpoint_URL"))){
+					if (!hash.containsValue(entries.getJSONObject(i).get(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+										.getAttributeName()))){
 						updateNeed = true;
 					}
 				} catch (JSONException e) {
@@ -276,7 +278,8 @@ public class NeighborsManager {
 		for(int i=0; i<gsrList.length(); i++){
 			String url;
 			try {
-				url = gsrList.getJSONObject(i).getString("Service_Endpoint_URL");
+				url = gsrList.getJSONObject(i).getString(ServiceBasicAttributeNames
+								.SERVICE_ENDPOINT_URL.getAttributeName());
 				// hash calculation
 				byte[] bytesOfMessage = url.getBytes("UTF-8");
 				MessageDigest md = MessageDigest.getInstance("MD5");
