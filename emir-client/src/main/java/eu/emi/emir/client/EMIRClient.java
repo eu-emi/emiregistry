@@ -44,18 +44,21 @@ import eu.unicore.util.httpclient.IClientConfiguration;
  * 
  */
 public class EMIRClient {
-	/**
-	 * 
-	 */
+	private final String url;
 
-	private String url;
-
-	private static Logger logger = Log.getLogger(Log.EMIR_CLIENT,
+	private static final Logger logger = Log.getLogger(Log.EMIR_CLIENT,
 			EMIRClient.class);
-	Client cr = null;
+	private Client cr = null;
 
-	IClientConfiguration clientConfig = null;
+	private IClientConfiguration clientConfig = null;
 
+	/***
+	 * Creates {@link EMIRClient} object with ssl/tls
+	 * 
+	 * @param url Remote EMIR url
+	 * @param {@link IClientConfiguration} 
+	 */
+	
 	public EMIRClient(String url, IClientConfiguration clientConfig) {
 		logger.debug("creating ssl client");
 		this.clientConfig = clientConfig;
@@ -63,9 +66,6 @@ public class EMIRClient {
 		initSec();
 	}
 
-	/**
-	 * 
-	 */
 	private void initSec() {
 		ClientConfig config = new DefaultClientConfig();
 		SSLContext ctx = null;
@@ -124,14 +124,25 @@ public class EMIRClient {
 
 		return context;
 	}
-
+	
+	/***
+	 * Single argument constructor to access emir on HTTP mode
+	 * 
+	 * @param url Remote EMIR url 
+	 */
+	
 	public EMIRClient(String url) {
 		logger.debug("creating default client");
 		this.url = url;
 		cr = Client.create();
 
 	}
-
+	
+	/***
+	 * Returns remote raw resource object 
+	 * 
+	 * @return {@link WebResource}
+	 */
 	public WebResource getClientResource() {
 		return cr.resource(url);
 	}
@@ -139,7 +150,12 @@ public class EMIRClient {
 	public Client getClient() {
 		return cr;
 	}
-
+	/**
+	 * Registers an array of Service Endpoint Records, defined as {@link JSONArray}
+	 * 
+	 * @param ja An array of JSON documents containing the Service Endpoint Records
+	 * @return {@link JSONArray}
+	 */
 	public JSONArray register(JSONArray ja) {
 		ClientResponse res = getClientResource().path("serviceadmin")
 				.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -154,7 +170,7 @@ public class EMIRClient {
 		return res.getEntity(JSONArray.class);
 	}
 
-	public ClientResponse delete(String url) {
+	public ClientResponse deleteByID(String url) {
 		ClientResponse res = getClientResource()
 				.path("serviceadmin")
 				.queryParam(
@@ -163,8 +179,13 @@ public class EMIRClient {
 						url).delete(ClientResponse.class);
 		return res;
 	}
-
-	public JSONArray query(MultivaluedMap<String, String> attrMap) {
+	/***
+	 * Querying the EMIR server for Service Endpoint Records using http query parameters
+	 *
+	 * @param attrMap A map containing name value pairs
+	 * @return a {@link JSONArray} containing matching records  
+	 */
+	public JSONArray queryByQueryParams(MultivaluedMap<String, String> attrMap) {
 		JSONArray ja = null;
 		if (attrMap != null) {
 			ja = getClientResource().path("services").queryParams(attrMap)
@@ -177,13 +198,18 @@ public class EMIRClient {
 		}
 		return ja;
 	}
-
-	public JSONArray queryJSON(JSONObject queryDocument) {
+	/***
+	 * Querying the EMIR server for JSON records by JSON document containing the rich queries
+	 *
+	 * @param queryDocument A json document defining rich query, according to MongoDB query specification, @see http://www.mongodb.org/display/DOCS/Advanced+Queries
+	 * @return a {@link JSONArray} containing matching records  
+	 */
+	public JSONArray queryByJSON(JSONObject queryDocument) {
 		return getClientResource().path("services")
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(JSONArray.class, queryDocument);
 	}
-
+	
 	public QueryResult queryXML(MultivaluedMap<String, String> attrMap,
 			Integer skip, Integer limit) {
 		QueryResult ja = getClientResource().path("services")
