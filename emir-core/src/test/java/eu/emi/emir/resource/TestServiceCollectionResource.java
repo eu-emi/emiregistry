@@ -200,7 +200,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		j.put(p1);
 		j.put(p2);
 		orQueryDocument.put("$or", j);
-		assertTrue(cr.queryJSON(orQueryDocument).length()==100);
+		assertTrue(cr.queryByJSON(orQueryDocument).length()==100);
 		
 		//{ $and: [ { Service_Type: jms }, { Service_Endpoint_HealthState: critical } ] }
 //		p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "critical");
@@ -217,7 +217,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		jo.put("$ne", "ok");
 		JSONObject ne = new JSONObject();
 		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), jo);
-		assertTrue(cr.queryJSON(ne).length()==50);
+		assertTrue(cr.queryByJSON(ne).length()==50);
 		
 	}
 
