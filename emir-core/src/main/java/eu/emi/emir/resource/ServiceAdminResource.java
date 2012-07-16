@@ -186,10 +186,7 @@ public class ServiceAdminResource {
 				if (length <= 0 || length > 100) {
 					throw new WebApplicationException(Status.FORBIDDEN);
 				}
-				// Get the Endpoint URL and a time of the message from the entry
-//				String serviceurl = serviceInfo
-//						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
-//								.getAttributeName());
+				// Get the Endpoint ID and a time of the message from the entry
 				String serviceID = serviceInfo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName());
