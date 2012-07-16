@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Startup script for UNICORE/X
+# Startup script for EMIR Server
 #
 
 #

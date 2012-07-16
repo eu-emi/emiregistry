@@ -11,12 +11,13 @@
 NAME="EMIR"
 
 #This must be equal to this file name
-SERVICE=emir
+SERVICE=emi-emir
 EMIR_USER=emi
 START=/usr/sbin/emir-start.sh
 STOP=/usr/sbin/emir-stop.sh
 LASTPID=/var/run/emi/emir/emir.pid
 
+[ -f /etc/sysconfig/$SERVICE ] && . /etc/sysconfig/$SERVICE
 
 start() {
 	echo -n "Starting $NAME: "
@@ -28,7 +29,7 @@ start() {
 }
 stop() {
 	echo -n $"Stopping $NAME: "
-	runuser -s /bin/sh -c "$STOP" $EMIR_USER 
+	/sbin/runuser -s /bin/sh -c "$STOP" $EMIR_USER 
 	rm -f "/var/lock/subsys/$SERVICE"
 	echo
 }
@@ -42,13 +43,17 @@ case "$1" in
 	stop
 	;;
   status)
-	status -p "$LASTPID" "$SERVICE"
+	status -p "$PID" "$SERVICE"
 	RETVAL=$?
 	;;
   restart)
 	stop
 	start
 	;;
+  reload)
+	echo "Reloading is not supported for this service. Use restart, if the modified configuration files are not automatically reloaded." 
+	;;
+
   *)
 	echo $"Usage: $0 {start|stop|status|restart|help}"
 	exit 1
