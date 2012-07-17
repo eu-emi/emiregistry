@@ -227,11 +227,11 @@ public class TestSimpleDSR {
 	public void testServiceadminGET() throws JSONException, IOException, InterruptedException{
 		System.out.println("/serviceadmin GET test");
 		//Registration check
-		String url = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+		String SeID = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName());
 
 		ClientResponse res = getChildClient(
-				"/serviceadmin?Service_Endpoint_URL="+url).accept(
+				"/serviceadmin?Service_Endpoint_ID="+SeID).accept(
 				MediaType.APPLICATION_JSON_TYPE).get(ClientResponse.class);
 
 		assertTrue(res.getStatus() == Status.OK.getStatusCode());
