@@ -6,9 +6,10 @@
 
 
 #
-# PID file
+# Read basic configuration parameters
 #
-PID=/var/run/emi/emir.pid
+. /etc/emi/emir/startup.properties
+
 
 if [ ! -e $PID ]
 then

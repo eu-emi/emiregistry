@@ -17,12 +17,11 @@
 
 NAME="EMIR"
 
-#This must be equal to this file name
-SERVICE=emi-emir
-EMIR_USER=emi
-START=/usr/sbin/emir-start.sh
-STOP=/usr/sbin/emir-stop.sh
-LASTPID=/var/run/emi/emir/emir.pid
+#
+# Read basic configuration parameters
+#
+. /etc/emi/emir/startup.properties
+
 
 start() {
         log_daemon_msg "Starting $NAME"
@@ -43,8 +42,8 @@ stop() {
 }
 
 status(){
-         if [ -a "$LASTPID" ]; then
-                 status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
+         if [ -a "$PID" ]; then
+                 status_of_proc -p "$PID" "$SERVICE" "$NAME"
          else
                  log_failure_msg "$SERVICE is not running"
          fi

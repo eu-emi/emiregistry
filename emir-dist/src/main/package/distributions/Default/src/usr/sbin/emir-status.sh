@@ -6,11 +6,11 @@
 # before use, make sure that the "service name" used in 
 # this file is the same as in the corresponding start.sh file
 
-# service name
-SERVICE=emir
+#
+# Read basic configuration parameters
+#
+. /etc/emi/emir/startup.properties
 
-# PID file
-PID=/var/run/emi/emir.pid
 
 if [ ! -e $PID ]
 then

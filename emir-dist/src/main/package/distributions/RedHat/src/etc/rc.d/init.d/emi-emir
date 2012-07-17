@@ -10,12 +10,11 @@
 
 NAME="EMIR"
 
-#This must be equal to this file name
-SERVICE=emi-emir
-EMIR_USER=emi
-START=/usr/sbin/emir-start.sh
-STOP=/usr/sbin/emir-stop.sh
-LASTPID=/var/run/emi/emir/emir.pid
+#
+# Read basic configuration parameters
+#
+. /etc/emi/emir/startup.properties
+
 
 [ -f /etc/sysconfig/$SERVICE ] && . /etc/sysconfig/$SERVICE
 

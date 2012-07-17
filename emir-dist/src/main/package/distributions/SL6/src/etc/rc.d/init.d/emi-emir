@@ -10,12 +10,11 @@
 
 NAME="EMIR"
 
-#This must be equal to this file name
-SERVICE=emir
-EMIR_USER=emi
-START=/usr/sbin/emir-start.sh
-STOP=/usr/sbin/emir-stop.sh
-LASTPID=/var/run/emi/emir/emir.pid
+#
+# Read basic configuration parameters
+#
+. /etc/emi/emir/startup.properties
+
 
 
 start() {
@@ -42,7 +41,7 @@ case "$1" in
 	stop
 	;;
   status)
-	status -p "$LASTPID" "$SERVICE"
+	status -p "$PID" "$SERVICE"
 	RETVAL=$?
 	;;
   restart)
