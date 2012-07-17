@@ -128,8 +128,8 @@ public class ServerProperties extends PropertiesHelper {
 		META.put(PROP_MONGODB_COLLECTION_NAME, new PropertyMD("services").setDescription("MongoDB collection name"));
 		META.put(PROP_MONGODB_USERNAME, new PropertyMD().setDescription(""));
 		META.put(PROP_MONGODB_PASSWORD, new PropertyMD().setSecret().setDescription(""));
-		META.put(PROP_RECORD_EXPIRY_DEFAULT, new PropertyMD("30").setDescription(""));
-		META.put(PROP_RECORD_EXPIRY_MAXIMUM, new PropertyMD("1825").setDescription(""));
+		META.put(PROP_RECORD_EXPIRY_DEFAULT, new PropertyMD("365").setDescription(""));
+		META.put(PROP_RECORD_EXPIRY_MAXIMUM, new PropertyMD("3650").setDescription(""));
 		META.put(PROP_RECORD_MAXIMUM, new PropertyMD("100").setDescription("Maximum Number of Service Endpoints in a request while registration"));
 		META.put(PROP_RECORD_BLOCKLIST_INCOMING, new PropertyMD().setDescription(""));
 		META.put(PROP_RECORD_BLOCKLIST_OUTGOING, new PropertyMD().setDescription(""));
