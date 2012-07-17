@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -23,6 +24,7 @@ import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
 import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.Log;
 import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.util.DateUtil;
 import eu.emi.emir.util.ServiceUtil;
@@ -33,6 +35,7 @@ import eu.unicore.util.configuration.ConfigurationException;
  *
  */
 public class TestRegistrationValidator {
+	private static final Logger logger = Log.getLogger("emir.test", TestRegistrationValidator.class);
 	
 	@Before
 	public void setup(){
@@ -41,6 +44,7 @@ public class TestRegistrationValidator {
 	
 	@Test
 	public void testValidateInfo() throws Exception{
+		logger.info(TestValueConstants.getJSONWithMandatoryAttributes());
 		assertTrue(ValidatorFactory.getRegistrationValidator().validateInfo(TestValueConstants.getJSONWithMandatoryAttributes()));
 	}
 	
@@ -48,7 +52,7 @@ public class TestRegistrationValidator {
 	public void testInvalidExpiryInfo_ExceedsDefault() throws Exception{
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		DateUtil.setExpiryTime(jo, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM)+10);
-		System.out.println(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+		logger.info(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	
@@ -56,7 +60,7 @@ public class TestRegistrationValidator {
 	public void testInvalidExpiryInfo_NegativeValue() throws Exception{
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		DateUtil.setExpiryTime(jo, -EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM));
-		System.out.println(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+		logger.info(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	
@@ -75,7 +79,7 @@ public class TestRegistrationValidator {
 	@Test
 	public void testZeroLengthArray() throws JSONException, InvalidServiceDescriptionException, ConfigurationException, ParseException{
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
-		System.out.println(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
+		logger.info(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
 		jo.remove(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
 		JSONArray ja = new JSONArray();
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(),ja);

@@ -113,12 +113,13 @@ public class HttpsServer {
 	 */
 	private void startLogConfigWatcher(){
 		final String logConfig=System.getProperty("log4j.configuration");
+		final LogManager l = LogManager.getLogManager();
 		if(logConfig==null){
 			logger.debug("No log4j config defined.");
 			return;
 		} else {
 			PropertyConfigurator.configure(logConfig);
-			LogManager l = LogManager.getLogManager();
+			
 			try {
 				l.readConfiguration(new FileInputStream(new File(logConfig)));
 			} catch (SecurityException e) {
@@ -131,13 +132,24 @@ public class HttpsServer {
 		}
 		
 		try{
+			final File logProperties=logConfig.startsWith("file:")?new File(new URI(logConfig)):new File(logConfig);
 			Runnable r=new Runnable(){
 				public void run(){
 					logger.info("LOG CONFIG MODIFIED, re-configuring.");
-					PropertyConfigurator.configure(logConfig);
+					try {
+						//configure log4j
+						PropertyConfigurator.configure(logConfig);
+						//configure java logging
+						l.readConfiguration(new FileInputStream(logProperties));
+					} catch (SecurityException e) {
+						System.err.println("Log configuration file <"+logConfig+"> invalid access.");
+					} catch (FileNotFoundException e) {
+						System.err.println("Log configuration file <"+logConfig+"> not found.");
+					} catch (IOException e) {
+						System.err.println("Log configuration file <"+logConfig+"> is not readable.");
+					}
 				}
 			};
-			File logProperties=logConfig.startsWith("file:")?new File(new URI(logConfig)):new File(logConfig);
 			FileListener fw = new FileListener(logProperties, r);
 			RegistryThreadPool.getScheduledExecutorService()
 					.scheduleWithFixedDelay(fw, 5, 5, TimeUnit.SECONDS);
