@@ -26,7 +26,7 @@ fi
 #
 # setup classpath
 #
-CP=.$(find "$LIB" -name "*.jar" -exec printf ":{}" \;)
+CP=`ls $LIB/*.jar | tr '\n' :`
 
 PARAM=$*
 if [ "$PARAM" = "" ]
