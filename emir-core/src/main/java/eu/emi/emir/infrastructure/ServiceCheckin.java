@@ -117,8 +117,9 @@ public class ServiceCheckin implements Runnable {
 					try {
 						String refID = null;
 						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
-						logger.debug("Send synch messages.");
+						logger.debug("Synch messages start.");
 						while (message.length() > 0){
+							logger.trace("Send synch message with refID: "+ refID);
 							message = convert(message);
 							// message sending
 							synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -129,6 +130,7 @@ public class ServiceCheckin implements Runnable {
 							
 							message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						}
+						logger.debug("Synch messages finished.");
 					} catch (JSONException e) {
 						Log.logException("", e);
 					}
