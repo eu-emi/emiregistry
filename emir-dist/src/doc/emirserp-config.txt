@@ -3,210 +3,210 @@ EMIR-SERP Configuration
 anchor:anchor-emir-serpd-config[]
 
 The configuration of EMIR-SERP can be performed by editing its configuration
-  file or files. The configuration can be found basically in one file
-  that default location is +/etc/emi/emir-serp/emir-serp.ini+.
+file or files. The configuration can be found basically in one file
+that default location is +/etc/emi/emir-serp/emir-serp.ini+.
 
-  This file contains every configuration options that can be the EMIR-SERP daemon
-  control by, like _service url_, _logging verbosity_, _credential
-  location_, etc.
+This file contains every configuration options that can be the EMIR-SERP daemon
+control by, like _service url_, _logging verbosity_, _credential
+location_, etc.
 
-  The advanced service entries to be propagated can be described in
-  separated configuration files preferably also under this directory and
-  use to have +.json+ extension.
+The advanced service entries to be propagated can be described in
+separated configuration files preferably also under this directory and
+use to have +.json+ extension.
 
-  The main configuration file has INI format. The +emir-serp+ section contains
-  the daemon scoped options while the others are to describe the different
-  service entries to be registered. In these cases the exact name is
-  indifferent, they just have to differ from each other and must avoid the
-  +emir+ name as well.
+The main configuration file has INI format. The +emir-serp+ section contains
+the daemon scoped options while the others are to describe the different
+service entries to be registered. In these cases the exact name is
+indifferent, they just have to differ from each other and must avoid the
++emir+ name as well.
 
-  Configuration options
-  ~~~~~~~~~~~~~~~~~~~~~
+Configuration options
+~~~~~~~~~~~~~~~~~~~~~
 
-  [NOTE]
-  ========
-  The optional names are case-insensitive.
-  ========
+[NOTE]
+========
+The optional names are case-insensitive.
+========
 
-  url
-  ^^^
+url
+^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ Yes
++Mandatory:+ Yes
 
-  +Description:+
++Description:+
 
-  URL of the EMIR service to connect in a
-  protocol://domain:port format.
+URL of the EMIR service to connect in a
+protocol://domain:port format.
 
-  The protocol part is not mandatory if https (default)
-  The port part is not mandatory if 54321 (default)
-  The domain part is mandatory
+The protocol part is not mandatory if https (default)
+The port part is not mandatory if 54321 (default)
+The domain part is mandatory
 
-  Examples:
-  url = emiregistry2.grid.niif.hu
-  url = https://emiregistry2.grid.niif.hu
-  url = https://emiregistry2.grid.niif.hu:54321
+Examples:
+url = emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu:54321
 
-  period
-  ^^^^^^
+period
+^^^^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ Yes
++Mandatory:+ Yes
 
-  +Description:+
++Description:+
 
-  The period of the registration/update messages. Its value is given in
-  hours.
+The period of the registration/update messages. Its value is given in
+hours.
 
-  validity
-  ^^^^^^^^
+validity
+^^^^^^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ Yes
++Mandatory:+ Yes
 
-  +Description:+
++Description:+
 
-  The validity of the registration entries. Its value is given in hours.
+The validity of the registration entries. Its value is given in hours.
 
-  cert
-  ^^^^
+cert
+^^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ /etc/grid-security/hostcert.pem
++Default value:+ /etc/grid-security/hostcert.pem
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  User certificate file location in PEM format. Only used and checked if the protocol in
-  the url option is 'https'.
+User certificate file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.
 
-  key
-  ^^^
+key
+^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ /etc/grid-security/hostkey.pem
++Default value:+ /etc/grid-security/hostkey.pem
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  User key file location in PEM format. Only used and checked if the protocol in
-  the url option is 'https'.
+User key file location in PEM format. Only used and checked if the protocol in
+the url option is 'https'.
 
-  cadir
-  ^^^^^
+cadir
+^^^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ /etc/grid-security/certificates
++Default value:+ /etc/grid-security/certificates
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  A path pointing to the store where the PEM certificate of the trusted
-  Certificate Authorities can be found. Only used and checked if the protocol in
-  the url option is 'https'.
+A path pointing to the store where the PEM certificate of the trusted
+Certificate Authorities can be found. Only used and checked if the protocol in
+the url option is 'https'.
 
-  verbosity
-  ^^^^^^^^^
+verbosity
+^^^^^^^^^
 
-  +Location:+ +emir+ section
++Location:+ +emir+ section
 
-  +Default value:+ error
++Default value:+ error
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  Logging verbosity. The parameter is optional. If missing or an invalid
-  value is given, the default value will be used. The logs are written
-  into the log file that can be found in the _/var/log/emi/emir-serp_
-  directory by default.
+Logging verbosity. The parameter is optional. If missing or an invalid
+value is given, the default value will be used. The logs are written
+into the log file that can be found in the _/var/log/emi/emir-serp_
+directory by default.
 
-  Service_Endpoint_URL
-  ^^^^^^^^^^^^^^^^^^^^
+Service_Endpoint_URL
+^^^^^^^^^^^^^^^^^^^^
 
-  +Location:+ simple service entry section
++Location:+ simple service entry section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ Yes
++Mandatory:+ Yes
 
-  +Description:+
++Description:+
 
-  The Service Endpoint URL to be propagated. If this option is missing an
-  error message will be raised.
+The Service Endpoint URL to be propagated. If this option is missing an
+error message will be raised.
 
-  Service_Name
-  ^^^^^^^^^^^^
+Service_Name
+^^^^^^^^^^^^
 
-  +Location:+ simple service entry section
++Location:+ simple service entry section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  The Service Name to be propagated. If this option is missing then the
-  service entry will contains no such component.
+The Service Name to be propagated. If this option is missing then the
+service entry will contains no such component.
 
-  Service_Type
-  ^^^^^^^^^^^^
+Service_Type
+^^^^^^^^^^^^
 
-  +Location:+ simple service entry section
++Location:+ simple service entry section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  The Service Type to be propagated. If this option is missing then the
-  service entry will contains no such component.
+The Service Type to be propagated. If this option is missing then the
+service entry will contains no such component.
 
-  Service_Endpoint_InterfaceName
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Service_Endpoint_InterfaceName
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  +Location:+ simple service entry section
++Location:+ simple service entry section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ No
++Mandatory:+ No
 
-  +Description:+
++Description:+
 
-  The Service Endpoint Interface Name to be propagated. If this option is missing then the
-  service entry will contains no such component.
+The Service Endpoint Interface Name to be propagated. If this option is missing then the
+service entry will contains no such component.
 
-  json_file_location
-  ^^^^^^^^^^^^^^^^^^
+json_file_location
+^^^^^^^^^^^^^^^^^^
 
-  +Location:+ advanced service entry section
++Location:+ advanced service entry section
 
-  +Default value:+ _No default value_
++Default value:+ _No default value_
 
-  +Mandatory:+ Yes
++Mandatory:+ Yes
 
-  +Description:+
++Description:+
 
-  The service entry can be also defined in a single external json formatted
-  file per service. Any allowed json attributes are allowed in this way.
-  The location of this file must be defined in this ini variable. The
+The service entry can be also defined in a single external json formatted
+file per service. Any allowed json attributes are allowed in this way.
+The location of this file must be defined in this ini variable. The
 recommended place for these files is under the +/etc/emi/emir-serp/+
 directory and naming them after the name of the given service with
 +.json+ extension.

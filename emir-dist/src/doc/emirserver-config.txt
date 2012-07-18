@@ -126,15 +126,15 @@ Examples
 
 Credential as a pair of DER files:
 
- credential.format=der
- credential.password=emi
- credential.path=path/to/credentials/cert-1.der
- credential.keyPath=path/to/credentials/pk-1.der
+ emir.security.credential.format=der
+ emir.security.credential.password=emi
+ emir.security.credential.path=path/to/credentials/cert-1.der
+ emir.security.credential.keyPath=path/to/credentials/pk-1.der
 
 Credential as a JKS file (type can be autodetected in almost every case):
 
- credential.path=path/to/credentials/server1.jks
- credential.password=xxxxxx
+ emir.security.credential.path=path/to/credentials/server1.jks
+ emir.security.credential.password=xxxxxx
 
 ACL Based Authorization
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,14 +223,14 @@ The EMIR uses MongoDB to store and index the SER collections. It must be configu
 |===========================================================
 |Property name|Type|Default value|Description
 4+^e|Connection Settings
-|mongodb.hostName|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
-|mongodb.port|Integer|27017|The port number
+|emir.mongodb.hostName|string|localhost|Fully qualified host name of the machine on which MongoDB is setup
+|emir.mongodb.port|Integer|27017|The port number
 4+^e|Database Settings
-|mongodb.dbName|string|emiregistry|The name of the database to store the SERP records
-|mongodb.colName|string|services|The name of the collection (of the database) in which the records will be stored 
+|emir.mongodb.dbName|string|emiregistry|The name of the database to store the SERP records
+|emir.mongodb.colName|string|services|The name of the collection (of the database) in which the records will be stored 
 4+^e|Login Settings
-|mongodb.userName|string|-|The username to access the MongoDB database 
-|mongodb.password|string|-|The password to access the MongoDB database 
+|emir.mongodb.userName|string|-|The username to access the MongoDB database 
+|emir.mongodb.password|string|-|The password to access the MongoDB database 
 |========================= 
 
 For high loads, especially at the GSR level, it is recommended to setup MongoDB http://www.mongodb.org/display/DOCS/Replication[replication] for enhanced scalability and performance.
@@ -242,8 +242,12 @@ Building EMIR Network
 EMIR allows building a network of registries participating in a Grid infrastructure or federation. The network can be of type hierarchical 
 or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are propagated from leaf DSR node to the top level root node, called GSR.
 Each DSR has only one parent, either DSR or GSR to which it pushes it's SER collections. At the root level the P2P network of GSR is formed to replicate
-the SER collections among multiple GSRs by referring a pre-configured +Global list+. The global list contains a listing of URLs of all the GSRs, each of which should be able to access the URLs. 
-      
+the SER collections among multiple GSRs by referring a pre-configured +Global list+. The global list contains a listing of URLs of all the GSRs, each of which should be able to access the URLs.
+
+[NOTE]  
+  The machines running the EMIR servers should be time synchronised, either by NTP or any alternative mechanism
+   
+    
 How to Setup DSR?
 ^^^^^^^^^^^^^^^^^
 
@@ -254,7 +258,7 @@ In order to build hierarchy of DSRs must be able to propagate the SER collection
 |===========================================================
 |Property name|Type|Default value|Description
 4+^e|EMIR's DSR settings
-|emir.parentAddress|string|http://localhost:9127|The address/URL (http or https) of the EMIR DSR server to which it propagates its SER collection
+|emir.parentAddress|string|-|The address/URL (http or https) of the EMIR DSR server to which it propagates its SER collection
 |=========================
 
 IMPORTANT: Add DN of child DSR into the parent DSRs CONF/emir.acl or CONF/users/testUd-(strict | regsexp).xml
@@ -298,7 +302,7 @@ In EMIR, every SER has associated lifetime or (Time-To-Live) TTL. The settings c
 |===========================================================
 |Property name|Type|Default value|Description
 |emir.record.expiryMaximum|Unsigned Integer (in days)|-|Maximum assignable lifetime for the SERs containing the Service_ExpireOn property, defined in days, minimum value: 1.
-|emir.record.expiryDefault|Unsigned Integer|-|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
+|emir.record.expiryDefault|Unsigned Integer (in days)|-|The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.
 |===========================================================
 
 Filtering Service Endpoint Records (SER)
@@ -324,11 +328,7 @@ Logging Configuration
 The EMIR server uses http://logging.apache.org/log4j/1.2/index.html[log4j] to provide log facilities to record all but some of the server activities. In order to 
 change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.
 
-[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
-|===========================================================
-|Property name|Type|Default value|Description
-|log4j.configuration|filesystem path|STARTUP_SCRIPT|The log4j configuration
-|=========================
+
 
 
 Advanced HTTP Server Settings
