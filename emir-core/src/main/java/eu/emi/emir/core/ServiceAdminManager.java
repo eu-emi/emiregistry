@@ -387,6 +387,7 @@ public class ServiceAdminManager {
 		if (!query.isEmpty())
 			return true;
 		else
+			log.debug("Wrong owner ("+ owner +") try to delete this Service Endpoint ID: "+ sendpointID);
 			return false;
 	}
 	
@@ -400,6 +401,11 @@ public class ServiceAdminManager {
 	 */
 	public boolean checkMessageGenerationTime(String messageTime, String sendpointID) throws QueryException,
 			PersistentStoreFailureException {
+		// Message time checking need only by the Global EMIR
+		if (!EMIRServer.getServerProperties().isGlobalEnabled()) {
+			return true;
+		}
+		
 		Map<String, String> map = new HashMap<String, String>();
 			
 		map.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
@@ -422,6 +428,7 @@ public class ServiceAdminManager {
 				// The given message newer than the stored
 				return true;
 			} else {
+				log.debug("The incoming entry was too old and don't accept it.");
 				return false;
 			}
 		}
