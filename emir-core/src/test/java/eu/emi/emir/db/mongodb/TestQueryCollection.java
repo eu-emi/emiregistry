@@ -153,14 +153,14 @@ public class TestQueryCollection extends MongoDBTestBase{
 
 		}
 		
-		JSONArray page = db.paginatedQuery("{}", 10, null);
+		JSONArray page = db.paginatedQuery("{}", 10, null, "_id");
 		printJSONArray(page, "page 1");
 		assertTrue(page.length() == 10);
 		
 		DBObject obj = (DBObject) page.get(page.length()-1);
 		String ref = obj.get("_id").toString();
 		System.out.println("last ref: "+ref);		
-		page = db.paginatedQuery("{}", 10, ref);
+		page = db.paginatedQuery("{}", 10, ref, "_id");
 		printJSONArray(page, "page 2");
 		assertTrue(page.length() == 10);
 		

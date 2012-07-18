@@ -119,7 +119,8 @@ public class ServiceCheckin implements Runnable {
 						 || refID != null) ){
 					// Full DB need to be send
 					try {
-						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
+						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID, 
+								ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE.getAttributeName());
 						logger.debug("Synchronisation STARTED with the parent EMIR: "+ parentURL);
 						while (message.length() > 0){
 							logger.trace("Send SYNCH message with reference DB record ID _id: "+ refID
@@ -132,7 +133,8 @@ public class ServiceCheckin implements Runnable {
 							JSONObject doc = new JSONObject(message.get(message.length()-1).toString());
 							refID = doc.getJSONObject("_id").get("$oid").toString();
 							
-							message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
+							message = serviceDB.paginatedQuery("{}", max.intValue(), refID, 
+									ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE.getAttributeName());
 						}
 						refID = null;
 						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);

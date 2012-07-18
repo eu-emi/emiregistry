@@ -526,12 +526,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	}
 
 	@Override
-	public JSONArray paginatedQuery(String query, Integer pageSize, String id) {
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id, String orderBy) {
 		DBObject queryObj = (DBObject) JSON.parse(query);
 		DBCursor cur = null;
-		BasicDBObject idOrderBy = new BasicDBObject("_id", 1);
+		if (orderBy == null || orderBy.isEmpty()) {
+			orderBy = "_id";
+		}
+		BasicDBObject OrderBy = new BasicDBObject(orderBy, 1);
 		if (id == null) {
-			cur = serviceCollection.find(queryObj).sort(idOrderBy)
+			cur = serviceCollection.find(queryObj).sort(OrderBy)
 					.limit(pageSize);
 		} else {
 			// { "_id" : { "$gt" : { "$oid" :
@@ -545,7 +548,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (queryObj.keySet().size() > 0) {
 				db.putAll(queryObj);
 			}
-			cur = serviceCollection.find(db).sort(idOrderBy).limit(pageSize);
+			cur = serviceCollection.find(db).sort(OrderBy).limit(pageSize);
 
 		}
 

@@ -177,9 +177,9 @@ public class ServiceColManager {
 		j.remove(keyPageSize);
 		j.remove(keyRef);
 		if (j.length() > 0)
-			jArr = serviceDB.paginatedQuery(j.toString(), pageSize, ref);
+			jArr = serviceDB.paginatedQuery(j.toString(), pageSize, ref, "_id");
 		else
-			jArr = serviceDB.paginatedQuery("{}", pageSize, ref);
+			jArr = serviceDB.paginatedQuery("{}", pageSize, ref, "_id");
 		
 		
 		
