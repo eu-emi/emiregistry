@@ -63,7 +63,7 @@ The configuration of EMIR-SERP can be performed by editing its configuration
   +Description:+
 
   The period of the registration/update messages. Its value is given in
-  minutes.
+  hours.
 
   validity
   ^^^^^^^^
@@ -76,7 +76,7 @@ The configuration of EMIR-SERP can be performed by editing its configuration
 
   +Description:+
 
-  The validity of the registration entries. Its value is given in minutes.
+  The validity of the registration entries. Its value is given in hours.
 
   cert
   ^^^^
