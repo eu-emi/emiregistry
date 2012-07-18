@@ -87,7 +87,7 @@ public class ServiceCheckin implements Runnable {
 				this.finalize();
 			}
 		} catch (MalformedURLException e) {
-			Log.logException("", e);
+			Log.logException("", e, logger);
 		}
 		myURL = url;
 		max = maxmessage;
@@ -101,6 +101,7 @@ public class ServiceCheckin implements Runnable {
 	 */
 	@Override
 	public void run() {
+		String refID = null;
 		while(true){
 			logger.debug("checkin service entry");
 			try {
@@ -114,12 +115,12 @@ public class ServiceCheckin implements Runnable {
 					return;
 				}
 				if ( res.hasEntity() && 
-					 res.getEntity(String.class).equals("First registration")){
+						(res.getEntity(String.class).equals("First registration")
+						 || refID != null) ){
 					// Full DB need to be send
 					try {
-						String refID = null;
 						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
-						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);
+						logger.debug("Synchronisation STARTED with the parent EMIR: "+ parentURL);
 						while (message.length() > 0){
 							logger.trace("Send SYNCH message with reference DB record ID _id: "+ refID
 													+", to the parent: "+ parentURL);
@@ -133,9 +134,10 @@ public class ServiceCheckin implements Runnable {
 							
 							message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						}
+						refID = null;
 						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);
 					} catch (JSONException e) {
-						Log.logException("", e);
+						Log.logException("", e, logger);
 					}
 				}
 			} catch (ClientHandlerException e){
@@ -144,7 +146,7 @@ public class ServiceCheckin implements Runnable {
 			try {
 				Thread.sleep(60*60*1000);
 			} catch (InterruptedException e) {
-				Log.logException("", e);
+				Log.logException("", e, logger);
 			}
 		}
 	}
@@ -161,7 +163,7 @@ public class ServiceCheckin implements Runnable {
 			try {
 				result.put(new JSONObject(array.getString(i)));
 			} catch (JSONException e) {
-				Log.logException("JSONObject convertation problem: ", e);
+				Log.logException("JSONObject convertation problem: ", e, logger);
 			}
 		}
 		return result;
