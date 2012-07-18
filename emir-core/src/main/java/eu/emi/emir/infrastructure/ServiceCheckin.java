@@ -119,7 +119,7 @@ public class ServiceCheckin implements Runnable {
 					try {
 						String refID = null;
 						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
-						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);
+						logger.debug("Synchronisation STARTED with the parent EMIR: "+ parentURL);
 						while (message.length() > 0){
 							logger.trace("Send SYNCH message with reference DB record ID _id: "+ refID
 													+", to the parent: "+ parentURL);
