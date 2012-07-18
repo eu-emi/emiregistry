@@ -642,7 +642,7 @@ footnotes: function () {
 <h1>EMI Registry Manual</h1>
 <span id="author">EMIR Product Team</span><br />
 <span id="revnumber">version 1.2.0,</span>
-<span id="revdate">13 07 2012</span>
+<span id="revdate">18 07 2012</span>
 <br /><span id="revremark">component version: 1.2.0</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -1582,6 +1582,16 @@ cellspacing="0" cellpadding="4">
 or Peer-to-Peer (P2P). In an hierarchical network, the SER collections are propagated from leaf DSR node to the top level root node, called GSR.
 Each DSR has only one parent, either DSR or GSR to which it pushes it&#8217;s SER collections. At the root level the P2P network of GSR is formed to replicate
 the SER collections among multiple GSRs by referring a pre-configured <tt>Global list</tt>. The global list contains a listing of URLs of all the GSRs, each of which should be able to access the URLs.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">========
+The connected EMIR servers should be time synchronised
+========</td>
+</tr></table>
+</div>
 <h4 id="_how_to_setup_dsr">4.7.1. How to Setup DSR?</h4>
 <div class="paragraph"><p>In order to build hierarchy of DSRs must be able to propagate the SER collections to any <strong>single</strong> parent DSR or a GSR.</p></div>
 <div class="tableblock">
@@ -1745,7 +1755,7 @@ cellspacing="0" cellpadding="4">
 </tr>
 <tr>
 <td align="left" valign="top"><p class="table"><tt>emir.record.expiryDefault</tt></p></td>
-<td align="left" valign="top"><p class="table">Unsigned Integer</p></td>
+<td align="left" valign="top"><p class="table">Unsigned Integer (in days)</p></td>
 <td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
 <td align="left" valign="top"><p class="table">The default lifetime will be set from the given property if the incoming registration is without the Service_ExpireOn attribute.</p></td>
 </tr>
@@ -1803,33 +1813,6 @@ cellspacing="0" cellpadding="4">
 <h3 id="_logging_configuration">4.9. Logging Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The EMIR server uses <a href="http://logging.apache.org/log4j/1.2/index.html">log4j</a> to provide log facilities to record all but some of the server activities. In order to
 change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.</p></div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="hsides"
-cellspacing="0" cellpadding="4">
-<col width="35%" />
-<col width="12%" />
-<col width="23%" />
-<col width="30%" />
-<thead>
-<tr>
-<th align="left" valign="top">Property name</th>
-<th align="left" valign="top">Type</th>
-<th align="left" valign="top">Default value</th>
-<th align="left" valign="top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table"><tt>log4j.configuration</tt></p></td>
-<td align="left" valign="top"><p class="table">filesystem path</p></td>
-<td align="left" valign="top"><p class="table"><tt>STARTUP_SCRIPT</tt></p></td>
-<td align="left" valign="top"><p class="table">The log4j configuration</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <h3 id="_advanced_http_server_settings">4.10. Advanced HTTP Server Settings</h3><div style="clear:left"></div>
 <div class="paragraph"><p>EMIR uses Eclipse&#8217;s Jetty server to host REST Web services. Following table lists the important properties.</p></div>
 <div class="admonitionblock">
@@ -2041,7 +2024,7 @@ url = https://emiregistry2.grid.niif.hu:54321</tt></pre>
 <div class="literalblock">
 <div class="content">
 <pre><tt>The period of the registration/update messages. Its value is given in
-minutes.</tt></pre>
+hours.</tt></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
@@ -2066,7 +2049,7 @@ minutes.</tt></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>The validity of the registration entries. Its value is given in minutes.</tt></pre>
+<pre><tt>The validity of the registration entries. Its value is given in hours.</tt></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
@@ -2682,7 +2665,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-13 16:34:02 CEST
+Last updated 2012-07-18 14:46:46 CEST
 </div>
 </div>
 </body>
