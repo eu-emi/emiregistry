@@ -526,6 +526,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	}
 
 	@Override
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id) {
+		return paginatedQuery(query, pageSize, id, "_id");
+	}
+
+	@Override
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id, String orderBy) {
 		DBObject queryObj = (DBObject) JSON.parse(query);
 		DBCursor cur = null;
