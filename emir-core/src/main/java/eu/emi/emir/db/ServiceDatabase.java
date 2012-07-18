@@ -213,6 +213,8 @@ public interface ServiceDatabase {
 	public JSONArray queryDistinctJSON(String attributeName);
 	
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id);
+	
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id, String orderBy);
 
 	/**
 	 * Get version of the database
