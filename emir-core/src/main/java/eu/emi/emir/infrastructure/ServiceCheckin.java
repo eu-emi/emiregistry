@@ -36,6 +36,7 @@ public class ServiceCheckin implements Runnable {
 	private final WebResource childClient;
 	private final WebResource synchClient;
 	private String myURL;
+	private String parentURL;
 	private Long max;
 	private ServiceDatabase serviceDB;
 	private Filters filters;
@@ -54,6 +55,7 @@ public class ServiceCheckin implements Runnable {
 		if (parentUrl.charAt(parentUrl.length()-1) == '/' ){
 			slash = "";
 		}
+		parentURL = parentUrl;
 		EMIRClient cc = new EMIRClient(parentUrl + slash + "children");
 		EMIRClient sc = new EMIRClient(parentUrl + slash + "serviceadmin");
 		if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
@@ -117,9 +119,10 @@ public class ServiceCheckin implements Runnable {
 					try {
 						String refID = null;
 						JSONArray message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
-						logger.debug("Synch messages start.");
+						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);
 						while (message.length() > 0){
-							logger.trace("Send synch message with refID: "+ refID);
+							logger.trace("Send SYNCH message with reference DB record ID _id: "+ refID
+													+", to the parent: "+ parentURL);
 							message = convert(message);
 							// message sending
 							synchClient.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -130,7 +133,7 @@ public class ServiceCheckin implements Runnable {
 							
 							message = serviceDB.paginatedQuery("{}", max.intValue(), refID);
 						}
-						logger.debug("Synch messages finished.");
+						logger.debug("Synchronisation FINISHED with the parent EMIR: "+ parentURL);
 					} catch (JSONException e) {
 						Log.logException("", e);
 					}
