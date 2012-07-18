@@ -103,9 +103,9 @@ public class ServiceAdminManager {
 			// default prop. value
 			if (!jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName())) {
-				Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM);
+				Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT);
 				if (log.isDebugEnabled()) {
-					log.debug("The expiry attribute is missing from the updated service information. The information will be expired in "+ expTime +"day from now");
+					log.debug("The expiry attribute is missing from the registered service information. The information will be expired in "+ expTime +"day from now");
 				}
 				DateUtil.setExpiryTime(jo, expTime);
 			}
@@ -205,7 +205,7 @@ public class ServiceAdminManager {
 					"The service description does not contain valid attributes: serviceurl and servicetype");
 		}
 		
-		Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM);
+		Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT);
 		if (log.isDebugEnabled()) {
 			log.debug("The expiry attribute is missing from the updated service information. The information will be expired in "+ expTime +"day from now");
 		}
