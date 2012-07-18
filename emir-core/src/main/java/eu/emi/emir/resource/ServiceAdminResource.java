@@ -233,7 +233,7 @@ public class ServiceAdminResource {
 				continue;
 				// return Response.ok(res).build();
 			} catch (ExistingResourceException e) {
-				errorArray.put(serviceInfo);
+				errorArray.put("The service with id:" + serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()) + "already exists");
 			} catch (Exception e) {
 				JSONObject jErr = new JSONObject();
 				jErr.put("error", e.getCause());
@@ -303,7 +303,7 @@ public class ServiceAdminResource {
 					} catch (UnknownServiceException e) {
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
-						errorArray.put(serviceInfo);
+						errorArray.put("Error occured while updating the service: "+ serviceInfo);
 					}
 					continue;
 
@@ -320,9 +320,10 @@ public class ServiceAdminResource {
 						res = serviceAdmin.updateService(serviceInfo);
 						arr.put(res);
 					} catch (UnknownServiceException e) {
+						Log.logException("Service with endpoint id: '"+serviceInfo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()) + "' does not exist", e, logger);
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
-						errorArray.put(serviceInfo);
+						errorArray.put("Error occured while updating the service: "+ serviceInfo);
 					}
 					continue;
 					// return Response.ok(res).build();
@@ -334,18 +335,19 @@ public class ServiceAdminResource {
 												.getAttributeName())
 								+ " does not exist or the update message is too old.");
 					}
+					String message = "Access denied for DN - " + owner
+							+ " to update service with the endpointID - "
+							+ sendpointID;
 					return Response
 							.status(Status.UNAUTHORIZED)
-							.entity("Access denied for DN - " + owner
-									+ " to update service with the endpointID - "
-									+ sendpointID).build();
+							.entity(message).build();
 				}
 			}
 			if (arr.length() > 0){
 				EventDispatcher.notifyRecievers(new Event(
 						EventTypes.SERVICE_UPDATE, arr));
 			}
-			if (errorArray.length() > 0) {
+			if (errorArray.length() > 0) {				
 				return Response.status(Status.CONFLICT).entity(errorArray)
 						.build();
 			}
