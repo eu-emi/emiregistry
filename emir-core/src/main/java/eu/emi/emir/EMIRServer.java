@@ -213,7 +213,7 @@ public class EMIRServer {
 		String parentUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_PARENT_ADDRESS);
 		String serverUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		if (parentUrl != null) {
-			logger.debug("Own server's URL: "+serverUrl);
+			logger.debug("Configured server's URL: "+serverUrl);
 			logger.info("The parent EMIR URL is set to: " + parentUrl);
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(parentUrl));
