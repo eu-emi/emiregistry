@@ -32,7 +32,7 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_ENDPOINT_IFACENAME("Service_Endpoint_InterfaceName",null,"Service Endpoint Interface Name",true), 
 			SERVICE_ENDPOINT_IFACE_VER("Service_Endpoint_InterfaceVersion",null,"Service Endpoint Interface Version",true),
 			SERVICE_ENDPOINT_IFACE_EXT("Service_Endpoint_InterfaceExtension"), 
-			SERVICE_ENDPOINT_WSDL("Service_Endpoint_WSDL"), 
+			SERVICE_ENDPOINT_WSDL("Service_Endpoint_WSDL",JSONArray.class), 
 			SERVICE_ENDPOINT_SUPPORTED_PROFILE("Service_Endpoint_SupportedProfile", JSONArray.class), 
 			SERVICE_ENDPOINT_SEMANTICS("Service_Endpoint_Semantics", JSONArray.class), 
 			SERVICE_ENDPOINT_HEALTH_STATE("Service_Endpoint_HealthState"), 
@@ -44,7 +44,7 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE("Service_Endpoint_DowntimeAnnounce", Date.class), 
 			SERVICE_ENDPOINT_DOWNTIME_START("Service_Endpoint_DowntimeStart", Date.class), 
 			SERVICE_ENDPOINT_DOWNTIME_END("Service_Endpoint_DowntimeEnd", Date.class), 
-			SERVICE_ENDPOINT_DOWNTIME_INFO("Service_DowntimeInfo"), 
+			SERVICE_ENDPOINT_DOWNTIME_INFO("Service_Endpoint_DowntimeInfo"), 
 			SERVICE_ENDPOINT_IMPL_NAME("Service_Endpoint_ImplementationName"), 
 			SERVICE_ENDPOINT_IMPL_VERSION("Service_Endpoint_ImplementationVersion"), 
 			SERVICE_ENDPOINT_IMPLEMENTOR("Service_Endpoint_Implementor"), 
@@ -58,7 +58,8 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_CONTACT("Service_Contact",JSONArray.class,"GLUE 2.0 Service Contact information as Array"),
 			SERVICE_CONTACT_DETAIL("Detail",null,"GLUE 2.0 Service Contact Detail"),
 			SERVICE_CONTACT_TYPE("ContactType",null,"GLUE 2.0 Service Contact Type"),
-			SERVICE_ENDPOINT_ACCESSPOLICY_RULE("Service_Endpoint_AccessPolicy_Rule",JSONArray.class,"VO Name");
+			SERVICE_ENDPOINT_ACCESSPOLICY_RULE("Service_Endpoint_AccessPolicy_Rule",JSONArray.class,"Access Policy Rule");
+
 
 	private String attributeName;
 	private Class<?> attributeType;
@@ -131,9 +132,26 @@ public enum ServiceBasicAttributeNames {
 	/* (non-Javadoc)
 			 * @see java.lang.Enum#toString()
 			 */
-			@Override
+	@Override
 	public String toString() {
 		return getAttributeName();
+	}
+	
+	/**
+	 * converts String to Enum
+	 * 
+	 * @param value
+	 * @return converted Enumeration
+	 * */
+	public static ServiceBasicAttributeNames fromString(String value) {
+		if (value != null) {
+		      for (ServiceBasicAttributeNames b : ServiceBasicAttributeNames.values()) {
+		        if (value.equalsIgnoreCase(b.getAttributeName())) {
+		          return b;
+		        }
+		      }
+		    }
+		    return null;
 	}
 
 }

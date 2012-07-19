@@ -183,14 +183,16 @@ public class EMIRServer {
 	 */
 	private void handleGSR() {
 		String type = "DSR";
-		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
+		ServerProperties sp = EMIRServer.getServerProperties();
+		if (sp.isGlobalEnabled()) {
 			type = "GSR";
 			GSRHelper.startGSRFunctions();
 		} else {
 			addParentDSR();
 		}
-		System.out.println("EMIR Server Started [TYPE: "+type+"]");
-		logger.info("EMIR Server Started [TYPE: "+type+"]");
+		String startMessage = "EMIR Server Started [TYPE: "+type+"] [URL:"+sp.getValue(ServerProperties.PROP_ADDRESS)+"]";
+		System.out.println(startMessage);
+		logger.info(startMessage);
 	}
 
 	/**
@@ -198,8 +200,9 @@ public class EMIRServer {
 	 */
 	private void startServiceReaper(){
 		try {
+			//this operation is penalty to the performance, should have greater interval 
 			RegistryThreadPool.getScheduledExecutorService()
-			.scheduleWithFixedDelay(new ServiceReaper(), 10, 30,
+			.scheduleWithFixedDelay(new ServiceReaper(), 10, 300,
 					TimeUnit.SECONDS);	
 		} catch (Exception e) {
 			logger.warn("Cannot start service record reaper", e);

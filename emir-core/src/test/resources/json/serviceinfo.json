@@ -8,7 +8,6 @@
 	"Service_QualityLevel":"production",
 	"Service_Complexity":"complexity",
 	"Service_Validity": 12313,
-	"Service_Extensions":[{"key1":"value1"},{"key2":"value2"}],
     "Service_Endpoint_ID":"endpoint_id_value",
     "Service_Endpoint_URL":"http://1",
     "Service_Endpoint_Capability":["capability1","capability2"],
@@ -35,5 +34,6 @@
 	"Service_Location_PostCode":"53119",
 	"Service_Location_Latitude":53.3,
 	"Service_Location_Longitude":4,	
-    "Service_ExpireOn":{"$date":"2011-07-21T11:47:24.111Z"}
+    "Service_ExpireOn":{"$date":"2011-07-21T11:47:24.111Z"},
+    "Service_Endpoint_AccessPolicy_Rule": ["vo:/vo_a","vo:/vo_b"]
 }

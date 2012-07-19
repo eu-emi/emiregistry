@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 
+import eu.emi.emir.TestValueConstants;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.glue2.Glue2Mapper;
 import eu.emi.emir.glue2.JSONToGlue2MappingException;
 import eu.eu_emi.emiregistry.QueryResult;
@@ -89,5 +91,28 @@ public class TestGlue2Mapper {
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(qr, sw);
 		System.out.println(sw);
+	}
+	
+	
+	@Test
+	public void testIfWrongArray() throws JSONToGlue2MappingException, JSONException{
+		Glue2Mapper gm = new Glue2Mapper();
+		JSONArray ja = new JSONArray();
+		ja.put(jo);
+		
+		//setting the wrong capability (string instead of array)
+		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.toString(), "http://2");
+		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(), "cap1");
+		jo.put("1", "1");
+		jo.put("2", "2");
+		
+		JSONObject j = TestValueConstants.getJSONWithMandatoryAttributes();
+		ja.put(j);
+		QueryResult qr = gm.toQueryResult(ja);
+		assertNotNull(qr.getService().get(0).getName());
+		assertEquals(new BigInteger("" + 2), qr.getCount());
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(qr, sw);
+		System.out.println(sw);		
 	}
 }
