@@ -128,6 +128,7 @@ public class TestRegistryBaseWithSecurity {
 //		p.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
 	}
 	
+	
 	public static ClientSecurityProperties getSecurityProperties_2(){
 		Properties p = new Properties();
 		// keystore setting
