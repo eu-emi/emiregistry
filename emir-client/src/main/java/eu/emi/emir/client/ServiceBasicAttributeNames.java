@@ -32,7 +32,7 @@ public enum ServiceBasicAttributeNames {
 			SERVICE_ENDPOINT_IFACENAME("Service_Endpoint_InterfaceName",null,"Service Endpoint Interface Name",true), 
 			SERVICE_ENDPOINT_IFACE_VER("Service_Endpoint_InterfaceVersion",null,"Service Endpoint Interface Version",true),
 			SERVICE_ENDPOINT_IFACE_EXT("Service_Endpoint_InterfaceExtension"), 
-			SERVICE_ENDPOINT_WSDL("Service_Endpoint_WSDL",JSONArray.class), 
+			SERVICE_ENDPOINT_WSDL("Service_Endpoint_WSDL",null,"WSDL URL"), 
 			SERVICE_ENDPOINT_SUPPORTED_PROFILE("Service_Endpoint_SupportedProfile", JSONArray.class), 
 			SERVICE_ENDPOINT_SEMANTICS("Service_Endpoint_Semantics", JSONArray.class), 
 			SERVICE_ENDPOINT_HEALTH_STATE("Service_Endpoint_HealthState"), 
