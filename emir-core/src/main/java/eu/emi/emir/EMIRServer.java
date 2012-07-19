@@ -213,7 +213,8 @@ public class EMIRServer {
 		String parentUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_PARENT_ADDRESS);
 		String serverUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		if (parentUrl != null) {
-			logger.info("adding parent EMIR : " + parentUrl + " to: " + serverUrl);
+			logger.debug("Own server's URL: "+serverUrl);
+			logger.info("The parent EMIR URL is set to: " + parentUrl);
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(parentUrl));
 			Long max = EMIRServer.getServerProperties().getLongValue(ServerProperties.PROP_RECORD_MAXIMUM);
