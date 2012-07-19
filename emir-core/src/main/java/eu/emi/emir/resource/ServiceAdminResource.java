@@ -385,7 +385,7 @@ public class ServiceAdminResource {
 				// New entry and message generation time need, it is come from one DSR
 				messageTime = ServiceUtil.toUTCFormat(new Date());
 			}
-			logger.debug("deleting service by ID: " + sendpointID
+			logger.debug("deleting service by Endpoint ID: " + sendpointID
 					+ ", Owned by: " + owner);
 			if (c.getRole().getName().equalsIgnoreCase("admin")) {
 				// let the admin delete everything

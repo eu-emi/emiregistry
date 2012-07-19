@@ -200,9 +200,13 @@ public class ServiceAdminManager {
 	 */
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
-		if (!ServiceUtil.isValidServiceInfo(jo)) {
-			throw new InvalidServiceDescriptionException(
-					"The service description does not contain valid attributes: serviceurl and servicetype");
+		if (!ServiceUtil.isValidServiceInfo(jo) ) {
+			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
+						!ServiceUtil.isValidRemovedServiceInfo(jo)) {
+				throw new InvalidServiceDescriptionException(
+						"The service description does not contain valid attributes: serviceurl and servicetype");
+			}
+			//TODO: accepted message with only one simple Endpoint_ID
 		}
 		
 		Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT);

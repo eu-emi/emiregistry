@@ -474,4 +474,43 @@ public class RegistrationValidator extends AbstractInfoValidator {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.emi.emir.validator.AbstractInfoValidator#checkMandatoryEndpointIDAttributes()
+	 */
+	@Override
+	Boolean checkMandatoryEndpointIDAttributes() {
+		StringBuilder sb = new StringBuilder(
+				"Missing/Invalid mandatory Service Endpoint Record attributes: \n");
+		List<Boolean> list = new ArrayList<Boolean>();
+		if (jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+				.getAttributeName())) {
+			try {
+				if ((jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+						.getAttributeName()))
+						&& (jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+								.getAttributeName()).isEmpty())) {
+					sb.append("Invalid/NULL Service Endpoint ID\n");
+					list.add(false);
+					// return false;
+				}
+				list.add(true);
+				// valid = true;
+			} catch (JSONException e) {
+				Log.logException("", e);
+				// return false;
+				list.add(false);
+
+			}
+		}
+
+		if (list.contains(false)) {
+			return false;
+		}
+
+		return true;
+	}
+
 }

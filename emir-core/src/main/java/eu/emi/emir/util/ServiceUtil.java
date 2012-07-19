@@ -63,6 +63,7 @@ public class ServiceUtil {
 	 * service attributes
 	 * 
 	 * @param serviceDesc
+	 * @throws InvalidServiceDescriptionException
 	 * @throws ParseException 
 	 * @throws ConfigurationException 
 	 * @throws JSONException
@@ -70,6 +71,18 @@ public class ServiceUtil {
 	public synchronized static boolean isValidServiceInfo(JSONObject jo)
 			throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException {
 		return ValidatorFactory.getRegistrationValidator().validateInfo(jo);
+	}
+
+	/**
+	 * Checks the service description being updated contains the service
+	 * endpoint ID attributes
+	 * 
+	 * @param serviceDesc
+	 * @throws InvalidServiceDescriptionException 
+	 */
+	public synchronized static boolean isValidRemovedServiceInfo(JSONObject jo)
+			throws InvalidServiceDescriptionException {
+		return ValidatorFactory.getRegistrationValidator().validateEndpointIDInfo(jo);
 	}
 
 	public synchronized static String toUTCFormat(Date d) {

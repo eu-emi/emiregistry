@@ -17,4 +17,5 @@ import eu.unicore.util.configuration.ConfigurationException;
  */
 public interface InfoValidator {
 	public Boolean validateInfo(JSONObject jo) throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException;
+	public Boolean validateEndpointIDInfo(JSONObject jo) throws InvalidServiceDescriptionException;
 }

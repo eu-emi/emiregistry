@@ -33,6 +33,21 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 		}
 		
 	}
+	
+	@Override
+	public Boolean validateEndpointIDInfo(JSONObject jo) throws InvalidServiceDescriptionException{
+		valid = false;
+		this.jo = jo;
+		
+		
+		if (checkMandatoryEndpointIDAttributes()) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
 	/**
 	 * @return
 	 */
@@ -47,5 +62,13 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 	 * Check service mandatory attributes (see mandatory attributes <a href="https://twiki.cern.ch/twiki/bin/view/EMI/EMIRSERDesc">EMIR Mandatory Attributes</a>)
 	 * */
 	abstract Boolean checkMandatoryAttributes() throws InvalidServiceDescriptionException;
-	
+
+	/**
+	 * Check service mandatory attributes by the removed status entry at GSR
+	 * 		Service_Endpoint_ID
+	 * 		updateSince 
+	 * 
+	 **/
+	abstract Boolean checkMandatoryEndpointIDAttributes() throws InvalidServiceDescriptionException;
+
 }
