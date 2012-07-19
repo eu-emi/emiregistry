@@ -66,7 +66,6 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 	/**
 	 * Check service mandatory attributes by the removed status entry at GSR
 	 * 		Service_Endpoint_ID
-	 * 		updateSince 
 	 * 
 	 **/
 	abstract Boolean checkMandatoryEndpointIDAttributes() throws InvalidServiceDescriptionException;
