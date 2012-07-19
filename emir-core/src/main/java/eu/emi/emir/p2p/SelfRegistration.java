@@ -92,7 +92,6 @@ public class SelfRegistration implements Runnable {
 		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACENAME.getAttributeName(), ifaceName);
 		myInfos.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER.getAttributeName(), "1.0.0");
 
-		System.err.println(myInfos.toString());
 		try {
 			String DN = eu.emi.emir.security.SecurityManager.getServerDistinguishedName();
 			myInfos.put(ServiceBasicAttributeNames.SERVICE_DN.getAttributeName(), DN);
