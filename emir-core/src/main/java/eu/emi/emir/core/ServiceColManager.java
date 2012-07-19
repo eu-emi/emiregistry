@@ -181,7 +181,10 @@ public class ServiceColManager {
 		else
 			jArr = serviceDB.paginatedQuery("{}", pageSize, ref);
 		
-		
+		// when the query response is empty 
+		if (jArr.length() == 0) {
+			return new JSONObject();
+		}
 		
 		JSONObject doc = new JSONObject(jArr.get(jArr.length()-1).toString());
 		
