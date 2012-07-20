@@ -642,7 +642,7 @@ footnotes: function () {
 <h1>EMI Registry Manual</h1>
 <span id="author">EMIR Product Team</span><br />
 <span id="revnumber">version 1.2.0,</span>
-<span id="revdate">18 07 2012</span>
+<span id="revdate">20 07 2012</span>
 <br /><span id="revremark">component version: 1.2.0</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -1224,7 +1224,8 @@ cellspacing="0" cellpadding="4">
 <div class="literalblock">
 <div class="content">
 <pre><tt>truststore.type=directory
-truststore.directoryLocations=/trust/dir/*.pem
+truststore.directoryLocations.1=/trust/dir/*.pem
+truststore.directoryLocations.1=/other/dir/*.pem
 truststore.crlLocations=/trust/dir/*.crl</tt></pre>
 </div></div>
 <div class="paragraph"><p>Directory truststore, with complete set of options:</p></div>
@@ -1233,7 +1234,8 @@ truststore.crlLocations=/trust/dir/*.crl</tt></pre>
 <pre><tt>emir.security.truststore.type=directory
 emir.security.truststore.allowProxy=DENY
 emir.security.truststore.updateInterval=1234
-emir.security.truststore.directoryLocations=/trust/dir/*.pem http://caserver/ca.pem
+emir.security.truststore.directoryLocations.1=/trust/dir/*.pem
+emir.security.truststore.directoryLocations.2=http://caserver/ca.pem
 emir.security.truststore.directoryEncoding=PEM
 emir.security.truststore.directoryConnectionTimeout=100
 emir.security.truststore.directoryDiskCachePath=/tmp
@@ -2419,7 +2421,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-18 16:06:33 CEST
+Last updated 2012-07-20 11:32:25 CEST
 </div>
 </div>
 </body>
