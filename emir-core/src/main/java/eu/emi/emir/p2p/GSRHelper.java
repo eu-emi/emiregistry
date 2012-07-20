@@ -4,9 +4,12 @@
 package eu.emi.emir.p2p;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.RegistryThreadPool;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
@@ -71,19 +74,26 @@ public class GSRHelper {
 	public static void stopGSRFunctions(){
 		logger.info("Send DELETE message to the neighbors.");
 		String myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
+		JSONObject eventData = new JSONObject();
+		try {
+			eventData.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), myURL);
+		} catch (JSONException e) {
+			Log.logException("Error during the delete message sending ", e, logger);
+		}
 
-		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
+		Event event = new Event(EventTypes.SERVICE_DELETE, eventData);
 		try {
 			new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
 		} catch (Exception e) {
-			Log.logException("Error during the delete message sending ", e);
+			Log.logException("Error during the delete message sending ", e, logger);
 		}
 		try {
 			// delete entry from own database
 			logger.info("Delete own entry from the database.");
 			new MongoDBServiceDatabase().deleteByEndpointID(myURL);
 		} catch (Exception e) {
-			Log.logException("Error in the delete procedure ", e);
+			Log.logException("Error in the delete procedure ", e, logger);
 		}
 	}
 }
