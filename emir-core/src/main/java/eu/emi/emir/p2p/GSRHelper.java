@@ -73,9 +73,14 @@ public class GSRHelper {
 		String myURL = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 
 		Event event = new Event(EventTypes.SERVICE_DELETE, myURL);
-		new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
+		try {
+			new eu.emi.emir.p2p.ServiceEventReceiver().recieve(event);
+		} catch (Exception e) {
+			Log.logException("Error during the delete message sending ", e);
+		}
 		try {
 			// delete entry from own database
+			logger.info("Delete own entry from the database.");
 			new MongoDBServiceDatabase().deleteByEndpointID(myURL);
 		} catch (Exception e) {
 			Log.logException("Error in the delete procedure ", e);
