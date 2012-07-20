@@ -111,9 +111,10 @@
 								<version>2.0</version>
 							</dependency>
 						</dependencies>
-					</plugin>
+					</plugin>					
 				</plugins>
 			</build>
+			
 		</profile>
 	</profiles>
 	<build>

@@ -54,6 +54,7 @@ public class TestPingResourceWithSecurity {
 		
 		BaseURI = "https://localhost:"
 				+ server.getJettyServer().getConnectors()[0].getLocalPort();
+		
 	}
 	private static void setSecuritySettingsWithDir(Properties p) {
 		p.setProperty(ServerSecurityProperties.PREFIX
@@ -76,7 +77,7 @@ public class TestPingResourceWithSecurity {
 				TruststoreProperties.TruststoreType.directory.toString());
 		p.setProperty(ServerSecurityProperties.PREFIX
 				+ TruststoreProperties.DEFAULT_PREFIX
-				+ TruststoreProperties.PROP_DIRECTORY_LOCATIONS,
+				+ TruststoreProperties.PROP_DIRECTORY_LOCATIONS+"1",
 				"src/test/resources/certs/cadir/*.pem");
 		p.setProperty(ServerSecurityProperties.PREFIX
 				+ TruststoreProperties.DEFAULT_PREFIX
@@ -120,7 +121,7 @@ public class TestPingResourceWithSecurity {
 				TruststoreProperties.TruststoreType.directory.toString());
 		p.setProperty(ClientSecurityProperties.PREFIX
 				+ TruststoreProperties.DEFAULT_PREFIX
-				+ TruststoreProperties.PROP_DIRECTORY_LOCATIONS,
+				+ TruststoreProperties.PROP_DIRECTORY_LOCATIONS+"1",
 				"src/test/resources/certs/cadir/*.pem");
 		p.setProperty(ClientSecurityProperties.PREFIX
 				+ TruststoreProperties.DEFAULT_PREFIX

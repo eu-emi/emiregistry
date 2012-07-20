@@ -46,10 +46,12 @@ The protocol part is not mandatory if https (default)
 The port part is not mandatory if 54321 (default)
 The domain part is mandatory
 
-Examples:
+.Examples
+-----------------
 url = emiregistry2.grid.niif.hu
 url = https://emiregistry2.grid.niif.hu
 url = https://emiregistry2.grid.niif.hu:54321
+-----------------
 
 period
 ^^^^^^

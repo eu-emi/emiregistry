@@ -76,16 +76,18 @@ Examples
 
 Directory truststore, with a minimal set of options:
 	
-	 truststore.type=directory
-	 truststore.directoryLocations=/trust/dir/*.pem
-	 truststore.crlLocations=/trust/dir/*.crl
+emir.security.truststore.type=directory
+emir.security.truststore.directoryLocations.1=/trust/dir/*.pem
+emir.security.truststore.directoryLocations.2=/other/dir/*.pem
+emir.security.truststore.crlLocations=/trust/dir/*.crl
 
 Directory truststore, with complete set of options:
 
  emir.security.truststore.type=directory
  emir.security.truststore.allowProxy=DENY
  emir.security.truststore.updateInterval=1234
- emir.security.truststore.directoryLocations=/trust/dir/*.pem http://caserver/ca.pem
+ emir.security.truststore.directoryLocations.1=/trust/dir/*.pem
+ emir.security.truststore.directoryLocations.2=http://caserver/ca.pem
  emir.security.truststore.directoryEncoding=PEM
  emir.security.truststore.directoryConnectionTimeout=100
  emir.security.truststore.directoryDiskCachePath=/tmp
