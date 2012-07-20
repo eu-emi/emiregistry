@@ -245,7 +245,7 @@ public class EMIRServer {
 	}
 	
 	protected void finalize(){
-		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
+		if (EMIRServer.getServerProperties().isGlobalEnabled() && server.isRunning()) {
 			GSRHelper.stopGSRFunctions();
 		}
 	}
