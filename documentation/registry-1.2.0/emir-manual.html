@@ -1221,13 +1221,10 @@ cellspacing="0" cellpadding="4">
 </div>
 <h4 id="_examples">4.2.5. Examples</h4>
 <div class="paragraph"><p>Directory truststore, with a minimal set of options:</p></div>
-<div class="literalblock">
-<div class="content">
-<pre><tt>truststore.type=directory
-truststore.directoryLocations.1=/trust/dir/*.pem
-truststore.directoryLocations.2=/other/dir/*.pem
-truststore.crlLocations=/trust/dir/*.crl</tt></pre>
-</div></div>
+<div class="paragraph"><p>emir.security.truststore.type=directory
+emir.security.truststore.directoryLocations.1=/trust/dir/<strong>.pem
+emir.security.truststore.directoryLocations.2=/other/dir/</strong>.pem
+emir.security.truststore.crlLocations=/trust/dir/*.crl</p></div>
 <div class="paragraph"><p>Directory truststore, with complete set of options:</p></div>
 <div class="literalblock">
 <div class="content">
@@ -2421,7 +2418,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-20 11:44:00 CEST
+Last updated 2012-07-20 11:49:00 CEST
 </div>
 </div>
 </body>
