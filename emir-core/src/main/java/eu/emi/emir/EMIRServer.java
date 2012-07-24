@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -217,6 +219,17 @@ public class EMIRServer {
 		String serverUrl = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_ADDRESS);
 		if (parentUrl != null) {
 			logger.debug("Configured server's URL: "+serverUrl);
+			try {
+				URL server = new URL(serverUrl);
+				URL parent = new URL(parentUrl);
+				if (server.equals(parent)) {
+					logger.warn("Configured same URL ("+ serverUrl +") to the own address and to the parent!");
+					logger.info("Wrong Parent URL! Entry forwarding function turned OFF!");
+					return;
+				}
+			} catch (MalformedURLException e1) {
+				Log.logException("Wrong address or parent URL setted by EMIR Server configuration", e1, logger);
+			}
 			logger.info("The parent EMIR URL is set to: " + parentUrl);
 			RegistryThreadPool.getExecutorService().execute(
 					new ServiceEventReceiver(parentUrl));
