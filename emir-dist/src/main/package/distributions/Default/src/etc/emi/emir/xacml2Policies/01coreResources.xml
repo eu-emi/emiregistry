@@ -41,15 +41,6 @@
     <Description> All authenticated users are permitted to perform anything except registration. </Description>
     <Target/>
     <Condition>
-      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">	
-      		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-      			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-        			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-          				<SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="role"/>
-        			</Apply>
-        		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">serviceowner</AttributeValue>
-      			</Apply>
-      		</Apply>
       	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">	
       		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-equal">
         		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
@@ -58,7 +49,6 @@
         	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">serviceadmin</AttributeValue>
       		</Apply>
       	</Apply>
-      </Apply>      
     </Condition>
   </Rule>
   
