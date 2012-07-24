@@ -38,8 +38,8 @@ case "$1" in
 	chown emi:emi  /etc/emi/emir/users/
 	chmod 644 /etc/emi/emir/users/*
 	
-	chown emi:emi /etc/emi/emir/dsr.config
-	chmod 600 /etc/emi/emir/dsr.config
+	chown emi:emi /etc/emi/emir/emir.config
+	chmod 600 /etc/emi/emir/emir.config
 
 	chown emi:emi /etc/emi/emir/emir.acl
 	chmod 640 /etc/emi/emir/emir.acl
