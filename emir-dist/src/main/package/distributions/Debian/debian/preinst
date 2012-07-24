@@ -16,6 +16,9 @@ set -e
 
 case "$1" in
     install|upgrade)
+     if [ -e /etc/init.d/emi-emir ]; then
+       /etc/init.d/emi-emir stop
+     fi
     
      /usr/sbin/groupadd -r emi 2>/dev/null || :
     
