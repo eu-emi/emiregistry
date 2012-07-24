@@ -75,6 +75,7 @@ case "$1" in
 	chmod 700 /var/log/emi/emir
 	
 	chown emi:emi /var/run/emi/emir
+        chown emi:emi /var/run/emi
 	chmod 700 /var/run/emi/emir
 
 	chown emi:emi /var/lib/emi/emir
