@@ -34,13 +34,13 @@ Edit the file
 and set the hostname and port.
 
 ----
-emir.address=http://dsr.domain.invalid:9126
+emir.address=http://example.com:9126
 ----
 
 Set the DSR parent attribute.
 
 ----
-emir.parentAddress=http://parent.dsr.domain.invalid:9126
+emir.parentAddress=http://parent.example.com:9126
 ----
 
 Start the services
@@ -56,7 +56,7 @@ Test the DSR
 Check that the DSR is running
 
 ----
-http://dsr.domain.invalid:9126/ping
+http://example.com:9126/ping
 ----
 
 Global Service Registry (GSR)
@@ -79,7 +79,7 @@ Edit the file
 and set the hostname and port.
 
 ----
-emir.address=http://gsr.domain.invalid:9126
+emir.address=http://example.com:9126
 ----
 
 set the global GSR flag
@@ -102,7 +102,7 @@ Test the GSR
 Check that the GSR is running
 
 ----
-http://gsr.domain.invalid:9126/ping
+http://example.com:9126/ping
 ----
 
 
@@ -130,7 +130,7 @@ Configure the EMIR-SERP (publisher)
 Edit the file /etc/emi/emir-serp/emir-serp.ini and set the url for yor DSR.
 
 ----
-url = http://dsr.domain.invalid:9126
+url = http://example.com:9126
 ----
 
 Set the json_dir_location
@@ -145,10 +145,10 @@ Create the json directory.
 mkdir -p /var/cache/emir-serp/services
 ----
 
-Create a hourly cron job to run the following command, where host.invalid is the host name of a site BDII.
+Create a hourly cron job to run the following command, where _bdii.example.com_ is the host name of a site BDII.
 
 ----
-ginfo --host bdii.domain.invalid --emi > /var/cache/emir-serp/services/example
+ginfo --host bdii.example.com --emi > /var/cache/emir-serp/services/example
 ----
 
 Start the service
@@ -163,5 +163,5 @@ Test the EMIR-SERP
 Check the expected services are published
 
 ----
-http://dsr.domain.invalid:9126/services
+http://example.com:9126/services
 ----

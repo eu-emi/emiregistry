@@ -19,8 +19,8 @@ The server configuration options in the CONF/emir.config are:
 |===========================================================
 |Property name|Type|Default value|Description
 4+^e|Server general settings
-|emir.address|string|http://localhost:9126|The address/URL of the EMIR server on which it receives registration and query requests. It should either start with http or https (SSL/TLS) mode, if "https" mode is selected the Authentication and Authorisation properties must be properly configured
-|emir.anonymousPort|Unsigned Integer|9127|The anonymous http port number. Setting the property will start an additional 'http' server (without SSL/TLS) only if the above server address is 'https' (with SSL/TLS). It will provide 'anonymous' access to the query interface (i.e. /services REST Web Service).   
+|emir.address|string|-|The address/URL of the EMIR server on which it receives registration and query requests. It should either start with http or https (SSL/TLS) mode, if "https" mode is selected the Authentication and Authorisation properties must be properly configured
+|emir.anonymousPort|Unsigned Integer|-|The anonymous http port number. Setting the property will start an additional 'http' server (without SSL/TLS) only if the above server address is 'https' (with SSL/TLS). It will provide 'anonymous' access to the query interface (i.e. /services REST Web Service).   
 |=========================
 
 PKI Trust Settings Configuration
