@@ -642,7 +642,7 @@ footnotes: function () {
 <h1>EMI Registry Manual</h1>
 <span id="author">EMIR Product Team</span><br />
 <span id="revnumber">version 1.2.0,</span>
-<span id="revdate">20 07 2012</span>
+<span id="revdate">24 07 2012</span>
 <br /><span id="revremark">component version: 1.2.0</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -751,12 +751,12 @@ of whole, formatted <strong>json</strong> documents.</p></div>
 <div class="paragraph"><p>and set the hostname and port.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>emir.address=http://dsr.domain.invalid:9126</tt></pre>
+<pre><tt>emir.address=http://example.com:9126</tt></pre>
 </div></div>
 <div class="paragraph"><p>Set the DSR parent attribute.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>emir.parentAddress=http://parent.dsr.domain.invalid:9126</tt></pre>
+<pre><tt>emir.parentAddress=http://parent.example.com:9126</tt></pre>
 </div></div>
 <div class="paragraph"><p>Start the services</p></div>
 <div class="listingblock">
@@ -768,7 +768,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>Check that the DSR is running</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>http://dsr.domain.invalid:9126/ping</tt></pre>
+<pre><tt>http://example.com:9126/ping</tt></pre>
 </div></div>
 <h3 id="_global_service_registry_gsr">2.2. Global Service Registry (GSR)</h3><div style="clear:left"></div>
 <h4 id="_installing_the_dsr_2">2.2.1. Installing the DSR</h4>
@@ -782,7 +782,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>and set the hostname and port.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>emir.address=http://gsr.domain.invalid:9126</tt></pre>
+<pre><tt>emir.address=http://example.com:9126</tt></pre>
 </div></div>
 <div class="paragraph"><p>set the global GSR flag</p></div>
 <div class="listingblock">
@@ -799,7 +799,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>Check that the GSR is running</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>http://gsr.domain.invalid:9126/ping</tt></pre>
+<pre><tt>http://example.com:9126/ping</tt></pre>
 </div></div>
 <h3 id="_service_endpoint_record_publisher_emir_serp">2.3. Service Endpoint Record Publisher (EMIR-SERP)</h3><div style="clear:left"></div>
 <h4 id="_installing_the_emir_serp">2.3.1. Installing the EMIR-SERP</h4>
@@ -817,7 +817,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>Edit the file /etc/emi/emir-serp/emir-serp.ini and set the url for yor DSR.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>url = http://dsr.domain.invalid:9126</tt></pre>
+<pre><tt>url = http://example.com:9126</tt></pre>
 </div></div>
 <div class="paragraph"><p>Set the json_dir_location</p></div>
 <div class="listingblock">
@@ -829,10 +829,10 @@ services emi-emir start</tt></pre>
 <div class="content">
 <pre><tt>mkdir -p /var/cache/emir-serp/services</tt></pre>
 </div></div>
-<div class="paragraph"><p>Create a hourly cron job to run the following command, where host.invalid is the host name of a site BDII.</p></div>
+<div class="paragraph"><p>Create a hourly cron job to run the following command, where <em>bdii.example.com</em> is the host name of a site BDII.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>ginfo --host bdii.domain.invalid --emi &gt; /var/cache/emir-serp/services/example</tt></pre>
+<pre><tt>ginfo --host bdii.example.com --emi &gt; /var/cache/emir-serp/services/example</tt></pre>
 </div></div>
 <div class="paragraph"><p>Start the service</p></div>
 <div class="listingblock">
@@ -843,7 +843,7 @@ services emi-emir start</tt></pre>
 <div class="paragraph"><p>Check the expected services are published</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>http://dsr.domain.invalid:9126/services</tt></pre>
+<pre><tt>http://example.com:9126/services</tt></pre>
 </div></div>
 </div>
 <h2 id="_installation">3. Installation</h2>
@@ -1003,13 +1003,13 @@ cellspacing="0" cellpadding="4">
 <tr>
 <td align="left" valign="top"><p class="table"><tt>emir.address</tt></p></td>
 <td align="left" valign="top"><p class="table">string</p></td>
-<td align="left" valign="top"><p class="table"><tt><a href="http://localhost:9126">http://localhost:9126</a></tt></p></td>
+<td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
 <td align="left" valign="top"><p class="table">The address/URL of the EMIR server on which it receives registration and query requests. It should either start with http or https (SSL/TLS) mode, if "https" mode is selected the Authentication and Authorisation properties must be properly configured</p></td>
 </tr>
 <tr>
 <td align="left" valign="top"><p class="table"><tt>emir.anonymousPort</tt></p></td>
 <td align="left" valign="top"><p class="table">Unsigned Integer</p></td>
-<td align="left" valign="top"><p class="table"><tt>9127</tt></p></td>
+<td align="left" valign="top"><p class="table"><tt>-</tt></p></td>
 <td align="left" valign="top"><p class="table">The anonymous http port number. Setting the property will start an additional <em>http</em> server (without SSL/TLS) only if the above server address is <em>https</em> (with SSL/TLS). It will provide <em>anonymous</em> access to the query interface (i.e. /services REST Web Service).</p></td>
 </tr>
 </tbody>
@@ -1958,10 +1958,13 @@ protocol://domain:port format.</p></div>
 <div class="paragraph"><p>The protocol part is not mandatory if https (default)
 The port part is not mandatory if 54321 (default)
 The domain part is mandatory</p></div>
-<div class="paragraph"><p>Examples:
-url = emiregistry2.grid.niif.hu
-url = <a href="https://emiregistry2.grid.niif.hu">https://emiregistry2.grid.niif.hu</a>
-url = <a href="https://emiregistry2.grid.niif.hu:54321">https://emiregistry2.grid.niif.hu:54321</a></p></div>
+<div class="listingblock">
+<div class="title">Examples</div>
+<div class="content">
+<pre><tt>url = emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu
+url = https://emiregistry2.grid.niif.hu:54321</tt></pre>
+</div></div>
 <h4 id="_period">5.1.2. period</h4>
 <div class="paragraph"><p><tt>Location:</tt> <tt>emir</tt> section</p></div>
 <div class="paragraph"><p><tt>Default value:</tt> <em>No default value</em></p></div>
@@ -2418,7 +2421,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.0<br />
-Last updated 2012-07-20 11:49:00 CEST
+Last updated 2012-07-24 13:38:21 CEST
 </div>
 </div>
 </body>
