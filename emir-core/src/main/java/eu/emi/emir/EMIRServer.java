@@ -194,20 +194,17 @@ public class EMIRServer {
 			addParentDSR();
 		}
 
-		String v = ServerProperties.class.getPackage()
-				.getImplementationVersion();
+		String v=ServerProperties.class.getPackage().getImplementationVersion();
 		StringBuilder sb = new StringBuilder();
 		sb.append("EMIR Server ");
-		if (v != null) {
-			sb.append("v" + v);
+		if (v!=null) {
+			sb.append("v"+v);
 		}
-		sb.append(" started [TYPE: " + type + "] [URL:"
-				+ sp.getValue(ServerProperties.PROP_ADDRESS) + "]");
+		sb.append(" [TYPE: "+type+"] [URL:"+sp.getValue(ServerProperties.PROP_ADDRESS)+"] STARTED");
 		String startMessage = sb.toString();
 		System.out.println(startMessage);
 		logger.info(startMessage);
 		printMongoConnectionStatus();
-
 	}
 
 	private void printMongoConnectionStatus() {
