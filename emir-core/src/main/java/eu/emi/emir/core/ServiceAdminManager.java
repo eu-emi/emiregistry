@@ -391,7 +391,7 @@ public class ServiceAdminManager {
 		if (!query.isEmpty())
 			return true;
 		else
-			log.debug("Wrong owner ("+ owner +") try to delete this Service Endpoint ID: "+ sendpointID);
+			log.debug("Wrong owner ("+ owner +") try to modify this Service Endpoint ID: "+ sendpointID);
 			return false;
 	}
 	
