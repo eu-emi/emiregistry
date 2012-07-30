@@ -302,7 +302,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					"No service description with the Endpoint ID:" + endpointID + " exists");
 		}
 		logger.info("deleted: " + endpointID);
-		// sending update event to the receivers
+		// sending delete event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
 			EventDispatcher.notifyRecievers(new Event(
@@ -331,7 +331,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), sObj.getEndpointID());
 
-			serviceCollection.update(query, dbObj);
+			serviceCollection.update(query, dbObj, true, false); //upsert=true and multi=false
 			database.requestDone();
 			logger.info("updated Service Endpoint Record with ID: " + id);
 			// sending update event to the receivers
