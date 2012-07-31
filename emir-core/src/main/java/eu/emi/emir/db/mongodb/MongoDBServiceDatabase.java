@@ -198,41 +198,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	}
 
-	public void insert(DBObject item) throws ExistingResourceException,
-			PersistentStoreFailureException {
-		@SuppressWarnings("unused")
-		List<String> lstError = new CopyOnWriteArrayList<String>();
-		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("inserting: " + item);
-			}
-			DBObject db = item;
-			
-			db.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
-					.getAttributeName(), new Date());
-			database.requestStart();
-			database.requestEnsureConnection();
-			serviceCollection.insert(db, WriteConcern.SAFE);
-			database.requestDone();
-			// EventManager.notifyRecievers(new Event(EventTypes.SERVICE_ADD,obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
-//			"1");
-//	
-//	obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
-//			
-//	obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
-			// item
-			// .toJSON()));
-		} catch (MongoException e) {
-			if (e instanceof DuplicateKey) {
-				throw new ExistingResourceException(e);
-			} else {
-				throw new PersistentStoreFailureException(e);
-			}
-
-		}
-
-	}
-
 	@Override
 	public ServiceObject getServiceByUrl(String identifier)
 			throws MultipleResourceException, NonExistingResourceException,

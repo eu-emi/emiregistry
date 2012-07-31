@@ -80,13 +80,14 @@ public class TestMongoDBEmbedded extends Assert{
 		
 		BasicDBObject bdb = new BasicDBObject();
 		
+		bdb.put("Service_Endpoint_ID", "testIDvalue");
 		bdb.put("testname", "testvalue");
 		
 		Date now = new Date();
 		
 		bdb.put("now", now);
 		
-		m.insert(bdb);
+		m.insert(new ServiceObject(bdb));
 		
 		List<ServiceObject> lst = m.findAll();
 		
