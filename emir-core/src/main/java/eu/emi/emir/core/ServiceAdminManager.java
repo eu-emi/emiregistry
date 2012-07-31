@@ -119,7 +119,11 @@ public class ServiceAdminManager {
 				try {
 					if (serviceDB.getServiceByEndpointID(jo.getString(
 							ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()))
-									.getServiceOwner() == null ){
+									.getServiceOwner() == null
+						|| jo.getString(
+								ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName())
+									.equals(EMIRServer.getServerProperties()
+											.getValue(ServerProperties.PROP_ADDRESS))){
 						/* 
 						 * The stored entry was removed and it contains very base
 						 * (Endpoint_URL and updateSince) information.
