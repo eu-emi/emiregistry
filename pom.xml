@@ -5,7 +5,7 @@
 
 	<groupId>eu.eu-emi</groupId>
 	<artifactId>emiregistry</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 	<name>EMIR</name>
 	<url>https://github.com/eu-emi/emiregistry</url>
@@ -368,10 +368,10 @@
 	</pluginRepositories>
 
 	<distributionManagement>
-		<!-- <repository> -->
-		<!-- <id>gh-pages</id> -->
-		<!-- <url>file:///${basedir}/../../emiregistry-pages/repository/</url> -->
-		<!-- </repository> -->
+<!-- 		<repository> -->
+<!-- 		<id>gh-pages</id> -->
+<!-- 		<url>file:///${basedir}/../../emiregistry-pages/repository/</url> -->
+<!-- 		</repository> -->
 	</distributionManagement>
 
 	<reporting>
