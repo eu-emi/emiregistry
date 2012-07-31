@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>emiregistry</artifactId>
+		<groupId>eu.eu-emi</groupId>
+		<version>1.2.0</version>
+	</parent>
+	<artifactId>emir-client</artifactId>
+	<description>Java Client API for EMIR</description>
+	<name>EMI Registry Client API</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>eu.eu-emi</groupId> -->
+<!-- 			<artifactId>emir-securityLibrary</artifactId> -->
+<!-- 			<version>${parent.version}</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		
+		<dependency>
+				<groupId>eu.unicore.security</groupId>
+				<artifactId>securityLibrary</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>pl.edu.icm.saml</groupId>
+						<artifactId>samly2</artifactId>						
+					</exclusion>
+				</exclusions>				
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>eu.eu-emi</groupId>
+			<artifactId>xmltypes</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+	<organization>
+		<name>EMI</name>
+		<url>www.eu-emi.eu</url>
+	</organization>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Specification-Title>${name}</Specification-Title>
+							<Specification-Vendor>EMI</Specification-Vendor>
+							<Specification-Version>${version}</Specification-Version>
+							<Implementation-Title>${name}</Implementation-Title>
+							<Implementation-Vendor-Id>emi.eu</Implementation-Vendor-Id>
+							<Implementation-Vendor>EMI</Implementation-Vendor>
+							<Implementation-Version>${version}</Implementation-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
