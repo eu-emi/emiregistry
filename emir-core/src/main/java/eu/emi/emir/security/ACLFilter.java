@@ -106,6 +106,7 @@ public class ACLFilter implements ContainerRequestFilter {
 	public ContainerRequest filter(ContainerRequest request)
 			throws WebApplicationException {
 		Client client = null;
+		@SuppressWarnings("unused")
 		Role role = new Role();
 		Boolean b = EMIRServer.getServerSecurityProperties().isSslEnabled();
 		String path = request.getPath();
@@ -189,8 +190,14 @@ public class ACLFilter implements ContainerRequestFilter {
 						try {
 							String[] pair = line.split("::");
 							X500Principal p = new X500Principal(pair[0].trim());
+							if (acceptedDNs.containsKey(p.getName())){
+								String message = "Duplicate access for this DN: "+ line;
+								message += "\n First one will be use!!!";
+								logger.warn(message);
+								continue;
+							}
 							acceptedDNs.put(p.getName(), pair[1].trim());
-							logger.info("Allowing admin access for <" + line
+							logger.info("Allowing "+pair[1].trim()+" access for <" + line
 									+ ">");
 						} catch (Exception ex) {
 							logger.warn("Invalid entry <" + line + ">", ex);
