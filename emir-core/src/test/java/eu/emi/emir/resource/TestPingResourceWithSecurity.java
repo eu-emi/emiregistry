@@ -38,6 +38,7 @@ public class TestPingResourceWithSecurity {
 	protected static Properties props;
 	static EMIRServer server = null;
 	protected static String BaseURI;
+	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(TestPingResourceWithSecurity
 			.class);
 	

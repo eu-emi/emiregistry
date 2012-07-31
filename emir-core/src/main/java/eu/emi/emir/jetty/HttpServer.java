@@ -25,6 +25,7 @@ import eu.emi.emir.client.util.Log;
  *
  */
 public class HttpServer {
+	@SuppressWarnings("unused")
 	private static Logger logger = Log.getLogger(Log.EMIR_HTTPSERVER, HttpServer.class);
 
 	ServerProperties serverProps = null;

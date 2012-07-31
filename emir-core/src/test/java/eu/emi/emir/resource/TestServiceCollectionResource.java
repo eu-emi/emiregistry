@@ -8,8 +8,6 @@ import static org.junit.Assert.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -23,7 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mongodb.QueryBuilder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import eu.emi.emir.TestRegistryBase;
@@ -51,6 +48,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 //	@Before
 	public void _setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
+		@SuppressWarnings("unused")
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, 12);

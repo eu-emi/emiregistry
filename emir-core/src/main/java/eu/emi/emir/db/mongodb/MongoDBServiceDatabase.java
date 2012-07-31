@@ -2,7 +2,6 @@ package eu.emi.emir.db.mongodb;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

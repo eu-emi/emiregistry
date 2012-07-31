@@ -15,7 +15,6 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.security.ServerSecurityProperties;
-import eu.unicore.security.canl.AuthnAndTrustProperties;
 import eu.unicore.util.configuration.ConfigurationException;
 import eu.unicore.util.jetty.JettyServerBase;
 

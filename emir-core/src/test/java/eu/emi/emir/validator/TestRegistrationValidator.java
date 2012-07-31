@@ -39,6 +39,7 @@ public class TestRegistrationValidator {
 	
 	@Before
 	public void setup(){
+		@SuppressWarnings("unused")
 		EMIRServer s = new EMIRServer(new Properties());
 	}
 	

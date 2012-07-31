@@ -3,7 +3,6 @@
  */
 package eu.emi.emir.resource;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
 import static org.junit.Assert.*;
 
