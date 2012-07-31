@@ -392,11 +392,19 @@ public class ServiceAdminManager {
 		query = serviceDB.query(OR.toString());
 		//System.out.println(objects.toString());
 
-		if (!query.isEmpty())
+		if (!query.isEmpty()) {
 			return true;
-		else
+		} else {
+			JSONObject entryExist = new JSONObject();
+			entryExist.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), sendpointID);
+
+			if (serviceDB.query(entryExist.toString()).isEmpty()) {
+				// The entry does not exist
+				return true;
+			}
 			log.debug("Wrong owner ("+ owner +") try to modify this Service Endpoint ID: "+ sendpointID);
 			return false;
+		}
 	}
 	
 	/**
