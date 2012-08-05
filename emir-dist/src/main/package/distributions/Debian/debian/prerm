@@ -19,7 +19,10 @@ set -e
 case "$1" in
     remove)
 	/etc/init.d/emi-emir stop
-	insserv -r emi-emir
+	if [ -e /sbin/insserv ]
+ 	then
+    	 /sbin/insserv -r emi-emir
+ 	fi 
     ;;
     upgrade|deconfigure)
     ;;

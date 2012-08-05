@@ -84,7 +84,10 @@ case "$1" in
 	chown emi:emi /var/lib/emi/emir/data
 	chmod 700 /var/lib/emi/emir/data
 	
-	insserv emi-emir
+	if [ -e /sbin/insserv ]
+ 	then
+    	 /sbin/insserv emi-emir
+ 	fi  
 	;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
