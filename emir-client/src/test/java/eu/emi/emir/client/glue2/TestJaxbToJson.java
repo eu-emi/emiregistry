@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -19,11 +20,12 @@ import static org.junit.Assert.*;
 
 /**
  * @author a.memon
- *
+ * 
  */
 public class TestJaxbToJson {
 	@Test
-	public void convertSingleXmlDoc() throws JSONException{
+	public void convertSingleXmlDoc() throws JSONException,
+			DatatypeConfigurationException {
 		ObjectFactory of = new ObjectFactory();
 		ServiceT s = of.createServiceT();
 		s.setID("id_1");
@@ -31,7 +33,7 @@ public class TestJaxbToJson {
 		s.setType("type_1");
 		List<EndpointT> lstEp = s.getEndpoint();
 		EndpointT et = of.createEndpointT();
-		
+
 		et.setID("epr_1");
 		et.setInterfaceName("iname_1");
 		et.getInterfaceVersion().add("1.0.0");
@@ -43,30 +45,33 @@ public class TestJaxbToJson {
 		et.getCapability().add("workflow");
 		et.getCapability().add("cloud");
 		et.setValidity(new BigInteger("360000"));
+		et.getWSDL().add("wsdl1");
+		et.getWSDL().add("wsdl2");
+		et.getWSDL().add("wsdl3");
 		lstEp.add(et);
-		
+
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(s, sw);
 		System.out.println(sw);
-		
+
 		JSONArray ja = JaxbToJson.convert(sw.toString());
-		
+
 		System.out.println(ja.toString(2));
-		
+
 		assertTrue(ja.length() == 1);
-		
-		
+
 	}
-	
+
 	@Test
-	public void convertTwoXmlDocs() throws JSONException{
+	public void convertTwoXmlDocs() throws JSONException,
+			DatatypeConfigurationException {
 		ObjectFactory of = new ObjectFactory();
 		ServiceT s = of.createServiceT();
 		s.setID("id_1");
 		s.setName("name_1");
 		s.setType("type_1");
 		List<EndpointT> lstEp = s.getEndpoint();
-		
+
 		EndpointT et = of.createEndpointT();
 		et.setID("epr_1");
 		et.setInterfaceName("iname_1");
@@ -78,7 +83,7 @@ public class TestJaxbToJson {
 		et.getCapability().add("jobmgmt");
 		et.getCapability().add("workflow");
 		et.getCapability().add("cloud");
-		
+
 		EndpointT et1 = of.createEndpointT();
 		et1.setID("epr_2");
 		et1.setInterfaceName("iname_2");
@@ -90,14 +95,18 @@ public class TestJaxbToJson {
 		et1.getCapability().add("virtualisation");
 		et1.getCapability().add("workflow");
 		et1.getCapability().add("cloud");
-				
+
 		lstEp.add(et);
 		lstEp.add(et1);
-		
+
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(s, sw);
 		System.out.println(sw);
-		
+
 		JSONArray ja = JaxbToJson.convert(sw.toString());
+
+		System.out.println(ja.toString(2));
+
+		assertTrue(ja.length() == 1);
 	}
 }

@@ -7,8 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -144,6 +149,20 @@ public class DateUtil {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		Date timestamp = formatter.parse(d);
 		return timestamp;
+	}
+	
+	public static XMLGregorianCalendar toXmlGregorian(Date d)
+			throws DatatypeConfigurationException {
+		GregorianCalendar gcal = new GregorianCalendar();
+		gcal.setTime(d);
+		XMLGregorianCalendar xgcal = DatatypeFactory.newInstance()
+				.newXMLGregorianCalendar(gcal);
+		return xgcal;
+	}
+	
+	public static Date fromXmlGregorian(XMLGregorianCalendar xmlCal)
+			throws DatatypeConfigurationException {
+		return xmlCal.toGregorianCalendar().getTime();
 	}
 
 }

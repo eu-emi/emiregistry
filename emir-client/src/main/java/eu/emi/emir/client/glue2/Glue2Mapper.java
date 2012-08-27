@@ -164,7 +164,7 @@ public class Glue2Mapper {
 
 					case SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE:
 						try {
-							et.setDowntimeAnnounce(toXmlGregorian(DateUtil.getDate(jo
+							et.setDowntimeAnnounce(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE
 											.getAttributeName()))));
 						} catch (Exception e) {
@@ -175,7 +175,7 @@ public class Glue2Mapper {
 						break;
 					case SERVICE_ENDPOINT_DOWNTIME_END:
 						try {
-							et.setDowntimeEnd(toXmlGregorian(DateUtil.getDate(jo
+							et.setDowntimeEnd(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_END
 											.getAttributeName()))));
 						} catch (Exception e) {
@@ -197,7 +197,7 @@ public class Glue2Mapper {
 						break;
 					case SERVICE_ENDPOINT_DOWNTIME_START:
 						try {
-							et.setDowntimeStart(toXmlGregorian(DateUtil.getDate(jo
+							et.setDowntimeStart(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START
 											.getAttributeName()))));
 						} catch (Exception e) {
@@ -353,7 +353,7 @@ public class Glue2Mapper {
 						break;
 					case SERVICE_ENDPOINT_STARTTIME:
 						try {
-							et.setStartTime(toXmlGregorian(DateUtil.getDate(jo
+							et.setStartTime(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_ENDPOINT_STARTTIME
 											.getAttributeName()))));
 						} catch (Exception e) {
@@ -465,10 +465,10 @@ public class Glue2Mapper {
 						break;
 					case SERVICE_CREATED_ON:
 						try {
-							st.setCreationTime(toXmlGregorian(DateUtil.getDate(jo
+							st.setCreationTime(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 											.getAttributeName()))));
-							et.setCreationTime(toXmlGregorian(DateUtil.getDate(jo
+							et.setCreationTime(DateUtil.toXmlGregorian(DateUtil.getDate(jo
 									.getJSONObject(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 											.getAttributeName()))));
 						} catch (Exception e) {
@@ -682,14 +682,5 @@ public class Glue2Mapper {
 
 		}
 		return lst;
-	}
-
-	private XMLGregorianCalendar toXmlGregorian(Date d)
-			throws DatatypeConfigurationException {
-		GregorianCalendar gcal = new GregorianCalendar();
-		gcal.setTime(d);
-		XMLGregorianCalendar xgcal = DatatypeFactory.newInstance()
-				.newXMLGregorianCalendar(gcal);
-		return xgcal;
-	}
+	}	
 }
