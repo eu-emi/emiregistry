@@ -1,9 +1,11 @@
 /**
  * 
  */
-package eu.emi.emir.client.util;
+package eu.emi.emir.client.glue2;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,6 +17,8 @@ import org.ogf.schemas.glue.x2009.x03.spec20R1.EndpointT;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.ServiceT;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
+import eu.emi.emir.client.util.Log;
 
 /**
  * Converts GLUE 2.0 XMLBeans XML to EMIR's JSON
@@ -23,13 +27,15 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
  * 
  */
 public class XmlbeansToJson {
-	private static Logger logger = Log.getLogger(Log.EMIR_CLIENT,	XmlbeansToJson.class);
+	private static Logger logger = Log.getLogger(Log.EMIR_CLIENT,
+			XmlbeansToJson.class);
 
-	public synchronized static JSONArray convert(String serviceXML) throws XmlException, JSONException{
+	public synchronized static JSONArray convert(String serviceXML)
+			throws XmlException, JSONException {
 		ServiceT service = ServiceT.Factory.parse(serviceXML);
 		return convert(service);
 	}
-	
+
 	public synchronized static JSONArray convert(final ServiceT service)
 			throws JSONException {
 		if (service == null) {
@@ -51,11 +57,11 @@ public class XmlbeansToJson {
 		EndpointT[] epArr = service.getEndpointArray();
 
 		for (EndpointT ep : epArr) {
-			
+
 			List<String> lstErr = new ArrayList<String>();
 
 			JSONObject emirJson = new JSONObject();
-			
+
 			// setting service mandatory attributes
 			if (service.getID() != null) {
 				emirJson.put(ServiceBasicAttributeNames.SERVICE_ID
@@ -126,28 +132,45 @@ public class XmlbeansToJson {
 				emirJson.put(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_TECHNOLOGY
 								.getAttributeName(), ep.getTechnology());
-				
+
 			} else {
 				lstErr.add("Mandatory 'Endpoint Technology' attribute missing");
 			}
 			
+			
+			//mind the limitation of integer here
+			if (ep.getValidity() != null) {
+
+				BigInteger sec = ep.getValidity();
+
+				Calendar c = Calendar.getInstance();
+
+				c.add(Calendar.SECOND, sec.intValue());
+
+				DateUtil.addDate(emirJson,
+						ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+								.getAttributeName(), c.getTime());
+
+			}
+
 			if (lstErr.size() > 0) {
 				StringBuilder b = new StringBuilder();
 				b.append("Incomplete Endpoint description:");
 				for (String err : lstErr) {
-					b.append("\n-"+err);
+					b.append("\n-" + err);
 				}
-				b.append("\nfrom: "+service);
-				logger.error(b.toString());				
+				b.append("\nfrom: " + service);
+				logger.error(b.toString());
 				continue;
 			}
 
 			emirJsonArr.put(emirJson);
-			
+
 		}
-		
+
 		if (logger.isTraceEnabled()) {
-			logger.trace("Valid JSON created from GLUE 2.0 XML: " + emirJsonArr.toString(2));	
+			logger.trace("Valid JSON created from GLUE 2.0 XML: "
+					+ emirJsonArr.toString(2));
 		}
 		return emirJsonArr;
 	}

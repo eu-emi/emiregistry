@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.emir.client.util;
+package eu.emi.emir.client.glue2;
 
 import org.apache.xmlbeans.XmlException;
 import org.codehaus.jettison.json.JSONException;
@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.EndpointT;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.ServiceT;
+
+import eu.emi.emir.client.glue2.XmlbeansToJson;
 
 
 /**
