@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.emir.glue2;
+package eu.emi.emir.client.glue2;
 
 /**
  * @author a.memon

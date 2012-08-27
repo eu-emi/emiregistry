@@ -17,13 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.TestValueConstants;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
 /**
@@ -56,7 +55,7 @@ public class TestServiceReaper extends MongoDBTestBase {
 		Calendar c = Calendar.getInstance();
 		// c.add(Calendar.MONTH, 12);
 		try {
-			date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+			date.put("$date", DateUtil.toUTCFormat(c.getTime()));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +70,7 @@ public class TestServiceReaper extends MongoDBTestBase {
 
 			c1.add(Calendar.SECOND, 1);
 			try {
-				date1.put("$date", ServiceUtil.toUTCFormat(c1.getTime()));
+				date1.put("$date", DateUtil.toUTCFormat(c1.getTime()));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

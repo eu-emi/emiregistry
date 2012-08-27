@@ -21,6 +21,7 @@ import org.codehaus.jettison.json.JSONObject;
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;
@@ -33,10 +34,9 @@ import eu.emi.emir.db.mongodb.ServiceObject;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.emi.emir.exception.UnknownServiceException;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
+import eu.emi.emir.validator.ValidatorUtil;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**
@@ -82,14 +82,14 @@ public class ServiceAdminManager {
 	 * 	 */
 	public JSONObject addService(JSONObject jo) throws InvalidServiceDescriptionException, JSONException, ExistingResourceException, ConfigurationException, ParseException
 			 {
-		if (!ServiceUtil.isValidServiceInfo(jo)) {
+		if (!ValidatorUtil.isValidServiceInfo(jo)) {
 			throw new InvalidServiceDescriptionException(
 					"The service description does not contain valid attributes");
 		}
 		try {
 			// current time and last update should be same in the beginning			
 			JSONObject date = new JSONObject();
-			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+			date.put("$date", DateUtil.toUTCFormat(new Date()));
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), date);
 			if (!jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
@@ -204,9 +204,9 @@ public class ServiceAdminManager {
 	 */
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
-		if (!ServiceUtil.isValidServiceInfo(jo) ) {
+		if (!ValidatorUtil.isValidServiceInfo(jo) ) {
 			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
-						!ServiceUtil.isValidRemovedServiceInfo(jo)) {
+						!ValidatorUtil.isValidRemovedServiceInfo(jo)) {
 				throw new InvalidServiceDescriptionException(
 						"The service description does not contain valid attributes: serviceurl and servicetype");
 			}
@@ -223,7 +223,7 @@ public class ServiceAdminManager {
 		if (!jo.has(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 				.getAttributeName())) {
 			JSONObject date = new JSONObject();
-			date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+			date.put("$date", DateUtil.toUTCFormat(new Date()));
 			jo.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 					.getAttributeName(), date);
 		}
@@ -314,7 +314,7 @@ public class ServiceAdminManager {
 		// { "serviceExpireOn" : { "$lte" : { "$date" :
 		// "2011-07-06T16:05:40Z"}}}
 
-		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+		date.put("$date", DateUtil.toUTCFormat(new Date()));
 		predicate.put("$lte", date);
 		query.put(
 				ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(),
@@ -432,9 +432,9 @@ public class ServiceAdminManager {
 			Date messageDate = new Date();
 			try {
 				// set the message date to GMT time
-				messageDate =  ServiceUtil.UTCISODateFormat.parse(ServiceUtil.toUTCFormat(messageDate));
+				messageDate =  DateUtil.UTCISODateFormat.parse(DateUtil.toUTCFormat(messageDate));
 				// if possible set the message date from the message time
-				messageDate =  ServiceUtil.UTCISODateFormat.parse(messageTime);
+				messageDate =  DateUtil.UTCISODateFormat.parse(messageTime);
 			} catch (ParseException e) {
 				// no problem, the time was empty
 				//Log.logException(e);

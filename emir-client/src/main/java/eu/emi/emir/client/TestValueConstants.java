@@ -1,14 +1,14 @@
 /**
  * 
  */
-package eu.emi.emir;
+package eu.emi.emir.client;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.util.DateUtil;
+import eu.emi.emir.client.util.DateUtil;
 
 /**
  * @author a.memon

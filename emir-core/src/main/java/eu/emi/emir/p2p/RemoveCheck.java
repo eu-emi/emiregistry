@@ -11,9 +11,9 @@ import com.mongodb.MongoException;
 
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.emir.util.DateUtil;
 
 /**
  * Periodically database entries remove checking by the GSR

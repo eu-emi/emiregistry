@@ -28,8 +28,8 @@ import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.security.ClientSecurityProperties;
-import eu.emi.emir.util.DateUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 import eu.unicore.security.canl.AuthnAndTrustProperties;
 import eu.unicore.security.canl.CredentialProperties;

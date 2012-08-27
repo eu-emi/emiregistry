@@ -30,6 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServiceAdminManager;
 import eu.emi.emir.db.ExistingResourceException;
@@ -38,7 +39,6 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
-import eu.emi.emir.util.ServiceUtil;
 
 /**
  * Resource for the service providers (privileged) to manage their services
@@ -383,7 +383,7 @@ public class ServiceAdminResource {
 			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
 						messageTime == "unknown") {
 				// New entry and message generation time need, it is come from one DSR
-				messageTime = ServiceUtil.toUTCFormat(new Date());
+				messageTime = DateUtil.toUTCFormat(new Date());
 			}
 			logger.debug("deleting service by Endpoint ID: " + sendpointID
 					+ ", Owned by: " + owner);

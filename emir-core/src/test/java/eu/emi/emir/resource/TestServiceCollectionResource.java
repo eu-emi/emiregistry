@@ -24,14 +24,14 @@ import org.junit.Test;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import eu.emi.emir.TestRegistryBase;
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.TestValueConstants;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.ServiceObject;
-import eu.emi.emir.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 import eu.unicore.bugsreporter.annotation.FunctionalTest;
 
@@ -55,7 +55,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services");
 		JSONObject date = new JSONObject();
-		date.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		date.put("$date", DateUtil.toUTCFormat(c.getTime()));
 		for (int i = 0; i < 50; i++) {
 			JSONObject entry1 = new JSONObject();
 			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL

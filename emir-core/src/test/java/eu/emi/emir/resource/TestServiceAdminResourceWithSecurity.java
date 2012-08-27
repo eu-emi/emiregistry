@@ -23,9 +23,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import eu.emi.emir.TestRegistryBaseWithSecurity;
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.TestValueConstants;
 
 /**
  * @author a.memon

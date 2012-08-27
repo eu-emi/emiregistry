@@ -1,13 +1,14 @@
 /**
  * 
  */
-package eu.emi.emir.exception;
+package eu.emi.emir.validator;
+
 
 /**
  * @author a.memon
  *
  */
-public class InvalidServiceDescriptionException extends RegistryException{
+public class InvalidServiceDescriptionException extends Exception{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 

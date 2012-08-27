@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.emir.glue2;
+package eu.emi.emir.client.glue2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,10 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.glue2.Glue2Mapper;
-import eu.emi.emir.glue2.JSONToGlue2MappingException;
+import eu.emi.emir.client.TestValueConstants;
+import eu.emi.emir.client.glue2.Glue2Mapper;
+import eu.emi.emir.client.glue2.JSONToGlue2MappingException;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**

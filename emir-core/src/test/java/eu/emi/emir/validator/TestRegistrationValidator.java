@@ -21,13 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
-import eu.emi.emir.ServerProperties;
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.TestValueConstants;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
+import eu.emi.emir.validator.ValidatorFactory;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**
@@ -39,8 +38,7 @@ public class TestRegistrationValidator {
 	
 	@Before
 	public void setup(){
-		@SuppressWarnings("unused")
-		EMIRServer s = new EMIRServer(new Properties());
+		EMIRServer e = new EMIRServer(new Properties());
 	}
 	
 	@Test
@@ -49,29 +47,13 @@ public class TestRegistrationValidator {
 		assertTrue(ValidatorFactory.getRegistrationValidator().validateInfo(TestValueConstants.getJSONWithMandatoryAttributes()));
 	}
 	
-	@Test (expected = InvalidServiceDescriptionException.class)
-	public void testInvalidExpiryInfo_ExceedsDefault() throws Exception{
-		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
-		DateUtil.setExpiryTime(jo, EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM)+10);
-		logger.info(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
-		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
-	}
-	
-	@Test (expected = InvalidServiceDescriptionException.class)
-	public void testInvalidExpiryInfo_NegativeValue() throws Exception{
-		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
-		DateUtil.setExpiryTime(jo, -EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM));
-		logger.info(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
-		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
-	}
-	
 	@Test
 	public void testInvalidDateType() throws Exception{
 		JSONObject jo = new JSONObject(FileUtils.readFileToString(new File("src/test/resources/json/serviceinfo.json")));
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH,12);
 		JSONObject d = new JSONObject();
-		d.put("$date", ServiceUtil.toUTCFormat(c.getTime()));
+		d.put("$date", DateUtil.toUTCFormat(c.getTime()));
 		jo.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName(), d);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_START.getAttributeName(), new Date());
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));

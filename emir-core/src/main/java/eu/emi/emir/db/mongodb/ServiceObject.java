@@ -13,8 +13,8 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.util.ServiceUtil;
 
 /**
  * Mongo flavor of EMIRegistry Service description
@@ -100,7 +100,7 @@ public class ServiceObject {
 		Date d = null;
 		try {
 
-			d = ServiceUtil.ServiceDateFormat.parse((String) jo
+			d = DateUtil.ServiceDateFormat.parse((String) jo
 					.get(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 							.getAttributeName()));
 		} catch (ParseException e) {
@@ -114,7 +114,7 @@ public class ServiceObject {
 	public Date getUpdateSince() {
 		Date d = null;
 		try {
-			d = ServiceUtil.UTCISODateFormat.parse(((JSONObject)jo.get(
+			d = DateUtil.UTCISODateFormat.parse(((JSONObject)jo.get(
 					ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 							.getAttributeName())).get("$date").toString());
 		} catch (ParseException e) {
@@ -131,7 +131,7 @@ public class ServiceObject {
 	public Date getExpireOn() {
 		Date d = null;
 		try {
-			d = ServiceUtil.ServiceDateFormat.parse((String) jo
+			d = DateUtil.ServiceDateFormat.parse((String) jo
 					.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 							.getAttributeName()));
 		} catch (ParseException e) {

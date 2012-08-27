@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.emi.emir.glue2;
+package eu.emi.emir.client.glue2;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -36,8 +36,8 @@ import org.ogf.schemas.glue._2009._03.spec_2.ServiceT;
 import org.ogf.schemas.glue._2009._03.spec_2.ServingStateT;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.util.DateUtil;
 //import eu.emi.emir.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 

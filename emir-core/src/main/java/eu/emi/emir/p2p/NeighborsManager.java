@@ -36,7 +36,7 @@ import eu.emi.emir.db.QueryException;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.event.EventTypes;
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
 
 
 /**

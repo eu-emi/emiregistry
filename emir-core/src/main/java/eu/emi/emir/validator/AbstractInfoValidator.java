@@ -8,7 +8,6 @@ import java.text.ParseException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**

@@ -23,9 +23,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
+import eu.emi.emir.client.util.ServiceUtil;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
 
 /**
  * <li>cleanup</li> <li>start child server and mongodb instance</li> <li>start

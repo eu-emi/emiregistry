@@ -22,9 +22,8 @@ import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
 
 /**
  * GSR Service periodically self registration
@@ -102,7 +101,7 @@ public class SelfRegistration implements Runnable {
 		}
 		// current time and last update should be same in the beginning
 		JSONObject date = new JSONObject();
-		date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+		date.put("$date", DateUtil.toUTCFormat(new Date()));
 		myInfos.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 				.getAttributeName(), date);
 		myInfos.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON

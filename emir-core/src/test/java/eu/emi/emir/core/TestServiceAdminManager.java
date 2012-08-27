@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
-import eu.emi.emir.TestValueConstants;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.TestValueConstants;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;
 import eu.emi.emir.db.NonExistingResourceException;

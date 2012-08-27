@@ -18,9 +18,8 @@ import org.codehaus.jettison.json.JSONObject;
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-import eu.emi.emir.exception.InvalidServiceDescriptionException;
-import eu.emi.emir.util.ServiceUtil;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**
@@ -70,7 +69,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 				key = (String) iterator.next();
 				if ((jo.get(key) instanceof JSONObject)
 						&& (jo.getJSONObject(key).has("$date"))) {
-					ServiceUtil.toUTCFormat(jo.getJSONObject(key).getString(
+					DateUtil.toUTCFormat(jo.getJSONObject(key).getString(
 							"$date"));
 					valid = true;
 				}
@@ -130,7 +129,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 					if (jo.getJSONObject(
 							ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 									.getAttributeName()).has("$date")) {
-						Date d = ServiceUtil
+						Date d = DateUtil
 								.toUTCFormat(jo
 										.getJSONObject(
 												ServiceBasicAttributeNames.SERVICE_EXPIRE_ON

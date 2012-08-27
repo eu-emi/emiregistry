@@ -24,10 +24,9 @@ import eu.emi.emir.ServerProperties;
 import eu.emi.emir.TestRegistryBase;
 import eu.emi.emir.client.EMIRClient;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
+import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.p2p.NeighborsManager;
-import eu.emi.emir.util.DateUtil;
-import eu.emi.emir.util.ServiceUtil;
 
 public class TestNeighborsManager {
 	EMIRServer s = null;
@@ -102,7 +101,7 @@ public class TestNeighborsManager {
 				myInfos.put("Service_Type", "GSR");
 				// current time and last update should be same in the beginning
 				JSONObject date = new JSONObject();
-				date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+				date.put("$date", DateUtil.toUTCFormat(new Date()));
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 						.getAttributeName(), date);
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
@@ -150,7 +149,7 @@ public class TestNeighborsManager {
 				myInfos.put("Service_Type", "GSR");
 				// current time and last update should be same in the beginning
 				JSONObject date = new JSONObject();
-				date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+				date.put("$date", DateUtil.toUTCFormat(new Date()));
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 						.getAttributeName(), date);
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
@@ -199,7 +198,7 @@ public class TestNeighborsManager {
 				myInfos.put("Service_Type", "GSR");
 				// current time and last update should be same in the beginning
 				JSONObject date = new JSONObject();
-				date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+				date.put("$date", DateUtil.toUTCFormat(new Date()));
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 						.getAttributeName(), date);
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
@@ -249,7 +248,7 @@ public class TestNeighborsManager {
 				myInfos.put("Service_Type", "GSR");
 				// current time and last update should be same in the beginning
 				JSONObject date = new JSONObject();
-				date.put("$date", ServiceUtil.toUTCFormat(new Date()));
+				date.put("$date", DateUtil.toUTCFormat(new Date()));
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_CREATED_ON
 						.getAttributeName(), date);
 				myInfos.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
