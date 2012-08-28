@@ -107,6 +107,6 @@ public class TestJaxbToJson {
 
 		System.out.println(ja.toString(2));
 
-		assertTrue(ja.length() == 1);
+		assertTrue(ja.length() == 2);
 	}
 }
