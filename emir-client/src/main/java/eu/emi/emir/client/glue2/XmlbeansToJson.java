@@ -13,6 +13,7 @@ import org.apache.xmlbeans.XmlException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.ogf.schemas.glue.x2009.x03.spec20R1.AccessPolicyT;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.EndpointT;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.ServiceT;
 
@@ -138,7 +139,9 @@ public class XmlbeansToJson {
 			}
 			
 			
-			//mind the limitation of integer here
+			// Optional attributes
+			// mind the limitation of integer here (max must not be greater than
+			// 2^31-1)
 			if (ep.getValidity() != null) {
 
 				BigInteger sec = ep.getValidity();
@@ -151,6 +154,124 @@ public class XmlbeansToJson {
 						ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 								.getAttributeName(), c.getTime());
 
+			}
+			
+			if (ep.getAccessPolicyArray()!= null && ep.getAccessPolicyArray().length > 0) {
+				AccessPolicyT at = ep.getAccessPolicyArray(0);
+
+				if (at.getRuleArray().length > 0) {
+					emirJson.put(
+							ServiceBasicAttributeNames.SERVICE_ENDPOINT_ACCESSPOLICY_RULE
+									.getAttributeDesc(), at.getRuleArray(0));
+				}
+			}
+
+			if (ep.getDowntimeAnnounce() != null) {
+				DateUtil.addDate(
+						emirJson,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_ANNOUNCE
+								.getAttributeName(), ep.getDowntimeAnnounce().getTime());
+			}
+
+			if (ep.getDowntimeEnd() != null) {
+				DateUtil.addDate(
+						emirJson,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_END
+								.getAttributeName(), ep.getDowntimeEnd().getTime());
+			}
+
+			if (ep.getDowntimeInfo() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_INFO
+								.getAttributeName(), ep.getDowntimeInfo());
+			}
+
+			if (ep.getDowntimeStart() != null) {
+				DateUtil.addDate(
+						emirJson,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_DOWNTIME_END
+								.getAttributeName(), ep.getDowntimeStart().getTime());
+			}
+
+			if (ep.getHealthState() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+								.getAttributeName(), ep.getHealthState()
+								.toString());
+			}
+
+			if (ep.getHealthStateInfo() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATEINFO
+								.getAttributeName(), ep.getHealthStateInfo()
+								.toString());
+			}
+
+			if (ep.getImplementationName() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_IMPL_NAME
+								.getAttributeName(), ep.getImplementationName());
+			}
+
+			if (ep.getImplementationVersion() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_IMPL_VERSION
+								.getAttributeName(), ep.getImplementationVersion());
+			}
+
+			if (ep.getImplementor() != null) {
+				emirJson.put(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_IMPLEMENTOR
+								.getAttributeName(), ep.getImplementor());
+			}
+
+			if (ep.getOtherInfoArray() != null && ep.getOtherInfoArray().length > 0) {
+				JSONArray otherInfo = new JSONArray();
+				for(String info : ep.getOtherInfoArray()){
+					otherInfo.put(info);
+				}
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_OTHER_INFO.getAttributeName(), otherInfo);
+			}
+
+			if (ep.getQualityLevel() != null) {
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_QUALITYLEVEL.getAttributeName(), ep.getQualityLevel().toString());
+			}
+
+			if (ep.getSemanticsArray() != null && ep.getSemanticsArray().length > 0) {
+				JSONArray semantics = new JSONArray();
+				for(String info : ep.getSemanticsArray()){
+					semantics.put(info);
+				}
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_SEMANTICS.getAttributeName(), semantics);
+			}
+
+			if (ep.getServingState() != null) {
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_SERVING_STATE.getAttributeName(), ep.getServingState().toString());
+			}
+
+			if (ep.getStartTime() != null) {
+				DateUtil.addDate(
+						emirJson,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_STARTTIME
+								.getAttributeName(), ep.getStartTime().getTime());
+			}
+
+			if (ep.getSupportedProfileArray() != null
+					&& ep.getSupportedProfileArray().length > 0) {
+				JSONArray profile = new JSONArray();
+				for(String info : ep.getSupportedProfileArray()){
+					profile.put(info);
+				}
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_SUPPORTED_PROFILE.getAttributeName(), profile);
+
+			}
+
+			if (ep.getWSDLArray() != null && ep.getWSDLArray().length > 0) {
+				JSONArray wsdl = new JSONArray();
+				for(String info : ep.getWSDLArray()){
+					wsdl.put(info);
+				}
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_WSDL.getAttributeName(), wsdl);
 			}
 
 			if (lstErr.size() > 0) {

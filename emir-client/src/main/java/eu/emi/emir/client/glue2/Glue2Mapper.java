@@ -6,17 +6,12 @@ package eu.emi.emir.client.glue2;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -38,10 +33,12 @@ import org.ogf.schemas.glue._2009._03.spec_2.ServingStateT;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
-//import eu.emi.emir.util.ServiceUtil;
 import eu.eu_emi.emiregistry.QueryResult;
+//import eu.emi.emir.util.ServiceUtil;
 
 /**
+ * Converts JSON to xml
+ * 
  * @author a.memon
  * 
  */

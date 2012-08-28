@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.EndpointT;
 import org.ogf.schemas.glue.x2009.x03.spec20R1.ServiceT;
-
+import static org.junit.Assert.*;
 import eu.emi.emir.client.glue2.XmlbeansToJson;
 
 
@@ -48,12 +48,12 @@ public class TestXmlBeansToJson {
 
 	@Test
 	public void test() throws JSONException {
-		XmlbeansToJson.convert(service);
+		assertTrue(XmlbeansToJson.convert(service).length() > 0);
 	}
 	
 	@Test
 	public void testString() throws JSONException, XmlException {
-		XmlbeansToJson.convert(service.toString());
+		assertNotNull(XmlbeansToJson.convert(service.toString()));
 	}
 
 }
