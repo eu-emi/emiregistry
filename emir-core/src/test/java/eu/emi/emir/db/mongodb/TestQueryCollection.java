@@ -38,6 +38,8 @@ public class TestQueryCollection extends MongoDBTestBase{
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services-test");
 		db.deleteAll();
+		db.dropDB();
+		
 	}
 
 	@Test
@@ -48,7 +50,7 @@ public class TestQueryCollection extends MongoDBTestBase{
 			JSONObject entry1 = new JSONObject();
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
-					"http://" + UUID.randomUUID()+Math.random());
+					"http://" + UUID.randomUUID());
 			entry1.put(
 					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 					"some_service_2");
