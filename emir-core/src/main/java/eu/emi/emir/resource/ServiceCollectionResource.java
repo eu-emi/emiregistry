@@ -91,9 +91,14 @@ public class ServiceCollectionResource {
 
 	}
 
+	/**
+	 * Plain query method, invoked only if the MIME type is defined as application/json
+	 * 
+	 * */
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryWithParams(@Context UriInfo ui) throws WebApplicationException, JSONException {
+	public Response queryWithParamsForJSON(@Context UriInfo ui) throws WebApplicationException, JSONException {
 
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
@@ -105,9 +110,10 @@ public class ServiceCollectionResource {
 		}
 
 		JSONArray jArr = null;
-
+		
 		try {
-			jArr = col.query(m);
+			jArr = col.queryForJSON(m);
+			
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
@@ -118,8 +124,44 @@ public class ServiceCollectionResource {
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
 		}
-
 		return Response.ok(jArr).build();
+		
+//		if (jo.length() == 0) {
+//			return Response.ok(jo).status(Status.NO_CONTENT).build();
+//		}
+//		return Response.ok(jo).build();
+	}
+	
+	/**
+	 * Plain query method, invoked only if the MIME type is defined as application/xml
+	 * 
+	 * */
+
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML })
+	public Response queryWithParamsForXML(@Context UriInfo ui)
+			throws WebApplicationException {
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
+
+		QueryResult qr = null;
+		try {
+			qr = col.queryForXML(m);
+		} catch (Exception e) {
+			Log.logException("Error in doing query for services in XML format", e, logger);
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
+		}
+		if (qr.getCount() == BigInteger.ZERO) {
+			return Response.ok(qr).status(Status.NO_CONTENT).build();
+
+		}
+
+		return Response.ok(qr).build();
 	}
 
 	/**
@@ -130,14 +172,20 @@ public class ServiceCollectionResource {
 	 * @throws JSONException 
 	 * */
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response queryWithJSON(JSONObject queryDocument)
+	public Response richQueryForJSON(JSONObject queryDocument, @Context UriInfo ui)
 			throws WebApplicationException, JSONException {
-
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
 		JSONArray jArr = null;
 		try {
-			jArr = col.query(queryDocument);
+			jArr = col.queryForJSON(queryDocument, m);
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONObject jErr = new JSONObject();
@@ -160,12 +208,18 @@ public class ServiceCollectionResource {
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response queryXMLWithJSON(JSONObject queryDocument)
+	public Response richQueryForXML(JSONObject queryDocument, @Context UriInfo ui)
 			throws WebApplicationException {
-
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
 		QueryResult jArr = null;
 		try {
-			jArr = col.queryGlue2(queryDocument);
+			jArr = col.queryForXML(queryDocument, m);
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in XML format", e, logger);
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
@@ -179,38 +233,7 @@ public class ServiceCollectionResource {
 
 		return Response.ok(jArr).build();
 	}
-
-	/**
-	 * Invoked only if the MIME type is defineds as application/xml
-	 * 
-	 * */
-
-	@GET
-	@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML })
-	public Response queryXMLWithParams(@Context UriInfo ui)
-			throws WebApplicationException {
-		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
-		Set<String> s = queryParams.keySet();
-		Map<String, Object> m = new HashMap<String, Object>();
-		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			m.put(key, queryParams.getFirst(key));
-		}
-
-		QueryResult qr = null;
-		try {
-			qr = col.queryGlue2(m);
-		} catch (Exception e) {
-			Log.logException("Error in doing query for services in XML format", e, logger);
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
-		}
-		if (qr.getCount() == BigInteger.ZERO) {
-			return Response.ok(qr).status(Status.NO_CONTENT).build();
-
-		}
-
-		return Response.ok(qr).build();
-	}
+	
 
 	@Deprecated
 	@GET
@@ -228,9 +251,9 @@ public class ServiceCollectionResource {
 
 		QueryResult qr = null;
 		try {
-			qr = col.queryGlue2(m);
+			qr = col.queryForXML(m);
 		} catch (Exception e) {
-			Log.logException("Error in doing query for services in XML format", e, logger);
+			Log.logException("Error executing query for services in XML format", e, logger);
 			throw new WebApplicationException(e);
 		}
 
@@ -242,8 +265,10 @@ public class ServiceCollectionResource {
 		return Response.ok(qr).build();
 	}
 
+	@Deprecated
 	@GET
 	@Path("/pagedquery")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response pagedQuery(@Context UriInfo ui)
 			throws WebApplicationException, JSONException {
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
@@ -254,12 +279,12 @@ public class ServiceCollectionResource {
 			m.put(key, queryParams.getFirst(key));
 		}
 
-		JSONObject jArr = null;
+		JSONArray jArr = null;
 
 		try {
-			jArr = col.pagedQuery(m);
+			jArr = col.pagedQueryForJSON(m);
 		} catch (Exception e) {
-			Log.logException("Error in doing paged query", e, logger);
+			Log.logException("Error executing paged query", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
@@ -268,6 +293,38 @@ public class ServiceCollectionResource {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
 		}
 		return Response.ok(jArr).build();
+	}
+	
+	@Deprecated
+	@GET
+	@Path("/pagedquery")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response pagedQueryGlue2(@Context UriInfo ui)
+			throws WebApplicationException, JSONException {
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+		Set<String> s = queryParams.keySet();
+		Map<String, Object> m = new HashMap<String, Object>();
+		for (Iterator<String> iterator = s.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			m.put(key, queryParams.getFirst(key));
+		}
+
+		QueryResult qr = null;
+
+		try {
+			qr = col.queryForXML(m);
+		} catch (Exception e) {
+			Log.logException("Error executing paged query in XML format", e, logger);
+			JSONObject jErr = new JSONObject();
+			jErr.put("error", e.getCause());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+		}
+		if (qr.getCount() == BigInteger.ZERO) {
+			return Response.ok(qr).status(Status.NO_CONTENT).build();
+
+		}
+
+		return Response.ok(qr).build();
 	}
 
 }

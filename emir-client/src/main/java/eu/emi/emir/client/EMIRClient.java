@@ -204,10 +204,55 @@ public class EMIRClient {
 	 * @param queryDocument A json document defining rich query, according to MongoDB query specification, @see http://www.mongodb.org/display/DOCS/Advanced+Queries
 	 * @return a {@link JSONArray} containing matching records  
 	 */
-	public JSONArray queryByJSON(JSONObject queryDocument) {
-		return getClientResource().path("services")
+	public JSONArray richQueryForJSON(JSONObject queryDocument) {
+		//FIXME: call-out to the paging method
+		return richQueryForJSON(queryDocument, null);
+	}
+	
+	/***
+	 * An overloaded method
+	 * 
+	 * @param queryDocument
+	 * @param pageSize is a number of SE records included in the result 
+	 * @return
+	 */
+	public JSONArray richQueryForJSON(JSONObject queryDocument, Integer pageSize) {
+		if ((pageSize == null) || pageSize == 0) {
+			//set the default page size
+			pageSize = 100;
+		}
+		
+		return getClientResource().path("services").queryParam("pageSize", pageSize.toString())
 				.accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(JSONArray.class, queryDocument);
+	}
+	
+	/***
+	 * Querying the EMIR server for JSON records by JSON document containing the rich queries
+	 *
+	 * @param queryDocument A json document defining rich query, according to MongoDB query specification, @see http://www.mongodb.org/display/DOCS/Advanced+Queries
+	 * @return a {@link JSONArray} containing matching records  
+	 */
+	public QueryResult richQueryForXML(JSONObject queryDocument) {
+		return richQueryForXML(queryDocument, null);
+	}
+	
+	/***
+	 * An overloaded method
+	 * 
+	 * @param queryDocument
+	 * @param pageSize is a number of SE records included in the result 
+	 * @return
+	 */
+	public QueryResult richQueryForXML(JSONObject queryDocument, Integer pageSize) {
+		if ((pageSize == null) || pageSize == 0) {
+			//set the default page size
+			pageSize = 100;
+		}
+		
+		return getClientResource().path("services").queryParam("pageSize", pageSize.toString())
+				.accept(MediaType.APPLICATION_XML_TYPE)
+				.post(QueryResult.class, queryDocument);
 	}
 	
 	public QueryResult queryXML(MultivaluedMap<String, String> attrMap,
