@@ -45,7 +45,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 
 	public static MongoDBServiceDatabase db;
 
-//	@Before
+	// @Before
 	public void _setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
 		@SuppressWarnings("unused")
@@ -65,7 +65,8 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 					"jms");
 			entry1.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), date);
-			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "critical");
+			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+					.getAttributeName(), "critical");
 			ServiceObject so = new ServiceObject(entry1);
 			db.insert(so);
 		}
@@ -78,12 +79,13 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 					"sms");
 			entry1.put(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 					.getAttributeName(), date);
-			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "ok");
+			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+					.getAttributeName(), "ok");
 			ServiceObject so = new ServiceObject(entry1);
 			db.insert(so);
 		}
 	}
-	
+
 	@Before
 	public void setUp() throws JSONException, ExistingResourceException,
 			PersistentStoreFailureException {
@@ -94,23 +96,23 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		for (int i = 0; i < 50; i++) {
 			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), "http://" + UUID.randomUUID());
-			jo.put(
-					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+			jo.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 					"jms");
-			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "critical");
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+					.getAttributeName(), "critical");
 			ServiceObject so = new ServiceObject(jo);
 			db.insert(so);
 		}
 		for (int i = 0; i < 50; i++) {
 			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), "http://" + UUID.randomUUID());
-			jo.put(
-					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+			jo.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
 					"sms");
-			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "ok");
+			jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+					.getAttributeName(), "ok");
 			ServiceObject so = new ServiceObject(jo);
 			db.insert(so);
-		}		
+		}
 	}
 
 	@After
@@ -131,8 +133,8 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			lst.add("jms");
 			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
 			JSONArray o = cr.queryByQueryParams(map);
-			System.out.println(o);
-			assertTrue(o.length() == 50);
+			System.out.println(o.toString(2));
+			assertEquals(50, o.length()-1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -191,10 +193,11 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			map.put("skip", lstSkip);
 			JSONArray o = cr.queryByQueryParams(map);
 			System.out.println(o.length());
+			System.out.println(o.toString(2));
 			assertTrue(o.length() == 30);
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail();			
+			fail();
 		}
 
 	}
@@ -215,10 +218,10 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			map.put("limit", lstLimit);
 			JSONArray o = cr.queryByQueryParams(map);
 			System.out.println(o.length());
-			assertTrue(o.length() == 20);
+			assertEquals(20, o.length());
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail();			
+			fail();
 		}
 	}
 
@@ -233,75 +236,160 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 
 	@Test
-	@FunctionalTest(id="ServiceQueryJSONTest", description="Test querying the service records in JSON format")
-	public void testQueryJSON() throws JSONException {
+	@FunctionalTest(id = "ServiceEndpointRecordsQueryForJSONTest", description = "Test queries defined in JSON format for the service endpoint records in JSON format")
+	public void testRichQueryForJSON() throws JSONException {
 		EMIRClient cr = new EMIRClient(BaseURI);
-		
-		
-		//{ $or: [ { Service_Type: jms }, { Service_Endpoint_HealthState: ok } ] }
+
+		// { $or: [ { Service_Type: jms }, { Service_Endpoint_HealthState: ok }
+		// ] }
 		JSONObject orQueryDocument = new JSONObject();
 		JSONObject p1 = new JSONObject();
-		p1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "jms");
+		p1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"jms");
 		JSONObject p2 = new JSONObject();
-		p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "ok");
+		p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+				.getAttributeName(), "ok");
 		JSONArray j = new JSONArray();
 		j.put(p1);
 		j.put(p2);
 		orQueryDocument.put("$or", j);
-		assertTrue(cr.queryByJSON(orQueryDocument).length()==100);
-		
-		//{ $and: [ { Service_Type: jms }, { Service_Endpoint_HealthState: critical } ] }
-//		p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), "critical");
-//		JSONObject andQueryDocument = new JSONObject();
-//		JSONArray j1 = new JSONArray();
-//		j1.put(p1);
-//		j1.put(p2);
-//		andQueryDocument.put("$and", j1);
-//		System.out.println(andQueryDocument);
-//		System.out.println(cr.queryJSON(andQueryDocument).length());
-		
-		//{ Service_Endpoint_HealthState : { $ne : ok } } }
+		assertEquals(100, cr.richQueryForJSON(orQueryDocument).length()-1);
+
+		// { $and: [ { Service_Type: jms }, { Service_Endpoint_HealthState:
+		// critical } ] }
+		// p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(),
+		// "critical");
+		// JSONObject andQueryDocument = new JSONObject();
+		// JSONArray j1 = new JSONArray();
+		// j1.put(p1);
+		// j1.put(p2);
+		// andQueryDocument.put("$and", j1);
+		// System.out.println(andQueryDocument);
+		// System.out.println(cr.queryJSON(andQueryDocument).length());
+
+		// { Service_Endpoint_HealthState : { $ne : ok } } }
 		JSONObject jo = new JSONObject();
 		jo.put("$ne", "ok");
 		JSONObject ne = new JSONObject();
-		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(), jo);
-		assertTrue(cr.queryByJSON(ne).length()==50);
-		
+		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+				.getAttributeName(), jo);
+		assertEquals(50, cr.richQueryForJSON(ne).length()-1);
+
+	}
+	
+	@Test
+	@FunctionalTest(id = "ServiceEndpointRecordsQueryForXMLTest", description = "Test queries defined in JSON format for the service endpoint records in XML format")
+	public void testRichQueryForXML() throws JSONException {
+		EMIRClient cr = new EMIRClient(BaseURI);
+
+		// { $or: [ { Service_Type: jms }, { Service_Endpoint_HealthState: ok }
+		// ] }
+		JSONObject orQueryDocument = new JSONObject();
+		JSONObject p1 = new JSONObject();
+		p1.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+				"jms");
+		JSONObject p2 = new JSONObject();
+		p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+				.getAttributeName(), "ok");
+		JSONArray j = new JSONArray();
+		j.put(p1);
+		j.put(p2);
+		orQueryDocument.put("$or", j);
+		assertEquals(100, cr.richQueryForXML(orQueryDocument).getService().size());
+
+		// { $and: [ { Service_Type: jms }, { Service_Endpoint_HealthState:
+		// critical } ] }
+		// p2.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.getAttributeName(),
+		// "critical");
+		// JSONObject andQueryDocument = new JSONObject();
+		// JSONArray j1 = new JSONArray();
+		// j1.put(p1);
+		// j1.put(p2);
+		// andQueryDocument.put("$and", j1);
+		// System.out.println(andQueryDocument);
+		// System.out.println(cr.queryJSON(andQueryDocument).length());
+
+		// { Service_Endpoint_HealthState : { $ne : ok } } }
+		JSONObject jo = new JSONObject();
+		jo.put("$ne", "ok");
+		JSONObject ne = new JSONObject();
+		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
+				.getAttributeName(), jo);
+		assertEquals(50, cr.richQueryForXML(ne).getService().size());
+
 	}
 
 	@Test
-	public void testPagedQuery() throws JSONException {
+	public void testSimplePagedQueryWithJSON() throws JSONException {
 		// starting page
 		EMIRClient cr = new EMIRClient(BaseURI
-				+ "/services/pagedquery?Service_Type=jms&pageSize=10");
-		JSONObject o = cr.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
-		assertEquals(10, o.getJSONArray("result").length());
+				+ "/services?Service_Type=jms&pageSize=10");
+		JSONArray o = cr.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+
+		System.out.println(o.toString(2));
+
+		assertEquals(10, o.length() - 1);
+
+		System.out.println(o.length());
 
 		System.out.println(BaseURI
-				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
-				+ o.get("ref"));
+				+ "/services?Service_Type=jms&pageSize=10&ref="
+				+ o.getJSONObject(o.length() - 1).getString("ref"));
+
 		cr = new EMIRClient(BaseURI
-				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
-				+ o.get("ref"));
+				+ "/services?Service_Type=jms&pageSize=10&ref="
+				+ o.getJSONObject(o.length() - 1).getString("ref"));
 		o = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-				.get(JSONObject.class);
-		assertEquals(10, o.getJSONArray("result").length());
+				.get(JSONArray.class);
+		assertEquals(10, o.length() - 1);
 
 		System.out.println(BaseURI
-				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
-				+ o.get("ref"));
+				+ "/services?Service_Type=jms&pageSize=10&ref="
+				+ o.getJSONObject(o.length() - 1).getString("ref"));
+
 		cr = new EMIRClient(BaseURI
-				+ "/services/pagedquery?Service_Type=jms&pageSize=10&ref="
-				+ o.get("ref"));
+				+ "/services?Service_Type=jms&pageSize=10&ref="
+				+ o.getJSONObject(o.length() - 1).getString("ref"));
 		o = cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
-				.get(JSONObject.class);
-		assertEquals(10, o.getJSONArray("result").length());
+				.get(JSONArray.class);
+		assertEquals(10, o.length() - 1);
 
 	}
 
 	@Test
-	@FunctionalTest(id="ServiceQueryGLUE2Test", description="Test querying the service records in GLUE 2.0 format")
+	public void testSimplePagedQueryWithXML() throws JSONException {
+
+		// starting page
+		EMIRClient cr = new EMIRClient(BaseURI
+				+ "/services?Service_Type=jms&pageSize=10");
+		QueryResult o = cr.getClientResource()
+				.accept(MediaType.APPLICATION_XML_TYPE).get(QueryResult.class);
+
+		JAXB.marshal(o, System.out);
+
+		System.out.println(o.getService().size());
+
+		assertEquals(10, o.getService().size());
+
+		// test for next 20 records
+		cr = new EMIRClient(BaseURI
+				+ "/services?Service_Type=jms&pageSize=20&ref=" + o.getRef());
+
+		o = cr.getClientResource().accept(MediaType.APPLICATION_XML_TYPE)
+				.get(QueryResult.class);
+
+		JAXB.marshal(o, System.out);
+
+		System.out.println(o.getService().size());
+
+		assertEquals(20, o.getService().size());
+	}
+
+	
+	@Deprecated
+	@Test
+	@FunctionalTest(id = "ServiceQueryGLUE2Test", description = "Test querying the service records in GLUE 2.0 format")
 	public void testGlue2QueryCollection() {
 		try {
 			EMIRClient cr = new EMIRClient(BaseURI
@@ -320,7 +408,8 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testGlue2QueryCollectionWithMIME() {
 		try {
-			EMIRClient cr = new EMIRClient(BaseURI + "/services?Service_Type=jms");
+			EMIRClient cr = new EMIRClient(BaseURI
+					+ "/services?Service_Type=jms");
 			QueryResult o = cr.getClientResource()
 					.accept(MediaType.APPLICATION_XML_TYPE)
 					.get(QueryResult.class);
@@ -335,7 +424,8 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	@Test
 	public void testGlue2QueryCollectionWithParamMIMEType() {
 		try {
-			JSONObject entry1 = TestValueConstants.getJSONWithMandatoryAttributes();
+			JSONObject entry1 = TestValueConstants
+					.getJSONWithMandatoryAttributes();
 			entry1.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
 					.getAttributeName(), "http://3");
 			ServiceObject so = new ServiceObject(entry1);
@@ -353,7 +443,5 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			fail();
 		}
 	}
-
-	
 
 }

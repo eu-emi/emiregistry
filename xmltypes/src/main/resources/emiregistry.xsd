@@ -11,6 +11,9 @@
 				<xsd:element ref="glue:Service" minOccurs="0" maxOccurs="unbounded"></xsd:element>
 			</xsd:sequence>
 			<xsd:attribute name="count" type="xsd:unsignedLong" use="optional"/>
+			<!-- Reference to the first record of next page  -->
+			<xsd:attribute name="ref" type="xsd:string" use="optional"/>
+			<xsd:attribute name="pageSize" type="xsd:integer" use="optional"/>
 		</xsd:complexType>
 	</xsd:element>
 </xsd:schema>

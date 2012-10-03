@@ -549,9 +549,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		}
 
-		List<DBObject> lst = cur.toArray();
-		cur.close();
-		JSONArray arr = new JSONArray(lst);
+		JSONArray arr = new JSONArray();
+		try {
+			while (cur.hasNext()) {
+				arr.put(new JSONObject(JSON.serialize(cur.next())));
+			}
+			cur.close();
+		} catch (Exception e) {
+			Log.logException("", e);
+		}
 		return arr;
 	}
 
