@@ -1,5 +1,6 @@
 package eu.emi.emir.db.mongodb;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,9 @@ import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
+import eu.emi.emir.validator.ValidatorUtil;
+import eu.unicore.util.configuration.ConfigurationException;
 
 import com.mongodb.*;
 import com.mongodb.MongoException.DuplicateKey;
@@ -282,9 +286,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			NonExistingResourceException, PersistentStoreFailureException {
 		try {
 			String  id = sObj.getServiceID();
-			if (logger.isDebugEnabled()) {
-				logger.debug("updating service description: " + sObj);
-			}
+			logger.debug("updating service description: " + sObj);
+
 			database.requestStart();
 			database.requestEnsureConnection();
 			DBObject dbObj = sObj.toDBObject();
@@ -294,6 +297,31 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			BasicDBObject query = new BasicDBObject();
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), sObj.getEndpointID());
+			
+			// Check the entry is exist or not. Validation need if it is not exist before.
+			DBObject db = serviceCollection.findOne(new BasicDBObject(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+							.getAttributeName(), sObj.getEndpointID()));
+			if (db == null) {
+				try {
+					if (!ValidatorUtil.isValidServiceInfo(sObj.toJSON())) {
+						throw new PersistentStoreFailureException(
+								"The service description does not contain valid attributes");
+					}
+				} catch (ConfigurationException e) {
+					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					return;
+				} catch (InvalidServiceDescriptionException e) {
+					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					return;
+				} catch (JSONException e) {
+					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					return;
+				} catch (ParseException e) {
+					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					return;
+				}
+			}
 
 			serviceCollection.update(query, dbObj, true, false); //upsert=true and multi=false
 			database.requestDone();
