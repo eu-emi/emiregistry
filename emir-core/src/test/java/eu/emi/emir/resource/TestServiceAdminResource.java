@@ -140,6 +140,32 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		
 		
 	}
+	
+	@Test
+	public void testInsertServiceWithUpdateMethod() throws JSONException {
+		EMIRClient cr = new EMIRClient(BaseURI + "/serviceadmin");
+		JSONObject j = TestValueConstants.getJSONWithMandatoryAttributes();
+		j.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), "sms");
+		JSONArray ja = new JSONArray();
+		ja.put(j);
+		cr.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(ja);
+		
+		System.out.println("being updated json document: "+j.toString(2));
+		
+		EMIRClient cr2 = new EMIRClient(BaseURI
+				+ "/serviceadmin?Service_Endpoint_ID=1");
+		JSONObject jo1 = cr2.getClientResource()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(JSONObject.class);
+		System.out.println(jo1);
+		//asserting the type
+		assertEquals("sms", jo1.get(ServiceBasicAttributeNames.SERVICE_TYPE
+				.getAttributeName()));
+		//asserting the expiry time
+		assertTrue(jo1.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON.getAttributeName()));
+		
+		System.out.println("updated json: "+jo1.toString(2));	
+	}
 
 	@Test
 	@FunctionalTest(id="ServiceDeletionTest", description="Test deletion of a service record")
