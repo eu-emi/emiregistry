@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -112,6 +113,104 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		db.deleteByEndpointID("http://2");
 		ServiceObject s1 = db.getServiceByEndpointID("http://2");
 		assertTrue(s1 == null);
+	}
+
+	@Test
+	public void testSimpleUpdateServiceEntry() {
+		// Create information to be stored
+		JSONObject entry = new JSONObject();
+		try {
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), "http://1");
+			entry.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"some_service");
+			ServiceObject s = new ServiceObject(entry);
+
+			db.insert(s);
+
+			assertEquals("http://1", db.getServiceByEndpointID("http://1").getEndpointID());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		try {
+			entry.put(ServiceBasicAttributeNames.SERVICE_ID
+					.getAttributeName(), "http://1");
+			
+			ServiceObject s = new ServiceObject(entry);
+			db.update(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testUpdateInsertServiceEntry() {
+		// Create information to be stored
+		JSONObject entry = new JSONObject();
+		try {
+			entry.put(ServiceBasicAttributeNames.SERVICE_NAME
+					.getAttributeName(), "service name");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ID
+					.getAttributeName(), "http://1");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), "http://service_endpoint_ID");
+			entry.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"service_type");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL
+					.getAttributeName(), "http://1");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY
+					.getAttributeName(), new JSONArray("[ \"http://1\" ]"));
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_TECHNOLOGY
+					.getAttributeName(), "webservice");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACENAME
+					.getAttributeName(), "ldap");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_IFACE_VER
+					.getAttributeName(), "1.0");
+			ServiceObject s = new ServiceObject(entry);
+
+			db.update(s);
+
+			assertEquals("http://service_endpoint_ID", db.getServiceByEndpointID("http://service_endpoint_ID").getEndpointID());
+		} catch (PersistentStoreFailureException e) {
+			System.out.print("Not updated an entry.\n");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
+	}
+
+	@Test (expected = PersistentStoreFailureException.class)
+	public void testUpdateInsertNotValidServiceEntry() throws PersistentStoreFailureException {
+		// Create information to be stored
+		JSONObject entry = new JSONObject();
+		try {
+			entry.put(ServiceBasicAttributeNames.SERVICE_ID
+					.getAttributeName(), "http://1");
+			entry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName(), "http://1");
+			entry.put(
+					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
+					"some_service");
+			ServiceObject s = new ServiceObject(entry);
+
+			db.update(s);
+
+			assertEquals("http://1", db.getServiceByEndpointID("http://1").getEndpointID());
+		} catch (MultipleResourceException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (NonExistingResourceException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (JSONException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
 	}
 
 	@After
