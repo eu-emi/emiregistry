@@ -7,4 +7,8 @@ The installation of the EMIR-SERP client is trivial. The only thing to do is
 to install the +emir-serp+ package from the EMI repository by
 executing:
 
-`yum instlal emir-serp`
+`yum install emir-serp`
+
+The package installation will provide the packages that are defined as
+dependencies, like python, python-ldap and python-simplejson if they are
+not previously installad on the machine.

@@ -22,13 +22,11 @@ the EMIR-SERP client do the periodical updates then finally, when the execution 
 the daemon is over, it attempts to delete the service entries from the
 remote database.
 
-The service entries can be simple or advanced ones.
+The service entries can be defined in single files, in multiple files in
+a watchdir (that is periodically scanned for new files) or in resource
+BDIIs. 
 
-The simple service entries contain only the mandatory and easily configurable
-attributes that are the following: Service_Name, Service_Type,
-Service_Endpoint_URL, Service_Endpoint_InterfaceName. Here, the single
-mandatory element is the Service_Endpoint_URL.
-
-The advanced entries can contains any kind of key value pairs that are
-accepted by the EMI Regisrty services and can be configured in the form
-of whole, formatted *json* documents.
+The entries can contain any kind of information allowed and accepted by the EMI Regisrty
+services and can be configured in the form of whole, formatted *json*
+documents or LDAP in case of BDII usage. The LDIF -> JSON converson is
+also performed by EMIR-SERP.

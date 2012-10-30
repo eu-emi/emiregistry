@@ -18,20 +18,20 @@ The main configuration file has INI format. The +emir-serp+ section contains
 the daemon scoped options while the others are to describe the different
 service entries to be registered. In these cases the exact name is
 indifferent, they just have to differ from each other and must avoid the
-+emir+ name as well.
++emir-serp+ name as well.
 
 Configuration options
 ~~~~~~~~~~~~~~~~~~~~~
 
 [NOTE]
 ========
-The optional names are case-insensitive.
+The names of options are case-insensitive.
 ========
 
 url
 ^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ _No default value_
 
@@ -39,12 +39,11 @@ url
 
 +Description:+
 
-URL of the EMIR service to connect in a
-protocol://domain:port format.
+URL of the EMIR service to connect in a protocol://domain:port format.
 
-The protocol part is not mandatory if https (default)
-The port part is not mandatory if 54321 (default)
-The domain part is mandatory
+If protocol is missing default +https+ is used.
+If port is missing default +54321+ is used.
+The domain part is mandatory.
 
 .Examples
 -----------------
@@ -56,7 +55,7 @@ url = https://emiregistry2.grid.niif.hu:54321
 period
 ^^^^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ _No default value_
 
@@ -70,7 +69,7 @@ hours.
 validity
 ^^^^^^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ _No default value_
 
@@ -83,7 +82,7 @@ The validity of the registration entries. Its value is given in hours.
 cert
 ^^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ /etc/grid-security/hostcert.pem
 
@@ -97,7 +96,7 @@ the url option is 'https'.
 key
 ^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ /etc/grid-security/hostkey.pem
 
@@ -111,7 +110,7 @@ the url option is 'https'.
 cadir
 ^^^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ /etc/grid-security/certificates
 
@@ -126,7 +125,7 @@ the url option is 'https'.
 verbosity
 ^^^^^^^^^
 
-+Location:+ +emir+ section
++Location:+ +emir-serp+ section
 
 +Default value:+ error
 
@@ -139,66 +138,21 @@ value is given, the default value will be used. The logs are written
 into the log file that can be found in the _/var/log/emi/emir-serp_
 directory by default.
 
-Service_Endpoint_URL
-^^^^^^^^^^^^^^^^^^^^
+[NOTE]
+========
+The service entries can be defined in separated ini sections. The name
+of the section is irrelevant but must be different in every cases!
 
-+Location:+ simple service entry section
+Any of 'json_file_location', 'json_dir_location' or 'resource_bdii_url'
+must be present in a section to enable EMIR-SERP registration otherwise
+section is going to be skipped.
+========
 
-+Default value:+ _No default value_
-
-+Mandatory:+ Yes
-
-+Description:+
-
-The Service Endpoint URL to be propagated. If this option is missing an
-error message will be raised.
-
-Service_Name
-^^^^^^^^^^^^
-
-+Location:+ simple service entry section
-
-+Default value:+ _No default value_
-
-+Mandatory:+ No
-
-+Description:+
-
-The Service Name to be propagated. If this option is missing then the
-service entry will contains no such component.
-
-Service_Type
-^^^^^^^^^^^^
-
-+Location:+ simple service entry section
-
-+Default value:+ _No default value_
-
-+Mandatory:+ No
-
-+Description:+
-
-The Service Type to be propagated. If this option is missing then the
-service entry will contains no such component.
-
-Service_Endpoint_InterfaceName
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-+Location:+ simple service entry section
-
-+Default value:+ _No default value_
-
-+Mandatory:+ No
-
-+Description:+
-
-The Service Endpoint Interface Name to be propagated. If this option is missing then the
-service entry will contains no such component.
 
 json_file_location
 ^^^^^^^^^^^^^^^^^^
 
-+Location:+ advanced service entry section
++Location:+ service related section
 
 +Default value:+ _No default value_
 
@@ -206,9 +160,53 @@ json_file_location
 
 +Description:+
 
-The service entry can be also defined in a single external json formatted
-file per service. Any allowed json attributes are allowed in this way.
-The location of this file must be defined in this ini variable. The
-recommended place for these files is under the +/etc/emi/emir-serp/+
-directory and naming them after the name of the given service with
-+.json+ extension.
+The service entry can be defined in a single external json formatted file
+per service. Any allowed json attributes are allowed in this way. The
+location of this file must be defined in the 'json_file_location' ini
+variable.
+
+The value of +json_file_location+ is used only if no +resource_bdii_url+ or
++json_dir_location+ are present in the same section.
+
+json_dir_location
+^^^^^^^^^^^^^^^^^
+
++Location:+ service related section
+
++Default value:+ _No default value_
+
++Mandatory:+ Yes
+
++Description:+
+
+Multiple entries belonging to a service can be put into separated json
+files in a common directory. The script periodically scan the content
+of the directory setted up with this attribute and the content of the
+found json files will be propagated to the EMIR service.
+
+The value of +json_dir_location+ is used  only if no +resource_bdii_url+ is
+present.
+
+resource_bdii_url
+^^^^^^^^^^^^^^^^^
+
++Location:+ service related section
+
++Default value:+ _No default value_
+
++Mandatory:+ Yes
+
++Description:+
+
+The service information to be registered can be harvested from directly
+from resource BDII LDAP servers. EMIR-SERP periodically queries the
+remote database, converts the result, and publish the service information
+to the previously configured EMIR service.
+
+If 'resource_bdii_url' attribute is present both 'json_dir_location' and
+'json_file_location' are ignored.
+
+If port is missing default 381 is used.
+If LDAP base is missing default 'o=glue' is used.
+Only 'ldap' scheme is accepted in the URL.
+
