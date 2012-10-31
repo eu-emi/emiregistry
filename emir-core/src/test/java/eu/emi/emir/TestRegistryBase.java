@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
  * @author a.memon
  * 
  */
-public abstract class TestRegistryBase {
+public class TestRegistryBase {
 	static EMIRServer server = null;
 	protected static String BaseURI;
 	private static Process p = null;

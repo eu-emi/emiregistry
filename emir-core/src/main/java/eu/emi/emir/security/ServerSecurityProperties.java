@@ -35,9 +35,11 @@ public class ServerSecurityProperties extends
 		DefaultServerSecurityConfiguration {
 	private static final Logger logger = Log.getLogger(Log.EMIR_SECURITY,
 			ServerSecurityProperties.class);
-
+	
+	public static final String SECURITY_PREFIX = "security.";
+	
 	@DocumentationReferencePrefix
-	public static final String PREFIX = ServerProperties.PREFIX + "security.";
+	public static final String PREFIX = ServerProperties.PREFIX + SECURITY_PREFIX;
 
 	/**
 	 * property defining whether SSL is enabled
@@ -109,7 +111,18 @@ public class ServerSecurityProperties extends
 				PROP_CHECKACCESS_ACL,
 				new PropertyMD().setPath()
 						.setDescription("Path of the acl file. Enabling this would initiate ACL file based authorisation instead of XACML"));
-
+		
+		META.put(
+				PROP_AIP_PREFIX,
+				new PropertyMD().setCanHaveSubkeys()
+						.setDescription("blah blah prefix"));
+		
+		META.put(TruststoreProperties.DEFAULT_PREFIX, new PropertyMD().setCanHaveSubkeys().
+				setDescription("Properties with this prefix are used to configure container's trust settings and certificates validation. See separate documentation for details."));
+		
+		META.put(CredentialProperties.DEFAULT_PREFIX, new PropertyMD().setCanHaveSubkeys().
+				setDescription("Properties with this prefix are used to configure the credential used by the container. See separate documentation for details."));
+		
 	}
 
 	private PropertiesHelper properties;
@@ -140,8 +153,6 @@ public class ServerSecurityProperties extends
 			setSslEnabled(true);
 		this.source = source;
 		properties = new PropertiesHelper(PREFIX, source, META, logger);
-		
-		
 		
 		if (isSslEnabled()) {
 			if (properties.getValue(PROP_CHECKACCESS_ACL) != null) {

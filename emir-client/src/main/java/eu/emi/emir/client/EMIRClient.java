@@ -108,7 +108,7 @@ public class EMIRClient {
 		X509TrustManager trustManager = SocketFactoryCreator
 				.getSSLTrustManager(validator);
 		X509TrustManager decoratedTrustManager = new LoggingX509TrustManager(
-				trustManager);
+				trustManager, "HTTP Client");
 		TrustManager[] trustManagers = new X509TrustManager[] { decoratedTrustManager };
 		
 		SecureRandom secureRandom = (secRandomAlg == null) ? null

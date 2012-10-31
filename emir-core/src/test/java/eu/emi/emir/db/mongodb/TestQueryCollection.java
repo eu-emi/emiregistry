@@ -139,48 +139,6 @@ public class TestQueryCollection extends MongoDBTestBase{
 	}
 
 	@Test
-	public void testQueryPaginate1() throws JSONException,
-			ExistingResourceException, PersistentStoreFailureException,
-			QueryException, ParseException {
-		for (int i = 0; i < 30; i++) {
-			JSONObject entry1 = new JSONObject();
-			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
-					"http://" + UUID.randomUUID());
-			entry1.put(
-					ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),
-					"jms");
-			ServiceObject so = new ServiceObject(entry1);
-			db.insert(so);
-
-		}
-		
-		JSONArray page = db.paginatedQuery("{}", 10, null);
-		printJSONArray(page, "page 1");
-		assertTrue(page.length() == 10);
-		
-		DBObject obj = (DBObject) page.get(page.length()-1);
-		String ref = obj.get("_id").toString();
-		System.out.println("last ref: "+ref);		
-		page = db.paginatedQuery("{}", 10, ref);
-		printJSONArray(page, "page 2");
-		assertTrue(page.length() == 10);
-		
-		obj = (DBObject) page.get(page.length()-1);
-		ref = obj.get("_id").toString();
-		System.out.println("last ref: "+ref);
-		printJSONArray(page, "page 3");
-		assertTrue(page.length() == 10);
-	}
-
-	private static void printJSONArray(JSONArray arr, String message) throws JSONException {
-		System.out.println(message);
-		for (int i = 0; i < arr.length(); i++) {
-			System.out.println(arr.get(i));
-		}
-	}
-
-	@Test
 	public void testQueryJSONWithLimitAndSkip() throws JSONException,
 			ExistingResourceException, PersistentStoreFailureException,
 			QueryException {

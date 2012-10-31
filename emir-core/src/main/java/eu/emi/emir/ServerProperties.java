@@ -10,11 +10,15 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.emi.emir.client.util.Log;
+import eu.emi.emir.jetty.EMIRJettyProperties;
+import eu.emi.emir.security.ServerSecurityProperties;
 import eu.unicore.util.configuration.ConfigurationException;
 import eu.unicore.util.configuration.DocumentationReferenceMeta;
 import eu.unicore.util.configuration.DocumentationReferencePrefix;
 import eu.unicore.util.configuration.PropertiesHelper;
 import eu.unicore.util.configuration.PropertyMD;
+import eu.unicore.util.httpclient.ClientProperties;
+import eu.unicore.util.jetty.HttpServerProperties;
 
 /**
  * @author a.memon
@@ -138,6 +142,9 @@ public class ServerProperties extends PropertiesHelper {
 		META.put(PROP_LOGGER_CONFIGPATH, new PropertyMD().setPath().setDescription(""));
 		META.put(PROP_H2_DBFILE_PATH, new PropertyMD("/var/lib/emi/emir/data/Emiregistry").setDescription("Path for the temporary database"));
 		
+		META.put(ServerSecurityProperties.SECURITY_PREFIX, new PropertyMD().setCanHaveSubkeys().setDescription("").setHidden());
+		META.put(ClientProperties.DEFAULT_PREFIX, new PropertyMD().setCanHaveSubkeys().setDescription("").setHidden());
+		META.put(EMIRJettyProperties.JETTY_PREFIX, new PropertyMD().setCanHaveSubkeys().setDescription("").setHidden());
 		
 	}
 	
