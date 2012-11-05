@@ -206,7 +206,7 @@ to the previously configured EMIR service.
 If 'resource_bdii_url' attribute is present both 'json_dir_location' and
 'json_file_location' are ignored.
 
-If port is missing default 381 is used.
+If port is missing default 2170 is used.
 If LDAP base is missing default 'o=glue' is used.
 Only 'ldap' scheme is accepted in the URL.
 
