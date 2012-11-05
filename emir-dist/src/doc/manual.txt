@@ -1,8 +1,8 @@
 EMI Registry Manual
 ===================
 EMIR Product Team
-v1.2.0, July 2012
-:revnumber: 1.2.0
+v1.2.1, November 2012
+:revnumber: 1.2.1
 :numbered:
 
 Overview
