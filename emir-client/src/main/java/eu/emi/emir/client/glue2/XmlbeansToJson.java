@@ -72,7 +72,7 @@ public class XmlbeansToJson {
 			}
 
 			if (service.getName() != null) {
-				emirJson.put(ServiceBasicAttributeNames.SERVICE_ID
+				emirJson.put(ServiceBasicAttributeNames.SERVICE_NAME
 						.getAttributeName(), service.getName());
 			} else {
 				lstErr.add("Mandatory 'Service Name' attribute missing");

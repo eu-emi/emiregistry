@@ -231,7 +231,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 					if (!jo.has(s.getAttributeName())
 							&& jo.isNull((s.getAttributeName()))) {
 						sb.append("* " + s.getAttributeName())
-								.append(" is a mandatory attibute, MUST be provided and not be NULL\n");
+								.append(" is a mandatory attribute, MUST be provided and not be NULL\n");
 						list.add(false);
 					}
 
