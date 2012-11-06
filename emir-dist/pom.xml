@@ -8,12 +8,12 @@
 	<url>https://github.com/eu-emi/emiregistry</url>
 	<name>Distribution of the EMIR server</name>
 	<!-- this is the "release" version -->
-	<version>1.2.1-RC1</version>
+	<version>1.2.1-rc2</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>eu.eu-emi</groupId>
 		<artifactId>emiregistry</artifactId>
-		<version>1.2.1-SNAPSHOT</version>
+		<version>1.2.1-rc2</version>
 	</parent>
 
 	<distributionManagement>
