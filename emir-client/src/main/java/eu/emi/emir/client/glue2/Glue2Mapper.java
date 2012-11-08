@@ -34,7 +34,6 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.DateUtil;
 import eu.emi.emir.client.util.Log;
 import eu.eu_emi.emiregistry.QueryResult;
-//import eu.emi.emir.util.ServiceUtil;
 
 /**
  * Converts JSON to xml
@@ -67,14 +66,20 @@ public class Glue2Mapper {
 		QueryResult qr = o.createQueryResult();
 		List<ServiceT> l = qr.getService();
 		JAXBElement<ServiceT>[] j = toGlue2Service(jo);
+			
+		logger.info(j.length);
 		
+		
+		if (j.length == 0) {
+			return qr;
+		}
 		//run the for loop for n-1 times as the last entry contained the reference for the next page
 		for (int i = 0; i < j.length-1; i++) {
 			l.add(j[i].getValue());
 		}
 		qr.setCount(new BigInteger("" + (jo.length()-1)));
 		
-		//set reference in case of pageinated queries
+		//set reference in case of paginated queries
 		try {
 			JSONObject ref = jo.getJSONObject(jo.length()-1);
 			if (!ref.isNull("ref")) {
