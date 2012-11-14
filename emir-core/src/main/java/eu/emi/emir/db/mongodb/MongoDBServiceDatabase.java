@@ -25,7 +25,7 @@ import eu.emi.emir.event.Event;
 import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.validator.InvalidServiceDescriptionException;
-import eu.emi.emir.validator.ValidatorUtil;
+import eu.emi.emir.validator.RegistrationValidator;
 import eu.unicore.util.configuration.ConfigurationException;
 
 import com.mongodb.*;
@@ -304,10 +304,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 							.getAttributeName(), sObj.getEndpointID()));
 			if (db == null) {
 				try {
-					if (!ValidatorUtil.isValidServiceInfo(sObj.toJSON())) {
-						throw new PersistentStoreFailureException(
-								"The service description does not contain valid attributes");
-					}
+					//why checking the validation so many times??
+//					if (!ValidatorUtil.isValidServiceInfo(sObj.toJSON())) {
+						//why throwing the exception again?
+//						throw new PersistentStoreFailureException(
+//								"The service description does not contain valid attributes");
+//					}
+					new RegistrationValidator().validateInfo(sObj.toJSON());
 				} catch (ConfigurationException e) {
 					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
 					return;

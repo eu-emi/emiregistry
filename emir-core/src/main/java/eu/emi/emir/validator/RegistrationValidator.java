@@ -120,68 +120,64 @@ public class RegistrationValidator extends AbstractInfoValidator {
 	 * @see eu.emi.dsr.info.AbstractInformationValidator#checkExpiryTime()
 	 */
 	@Override
-	Boolean checkExpiryTime() throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException {
+	Boolean checkExpiryTime() throws InvalidServiceDescriptionException,
+			ConfigurationException, JSONException, ParseException {
 
 		if (jo.has(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
 				.getAttributeName())) {
-				if (jo.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-						.getAttributeName()) instanceof JSONObject) {
-					if (jo.getJSONObject(
+			if (jo.get(ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+					.getAttributeName()) instanceof JSONObject) {
+				if (jo.getJSONObject(
+						ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+								.getAttributeName()).has("$date")) {
+					Date d = DateUtil.toUTCFormat(jo.getJSONObject(
 							ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-									.getAttributeName()).has("$date")) {
-						Date d = DateUtil
-								.toUTCFormat(jo
-										.getJSONObject(
-												ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-														.getAttributeName())
-										.getString("$date"));
-						Calendar c = Calendar.getInstance();
-						c.setTime(d);
+									.getAttributeName()).getString("$date"));
+					Calendar c = Calendar.getInstance();
+					c.setTime(d);
 
-						// creating the max expiry time calendar
-						Calendar cMax = Calendar.getInstance();
-						int max_def = 0;
-						try {
-							max_def = EMIRServer
-									.getServerProperties()
-									.getIntValue(
-											ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM);
-						} catch (NumberFormatException e) {
+					// creating the max expiry time calendar
+					Calendar cMax = Calendar.getInstance();
+					int max_def = 0;
+					try {
+						max_def = EMIRServer.getServerProperties().getIntValue(
+								ServerProperties.PROP_RECORD_EXPIRY_MAXIMUM);
+					} catch (NumberFormatException e) {
 
-							logger.warn("Error in reading the configuration property of maximum default expiry days - setting the value to"
-									+ max_def + " days");
-						}
-
-						cMax.add(Calendar.DATE, max_def);
-
-						if ((cMax.compareTo(c) < 0)) {
-							String msg = "Failed to validate the service information: Given service expiry- "
-									+ c.getTime()
-									+ ", exceeds the default maximum- "
-									+ cMax.getTime();
-							logger.error(msg);
-							throw new InvalidServiceDescriptionException(msg);
-						}
-						Calendar now = Calendar.getInstance();
-						if (c.compareTo(Calendar.getInstance()) <= 0) {
-							String msg = "Failed to validate the service information: Given service expiry- "
-									+ c.getTime()
-									+ ", mustn't be less than or equal-to current time - "
-									+ now.getTime();
-							logger.error(msg);
-							throw new InvalidServiceDescriptionException(msg);
-						}
-
+						logger.warn("Error in reading the configuration property of maximum default expiry days - setting the value to"
+								+ max_def + " days");
 					}
-				} else {
-					String msg = "Failed to validate the service information: invalid date format for the key: "
-							+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
-									.getAttributeName();
-					logger.error(msg);
-					valid = false;
-					throw new InvalidServiceDescriptionException(msg);
+
+					cMax.add(Calendar.DATE, max_def);
+
+					if ((cMax.compareTo(c) < 0)) {
+						String msg = "Failed to validate the service information: Given service expiry- "
+								+ c.getTime()
+								+ ", exceeds the default maximum- "
+								+ cMax.getTime();
+						logger.error(msg);
+						throw new InvalidServiceDescriptionException(msg);
+					}
+					Calendar now = Calendar.getInstance();
+					if (c.compareTo(Calendar.getInstance()) <= 0) {
+						String msg = "Failed to validate the service information: Given service expiry- "
+								+ c.getTime()
+								+ ", mustn't be less than or equal-to current time - "
+								+ now.getTime();
+						logger.error(msg);
+						throw new InvalidServiceDescriptionException(msg);
+					}
+
 				}
-			
+			} else {
+				String msg = "Failed to validate the service information: invalid date format for the key: "
+						+ ServiceBasicAttributeNames.SERVICE_EXPIRE_ON
+								.getAttributeName();
+				logger.error(msg);
+				valid = false;
+				throw new InvalidServiceDescriptionException(msg);
+			}
+
 		}
 
 		return true;
@@ -222,8 +218,15 @@ public class RegistrationValidator extends AbstractInfoValidator {
 	@Override
 	Boolean checkMandatoryAttributes()
 			throws InvalidServiceDescriptionException {
-		StringBuilder sb = new StringBuilder(
-				"Following mandatory Service Endpoint Record attributes are either 'missing', 'NULL', or 'wrongly' defined: \n");
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			sb.append("Service Endpoint Record:\n"
+					+ jo.toString(2)
+					+ "\nwith following mandatory Service Endpoint Record attributes are either 'missing', 'NULL', or 'wrongly' defined: \n");
+		} catch (JSONException e1) {
+			logger.error(e1);
+		}
 		List<Boolean> list = new ArrayList<Boolean>();
 		for (ServiceBasicAttributeNames s : ServiceBasicAttributeNames.values()) {
 			if (s.isMandatory()) {
@@ -231,7 +234,7 @@ public class RegistrationValidator extends AbstractInfoValidator {
 					if (!jo.has(s.getAttributeName())
 							&& jo.isNull((s.getAttributeName()))) {
 						sb.append("* " + s.getAttributeName())
-								.append(" is a mandatory attribute, MUST be provided and not be NULL\n");
+								.append(" is a mandatory attribute, MUST NOT be Null\n");
 						list.add(false);
 					}
 
@@ -242,12 +245,12 @@ public class RegistrationValidator extends AbstractInfoValidator {
 							if (!(jo.get(s.getAttributeName()) instanceof JSONArray)) {
 								sb.append("* " + s.getAttributeName())
 										.append(" MUST be defined as JSON Array, e.g. [\"value1\",\"value2\"...]");
-								
+
 								list.add(false);
 							}
 							if (jo.getJSONArray(s.getAttributeName()).length() <= 0) {
 								sb.append("* " + s.getAttributeName())
-								.append(" JSON Array at least contain single element, e.g. [\"value1\",\"value2\"...]");
+										.append(" JSON Array at least contain single element, e.g. [\"value1\",\"value2\"...]");
 								list.add(false);
 							}
 
@@ -268,7 +271,9 @@ public class RegistrationValidator extends AbstractInfoValidator {
 			logger.error(sb.toString());
 			list.clear();
 			list = null;
-			return false;
+//			return false;
+			//the reason being is the error always remain at the server side and never thrown to the client
+			throw new InvalidServiceDescriptionException(sb.toString());
 		}
 		list.clear();
 		list = null;
@@ -476,13 +481,20 @@ public class RegistrationValidator extends AbstractInfoValidator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * eu.emi.emir.validator.AbstractInfoValidator#checkMandatoryEndpointIDAttributes()
+	 * @see eu.emi.emir.validator.AbstractInfoValidator#
+	 * checkMandatoryEndpointIDAttributes()
 	 */
 	@Override
-	Boolean checkMandatoryEndpointIDAttributes() {
-		StringBuilder sb = new StringBuilder(
-				"Missing/Invalid mandatory Service Endpoint Record attributes: \n");
+	Boolean checkMandatoryEndpointIDAttributes() throws InvalidServiceDescriptionException{
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			sb.append("Service Endpoint Record:\n"
+					+ jo.toString(2)
+					+ "\nwith missing/invalid mandatory Service Endpoint Record attributes: \n");
+		} catch (JSONException e1) {
+			logger.error(e1);
+		}
 		List<Boolean> list = new ArrayList<Boolean>();
 		if (jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 				.getAttributeName())) {
@@ -506,7 +518,8 @@ public class RegistrationValidator extends AbstractInfoValidator {
 		}
 
 		if (list.contains(false)) {
-			return false;
+//			return false;
+			throw new InvalidServiceDescriptionException(sb.toString());
 		}
 
 		return true;

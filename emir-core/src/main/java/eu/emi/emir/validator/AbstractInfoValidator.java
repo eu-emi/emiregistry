@@ -42,7 +42,7 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 		if (checkMandatoryEndpointIDAttributes()) {
 			return true;
 		} else {
-			return false;
+			return false ;
 		}
 		
 	}

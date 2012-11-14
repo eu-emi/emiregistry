@@ -39,6 +39,7 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
 
 /**
  * Resource for the service providers (privileged) to manage their services
@@ -52,7 +53,7 @@ public class ServiceAdminResource {
 			ServiceAdminResource.class);
 
 	private ServiceAdminManager serviceAdmin;
-	
+
 	@Context
 	HttpServletRequest req;
 
@@ -60,7 +61,6 @@ public class ServiceAdminResource {
 	 * 
 	 */
 	public ServiceAdminResource() {
-		// serviceAdmin = ServiceManagerFactory.getServiceAdminManager();
 		serviceAdmin = new ServiceAdminManager();
 	}
 
@@ -88,10 +88,10 @@ public class ServiceAdminResource {
 		try {
 			String id = extractServiceEndpointIDFromUri(infos);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Finding Service by Endpoint ID: "+id);	
+				logger.debug("Finding Service by Endpoint ID: " + id);
 			}
 			result = serviceAdmin
-					.findServiceByEndpointID(extractServiceEndpointIDFromUri(infos));			
+					.findServiceByEndpointID(extractServiceEndpointIDFromUri(infos));
 		} catch (Exception e) {
 			Log.logException("Error in finding SER by Endpoint ID", e, logger);
 			JSONObject jErr = new JSONObject();
@@ -102,7 +102,7 @@ public class ServiceAdminResource {
 
 		return result;
 	}
-	
+
 	private String extractServiceEndpointIDFromUri(UriInfo infos)
 			throws IllegalArgumentException {
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();
@@ -110,7 +110,8 @@ public class ServiceAdminResource {
 				.getAttributeName();
 		String key = (mm.containsKey(attrName)) ? attrName : "unknown";
 		if (key == "unknown") {
-			Log.logException("Error in getting Service by ID", new IllegalArgumentException("illegal argument"), logger);
+			Log.logException("Error in getting Service by ID",
+					new IllegalArgumentException("illegal argument"), logger);
 			throw new IllegalArgumentException();
 		}
 		String value = mm
@@ -134,12 +135,12 @@ public class ServiceAdminResource {
 
 		try {
 			Client c = (Client) req.getAttribute("client");
-			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled()
+					&& c == null) {
 				c = Client.getAnonymousClient();
 			}
-			serviceInfo
-					.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
-							.getAttributeName(), c.getDistinguishedName());
+			serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
+					.getAttributeName(), c.getDistinguishedName());
 			JSONObject res = serviceAdmin.addService(serviceInfo);
 			return Response.ok(res).build();
 		} catch (ExistingResourceException e) {
@@ -166,9 +167,10 @@ public class ServiceAdminResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException, JSONException {
-		
-		Long max = EMIRServer.getServerProperties().getLongValue(ServerProperties.PROP_RECORD_MAXIMUM);
-		
+
+		Long max = EMIRServer.getServerProperties().getLongValue(
+				ServerProperties.PROP_RECORD_MAXIMUM);
+
 		if (serviceInfos.length() > max) {
 			return Response
 					.status(Status.FORBIDDEN)
@@ -191,15 +193,17 @@ public class ServiceAdminResource {
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName());
 				String messageTime = "";
-				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-								.getAttributeName())){
+				if (serviceInfo
+						.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName())) {
 					messageTime = (serviceInfo
 							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 									.getAttributeName())).getString("$date");
 				}
-				
+
 				Client c = (Client) req.getAttribute("client");
-				if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+				if (!EMIRServer.getServerSecurityProperties().isSslEnabled()
+						&& c == null) {
 					c = Client.getAnonymousClient();
 				}
 				JSONObject res = null;
@@ -215,45 +219,60 @@ public class ServiceAdminResource {
 										.getDistinguishedName());
 
 					}
-					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceID)){
+					if (serviceAdmin.checkMessageGenerationTime(messageTime,
+							serviceID)) {
 						res = serviceAdmin.addService(serviceInfo);
 					}
 
 				} else {
-					if (serviceAdmin.checkMessageGenerationTime(messageTime, serviceID)){
+					if (serviceAdmin.checkMessageGenerationTime(messageTime,
+							serviceID)) {
 						// add if the owner is missing
-						serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
-								.getAttributeName(), c.getDistinguishedName());
+						serviceInfo.put(
+								ServiceBasicAttributeNames.SERVICE_OWNER_DN
+										.getAttributeName(), c
+										.getDistinguishedName());
 						res = serviceAdmin.addService(serviceInfo);
 					}
 				}
-				if (res != null){
+				if (res != null) {
 					arr.put(res);
 				}
 				continue;
 				// return Response.ok(res).build();
 			} catch (ExistingResourceException e) {
-				errorArray.put("The service with id:" + serviceInfo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()) + "already exists");
+				errorArray
+						.put("The service with id:"
+								+ serviceInfo
+										.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+												.getAttributeName())
+								+ "already exists");
+
+			} catch (InvalidServiceDescriptionException e) {
+				errorArray
+						.put("Error occured while updating/creating the service: "
+								+ e.getMessage());
 			} catch (Exception e) {
 				JSONObject jErr = new JSONObject();
 				jErr.put("error", e.getCause());
-				Log.logException("Error in registering the information", e, logger);
+				Log.logException("Error in registering the information", e,
+						logger);
 				throw new WebApplicationException(Response
 						.status(Status.INTERNAL_SERVER_ERROR).entity(jErr)
 						.build());
 			}
 
 		}
-		if (arr.length() > 0){
-			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD, arr));
+		if (arr.length() > 0) {
+			EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
+					arr));
 		}
 		if (errorArray.length() > 0) {
-			logger.warn("Conflict found in service registration");
-			return Response.status(Status.CONFLICT).entity(errorArray).build();
+			logger.warn("Errors while registring the service information\n"+errorArray.toString(2));
+			return Response.status(Status.NOT_ACCEPTABLE).entity(errorArray).build();
 		}
 		return Response.ok(arr).build();
 	}
-
 
 	/**
 	 * updating array of entries
@@ -270,11 +289,12 @@ public class ServiceAdminResource {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
 			Client c = (Client) req.getAttribute("client");
-			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled()
+					&& c == null) {
 				c = Client.getAnonymousClient();
 			}
 			for (int i = 0; i < serviceInfos.length(); i++) {
-				JSONObject serviceInfo = serviceInfos.getJSONObject(i);				
+				JSONObject serviceInfo = serviceInfos.getJSONObject(i);
 				String owner = c.getDistinguishedName();
 				String sendpointID = serviceInfo
 						.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
@@ -285,16 +305,18 @@ public class ServiceAdminResource {
 					logger.debug("updating service by ID: " + sendpointID
 							+ ", Owned by: " + owner);
 				}
-				
+
 				String messageTime = "";
-				if (serviceInfo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
-								.getAttributeName())){
+				if (serviceInfo
+						.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+								.getAttributeName())) {
 					messageTime = (serviceInfo
 							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 									.getAttributeName())).getString("$date");
 				}
 				if (c.getRole().getName().equalsIgnoreCase("admin")
-						&& serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID)) {
+						&& serviceAdmin.checkMessageGenerationTime(messageTime,
+								sendpointID)) {
 					// let the admin update any service
 					JSONObject res;
 					try {
@@ -303,7 +325,13 @@ public class ServiceAdminResource {
 					} catch (UnknownServiceException e) {
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
-						errorArray.put("Error occured while updating the service: "+ serviceInfo);
+						errorArray
+								.put("Error occured while updating the service: "
+										+ serviceInfo);
+					} catch (InvalidServiceDescriptionException e) {
+						errorArray
+								.put("Error occured while updating/creating the service: "
+										+ e.getMessage());
 					}
 					continue;
 
@@ -314,16 +342,24 @@ public class ServiceAdminResource {
 										serviceInfo
 												.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 														.getAttributeName()))
-								&& serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID)) {
+						&& serviceAdmin.checkMessageGenerationTime(messageTime,
+								sendpointID)) {
 					JSONObject res;
 					try {
 						res = serviceAdmin.updateService(serviceInfo);
 						arr.put(res);
 					} catch (UnknownServiceException e) {
-						Log.logException("Service with endpoint id: '"+serviceInfo.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName()) + "' does not exist", e, logger);
+						Log.logException(
+								"Service with endpoint id: '"
+										+ serviceInfo
+												.get(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+														.getAttributeName())
+										+ "' does not exist", e, logger);
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
-						errorArray.put("Error occured while updating the service: "+ serviceInfo);
+						errorArray
+								.put("Error occured while updating the service: "
+										+ serviceInfo);
 					}
 					continue;
 					// return Response.ok(res).build();
@@ -338,18 +374,18 @@ public class ServiceAdminResource {
 					String message = "Access denied for DN - " + owner
 							+ " to update service with the endpointID - "
 							+ sendpointID;
-					return Response
-							.status(Status.UNAUTHORIZED)
-							.entity(message).build();
+					return Response.status(Status.UNAUTHORIZED).entity(message)
+							.build();
 				}
 			}
-			if (arr.length() > 0){
+			if (arr.length() > 0) {
 				EventDispatcher.notifyRecievers(new Event(
 						EventTypes.SERVICE_UPDATE, arr));
 			}
-			if (errorArray.length() > 0) {				
-				return Response.status(Status.CONFLICT).entity(errorArray)
-						.build();
+			if (errorArray.length() > 0) {
+				logger.warn("Error while registering/updating the service information: \n"+errorArray.toString(2));
+				return Response.status(Status.NOT_ACCEPTABLE)
+						.entity(errorArray).build();
 			}
 			return Response.ok(arr).build();
 		} catch (Exception e) {
@@ -374,15 +410,17 @@ public class ServiceAdminResource {
 		String sendpointID = null;
 		try {
 			Client c = (Client) req.getAttribute("client");
-			if (!EMIRServer.getServerSecurityProperties().isSslEnabled() && c == null) {
+			if (!EMIRServer.getServerSecurityProperties().isSslEnabled()
+					&& c == null) {
 				c = Client.getAnonymousClient();
 			}
 			String owner = c.getDistinguishedName();
 			sendpointID = extractServiceEndpointIDFromUri(infos);
 			String messageTime = extractServiceDateFromUri(infos);
-			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
-						messageTime == "unknown") {
-				// New entry and message generation time need, it is come from one DSR
+			if (EMIRServer.getServerProperties().isGlobalEnabled()
+					&& messageTime == "unknown") {
+				// New entry and message generation time need, it is come from
+				// one DSR
 				messageTime = DateUtil.toUTCFormat(new Date());
 			}
 			logger.debug("deleting service by Endpoint ID: " + sendpointID
@@ -392,7 +430,8 @@ public class ServiceAdminResource {
 				serviceAdmin.removeService(sendpointID, messageTime);
 			} else if ((owner != null)
 					&& (serviceAdmin.checkOwner(owner, sendpointID))
-						&& (serviceAdmin.checkMessageGenerationTime(messageTime, sendpointID))) {
+					&& (serviceAdmin.checkMessageGenerationTime(messageTime,
+							sendpointID))) {
 
 				serviceAdmin.removeService(sendpointID, messageTime);
 
@@ -405,17 +444,19 @@ public class ServiceAdminResource {
 			}
 
 		} catch (IllegalArgumentException e) {
-			Log.logException("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
-					+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-					.getAttributeName() + " = <SERVICE ENDPOINT ID>", e, logger);
+			Log.logException(
+					"Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
+							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+									.getAttributeName()
+							+ " = <SERVICE ENDPOINT ID>", e, logger);
 			return Response
 					.status(Status.BAD_REQUEST)
 					.entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
 							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-									.getAttributeName() + " = <SERVICE ENDPOINT ID>")
-					.build();
+									.getAttributeName()
+							+ " = <SERVICE ENDPOINT ID>").build();
 		} catch (Exception e) {
-			Log.logException("Error in deleting the service",e,logger);
+			Log.logException("Error in deleting the service", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response
@@ -423,8 +464,9 @@ public class ServiceAdminResource {
 		}
 		return Response.ok().build();
 	}
-	
-	private String extractServiceDateFromUri(UriInfo infos) throws IllegalArgumentException{
+
+	private String extractServiceDateFromUri(UriInfo infos)
+			throws IllegalArgumentException {
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();
 		String attrName = ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 				.getAttributeName();
@@ -437,5 +479,5 @@ public class ServiceAdminResource {
 						.getAttributeName());
 		return value;
 	}
-	
+
 }

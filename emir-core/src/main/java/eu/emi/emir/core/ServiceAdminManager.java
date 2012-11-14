@@ -36,7 +36,7 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.validator.InvalidServiceDescriptionException;
-import eu.emi.emir.validator.ValidatorUtil;
+import eu.emi.emir.validator.RegistrationValidator;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**
@@ -82,10 +82,8 @@ public class ServiceAdminManager {
 	 * 	 */
 	public JSONObject addService(JSONObject jo) throws InvalidServiceDescriptionException, JSONException, ExistingResourceException, ConfigurationException, ParseException
 			 {
-		if (!ValidatorUtil.isValidServiceInfo(jo)) {
-			throw new InvalidServiceDescriptionException(
-					"The service description does not contain valid attributes");
-		}
+		new RegistrationValidator().validateInfo(jo);
+		
 		try {
 			// current time and last update should be same in the beginning			
 			JSONObject date = new JSONObject();
@@ -204,14 +202,23 @@ public class ServiceAdminManager {
 	 */
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
-		if (!ValidatorUtil.isValidServiceInfo(jo) ) {
-			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
-						!ValidatorUtil.isValidRemovedServiceInfo(jo)) {
-				throw new InvalidServiceDescriptionException(
-						"The service description does not contain valid attributes: serviceurl and servicetype");
-			}
-			//TODO: accepted message with only one simple Endpoint_ID
-		}
+		
+		new RegistrationValidator().validateInfo(jo);
+		new RegistrationValidator().validateEndpointIDInfo(jo);
+		
+//		boolean isValid = ValidatorUtil.isValidServiceInfo(jo);
+//		boolean isValidRemoved = ValidatorUtil.isValidRemovedServiceInfo(jo);
+		
+//		if (!isValid) {
+//			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
+//						!isValidRemoved) {
+//				throw new InvalidServiceDescriptionException(
+//						"The service description does not contain valid attributes: serviceurl and servicetype");
+//			}
+//			//TODO: accepted message with only one simple Endpoint_ID
+//		}
+		
+		
 		
 		Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT);
 		if (log.isDebugEnabled()) {

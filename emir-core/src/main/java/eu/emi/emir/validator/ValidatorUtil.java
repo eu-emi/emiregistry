@@ -25,9 +25,10 @@ public class ValidatorUtil {
 	 * @throws ConfigurationException 
 	 * @throws JSONException
 	 */
-	public synchronized static boolean isValidServiceInfo(JSONObject jo)
+	public boolean isValidServiceInfo(JSONObject jo)
 			throws InvalidServiceDescriptionException, ConfigurationException, JSONException, ParseException {
-		return ValidatorFactory.getRegistrationValidator().validateInfo(jo);
+//		return ValidatorFactory.getRegistrationValidator().validateInfo(jo);
+		return new RegistrationValidator().validateInfo(jo);
 	}
 
 	/**
@@ -37,9 +38,10 @@ public class ValidatorUtil {
 	 * @param serviceDesc
 	 * @throws InvalidServiceDescriptionException 
 	 */
-	public synchronized static boolean isValidRemovedServiceInfo(JSONObject jo)
+	public boolean isValidRemovedServiceInfo(JSONObject jo)
 			throws InvalidServiceDescriptionException {
-		return ValidatorFactory.getRegistrationValidator().validateEndpointIDInfo(jo);
+//		return ValidatorFactory.getRegistrationValidator().validateEndpointIDInfo(jo);
+		return new RegistrationValidator().validateEndpointIDInfo(jo);
 	}
 	
 }

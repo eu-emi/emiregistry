@@ -48,6 +48,7 @@ public class TestXmlBeansToJson {
 
 	@Test
 	public void test() throws JSONException {
+		System.out.println(XmlbeansToJson.convert(service).toString(2));
 		assertTrue(XmlbeansToJson.convert(service).length() > 0);
 	}
 	
