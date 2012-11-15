@@ -19,6 +19,7 @@ import eu.emi.emir.db.NonExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.ServiceObject;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
 
 /**
  * @author martoni
@@ -184,8 +185,8 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		}		
 	}
 
-	@Test (expected = PersistentStoreFailureException.class)
-	public void testUpdateInsertNotValidServiceEntry() throws PersistentStoreFailureException {
+	@Test (expected = NullPointerException.class)
+	public void testUpdateInsertNotValidServiceEntry() throws NullPointerException  {
 		// Create information to be stored
 		JSONObject entry = new JSONObject();
 		try {
@@ -205,6 +206,9 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 			e.printStackTrace();
 			fail(e.getMessage());
 		} catch (NonExistingResourceException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (PersistentStoreFailureException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} catch (JSONException e) {
