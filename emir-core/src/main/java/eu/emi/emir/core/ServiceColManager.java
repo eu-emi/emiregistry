@@ -304,13 +304,14 @@ public class ServiceColManager {
 			return new JSONArray();
 		}
 
-		JSONObject doc = new JSONObject(jArr.get(jArr.length() - 1).toString());
+        if ( jArr.length() == pageSize) {
+		    JSONObject doc = new JSONObject(jArr.get(jArr.length() - 1).toString());
 
-		JSONObject refObj = new JSONObject();
+		    JSONObject refObj = new JSONObject();
 
-		refObj.put(REF, doc.getJSONObject("_id").get("$oid"));
-
-		jArr.put(refObj);
+		    refObj.put(REF, doc.getJSONObject("_id").get("$oid"));
+		    jArr.put(refObj);
+        }
 
 		return jArr;
 	}	

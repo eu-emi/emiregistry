@@ -134,7 +134,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			map.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), lst);
 			JSONArray o = cr.queryByQueryParams(map);
 			System.out.println(o.toString(2));
-			assertEquals(50, o.length()-1);
+			assertEquals(50, o.length());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -273,7 +273,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		JSONObject ne = new JSONObject();
 		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
 				.getAttributeName(), jo);
-		assertEquals(50, cr.richQueryForJSON(ne).length()-1);
+		assertEquals(50, cr.richQueryForJSON(ne).length());
 
 	}
 	
