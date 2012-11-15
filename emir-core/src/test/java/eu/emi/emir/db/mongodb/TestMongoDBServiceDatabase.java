@@ -19,7 +19,6 @@ import eu.emi.emir.db.NonExistingResourceException;
 import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.ServiceObject;
-import eu.emi.emir.validator.InvalidServiceDescriptionException;
 
 /**
  * @author martoni
