@@ -18,7 +18,6 @@ import eu.unicore.util.configuration.DocumentationReferencePrefix;
 import eu.unicore.util.configuration.PropertiesHelper;
 import eu.unicore.util.configuration.PropertyMD;
 import eu.unicore.util.httpclient.ClientProperties;
-import eu.unicore.util.jetty.HttpServerProperties;
 
 /**
  * @author a.memon

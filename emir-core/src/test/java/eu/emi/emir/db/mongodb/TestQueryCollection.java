@@ -6,7 +6,6 @@ package eu.emi.emir.db.mongodb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,8 +15,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.mongodb.DBObject;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;

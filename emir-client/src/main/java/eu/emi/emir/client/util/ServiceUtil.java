@@ -18,11 +18,7 @@ import java.util.List;
 import java.util.logging.LogManager;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * 
