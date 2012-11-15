@@ -316,7 +316,6 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		ne.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE
 				.getAttributeName(), jo);
 		assertEquals(50, cr.richQueryForXML(ne).getService().size());
-
 	}
 
 	@Test
@@ -414,6 +413,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 					.accept(MediaType.APPLICATION_XML_TYPE)
 					.get(QueryResult.class);
 			JAXB.marshal(o, System.out);
+			System.out.println(o.getService().size());
 			assertTrue(o.getCount().equals(new BigInteger("50")));
 		} catch (Exception e) {
 			e.printStackTrace();

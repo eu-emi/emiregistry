@@ -66,29 +66,31 @@ public class Glue2Mapper {
 		QueryResult qr = o.createQueryResult();
 		List<ServiceT> l = qr.getService();
 		JAXBElement<ServiceT>[] j = toGlue2Service(jo);
-			
-		logger.info(j.length);
-		
-		
+
 		if (j.length == 0) {
 			return qr;
 		}
-		//run the for loop for n-1 times as the last entry contained the reference for the next page
-		for (int i = 0; i < j.length-1; i++) {
-			l.add(j[i].getValue());
-		}
-		qr.setCount(new BigInteger("" + (jo.length()-1)));
+		// run the for loop for n-1 times as the last entry contained the
+		// reference for the next page
+
 		
-		//set reference in case of paginated queries
+		int size = j.length;
+		// set reference in case of paginated queries
 		try {
-			JSONObject ref = jo.getJSONObject(jo.length()-1);
+			JSONObject ref = jo.getJSONObject(jo.length() - 1);
 			if (!ref.isNull("ref")) {
-				qr.setRef(ref.getString("ref"));	
+				qr.setRef(ref.getString("ref"));
+				size = j.length - 1;
 			}
 		} catch (JSONException e) {
 			throw new JSONToGlue2MappingException(e);
 		}
-		
+
+		for (int i = 0; i < size; i++) {
+			l.add(j[i].getValue());
+		}
+		qr.setCount(new BigInteger("" + (size)));
+
 		return qr;
 	}
 
@@ -102,7 +104,7 @@ public class Glue2Mapper {
 				JSONObject serJo = jo.getJSONObject(i);
 				if (serJo.has("ref")) {
 					continue;
-				}				
+				}
 				JAXBElement<ServiceT> jt = toGlue2XML(serJo);
 				e[i] = jt;
 				lst.add(jt);
@@ -698,5 +700,5 @@ public class Glue2Mapper {
 
 		}
 		return lst;
-	}	
+	}
 }
