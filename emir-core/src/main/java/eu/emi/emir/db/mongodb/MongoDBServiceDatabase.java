@@ -61,8 +61,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		String dbPassword = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_PASSWORD);
 
 		try {
-			// connection = MongoConnection.get(hostname,
-			// Integer.valueOf(port));
 			if (connection == null) {
 
 				MongoOptions mo = new MongoOptions();
@@ -304,12 +302,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 							.getAttributeName(), sObj.getEndpointID()));
 			if (db == null) {
 				try {
-					//why checking the validation so many times??
-//					if (!ValidatorUtil.isValidServiceInfo(sObj.toJSON())) {
-						//why throwing the exception again?
-//						throw new PersistentStoreFailureException(
-//								"The service description does not contain valid attributes");
-//					}
 					new RegistrationValidator().validateInfo(sObj.toJSON());
 				} catch (ConfigurationException e) {
 					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
