@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>emiregistry</artifactId>
 		<groupId>eu.eu-emi</groupId>
-		<version>1.2.1-rc3</version>
+		<version>1.2.1-rc4</version>
 	</parent>
 	<name>Core EMI Registry Server</name>
 	<url>https://github.com/eu-emi/emiregistry</url>

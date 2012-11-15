@@ -204,20 +204,9 @@ public class ServiceAdminManager {
 			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
 		
 		new RegistrationValidator().validateInfo(jo);
-		new RegistrationValidator().validateEndpointIDInfo(jo);
-		
-//		boolean isValid = ValidatorUtil.isValidServiceInfo(jo);
-//		boolean isValidRemoved = ValidatorUtil.isValidRemovedServiceInfo(jo);
-		
-//		if (!isValid) {
-//			if (EMIRServer.getServerProperties().isGlobalEnabled() &&
-//						!isValidRemoved) {
-//				throw new InvalidServiceDescriptionException(
-//						"The service description does not contain valid attributes: serviceurl and servicetype");
-//			}
-//			//TODO: accepted message with only one simple Endpoint_ID
-//		}
-		
+		if (EMIRServer.getServerProperties().isGlobalEnabled() ) {
+			new RegistrationValidator().validateEndpointIDInfo(jo);
+		}
 		
 		
 		Integer expTime = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_RECORD_EXPIRY_DEFAULT);
