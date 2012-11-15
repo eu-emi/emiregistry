@@ -304,7 +304,7 @@ public class ServiceColManager {
 			return new JSONArray();
 		}
 
-        if ( jArr.length() >= pageSize) {
+        if ( jArr.length() == pageSize) {
 		    JSONObject doc = new JSONObject(jArr.get(jArr.length() - 1).toString());
 
 		    JSONObject refObj = new JSONObject();
