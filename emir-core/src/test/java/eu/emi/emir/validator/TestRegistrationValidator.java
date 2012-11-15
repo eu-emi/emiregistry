@@ -59,7 +59,7 @@ public class TestRegistrationValidator {
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
 	}
 	
-	@Test
+	@Test (expected = InvalidServiceDescriptionException.class)
 	public void testZeroLengthArray() throws JSONException, InvalidServiceDescriptionException, ConfigurationException, ParseException{
 		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
 		logger.info(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString());
