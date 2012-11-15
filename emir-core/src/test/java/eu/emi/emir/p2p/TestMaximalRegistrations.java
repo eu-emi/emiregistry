@@ -63,7 +63,7 @@ public class TestMaximalRegistrations {
 			for (int i = 1; i < numberOfEntries + 1; i++) {
 				String url = "http://" + i;
 				try {
-					getChildClient("/serviceadmin?Service_Endpoint_URL=" + url)
+					getChildClient("/serviceadmin?Service_Endpoint_ID=" + url)
 							.delete();
 					System.out.println("clean up: " + url);
 				} catch (UniformInterfaceException e) {
@@ -89,8 +89,8 @@ public class TestMaximalRegistrations {
 			// one registration to the child server
 			JSONObject jo = new JSONObject(
 					"{\"Service_ID\": \"urn:ogf:Service:piff.hep.lu.se:aris,GLUE2GroupID=resource,o=glue\","
-							+ "\"Service_Endpoint_ID\" : \"urn:ogf:Endpoint:piff.hep.lu.se:ldapglue2:2135,GLUE2ServiceID=urn:ogf:Service:piff.hep.lu.se:aris,GLUE2GroupID=resource,o=glue\","
-							+ "\"Service_Endpoint_URL\" : \"" + url + "\"} ");
+							+ "\"Service_Endpoint_URL\" : \"urn:ogf:Endpoint:piff.hep.lu.se:ldapglue2:2135,GLUE2ServiceID=urn:ogf:Service:piff.hep.lu.se:aris,GLUE2GroupID=resource,o=glue\","
+							+ "\"Service_Endpoint_ID\" : \"" + url + "\"} ");
 
 			jos.put(jo);
 
