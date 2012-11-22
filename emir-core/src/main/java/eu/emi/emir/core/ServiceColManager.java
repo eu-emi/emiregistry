@@ -185,7 +185,7 @@ public class ServiceColManager {
 		
 		QueryResult qr = null;
 
-		if (m.get(PAGE_SIZE) != null && m.get(PAGE_SIZE).toString().equals("0")) {
+		if (m.get(PAGE_SIZE) != null && Integer.valueOf(m.get(PAGE_SIZE).toString()) <= 0 ) {
 			return new QueryResult();
 		}
 
@@ -289,7 +289,7 @@ public class ServiceColManager {
 		pageSize = (m.get(PAGE_SIZE) != null) ? Integer.valueOf(m
 				.get(PAGE_SIZE).toString()) : 100;
 
-		if (pageSize == 0) {
+		if (pageSize <= 0) {
 			return new JSONArray();
 		}
 		ref = (m.get(REF) != null) ? m.get(REF).toString() : null;
