@@ -451,10 +451,11 @@ public class NeighborsManager {
 			}
 			String ref = null;
 			// Fetch the DB from the GSR
-			EMIRClient c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr);
+			String path = "/services/pagedquery?pageSize="+maxEntriesNr;
+			EMIRClient c = new EMIRClient(list.get(j) + path);
 			if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
 
-				c = new EMIRClient(list.get(j) + "/services/pagedquery",
+				c = new EMIRClient(list.get(j) + path,
 											EMIRServer.getClientSecurityProperties());
 			}
 			boolean found = false;
@@ -496,9 +497,10 @@ public class NeighborsManager {
 								logger.warn("Some failure happend during the DB store.");
 							}
 							// next part of the database
-							c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref);
+							path = "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref;
+							c = new EMIRClient(list.get(j) + path);
 							if (EMIRServer.getServerSecurityProperties().isSslEnabled()) {
-								c = new EMIRClient(list.get(j) + "/services/pagedquery?pageSize="+maxEntriesNr+"&ref="+ref,
+								c = new EMIRClient(list.get(j) + path,
 															EMIRServer.getClientSecurityProperties());
 							}
 							break;
