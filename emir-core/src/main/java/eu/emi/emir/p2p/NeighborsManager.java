@@ -469,13 +469,14 @@ public class NeighborsManager {
 			int state = 0;
 			while ( (ref == null && state == 0) || (newDB.length() > 0 && !found && state != 3) ) {
 				logger.info("Fetch DB from  " + list.get(j));
+				logger.debug("newDB: "+ newDB.length() +", found: " + found+ ", state: "+ state);
 				for (int i=0; i<retry; i++){
-					JSONObject o = new JSONObject();
+					JSONArray o = new JSONArray();
 					try {
 						state = 1;
 						o = c.getClientResource()
 								.accept(MediaType.APPLICATION_JSON_TYPE)
-									.get(JSONObject.class);
+									.get(JSONArray.class);
 					} catch (ClientHandlerException e) {
 						state = 3;
 						logger.debug("DB query, unreachable host: " + list.get(j));
@@ -486,11 +487,16 @@ public class NeighborsManager {
 						break;
 					}
 					state = 2;
-					if (!o.isNull("result")){
+					if (o.length() != 0){
 						try {
-							ref = o.getString("ref");
+							JSONObject refObj = o.getJSONObject(o.length()-1);
+							ref = refObj.getString("ref");
 							logger.debug("New ref: " + ref);
-							newDB = o.getJSONArray("result");
+							// copy the got entries from the result
+							newDB = new JSONArray();
+							for (int index=0; index<o.length()-1; index++) {
+								newDB.put(o.getJSONObject(index));
+							}
 							logger.debug("New DB: " + newDB.toString());
 							// Store the new DB part
 							if (!DBStore(newDB)){
@@ -505,7 +511,15 @@ public class NeighborsManager {
 							}
 							break;
 						} catch (JSONException e) {
-							logger.debug("The got message is not JSONArray! message: " + o.toString());
+							logger.debug("The got message is the last! message: " + o.toString());
+							newDB = o;
+							logger.debug("New DB: " + newDB.toString());
+							// Store the new DB part
+							if (!DBStore(newDB)){
+								logger.warn("Some failure happend during the DB store.");
+							}
+							found = true;
+							break;
 						}
 					} else {
 						// don't get more data from the server
@@ -527,7 +541,6 @@ public class NeighborsManager {
 	 * @param list of the DB entries
 	 * 
 	 * @return boolean, all elements can be stored without any failure or not.
-	 * @throws Exception 
 	 */
 	private boolean DBStore(JSONArray newDB){
 		ServiceAdminManager serviceAdmin = new ServiceAdminManager();
