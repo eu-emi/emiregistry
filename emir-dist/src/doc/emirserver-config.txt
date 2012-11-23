@@ -323,6 +323,20 @@ EMIR offers a way to block
 |emir.record.blockList.outgoing|filesystem path|CONF/outputfilters|The file containing list of SER IDs, matching services will be blocked from propagation to it's parent DSR
 |===========================================================
 
+Validation of Mandatory Attributes 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Usually the DSR or GSR does not allow the SER to be registered(or updated) without having mandatory attributes. 
+This validity check can be disabled to allow the publishers to register a SER with custom attributes to 
+the EMIR server. Hence providing a flexibility to the publishers, whereas the consumers have to examine 
+all the attributes while performing some operation on the service (contained in the SER) itself. 
+
+.Enable/Disable Validity Checks 
+[width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
+|===========================================================
+|Property name|Type|Default value|Description
+|emir.record.attributeCheckingMode|String|strict|There are two possible modes: 'strict' or 'flexible'. If set to 'strict' the emir server will check mandatory attributes in the record being updated or registered. If set to 'flexible' only SERVICE_ENDPOINT_ID will be checked.
+|===========================================================
 
 Logging Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
