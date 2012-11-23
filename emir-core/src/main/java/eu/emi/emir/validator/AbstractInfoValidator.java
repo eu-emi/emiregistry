@@ -8,6 +8,7 @@ import java.text.ParseException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.emir.EMIRServer;
 import eu.unicore.util.configuration.ConfigurationException;
 
 /**
@@ -25,11 +26,21 @@ public abstract class AbstractInfoValidator implements InfoValidator{
 		this.jo = jo;
 		
 		
-		if (checkMandatoryAttributes() && checkDateTypes() && checkExpiryTime()) {
+//		if (checkMandatoryAttributes() && checkDateTypes() && checkExpiryTime()) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		if (checkDateTypes() && checkExpiryTime()) {
+			if (EMIRServer.getServerProperties().getAttributeCheckingMode().equalsIgnoreCase("strict")) {
+				return checkMandatoryAttributes();
+			}
 			return true;
 		} else {
 			return false;
 		}
+		
+
 		
 	}
 	

@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.jetty.EMIRJettyProperties;
 import eu.emi.emir.security.ServerSecurityProperties;
@@ -98,6 +99,8 @@ public class ServerProperties extends PropertiesHelper {
 	
 	public static final String PROP_RECORD_MAXIMUM = "record.maximum";
 	
+	public static final String PROP_RECORD_CHECKING_MODE = "record.attributeCheckingMode";
+	
 	// Advanced: HTTP Request interceptors  //
 	
 	public static final String PROP_REQUEST_INTERCEPTORS = "interceptors.request";
@@ -110,6 +113,10 @@ public class ServerProperties extends PropertiesHelper {
 	
 	// Path for the temporary database //
 	public static String PROP_H2_DBFILE_PATH = "h2.dbpath";
+	
+	enum ATTRIBUTE_CHECKING_MODE{
+		strict, relaxed;
+	};
 	
 	@DocumentationReferenceMeta
 	public final static Map<String, PropertyMD> META = new HashMap<String, PropertyMD>();
@@ -136,6 +143,7 @@ public class ServerProperties extends PropertiesHelper {
 		META.put(PROP_RECORD_MAXIMUM, new PropertyMD("100").setDescription("Maximum Number of Service Endpoints in a request while registration"));
 		META.put(PROP_RECORD_BLOCKLIST_INCOMING, new PropertyMD().setDescription(""));
 		META.put(PROP_RECORD_BLOCKLIST_OUTGOING, new PropertyMD().setDescription(""));
+		META.put(PROP_RECORD_CHECKING_MODE, new PropertyMD("strict").setDescription("There are two possible modes: 'strict' or 'flexible'. If set to 'strict' the emir server will check mandatory attributes in the record being updated or registered. If set to 'flexible' only "+ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString()+" will be checked."));
 		META.put(PROP_REQUEST_INTERCEPTORS, new PropertyMD().setDescription(""));
 		META.put(PROP_RESPONSE_INTERCEPTORS, new PropertyMD().setDescription(""));
 		META.put(PROP_LOGGER_CONFIGPATH, new PropertyMD().setPath().setDescription(""));
@@ -160,6 +168,10 @@ public class ServerProperties extends PropertiesHelper {
 	
 	public String parentAddress(){
 		return getValue(PROP_PARENT_ADDRESS);
+	}
+	
+	public String getAttributeCheckingMode(){
+		return getValue(PROP_RECORD_CHECKING_MODE);
 	}
 	
 	/**

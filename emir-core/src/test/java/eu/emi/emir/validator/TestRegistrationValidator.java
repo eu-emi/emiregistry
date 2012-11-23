@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.TestValueConstants;
 import eu.emi.emir.client.util.DateUtil;
@@ -35,11 +36,10 @@ import eu.unicore.util.configuration.ConfigurationException;
  */
 public class TestRegistrationValidator {
 	private static final Logger logger = Log.getLogger("emir.test", TestRegistrationValidator.class);
-	
+	EMIRServer e = null;
 	@Before
 	public void setup(){
-		@SuppressWarnings("unused")
-		EMIRServer e = new EMIRServer(new Properties());
+		e = new EMIRServer(new Properties());
 	}
 	
 	@Test
@@ -68,6 +68,16 @@ public class TestRegistrationValidator {
 		JSONArray ja = new JSONArray();
 		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(),ja);
 		assertFalse(ValidatorFactory.getRegistrationValidator().validateInfo(jo));
+	}
+	
+	@Test
+	public void testFlexibleAttributeCheckingMode() throws JSONException, ConfigurationException, InvalidServiceDescriptionException, ParseException{
+		Properties p = new Properties();
+		p.setProperty(ServerProperties.PREFIX+ServerProperties.PROP_RECORD_CHECKING_MODE, "flexible");
+		e = new EMIRServer(p);
+		JSONObject jo = new JSONObject();
+		jo.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString(), "1");
+		assertTrue(new RegistrationValidator().validateInfo(jo));
 	}
 	
 }
