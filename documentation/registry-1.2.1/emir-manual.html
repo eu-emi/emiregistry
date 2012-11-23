@@ -642,7 +642,7 @@ footnotes: function () {
 <h1>EMI Registry Manual</h1>
 <span id="author">EMIR Product Team</span><br />
 <span id="revnumber">version 1.2.1,</span>
-<span id="revdate">07 11 2012</span>
+<span id="revdate">23 11 2012</span>
 <br /><span id="revremark">component version: 1.2.1</span>
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
@@ -1839,6 +1839,39 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
+<h4 id="_validation_of_mandatory_attributes">4.8.3. Validation of Mandatory Attributes</h4>
+<div class="paragraph"><p>Usually the DSR or GSR does not allow the SER to be registered(or updated) without having mandatory attributes.
+This validity check can be disabled to allow the publishers to register a SER with custom attributes to
+the EMIR server. Hence providing a flexibility to the publishers, whereas the consumers have to examine
+all the attributes while performing some operation on the service (contained in the SER) itself.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 7. Enable/Disable Validity Checks</caption>
+<col width="35%" />
+<col width="12%" />
+<col width="23%" />
+<col width="30%" />
+<thead>
+<tr>
+<th align="left" valign="top">Property name</th>
+<th align="left" valign="top">Type</th>
+<th align="left" valign="top">Default value</th>
+<th align="left" valign="top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>emir.record.attributeCheckingMode</tt></p></td>
+<td align="left" valign="top"><p class="table">String</p></td>
+<td align="left" valign="top"><p class="table"><tt>strict</tt></p></td>
+<td align="left" valign="top"><p class="table">There are two possible modes: <em>strict</em> or <em>flexible</em>. If set to <em>strict</em> the emir server will check mandatory attributes in the record being updated or registered. If set to <em>flexible</em> only SERVICE_ENDPOINT_ID will be checked.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <h3 id="_logging_configuration">4.9. Logging Configuration</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The EMIR server uses <a href="http://logging.apache.org/log4j/1.2/index.html">log4j</a> to provide log facilities to record all but some of the server activities. In order to
 change the logging configuration, CONF/log4j.properties should be reviewed by the administrator.</p></div>
@@ -2463,7 +2496,7 @@ defined as <strong>application/xml</strong> instead.</p></div>
 <div id="footer">
 <div id="footer-text">
 Version 1.2.1<br />
-Last updated 2012-11-07 00:08:31 CET
+Last updated 2012-11-23 12:17:08 CET
 </div>
 </div>
 </body>
