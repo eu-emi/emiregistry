@@ -203,7 +203,37 @@ public class ServiceAdminManager {
 	public JSONObject updateService(JSONObject jo) throws UnknownServiceException,
 			InvalidServiceDescriptionException, JSONException, WebApplicationException, ConfigurationException, ParseException {
 		
-		new RegistrationValidator().validateInfo(jo);
+		try {
+			new RegistrationValidator().validateInfo(jo);
+		} catch(InvalidServiceDescriptionException e){
+			if (EMIRServer.getServerProperties().isGlobalEnabled()
+					&& jo.length() == 3
+					&& jo.has(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+								.getAttributeName())
+					&& jo.has(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+							.getAttributeName())
+							&& jo.has(ServiceBasicAttributeNames.SERVICE_OWNER_DN
+									.getAttributeName())) {
+				// It is control UPDATE message (DELETE the entry)
+				String sendpointID = jo.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+						.getAttributeName());
+				String messageTime = jo.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
+						.getAttributeName()).getString("$date");
+				try {
+					removeService(sendpointID, messageTime);
+				} catch (MultipleResourceException e1) {
+					Log.logException("", e1,log);
+				} catch (NonExistingResourceException e1) {
+					Log.logException("", e1,log);
+				} catch (PersistentStoreFailureException e1) {
+					Log.logException("", e1,log);
+				}
+				return null;
+				
+			} else {
+				throw new InvalidServiceDescriptionException();
+			}
+		}
 		if (EMIRServer.getServerProperties().isGlobalEnabled() ) {
 			new RegistrationValidator().validateEndpointIDInfo(jo);
 		}
