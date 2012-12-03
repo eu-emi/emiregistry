@@ -2,6 +2,8 @@ package eu.emi.emir.db.mongodb;
 
 import static org.junit.Assert.*;
 
+import java.util.Properties;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +14,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import eu.emi.emir.EMIRServer;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.db.ExistingResourceException;
 import eu.emi.emir.db.MultipleResourceException;
@@ -33,6 +36,7 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 	
 	@Before
 	public void setUp() {
+		EMIRServer s = new EMIRServer(new Properties());
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services-test");
 		db.deleteAll();
