@@ -285,6 +285,17 @@ public class ServiceAdminResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException, JSONException {
+
+		Long max = EMIRServer.getServerProperties().getLongValue(
+				ServerProperties.PROP_RECORD_MAXIMUM);
+
+		if (serviceInfos.length() > max) {
+			return Response
+					.status(Status.FORBIDDEN)
+					.entity(new String(
+							"Number of entries/json objects in the array must not exceed: "
+									+ max)).build();
+		}
 		try {
 			JSONArray arr = new JSONArray();
 			JSONArray errorArray = new JSONArray();
