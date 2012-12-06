@@ -325,11 +325,11 @@ public class ServiceAdminResource {
 							.getJSONObject(ServiceBasicAttributeNames.SERVICE_UPDATE_SINCE
 									.getAttributeName())).getString("$date");
 				}
+				JSONObject res = null;
 				if (c.getRole().getName().equalsIgnoreCase("admin")
 						&& serviceAdmin.checkMessageGenerationTime(messageTime,
 								sendpointID)) {
 					// let the admin update any service
-					JSONObject res;
 					try {
 						res = serviceAdmin.updateService(serviceInfo);
 						arr.put(res);
@@ -355,7 +355,6 @@ public class ServiceAdminResource {
 														.getAttributeName()))
 						&& serviceAdmin.checkMessageGenerationTime(messageTime,
 								sendpointID)) {
-					JSONObject res;
 					try {
 						res = serviceAdmin.updateService(serviceInfo);
 						arr.put(res);
