@@ -643,7 +643,11 @@ public class NeighborsManager {
 		String configValue = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_GLOBAL_PROVIDERLIST);
 		// Replace the following characters (' ', '[', ']', '\n') 
 		// with empty character.
-		configValue = configValue.replaceAll(" |\\[|\\]|\n", "");
+		try {
+		    configValue = configValue.replaceAll(" |\\[|\\]|\n", "");
+		} catch (NullPointerException e) {
+		    return listOfURLs;
+		}
 		// Tokenize the input string and add into the list
 		StringTokenizer tokens = new StringTokenizer(configValue,",");
 	    while(tokens.hasMoreTokens()){
