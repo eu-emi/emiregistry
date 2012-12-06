@@ -171,7 +171,8 @@ public class ServiceAdminResource {
 		return registerupdateServices(serviceInfos, "register");
 	}
 
-	private Response OLDregisterServices(JSONArray serviceInfos)
+	@Deprecated
+	private Response _registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException, JSONException {
 		
 		Long max = EMIRServer.getServerProperties().getLongValue(
