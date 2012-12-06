@@ -168,6 +168,12 @@ public class ServiceAdminResource {
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException, JSONException {
 
+		return registerupdateServices(serviceInfos, "register");
+	}
+
+	private Response OLDregisterServices(JSONArray serviceInfos)
+			throws WebApplicationException, InterruptedException, JSONException {
+		
 		Long max = EMIRServer.getServerProperties().getLongValue(
 				ServerProperties.PROP_RECORD_MAXIMUM);
 
@@ -286,6 +292,16 @@ public class ServiceAdminResource {
 	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException, JSONException {
 
+		return registerupdateServices(serviceInfos, "update");
+	}
+
+	protected Response registerupdateServices(JSONArray serviceInfos, String method)
+			throws WebApplicationException, JSONException {
+
+        String methodMessage = "updating";
+        if ( methodMessage.equals("register")) {
+        	methodMessage = "registering";
+        }
 		Long max = EMIRServer.getServerProperties().getLongValue(
 				ServerProperties.PROP_RECORD_MAXIMUM);
 
@@ -313,7 +329,7 @@ public class ServiceAdminResource {
 				serviceInfo.put(ServiceBasicAttributeNames.SERVICE_OWNER_DN
 						.getAttributeName(), c.getDistinguishedName());
 				if (logger.isDebugEnabled()) {
-					logger.debug("updating service by ID: " + sendpointID
+					logger.debug( methodMessage + " service by ID: " + sendpointID
 							+ ", Owned by: " + owner);
 				}
 
@@ -337,11 +353,11 @@ public class ServiceAdminResource {
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
 						errorArray
-								.put("Error occured while updating the service: "
+								.put("Error occured while " + methodMessage + " the service: "
 										+ serviceInfo);
 					} catch (InvalidServiceDescriptionException e) {
 						errorArray
-								.put("Error occured while updating/creating the service: "
+								.put("Error occured while " + methodMessage + " the service: "
 										+ e.getMessage());
 					}
 					continue;
@@ -368,7 +384,7 @@ public class ServiceAdminResource {
 						return Response.status(Status.NOT_FOUND).build();
 					} catch (WebApplicationException e) {
 						errorArray
-								.put("Error occured while updating the service: "
+								.put("Error occured while " + methodMessage + " the service: "
 										+ serviceInfo);
 					}
 					continue;
@@ -379,27 +395,33 @@ public class ServiceAdminResource {
 								+ serviceInfo
 										.getString(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 												.getAttributeName())
-								+ " does not exist or the update message is too old.");
+								+ " does not exist or the " + method +" message is too old.");
 					}
 					String message = "Access denied for DN - " + owner
-							+ " to update service with the endpointID - "
+							+ " to " + method + " service with the endpointID - "
 							+ sendpointID;
 					return Response.status(Status.UNAUTHORIZED).entity(message)
 							.build();
 				}
 			}
 			if (arr.length() > 0) {
-				EventDispatcher.notifyRecievers(new Event(
-						EventTypes.SERVICE_UPDATE, arr));
+				if ( method.equals("update")){
+				    EventDispatcher.notifyRecievers(new Event(
+					    	EventTypes.SERVICE_UPDATE, arr));
+				}
+				if ( method.equals("register")){
+				    EventDispatcher.notifyRecievers(new Event(
+					    	EventTypes.SERVICE_ADD, arr));
+				}
 			}
 			if (errorArray.length() > 0) {
-				logger.warn("Error while registering/updating the service information: \n"+errorArray.toString(2));
+				logger.warn("Error while " + methodMessage + " the service information: \n"+errorArray.toString(2));
 				return Response.status(Status.NOT_ACCEPTABLE)
 						.entity(errorArray).build();
 			}
 			return Response.ok(arr).build();
 		} catch (Exception e) {
-			Log.logException("Error in updating the services", e, logger);
+			Log.logException("Error in " + methodMessage + " the services", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
 			throw new WebApplicationException(Response
