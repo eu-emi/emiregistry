@@ -64,12 +64,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (connection == null) {
 
 				MongoOptions mo = new MongoOptions();
-				mo.autoConnectRetry = true;
-				mo.connectTimeout = 100;
-				mo.maxWaitTime = 100;
-				mo.socketKeepAlive = true;
-				mo.connectionsPerHost = 255;
-
+				mo.setAutoConnectRetry(true);
+				mo.setConnectTimeout(5000);
+				mo.setMaxAutoConnectRetryTime(10000);
+				mo.setMaxWaitTime(5000);
+				mo.setSocketKeepAlive(true);
+				mo.setSocketTimeout(0);
+				mo.setConnectionsPerHost(255);				
 				ServerAddress sa = new ServerAddress(hostname,
 						Integer.valueOf(port));
 				connection = new Mongo(sa, mo);
