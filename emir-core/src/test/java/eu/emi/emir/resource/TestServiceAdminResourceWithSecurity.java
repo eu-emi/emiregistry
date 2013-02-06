@@ -80,16 +80,15 @@ public class TestServiceAdminResourceWithSecurity extends
 	public void testUnAuthzRegisterService() throws JSONException,
 			UnrecoverableKeyException, KeyStoreException,
 			NoSuchAlgorithmException, CertificateException, IOException {
+		JSONObject jo = TestValueConstants.getJSONWithMandatoryAttributes();
+		JSONArray ja = new JSONArray();
+		ja.put(jo);
 		EMIRClient cr2 = new EMIRClient(BaseURI
-				+ "/serviceadmin?Service_Endpoint_ID=1",
+				+ "/serviceadmin",
 				getSecurityProperties_3());
-
+		
 		assertEquals(
-				Status.UNAUTHORIZED,
-				Status.fromStatusCode(cr2.getClientResource()
-						.accept(MediaType.APPLICATION_JSON_TYPE)
-						.get(ClientResponse.class).getStatus()));
-
+				Status.UNAUTHORIZED,Status.fromStatusCode(cr2.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,ja).getStatus()));
+		
 	}
-
 }

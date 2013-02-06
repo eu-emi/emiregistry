@@ -4,6 +4,12 @@
       <attribute name="role"><value>user</value></attribute>
       <attribute name="empty"/>      
    </entry>
+   <entry key=".*[OU=JSC,O=Forschungszentrum Juelich GmbH,L=Juelich,C=DE]">
+      <attribute name="role">
+      	<value>serviceowner</value>
+      </attribute>
+      <attribute name="empty"/>      
+   </entry>
    <entry key=".*">
       <attribute name="role"><value>banned</value></attribute>
    </entry>
