@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -27,6 +26,12 @@ import eu.emi.emir.client.glue2.JSONToGlue2MappingException;
  * 
  */
 public class DateUtil {
+	public static final SimpleDateFormat ServiceDateFormat = new SimpleDateFormat(
+			"dd-mm-yyyy,HH:mm");
+	public static final SimpleDateFormat ISODateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ssZ");
+	public static final SimpleDateFormat UTCISODateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	public static JSONObject setCreationTime(JSONObject jo, Integer days) {
 		JSONObject date = new JSONObject();
 		try {
@@ -39,7 +44,7 @@ public class DateUtil {
 
 		return jo;
 	}
-	
+
 	public static JSONObject setExpiryTime(JSONObject jo, Integer days) {
 		JSONObject date = new JSONObject();
 		try {
@@ -110,7 +115,7 @@ public class DateUtil {
 	public static Date addHours(Integer hours) {
 		return addHours(new Date(), hours);
 	}
-	
+
 	/**
 	 * @param resJson
 	 */
@@ -127,14 +132,6 @@ public class DateUtil {
 		return date;
 	}
 
-	public static SimpleDateFormat ServiceDateFormat = new SimpleDateFormat(
-	"dd-mm-yyyy,HH:mm");
-	public static SimpleDateFormat ISODateFormat = new SimpleDateFormat(
-	"yyyy-MM-dd'T'HH:mm:ssZ");
-	public static SimpleDateFormat UTCISODateFormat = new SimpleDateFormat(
-	"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-	static List<String> lstNames;
-
 	public synchronized static String toUTCFormat(Date d) {
 		SimpleDateFormat formatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -150,7 +147,7 @@ public class DateUtil {
 		Date timestamp = formatter.parse(d);
 		return timestamp;
 	}
-	
+
 	public static XMLGregorianCalendar toXmlGregorian(Date d)
 			throws DatatypeConfigurationException {
 		GregorianCalendar gcal = new GregorianCalendar();
@@ -159,7 +156,7 @@ public class DateUtil {
 				.newXMLGregorianCalendar(gcal);
 		return xgcal;
 	}
-	
+
 	public static Date fromXmlGregorian(XMLGregorianCalendar xmlCal)
 			throws DatatypeConfigurationException {
 		return xmlCal.toGregorianCalendar().getTime();

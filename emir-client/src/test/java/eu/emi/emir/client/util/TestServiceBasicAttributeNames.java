@@ -16,14 +16,12 @@ import static  org.junit.Assert.*;
 public class TestServiceBasicAttributeNames {
 	@Test
 	public void testFromString(){
-		ServiceBasicAttributeNames s = ServiceBasicAttributeNames.fromString("Service_Endpoint_ID");
-		assertTrue(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName() == s.getAttributeName());
+			ServiceBasicAttributeNames s = ServiceBasicAttributeNames.fromString("Service_Endpoint_ID");
+			assertTrue(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName() == s.getAttributeName());
+			System.out.println(s.getAttributeName());
+			ServiceBasicAttributeNames s1 = ServiceBasicAttributeNames.fromString("Service_Endpoint_ID_1");
+			//it should return NULL if it does not reside in the enums
+			assertNull(s1);	
 		
-		ServiceBasicAttributeNames s1 = ServiceBasicAttributeNames.fromString("Service_Endpoint_ID_1");
-		
-		System.out.println(s1);
-		
-		//it should return NULL if it does not reside in the enums
-		assertNull(s1);
 	}
 }

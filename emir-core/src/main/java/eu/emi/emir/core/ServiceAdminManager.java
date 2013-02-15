@@ -162,7 +162,7 @@ public class ServiceAdminManager {
 	 */
 	public void removeService(String endpointID, String messageTime) throws MultipleResourceException, NonExistingResourceException, PersistentStoreFailureException, JSONException{
 		if (EMIRServer.getServerProperties().isGlobalEnabled()) {
-			// Update message will be contains only the URL and the update since attributes.
+			// Update message will contain only the URL and the updated attributes.
 			JSONObject newEntry = new JSONObject();
 			newEntry.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),endpointID);

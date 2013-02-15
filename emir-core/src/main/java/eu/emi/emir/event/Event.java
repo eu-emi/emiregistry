@@ -8,8 +8,8 @@ package eu.emi.emir.event;
  *
  */
 public class Event {
-	private String type;
-	private Object data;
+	private final String type;
+	private final Object data;
 	/**
 	 * 
 	 */
