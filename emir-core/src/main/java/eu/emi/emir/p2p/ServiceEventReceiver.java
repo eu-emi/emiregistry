@@ -28,7 +28,7 @@ public class ServiceEventReceiver implements EventListener, Runnable {
 
 	private Filters filter;
 	private String myURL;
-
+	
 	/** 
 	 * Constructor for this event receiver class
 	 * @param None

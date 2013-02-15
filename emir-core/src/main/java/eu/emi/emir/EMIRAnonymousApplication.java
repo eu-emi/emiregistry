@@ -10,6 +10,7 @@ import javax.ws.rs.core.Application;
 
 import eu.emi.emir.resource.PingResource;
 import eu.emi.emir.resource.ServiceCollectionResource;
+import eu.emi.emir.resource.StatusResource;
 
 /**
  * The JAX-RS application to expose resources on anonymous rest interface
@@ -26,6 +27,7 @@ public class EMIRAnonymousApplication extends Application{
 		Set<Class<?>> rrcs = new HashSet<Class<?>>();
         rrcs.add(ServiceCollectionResource.class);
         rrcs.add(PingResource.class);
+        rrcs.add(StatusResource.class);
         return rrcs;
 	}
 }

@@ -166,6 +166,14 @@ public class ServerProperties extends PropertiesHelper {
 		return true;
 	}
 	
+	public String getAnonymousPortNumber(){
+		String port = getValue(PROP_ANONYMOUS_PORT);
+		if (port.isEmpty() || port == null) {
+			return "UNKNOWN";
+		}
+		return port;
+	}
+	
 	public String parentAddress(){
 		return getValue(PROP_PARENT_ADDRESS);
 	}

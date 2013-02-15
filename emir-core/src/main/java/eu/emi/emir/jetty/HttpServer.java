@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Server;
 
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -62,7 +63,13 @@ public class HttpServer {
 		server.start();
 
 	}
-
+	
+	
+	public Server getServer(){
+		return server.getServer();
+	}
+	
+	
 	public void stop() throws Exception {
 		server.stop();
 

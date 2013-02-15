@@ -55,6 +55,8 @@ public class EMIRServer {
 	private Server server;
 
 	private static Properties rawProps;
+	
+	private static String mongoDBVersion;
 
 	/**
 	 * 
@@ -137,14 +139,15 @@ public class EMIRServer {
 			rawProps = props;
 
 			server.start();
-
+			
 			if (serverProps.isAnonymousAccessEnabled()
 					&& secProps.isSslEnabled()) {
 				anonymousServer = new HttpServer(props);
 				anonymousServer.start();
+				
 			}
+			
 
-			this.server = server.getJettyServer().getServer();
 
 		} catch (Exception e) {
 			logger.error("Problem starting the server", e);
@@ -229,17 +232,25 @@ public class EMIRServer {
 
 			sb.append("Connection to MongoDB v");
 			sb.append(version);
-			sb.append(" [").append(hostName).append(":").append(portNumber)
+			sb.append(" on [").append(hostName).append(":").append(portNumber)
 					.append("]");
-			sb.append("OK / AVAILABLE");
+			sb.append(" OK / AVAILABLE");
 			System.out.println(sb.toString());
 			logger.info(sb.toString());
+			mongoDBVersion = version;			
 		} catch (Exception e) {
-			logger.warn("Connection to MongoDB [" + hostName + ":" + portNumber
-					+ "] failed");
+			logger.warn("Connection to MongoDB on [" + hostName + ":" + portNumber
+					+ "] FAILED");
 		}
 	}
-
+	
+	public static String getMongoDBVersion(){
+		if (mongoDBVersion == null || mongoDBVersion.isEmpty()) {
+			mongoDBVersion = "N/A";
+		}
+		return mongoDBVersion;
+	}
+	
 	/**
 	 * Starts the service reaper thread to purge the expired service entries
 	 */

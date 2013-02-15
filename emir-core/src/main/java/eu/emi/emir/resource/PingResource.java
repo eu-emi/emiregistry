@@ -30,9 +30,7 @@ public class PingResource {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN})
 	public Response ping() throws WebApplicationException{
-		System.out.println("pinging me!!");
 		JSONObject jo = new JSONObject();
-//		Date d = DSRServer.getRunningSince();
 		Date d = EMIRServer.getRunningSince();
 		try {
 			jo.put("RunningSince", d.toString());
