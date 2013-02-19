@@ -3,6 +3,7 @@
  */
 package eu.emi.emir.resource;
 
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import javax.ws.rs.GET;
@@ -16,8 +17,14 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.mongodb.DB;
+import com.mongodb.DBAddress;
+import com.mongodb.Mongo;
+
 import eu.emi.emir.EMIRServer;
+import eu.emi.emir.ServerProperties;
 import eu.emi.emir.client.util.Log;
+import eu.unicore.util.configuration.ConfigurationException;
 
 /**
  * The resource to show server status, such as, server version, mongodb version,
@@ -56,7 +63,23 @@ public class StatusResource {
 			if (EMIRServer.getServerProperties().isAnonymousAccessEnabled()) 
 				jo.put("AnonymousAccessPortNumber", EMIRServer.getServerProperties().getAnonymousPortNumber());
 			jo.put("RunningSince", d.toString());
-			
+			try {
+				DB db = Mongo.connect(new DBAddress(EMIRServer.getServerProperties().getValue(
+						ServerProperties.PROP_MONGODB_HOSTNAME),
+						EMIRServer.getServerProperties().getIntValue(
+								ServerProperties.PROP_MONGODB_PORT),
+						EMIRServer.getServerProperties().getValue(
+								ServerProperties.PROP_MONGODB_DB_NAME)));
+
+				String colName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_COLLECTION_NAME);
+				jo.put("NumberofEntries",+db.getCollection(colName).count());
+
+			} catch (UnknownHostException e) {
+				Log.logException("Error in probing the mongodb status", e, logger);
+			} catch (ConfigurationException e) {
+				Log.logException("Error in probing the mongodb status", e, logger);
+			}
+
 		} catch (JSONException e) {
 			Log.logException("Error in probing the EMIR status", e, logger);
 			throw new WebApplicationException(e);
