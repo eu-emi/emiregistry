@@ -33,7 +33,7 @@ import com.mongodb.MongoException.DuplicateKey;
 import com.mongodb.util.JSON;
 
 /**
- * Mongodb integration class to proxy database operations 
+ * Mongodb integration class to proxy database operations
  * 
  * @author martoni
  * @author a.memon
@@ -51,14 +51,20 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		if (EMIRServer.getServerProperties() == null) {
 			new EMIRServer();
 		}
-		String hostname = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_HOSTNAME);
-		Integer port = EMIRServer.getServerProperties().getIntValue(ServerProperties.PROP_MONGODB_PORT);
-		
-		String dbName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_DB_NAME);
-		String colName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_COLLECTION_NAME);
+		String hostname = EMIRServer.getServerProperties().getValue(
+				ServerProperties.PROP_MONGODB_HOSTNAME);
+		Integer port = EMIRServer.getServerProperties().getIntValue(
+				ServerProperties.PROP_MONGODB_PORT);
 
-		String dbUserName = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_USERNAME);
-		String dbPassword = EMIRServer.getServerProperties().getValue(ServerProperties.PROP_MONGODB_PASSWORD);
+		String dbName = EMIRServer.getServerProperties().getValue(
+				ServerProperties.PROP_MONGODB_DB_NAME);
+		String colName = EMIRServer.getServerProperties().getValue(
+				ServerProperties.PROP_MONGODB_COLLECTION_NAME);
+
+		String dbUserName = EMIRServer.getServerProperties().getValue(
+				ServerProperties.PROP_MONGODB_USERNAME);
+		String dbPassword = EMIRServer.getServerProperties().getValue(
+				ServerProperties.PROP_MONGODB_PASSWORD);
 
 		try {
 			if (connection == null) {
@@ -70,7 +76,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				mo.setMaxWaitTime(5000);
 				mo.setSocketKeepAlive(true);
 				mo.setSocketTimeout(0);
-				mo.setConnectionsPerHost(255);				
+				mo.setConnectionsPerHost(255);
 				ServerAddress sa = new ServerAddress(hostname,
 						Integer.valueOf(port));
 				connection = new Mongo(sa, mo);
@@ -81,11 +87,16 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			if (dbUserName != null) {
 				if ((!dbUserName.equalsIgnoreCase(""))
 						&& (!dbPassword.equalsIgnoreCase(""))) {
-					if (!database
-							.authenticate(dbUserName, dbPassword.toCharArray())) {
-						
-						Log.logException("Cannot authenticate the user: " + dbUserName + "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again", new RuntimeException("MongoDB Authentication Failed"));
-						
+					if (!database.authenticate(dbUserName,
+							dbPassword.toCharArray())) {
+
+						Log.logException(
+								"Cannot authenticate the user: "
+										+ dbUserName
+										+ "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
+								new RuntimeException(
+										"MongoDB Authentication Failed"));
+
 						System.out
 								.printf("%s:%s.%s.%s",
 										"Error occurred while starting the EMIR server",
@@ -96,9 +107,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 						System.exit(1);
 					}
 
-				}	
+				}
 			}
-			
 
 			serviceCollection = database.getCollection(colName);
 
@@ -114,7 +124,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		} catch (MongoException e) {
 			Log.logException("", e, logger);
 			logger.warn(e.getCause());
-		} catch (Exception e) {			
+		} catch (Exception e) {
 			logger.error("Error in connecting the MongoDB database", e);
 		}
 
@@ -133,7 +143,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public MongoDBServiceDatabase(String hostname, Integer port, String dbName,
 			String colName) {
 		try {
-			
+
 			if (connection == null) {
 				connection = new Mongo(hostname, port);
 			}
@@ -147,13 +157,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
 					"1");
-			
-//			obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
-//					"1");
-//			
-//			obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
-//					
-//			obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
+
+			// obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
+			// "1");
+			//
+			// obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
+			//
+			// obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
 
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
@@ -181,10 +191,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			// .getAttributeName(), new Date());
 
 			serviceCollection.insert(db, WriteConcern.SAFE);
-			
+
 			database.requestDone();
-			
-			logger.info("inserted Service Endpoint record with ID: " + item.getEndpointID());
+
+			logger.info("inserted Service Endpoint record with ID: "
+					+ item.getEndpointID());
 			// EventDispatcher.notifyRecievers(new Event(EventTypes.SERVICE_ADD,
 			// item
 			// .toJSON()));
@@ -223,7 +234,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		return so;
 	}
-	
+
 	@Override
 	public ServiceObject getServiceByEndpointID(String identifier)
 			throws MultipleResourceException, NonExistingResourceException,
@@ -249,8 +260,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	}
 
 	@Override
-	public void deleteByEndpointID(String endpointID) throws MultipleResourceException,
-			NonExistingResourceException, PersistentStoreFailureException {
+	public void deleteByEndpointID(String endpointID)
+			throws MultipleResourceException, NonExistingResourceException,
+			PersistentStoreFailureException {
 		database.requestStart();
 		database.requestEnsureConnection();
 		BasicDBObject query = new BasicDBObject();
@@ -261,12 +273,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.requestDone();
 		if (d == null) {
 			if (logger.isDebugEnabled()) {
-				String msg = "No service description with the Endpoint ID:" + endpointID
-						+ " exists";
+				String msg = "No service description with the Endpoint ID:"
+						+ endpointID + " exists";
 				logger.debug(msg);
 			}
 			throw new NonExistingResourceException(
-					"No service description with the Endpoint ID:" + endpointID + " exists");
+					"No service description with the Endpoint ID:" + endpointID
+							+ " exists");
 		}
 		logger.info("deleted: " + endpointID);
 		// sending delete event to the receivers
@@ -284,7 +297,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		try {
-			String  id = sObj.getServiceID();
+			String id = sObj.getServiceID();
 			logger.debug("updating service description: " + sObj);
 
 			database.requestStart();
@@ -296,8 +309,9 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			BasicDBObject query = new BasicDBObject();
 			query.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 					.getAttributeName(), sObj.getEndpointID());
-			
-			// Check the entry is exist or not. Validation need if it is not exist before.
+
+			// Check the entry is exist or not. Validation need if it is not
+			// exist before.
 			DBObject db = serviceCollection.findOne(new BasicDBObject(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), sObj.getEndpointID()));
@@ -305,21 +319,31 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				try {
 					new RegistrationValidator().validateInfo(sObj.toJSON());
 				} catch (ConfigurationException e) {
-					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					Log.logException(
+							"Error during the update message validation. (ID:"
+									+ id + ")", e, logger);
 					return;
 				} catch (InvalidServiceDescriptionException e) {
-					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					Log.logException(
+							"Error during the update message validation. (ID:"
+									+ id + ")", e, logger);
 					return;
 				} catch (JSONException e) {
-					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					Log.logException(
+							"Error during the update message validation. (ID:"
+									+ id + ")", e, logger);
 					return;
 				} catch (ParseException e) {
-					Log.logException("Error during the update message validation. (ID:"+id+")", e, logger);
+					Log.logException(
+							"Error during the update message validation. (ID:"
+									+ id + ")", e, logger);
 					return;
 				}
 			}
 
-			serviceCollection.update(query, dbObj, true, false); //upsert=true and multi=false
+			serviceCollection.update(query, dbObj, true, false); // upsert=true
+																	// and
+																	// multi=false
 			database.requestDone();
 			logger.info("updated Service Endpoint Record with ID: " + id);
 			// sending update event to the receivers
@@ -327,7 +351,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			// Event(EventTypes.SERVICE_UPDATE,
 			// sObj.toJSON()));
 		} catch (MongoException e) {
-			Log.logException("Error updating the Service Record in MongoDB: "+sObj, e, logger);
+			Log.logException("Error updating the Service Record in MongoDB: "
+					+ sObj, e, logger);
 		}
 
 	}
@@ -519,7 +544,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	}
 
 	@Override
-	public JSONArray paginatedQuery(String query, Integer pageSize, String id, String orderBy) {
+	public JSONArray paginatedQuery(String query, Integer pageSize, String id,
+			String orderBy) {
 		DBObject queryObj = (DBObject) JSON.parse(query);
 		DBCursor cur = null;
 		if (orderBy == null || orderBy.isEmpty()) {
@@ -605,7 +631,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		database.requestStart();
 		database.requestEnsureConnection();
 		serviceCollection.remove(db);
-		
+
 		database.requestDone();
 
 	}
@@ -630,5 +656,19 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public String getDBVersion() {
 		CommandResult result = database.command("serverStatus");
 		return result.getString("version");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.emir.db.ServiceDatabase#size()
+	 */
+	@Override
+	public Long size() {
+		if (serviceCollection == null) {
+			return 0L;
+		}
+		Long size = serviceCollection.count();
+		return size;
 	}
 }

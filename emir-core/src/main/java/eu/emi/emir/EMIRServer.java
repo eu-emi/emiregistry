@@ -147,7 +147,7 @@ public class EMIRServer {
 				
 			}
 			
-
+			this.server = server.getJettyServer().getServer();
 
 		} catch (Exception e) {
 			logger.error("Problem starting the server", e);

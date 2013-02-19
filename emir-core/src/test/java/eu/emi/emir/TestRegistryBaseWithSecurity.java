@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -60,10 +61,10 @@ public class TestRegistryBaseWithSecurity {
 		server = new EMIRServer();
 		server.run(props);
 		
-		server.getJettyServer();
+		Server s = server.getJettyServer();
 		
 		BaseURI = "https://localhost:"
-				+ server.getJettyServer().getConnectors()[0].getLocalPort();
+				+s.getConnectors()[0].getLocalPort();
 	}
 
 //	private static void setSecuritySettings_(Properties p) {
@@ -289,7 +290,7 @@ public class TestRegistryBaseWithSecurity {
 			e.printStackTrace();
 		}
 		
-		server.stop();
+//		server.stop();
 		
 	}
 

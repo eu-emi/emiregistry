@@ -3,6 +3,7 @@
  */
 package eu.emi.emir.core;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Map;
 
@@ -336,6 +337,10 @@ public class ServiceColManager {
 		Glue2Mapper gm = new Glue2Mapper();
 		QueryResult qr = gm.toQueryResult(pagedQueryForJSON(queryDoc, m));
 		return qr;
+	}
+	
+	public Long getTotalNumberOfEntries(){
+		return serviceDB.size();
 	}
 
 }

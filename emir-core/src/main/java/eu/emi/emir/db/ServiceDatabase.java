@@ -3,6 +3,7 @@
  */
 package eu.emi.emir.db;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -221,4 +222,9 @@ public interface ServiceDatabase {
 	 * @return String, version of the database
 	 */
 	public String getDBVersion();
+
+	/**
+	 * 
+	 */
+	public Long size();
 }
