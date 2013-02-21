@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
@@ -670,5 +671,60 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 		Long size = serviceCollection.count();
 		return size;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.emir.db.ServiceDatabase#facetedQuery()
+	 */
+	public JSONArray facetedQuery(Set<String> j) throws JSONException {
+		JSONArray ja = new JSONArray();
+
+		for (String str : j) {
+			
+			//create match
+			BasicDBObject match = new BasicDBObject();
+			match.put("$match", new BasicDBObject());
+			
+			// build the $projection operation
+			DBObject fields = new BasicDBObject();
+			
+//			fields.put("count", 1);
+			DBObject project = new BasicDBObject();
+			
+			// Now the $group operation
+			DBObject groupFields = new BasicDBObject();			
+
+			
+			// build the $projection operation
+			fields.put(str, 1);
+			project.put("$project", fields );
+			
+			// Now the $group operation
+			groupFields.put( "_id", "$"+str);
+			
+			//performing sum and storing it in the count attribute
+			groupFields.put("count", new BasicDBObject("$sum", 1));
+			
+			DBObject group = new BasicDBObject("$group", groupFields);
+			AggregationOutput output = serviceCollection.aggregate( match, project, group );
+			
+			Iterable<DBObject> it = output.results();
+			
+			JSONArray terms = new JSONArray();
+			
+			for (DBObject dbObject : it) {
+				JSONObject term = new JSONObject(JSON.serialize(dbObject));				
+				terms.put(term);
+			}
+			
+			JSONObject attrName = new JSONObject();
+			
+			attrName.put(str, terms);
+			ja.put(attrName);
+		}
+		
+		return ja;
 	}
 }

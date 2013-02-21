@@ -3,8 +3,8 @@
  */
 package eu.emi.emir.db;
 
-import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -91,26 +91,13 @@ public interface ServiceDatabase {
 	public void deleteByEndpointID(String url) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException;
 
+	//TODO: doc
 	public void deleteAll();
 
 	/**
 	 * Query and delete the matching documents
 	 * */
 	public void findAndDelete(String query);
-
-	// /**
-	// * Check whether any item specified by the identifier exists in the
-	// persistent store
-	// * @param url service url
-	// * @return true if there is exactly one item in the persistent store
-	// specified by the identifier or false if there is no such element
-	// * @throws MultipleResourceException throws exception if the identifier
-	// specifies more than one item
-	// * @throws PersistentStoreFailureException throws exception if persistent
-	// store level error occurs
-	// */
-	// public boolean contains(String url) throws MultipleResourceException,
-	// PersistentStoreFailureException;
 
 	/**
 	 * Update an existing item in the persistent store
@@ -164,9 +151,10 @@ public interface ServiceDatabase {
 	 * */
 	public List<ServiceObject> query(String query, Integer limit, Integer skip)
 			throws QueryException, PersistentStoreFailureException;
-
+	//TODO: doc
 	public List<ServiceObject> findAll() throws JSONException;
 
+	//TODO: doc
 	/**
 	 * @param query
 	 * @return
@@ -178,6 +166,7 @@ public interface ServiceDatabase {
 	public JSONArray queryJSON(String query) throws QueryException,
 			PersistentStoreFailureException, MongoException, JSONException;
 
+	//TODO: doc
 	/**
 	 * @param query
 	 * @param limit
@@ -189,6 +178,7 @@ public interface ServiceDatabase {
 	public JSONArray queryJSON(String query, Integer limit, Integer skip)
 			throws QueryException, PersistentStoreFailureException;
 
+	//TODO: doc
 	/**
 	 * @param query
 	 * @param skip
@@ -199,6 +189,7 @@ public interface ServiceDatabase {
 	public JSONArray queryJSON(String query, Integer skip) throws QueryException,
 			PersistentStoreFailureException;
 
+	//TODO: doc
 	/**
 	 * @param s
 	 * @param limit
@@ -213,8 +204,10 @@ public interface ServiceDatabase {
 	 */
 	public JSONArray queryDistinctJSON(String attributeName);
 	
+	//TODO: doc
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id);
 	
+	//TODO: doc
 	public JSONArray paginatedQuery(String query, Integer pageSize, String id, String orderBy);
 
 	/**
@@ -224,7 +217,17 @@ public interface ServiceDatabase {
 	public String getDBVersion();
 
 	/**
+	 * Calculate size of the underlying endpoint collection
+	 * 
+	 * @return number of records in the mongodb collection
 	 * 
 	 */
 	public Long size();
+	
+	//TODO: doc
+	/**
+	 * Faceted search 
+	 * 
+	 */
+	public JSONArray facetedQuery(Set<String> j) throws JSONException;
 }
