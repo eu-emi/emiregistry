@@ -8,6 +8,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
@@ -28,6 +31,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import eu.emi.emir.client.util.Log;
 import eu.emi.security.authn.x509.X509CertChainValidator;
@@ -261,5 +265,18 @@ public class EMIRClient {
 				.queryParams(attrMap).accept(MediaType.APPLICATION_XML_TYPE)
 				.get(QueryResult.class);
 		return ja;
+	}
+
+	/**
+	 * @param facetNames
+	 */
+	public JSONArray facetSearch(Set<String> facetNames) {
+		
+		MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+		List<String> lstNames = new ArrayList<String>();
+		lstNames.addAll(facetNames);
+		map.put("names", lstNames);
+		JSONArray result = getClientResource().path("services/facet").queryParams(map).accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+		return result;
 	}
 }

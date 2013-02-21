@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -17,6 +19,7 @@ import javax.xml.bind.JAXB;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -442,6 +445,17 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 			e.printStackTrace();
 			fail();
 		}
+	}
+	
+	@Test
+	public void testFacetedQuery(){
+		EMIRClient cr = new EMIRClient(BaseURI);
+		Set<String> facetNames = new HashSet<String>();
+		facetNames.add(ServiceBasicAttributeNames.SERVICE_TYPE.toString());
+		facetNames.add(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.toString());
+		
+		//should return two facets
+		assertEquals(2, cr.facetSearch(facetNames).length());
 	}
 
 }
