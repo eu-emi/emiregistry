@@ -12,6 +12,7 @@ import org.codehaus.jettison.json.JSONArray;
  */
 public enum ServiceBasicAttributeNames {
 	        SERVICE_ID("Service_ID",null,"GLUE 2.0 Service ID",true),
+	        SERVICE_DOMAIN("Service_Domain", null, "Service Domain"),
 	        SERVICE_NAME("Service_Name", null, "Service Name",true), 
 	        SERVICE_TYPE("Service_Type", null, "Service Type",true), 
 	        SERVICE_ENDPOINT_URL("Service_Endpoint_URL", null, "Service Unique URL (Mandatory Attribute)",true), 

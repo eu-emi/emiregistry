@@ -60,7 +60,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 		ClientResponse res = cr.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(ClientResponse.class, TestValueConstants.getJSONArrayWithMandatoryAttributes());
+				.post(ClientResponse.class, TestValueConstants.getSingleJSONArrayWithMandatoryAttributes());
 		JSONArray resArr = res.getEntity(JSONArray.class);
 		assertNotNull(resArr);
 
@@ -111,7 +111,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(TestValueConstants.getJSONArrayWithMandatoryAttributes()
+				.post(TestValueConstants.getSingleJSONArrayWithMandatoryAttributes()
 						);
 		
 
@@ -174,7 +174,7 @@ public class TestServiceAdminResource extends TestRegistryBase {
 		
 		cr1.getClientResource()
 				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(TestValueConstants.getJSONArrayWithMandatoryAttributes());
+				.post(TestValueConstants.getSingleJSONArrayWithMandatoryAttributes());
 		EMIRClient cr = new EMIRClient(BaseURI
 				+ "/serviceadmin");
 		cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString(), "1").delete();

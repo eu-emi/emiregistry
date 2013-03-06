@@ -448,14 +448,16 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 	
 	@Test
-	public void testFacetedQuery(){
+	public void testFacetedQuery() throws JSONException{
 		EMIRClient cr = new EMIRClient(BaseURI);
 		Set<String> facetNames = new HashSet<String>();
 		facetNames.add(ServiceBasicAttributeNames.SERVICE_TYPE.toString());
 		facetNames.add(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.toString());
 		
+		JSONArray ja = cr.facetSearch(facetNames);
+		System.out.println(ja.toString(2));
 		//should return two facets
-		assertEquals(2, cr.facetSearch(facetNames).length());
+		assertEquals(2, ja.length());
 	}
 
 }

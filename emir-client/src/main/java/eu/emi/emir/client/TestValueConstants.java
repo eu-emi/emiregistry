@@ -3,6 +3,8 @@
  */
 package eu.emi.emir.client;
 
+import java.util.UUID;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,9 +35,25 @@ public class TestValueConstants {
 		return jo;
 	}
 	
-	public static JSONArray getJSONArrayWithMandatoryAttributes() throws JSONException{
+	public static JSONArray getSingleJSONArrayWithMandatoryAttributes() throws JSONException{
 		JSONArray ja = new JSONArray();
 		ja.put(getJSONWithMandatoryAttributes());
+		return ja;
+	}
+	
+	public static JSONArray getDummyJSONArrayWithMandatoryAttributes(int index) throws JSONException{
+		if (index <= 0) {
+			throw new NullPointerException();
+		}
+		JSONArray ja = new JSONArray();
+		for (int i = 0; i < index; i++) {
+			JSONObject j = getJSONWithMandatoryAttributes();
+			String id = UUID.randomUUID().toString();
+			j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(), id);
+			j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_URL.getAttributeName(), "http://url/"+id);
+			ja.put(j);	
+		}
+		
 		return ja;
 	}
 }
