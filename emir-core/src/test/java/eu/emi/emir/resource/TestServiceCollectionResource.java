@@ -452,7 +452,6 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	
 	@Test
 	public void testFacetedQuery() throws JSONException, InterruptedException{
-		Thread.sleep(200000000);
 		EMIRClient cr = new EMIRClient(BaseURI);		
 		Map<String, String> j = new HashMap<String, String>();
 		j.put(ServiceBasicAttributeNames.SERVICE_NAME.toString(), FacetKeyType.SIMPLE);
