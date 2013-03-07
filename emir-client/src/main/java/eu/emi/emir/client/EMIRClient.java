@@ -10,6 +10,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
@@ -33,6 +34,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import eu.emi.emir.client.query.URIQuery;
+import eu.emi.emir.client.util.ExtentedMultiValuedMapImpl;
+import eu.emi.emir.client.util.ExtentendedMultiValuedMap;
 import eu.emi.emir.client.util.Log;
 import eu.emi.security.authn.x509.X509CertChainValidator;
 import eu.emi.security.authn.x509.X509Credential;
@@ -202,6 +206,28 @@ public class EMIRClient {
 		}
 		return ja;
 	}
+	
+	/***
+	 * Querying the EMIR server for Service Endpoint Records using http query parameters
+	 *
+	 * @param query
+	 * @return a {@link JSONArray} containing matching records  
+	 */
+	public JSONArray queryByQueryParams(URIQuery query) {
+		JSONArray ja = null;
+		if (query != null) {
+			MultivaluedMap<String, String> attrMap = query.getMultiValuedMap();
+			ja = getClientResource().path("services").queryParams(attrMap)
+					.accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONArray.class);
+		} else {
+			ja = getClientResource().path("services")
+					.accept(MediaType.APPLICATION_JSON_TYPE)
+					.get(JSONArray.class);
+		}
+		return ja;
+	}
+	
 	/***
 	 * Querying the EMIR server for JSON records by JSON document containing the rich queries
 	 *
@@ -270,12 +296,10 @@ public class EMIRClient {
 	/**
 	 * @param facetNames
 	 */
-	public JSONArray facetSearch(Set<String> facetNames) {
+	public JSONArray facetSearch(Map<String, String> facetMap) {
 		
-		MultivaluedMap<String, String> map = new MultivaluedMapImpl();
-		List<String> lstNames = new ArrayList<String>();
-		lstNames.addAll(facetNames);
-		map.put("names", lstNames);
+		ExtentendedMultiValuedMap<String, String> map = new ExtentedMultiValuedMapImpl();
+		map.putAllMap(facetMap);		
 		JSONArray result = getClientResource().path("services/facet").queryParams(map).accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
 		return result;
 	}

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import eu.emi.emir.resource.FacetQueryResource;
 import eu.emi.emir.resource.PingResource;
 import eu.emi.emir.resource.ServiceCollectionResource;
 import eu.emi.emir.resource.StatusResource;
@@ -28,6 +29,7 @@ public class EMIRAnonymousApplication extends Application{
         rrcs.add(ServiceCollectionResource.class);
         rrcs.add(PingResource.class);
         rrcs.add(StatusResource.class);
+        rrcs.add(FacetQueryResource.class);
         return rrcs;
 	}
 }

@@ -4,6 +4,7 @@
 package eu.emi.emir.db;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -224,10 +225,15 @@ public interface ServiceDatabase {
 	 */
 	public Long size();
 	
-	//TODO: doc
+	
 	/**
 	 * Faceted search 
 	 * 
 	 */
 	public JSONArray facetedQuery(Set<String> j) throws JSONException;
+	
+	/**
+	 * @param keypairs of name and type
+	 * */
+	public JSONArray facetedQuery(Map<String, String> map) throws JSONException;
 }

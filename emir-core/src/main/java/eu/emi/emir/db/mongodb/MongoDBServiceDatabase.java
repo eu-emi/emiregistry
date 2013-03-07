@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,6 +15,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.EMIRServer;
 import eu.emi.emir.ServerProperties;
+import eu.emi.emir.client.FacetKeyType;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ExistingResourceException;
@@ -678,53 +680,133 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 * 
 	 * @see eu.emi.emir.db.ServiceDatabase#facetedQuery()
 	 */
+	@Deprecated
 	public JSONArray facetedQuery(Set<String> j) throws JSONException {
 		JSONArray ja = new JSONArray();
 
 		for (String str : j) {
-			
-			//create match
+
+			// create match
 			BasicDBObject match = new BasicDBObject();
 			match.put("$match", new BasicDBObject());
-			
+
 			// build the $projection operation
 			DBObject fields = new BasicDBObject();
-			
-//			fields.put("count", 1);
-			DBObject project = new BasicDBObject();
-			
-			// Now the $group operation
-			DBObject groupFields = new BasicDBObject();			
 
-			
+			// fields.put("count", 1);
+			DBObject project = new BasicDBObject();
+
+			// Now the $group operation
+			DBObject groupFields = new BasicDBObject();
+
 			// build the $projection operation
 			fields.put(str, 1);
-			project.put("$project", fields );
-			
+			project.put("$project", fields);
+
 			// Now the $group operation
-			groupFields.put( "_id", "$"+str);
-			
-			//performing sum and storing it in the count attribute
+			groupFields.put("_id", "$" + str);
+
+			// performing sum and storing it in the count attribute
 			groupFields.put("count", new BasicDBObject("$sum", 1));
-			
+
 			DBObject group = new BasicDBObject("$group", groupFields);
-			AggregationOutput output = serviceCollection.aggregate( match, project, group );
-			
+			AggregationOutput output = serviceCollection.aggregate(match,
+					project, group);
+
 			Iterable<DBObject> it = output.results();
-			
+
 			JSONArray terms = new JSONArray();
-			
+
 			for (DBObject dbObject : it) {
-				JSONObject term = new JSONObject(JSON.serialize(dbObject));				
+				JSONObject term = new JSONObject(JSON.serialize(dbObject));
+				System.out.println(term);
 				terms.put(term);
 			}
-			
+
+			System.out.println("\n\n");
+
 			JSONObject attrName = new JSONObject();
-			
+
 			attrName.put(str, terms);
 			ja.put(attrName);
 		}
-		
+
 		return ja;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.emi.emir.db.ServiceDatabase#facetedQuery(java.util.Map)
+	 */
+	@Override
+	public JSONArray facetedQuery(Map<String, String> map) throws JSONException {
+		JSONArray ja = new JSONArray();
+		Set<String> j = map.keySet();
+		for (String key : j) {
+
+			// create match
+			BasicDBObject match = new BasicDBObject();
+			match.put("$match", new BasicDBObject());
+
+			// build the $projection operation
+			DBObject fields = new BasicDBObject();
+
+			// fields.put("count", 1);
+			DBObject project = new BasicDBObject();
+
+			// Now the $group operation
+			DBObject groupFields = new BasicDBObject();
+
+			DBObject unwindFields = new BasicDBObject();
+
+			
+
+			// build the $projection operation
+			fields.put(key, 1);
+			project.put("$project", fields);
+
+			// Now the $group operation
+			groupFields.put("_id", "$" + key);
+
+			// performing sum and storing it in the count attribute
+			groupFields.put("count", new BasicDBObject("$sum", 1));
+
+			DBObject group = new BasicDBObject("$group", groupFields);
+			
+			AggregationOutput output = null;
+			
+			if (map.get(key).equalsIgnoreCase(FacetKeyType.ARRAY)) {
+				unwindFields
+				.put("$unwind",
+						"$"
+								+ key);
+				
+				output = serviceCollection.aggregate(match,
+						unwindFields, project, group);	
+			} else if (map.get(key).equalsIgnoreCase(FacetKeyType.SIMPLE)) {
+				output = serviceCollection.aggregate(match, project, group);
+			}
+			
+
+			Iterable<DBObject> it = output.results();
+
+			JSONArray terms = new JSONArray();
+
+			for (DBObject dbObject : it) {
+				JSONObject term = new JSONObject(JSON.serialize(dbObject));
+				terms.put(term);
+			}
+
+			JSONObject attrName = new JSONObject();
+
+			attrName.put(key, terms);
+			ja.put(attrName);
+		}
+
+		return ja;
+	}
+
+	
+
 }

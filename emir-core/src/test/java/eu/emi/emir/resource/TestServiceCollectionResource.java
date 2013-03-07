@@ -8,7 +8,9 @@ import static org.junit.Assert.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,6 +30,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import eu.emi.emir.TestRegistryBase;
 import eu.emi.emir.client.EMIRClient;
+import eu.emi.emir.client.FacetKeyType;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.TestValueConstants;
 import eu.emi.emir.client.util.DateUtil;
@@ -448,16 +451,18 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 	
 	@Test
-	public void testFacetedQuery() throws JSONException{
-		EMIRClient cr = new EMIRClient(BaseURI);
-		Set<String> facetNames = new HashSet<String>();
-		facetNames.add(ServiceBasicAttributeNames.SERVICE_TYPE.toString());
-		facetNames.add(ServiceBasicAttributeNames.SERVICE_ENDPOINT_HEALTH_STATE.toString());
+	public void testFacetedQuery() throws JSONException, InterruptedException{
+		Thread.sleep(200000000);
+		EMIRClient cr = new EMIRClient(BaseURI);		
+		Map<String, String> j = new HashMap<String, String>();
+		j.put(ServiceBasicAttributeNames.SERVICE_NAME.toString(), FacetKeyType.SIMPLE);
+		j.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), FacetKeyType.SIMPLE);
+		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(), FacetKeyType.ARRAY);
 		
-		JSONArray ja = cr.facetSearch(facetNames);
+		JSONArray ja = cr.facetSearch(j);
 		System.out.println(ja.toString(2));
 		//should return two facets
-		assertEquals(2, ja.length());
+		assertEquals(3, ja.length());
 	}
 
 }

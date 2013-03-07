@@ -21,6 +21,8 @@ public class TestValueConstants {
 		JSONObject jo = new JSONObject();
 		JSONArray capJa = new JSONArray();
 		capJa.put("1");
+		capJa.put("2");
+		capJa.put("3");
 		DateUtil.setExpiryTime(jo, 365);
 		jo.put(ServiceBasicAttributeNames.SERVICE_ID.getAttributeName(), "1");
 		jo.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), "1");

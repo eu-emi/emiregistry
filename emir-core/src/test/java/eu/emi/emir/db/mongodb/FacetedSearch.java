@@ -5,7 +5,9 @@ package eu.emi.emir.db.mongodb;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.emi.emir.EMIRServer;
+import eu.emi.emir.client.FacetKeyType;
 import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.TestValueConstants;
 import eu.emi.emir.db.ExistingResourceException;
@@ -88,9 +91,10 @@ public class FacetedSearch extends MongoDBTestBase {
 
 	@Test
 	public void test() throws Exception {
-		Set<String> j = new HashSet<String>();
-		j.add(ServiceBasicAttributeNames.SERVICE_NAME.toString());
-		j.add(ServiceBasicAttributeNames.SERVICE_TYPE.toString());
+		Map<String, String> j = new HashMap<String, String>();
+		j.put(ServiceBasicAttributeNames.SERVICE_NAME.toString(), FacetKeyType.SIMPLE);
+		j.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), FacetKeyType.SIMPLE);
+		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(), FacetKeyType.ARRAY);
 
 		JSONArray ja = db.facetedQuery(j);
 		assertEquals(
@@ -100,6 +104,8 @@ public class FacetedSearch extends MongoDBTestBase {
 								ServiceBasicAttributeNames.SERVICE_NAME
 										.toString()).getJSONObject(0)
 						.getString("_id")));
+		
+		System.out.println(ja.toString(2));
 	}
 
 	@After
