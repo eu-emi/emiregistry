@@ -13,7 +13,7 @@ Packager: EMI emir@niif.hu
 @preamble@
 
 %description
-A Service Registry conceived during the EMI project. 
+A Federated Service Endpoint Registry for Distributed Computing and Collaborative Data Infrastructures. 
 Its main goals to discover all the Service endpoints that 
 exist and hence obtain future information about them. The key 
 part to the service registry is the management procedures and 
