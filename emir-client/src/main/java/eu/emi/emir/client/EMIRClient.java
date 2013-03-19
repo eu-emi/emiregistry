@@ -143,6 +143,9 @@ public class EMIRClient {
 		logger.debug("creating default client");
 		this.url = url;
 		cr = Client.create();
+		
+		//set connection timeout to seconds
+		cr.setConnectTimeout(3000);
 
 	}
 	
@@ -302,5 +305,23 @@ public class EMIRClient {
 		map.putAllMap(facetMap);		
 		JSONArray result = getClientResource().path("services/facet").queryParams(map).accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
 		return result;
+	}
+	
+	public Boolean isReachable(){
+		boolean status;
+		JSONObject j = null;
+		
+		try {
+			j = getClientResource().path("ping").get(JSONObject.class);	
+		} catch (Exception e) {
+			return false;
+		}
+		
+		if (j != null) {
+			status = true;
+		} else {
+			status = false;
+		}
+		return status;
 	}
 }
