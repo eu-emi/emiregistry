@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -32,6 +33,13 @@ public class DateUtil {
 			"yyyy-MM-dd'T'HH:mm:ssZ");
 	public static final SimpleDateFormat UTCISODateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+	public enum DurationType {
+		DAYS, MINUTES, SECONDS, HOURS, YEARS;
+	}
+	
+	private static final int[] MONTH  = new int[]{ 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };  
+
 	public static JSONObject setCreationTime(JSONObject jo, Integer days) {
 		JSONObject date = new JSONObject();
 		try {
@@ -161,5 +169,109 @@ public class DateUtil {
 			throws DatatypeConfigurationException {
 		return xmlCal.toGregorianCalendar().getTime();
 	}
+
+	/**
+	 * Checks whether given json document has nested json date object
+	 * 
+	 * @param object
+	 * @return boolean value asserting the presence of nested date object
+	 */
+	public static Boolean hasDateSubObject(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject j = (JSONObject) object;
+			if (j.has("$date")) {
+				return true;
+			} else {
+				return false;
+			}
+
+		}
+
+		return false;
+	}
+
+	/***
+	 * Calculate duration between different times
+	 * 
+	 * @param fromDate
+	 * @param toDate The date in future or greater than the fromDate
+	 * @return
+	 */
+	public static Duration duration(Calendar fromDate, Calendar toDate) {
+		
+		Integer monthResult = 0;
+		Integer dayResult = 0;
+		Integer yearResult = 0;
+		Integer hourResult = 0;
+		Integer hourIncrement = 0;
+		
+		Integer minutesResult = 0;
+		Integer minutesIncrement = 0;
+		
+		Integer increment = 0;
+		
+		if (toDate.get(Calendar.MINUTE) < fromDate.get(Calendar.MINUTE)) {
+			minutesIncrement = 1;
+			minutesResult = (toDate.get(Calendar.MINUTE) + 60) - fromDate.get(Calendar.MINUTE);
+		} else {
+			minutesIncrement = 0;
+			minutesResult = toDate.get(Calendar.MINUTE) - fromDate.get(Calendar.MINUTE);
+		}
+		
+		if (toDate.get(Calendar.HOUR_OF_DAY) < (fromDate.get(Calendar.HOUR_OF_DAY) + minutesIncrement)) {
+			hourResult = (toDate.get(Calendar.HOUR_OF_DAY) + 24) - fromDate.get(Calendar.HOUR_OF_DAY);
+			hourIncrement = 1;
+		} else {
+			hourResult = toDate.get(Calendar.HOUR_OF_DAY)  - fromDate.get(Calendar.HOUR_OF_DAY);
+			hourIncrement = 0;
+		}
+		
+		
+		//calculate day
+		if( toDate.get(Calendar.DATE) < fromDate.get(Calendar.DATE) ){
+			increment = MONTH[fromDate.get(Calendar.MONTH)-1];
+		}
+		
+		if (increment == -1) {
+			Boolean leapYear = fromDate.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
+			if (leapYear) {
+				increment = 29;
+			} else {
+				increment = 28;
+			}
+		}
+		
+		if (increment != 0) {
+			dayResult = (toDate.get(Calendar.DATE) + increment) -  fromDate.get(Calendar.DATE);
+			increment = 1;
+		} else {
+			dayResult = toDate.get(Calendar.DATE) -  fromDate.get(Calendar.DATE);
+			increment = 0;
+		}
+		
+		
+		//calculate month
+		if( toDate.get(Calendar.MONTH) < (fromDate.get(Calendar.MONTH) + increment) ){
+			monthResult = (toDate.get(Calendar.MONTH)+12) - fromDate.get(Calendar.MONTH);
+			increment = 1;
+		} else {
+			monthResult = toDate.get(Calendar.MONTH) - fromDate.get(Calendar.MONTH);
+			increment = 0;
+		}
+		
+		//calculate year
+		yearResult = toDate.get(Calendar.YEAR) - (fromDate.get(Calendar.YEAR)+1);
+		
+		Duration d = new Duration();
+		
+		d.setYears(yearResult);
+		d.setDays(dayResult);
+		d.setMonths(monthResult);
+		d.setHours(hourResult);
+		d.setMinutes(minutesResult);
+		
+		return d;
+	}
+	
 
 }

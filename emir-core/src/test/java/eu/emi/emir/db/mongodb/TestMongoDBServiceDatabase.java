@@ -39,7 +39,8 @@ public class TestMongoDBServiceDatabase extends MongoDBTestBase{
 		EMIRServer s = new EMIRServer(new Properties());
 		db = new MongoDBServiceDatabase("localhost", 27017, "emiregistry",
 				"services-test");
-		db.deleteAll();
+		db.dropDB("emiregistry");
+		
 	}
 
 	@Test

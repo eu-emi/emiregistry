@@ -46,56 +46,58 @@ import com.mongodb.util.JSON;
 public class MongoDBServiceDatabase implements ServiceDatabase {
 	private static Logger logger = Log.getLogger(Log.EMIR_DB,
 			MongoDBServiceDatabase.class);
-	private static Mongo connection;
+	private static MongoClient connection;
 	private DB database;
 	private DBCollection serviceCollection;
-
+	private String hostName;
+	private Integer port;
+	private String colName;
+	private String dbName;
+	private String userName;
+	private String password;
+	
+	
+	
 	public MongoDBServiceDatabase() {
 		if (EMIRServer.getServerProperties() == null) {
 			new EMIRServer();
 		}
-		String hostname = EMIRServer.getServerProperties().getValue(
+		hostName = EMIRServer.getServerProperties().getValue(
 				ServerProperties.PROP_MONGODB_HOSTNAME);
-		Integer port = EMIRServer.getServerProperties().getIntValue(
+		port = EMIRServer.getServerProperties().getIntValue(
 				ServerProperties.PROP_MONGODB_PORT);
 
-		String dbName = EMIRServer.getServerProperties().getValue(
+		dbName = EMIRServer.getServerProperties().getValue(
 				ServerProperties.PROP_MONGODB_DB_NAME);
-		String colName = EMIRServer.getServerProperties().getValue(
+		colName = EMIRServer.getServerProperties().getValue(
 				ServerProperties.PROP_MONGODB_COLLECTION_NAME);
 
-		String dbUserName = EMIRServer.getServerProperties().getValue(
+		userName = EMIRServer.getServerProperties().getValue(
 				ServerProperties.PROP_MONGODB_USERNAME);
-		String dbPassword = EMIRServer.getServerProperties().getValue(
+		password = EMIRServer.getServerProperties().getValue(
 				ServerProperties.PROP_MONGODB_PASSWORD);
 
 		try {
 			if (connection == null) {
 
-				MongoOptions mo = new MongoOptions();
-				mo.setAutoConnectRetry(true);
-				mo.setConnectTimeout(5000);
-				mo.setMaxAutoConnectRetryTime(10000);
-				mo.setMaxWaitTime(5000);
-				mo.setSocketKeepAlive(true);
-				mo.setSocketTimeout(0);
-				mo.setConnectionsPerHost(255);
-				ServerAddress sa = new ServerAddress(hostname,
+				MongoClientOptions mo = MongoClientOptions.builder().autoConnectRetry(true).connectTimeout(5000).maxAutoConnectRetryTime(10000).maxWaitTime(5000).socketKeepAlive(true).socketTimeout(0).connectionsPerHost(255).build();
+				
+				ServerAddress sa = new ServerAddress(hostName,
 						Integer.valueOf(port));
-				connection = new Mongo(sa, mo);
+				connection = new MongoClient(sa, mo);
 			}
 
 			database = connection.getDB(dbName);
 
-			if (dbUserName != null) {
-				if ((!dbUserName.equalsIgnoreCase(""))
-						&& (!dbPassword.equalsIgnoreCase(""))) {
-					if (!database.authenticate(dbUserName,
-							dbPassword.toCharArray())) {
+			if (userName != null) {
+				if ((!userName.equalsIgnoreCase(""))
+						&& (!password.equalsIgnoreCase(""))) {
+					if (!database.authenticate(userName,
+							password.toCharArray())) {
 
 						Log.logException(
 								"Cannot authenticate the user: "
-										+ dbUserName
+										+ userName
 										+ "\nProvide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
 								new RuntimeException(
 										"MongoDB Authentication Failed"));
@@ -104,7 +106,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 								.printf("%s:%s.%s.%s",
 										"Error occurred while starting the EMIR server",
 										"Cannot authenticate the database User: "
-												+ dbUserName,
+												+ userName,
 										" Provide the correct MongoDB database username and password in configuration file and restart the EMIR server again",
 										" Stoppoing the EMIR server.");
 						System.exit(1);
@@ -119,11 +121,18 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			BasicDBObject obj = new BasicDBObject(
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(),
-					"1");
+					1);
+			
+            BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
+			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
+			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
+			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),1);
 
 			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), true);
+			serviceCollection.ensureIndex(nonUniqueIndexKeys);
+			
 		} catch (MongoException e) {
 			Log.logException("", e, logger);
 			logger.warn(e.getCause());
@@ -146,9 +155,23 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public MongoDBServiceDatabase(String hostname, Integer port, String dbName,
 			String colName) {
 		try {
+			this.hostName = hostname;
+			this.dbName = dbName;
+			this.colName = colName;
+			this.port = port;
+			init();
+		} catch (Exception e) {
+			logger.error("Error in connecting the MongoDB database", e);
+
+		}
+	}
+	
+	
+	private void init(){
+		try {
 
 			if (connection == null) {
-				connection = new Mongo(hostname, port);
+				connection = new MongoClient(hostName, port);
 			}
 
 			database = connection.getDB(dbName);
@@ -156,21 +179,14 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection = database.getCollection(colName);
 
 			// setting index and uniquesness on service url
-			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-							.getAttributeName(),
-					"1");
-
-			// obj.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(),
-			// "1");
-			//
-			// obj.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(),"1");
-			//
-			// obj.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
-
-			serviceCollection.ensureIndex(obj,
+			
+			BasicDBObject obj = getUniqueIndexes();
+					
+					
+			serviceCollection.ensureIndex(getUniqueIndexes(),
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 							.getAttributeName(), true);
+			serviceCollection.ensureIndex(getNonUniqueIndexes());
 			if (logger.isDebugEnabled()) {
 				logger.debug("Unique index created: " + obj);
 			}
@@ -179,7 +195,23 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		}
 	}
-
+	
+	private BasicDBObject getNonUniqueIndexes(){
+		BasicDBObject obj = new BasicDBObject(
+				ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+						.getAttributeName(),
+				1);
+		return obj;
+	}
+	
+	private BasicDBObject getUniqueIndexes(){
+		BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
+		nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
+		nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
+		nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),1);
+		return nonUniqueIndexKeys;
+	}
+	
 	@Override
 	public void insert(ServiceObject item) throws ExistingResourceException,
 			PersistentStoreFailureException {
@@ -648,6 +680,15 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 	public void dropDB() {
 		database.dropDatabase();
+	}
+	
+	public void dropDB(String dbName) {
+		connection.dropDatabase(dbName);
+	}
+	
+	public DB createOrGetDB(String name){
+		
+		return connection.getDB(name);
 	}
 
 	/*

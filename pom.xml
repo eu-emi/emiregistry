@@ -20,7 +20,7 @@
 		<jersey.version>1.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<bugsreporter.version>1.2</bugsreporter.version>
-		<mongodb-java.version>2.10.1</mongodb-java.version>
+		<mongodb-java.version>2.11.0</mongodb-java.version>
 	</properties>
 	<issueManagement>
 		<system>GitHub</system>

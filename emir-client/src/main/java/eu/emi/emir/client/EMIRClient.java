@@ -69,6 +69,7 @@ public class EMIRClient {
 	
 	public EMIRClient(String url, IClientConfiguration clientConfig) {
 		logger.debug("creating ssl client");
+		
 		this.clientConfig = clientConfig;
 		this.url = url;
 		initSec();
@@ -323,5 +324,9 @@ public class EMIRClient {
 			status = false;
 		}
 		return status;
+	}
+	
+	public String getEmirUrl(){
+		return this.url;
 	}
 }
