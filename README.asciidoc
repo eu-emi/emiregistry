@@ -4,7 +4,7 @@
 
 ==== EMI
 
-http://www.eu-emi.eu[European Middleware Initiative (EMI)] is EU funded project of FP7.
+http://www.eu-emi.eu[European Middleware Initiative (EMI)] is an FP7 EU funded project.
 
 ==== The Registry
 
