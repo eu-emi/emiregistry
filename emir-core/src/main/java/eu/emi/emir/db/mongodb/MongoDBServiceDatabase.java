@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.Version;
+import org.codehaus.jackson.util.VersionUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -55,6 +57,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	private String dbName;
 	private String userName;
 	private String password;
+	private static String dbVersion;
 	
 	
 	
@@ -119,20 +122,18 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 			// setting index and unique constraint on "service endpoint id"
 			BasicDBObject obj = new BasicDBObject(
+					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
+							1);
+			serviceCollection.ensureIndex(obj,
 					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-							.getAttributeName(),
-					1);
+							.getAttributeName(), true);
+			
 			
             BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
 			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
 			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
 			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),1);
-
-			serviceCollection.ensureIndex(obj,
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-							.getAttributeName(), true);
-			serviceCollection.ensureIndex(nonUniqueIndexKeys);
-			
+			serviceCollection.ensureIndex(nonUniqueIndexKeys, "secondary",false);
 		} catch (MongoException e) {
 			Log.logException("", e, logger);
 			logger.warn(e.getCause());
@@ -196,7 +197,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		}
 	}
 	
-	private BasicDBObject getNonUniqueIndexes(){
+	private BasicDBObject getUniqueIndexes(){
 		BasicDBObject obj = new BasicDBObject(
 				ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 						.getAttributeName(),
@@ -204,7 +205,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		return obj;
 	}
 	
-	private BasicDBObject getUniqueIndexes(){
+	private BasicDBObject getNonUniqueIndexes(){
 		BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
 		nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
 		nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
@@ -698,8 +699,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public String getDBVersion() {
-		CommandResult result = database.command("serverStatus");
-		return result.getString("version");
+		if (dbVersion == null) {
+			CommandResult result = database.command("serverStatus");
+			dbVersion = result.getString("version");
+		}
+		
+		return dbVersion;
 	}
 
 	/*
@@ -781,7 +786,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 * @see eu.emi.emir.db.ServiceDatabase#facetedQuery(java.util.Map)
 	 */
 	@Override
-	public JSONArray facetedQuery(Map<String, String> map) throws JSONException {
+	public JSONArray facetedQuery(Map<String, String> map) throws Exception {
+		Version v =new Version(2, 4, 1, null);
+		logger.info(VersionUtil.parseVersion(getDBVersion()).compareTo(v));
+		if (VersionUtil.parseVersion(getDBVersion()).compareTo(v) < 0) {
+			throw new UnsupportedOperationException("The MongoDB server version should be equal to or greater than: "+v.toString()+", current version is: "+getDBVersion());
+		};
+		logger.info(getDBVersion());
 		JSONArray ja = new JSONArray();
 		Set<String> j = map.keySet();
 		for (String key : j) {

@@ -21,6 +21,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Request;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -305,6 +306,7 @@ public class EMIRClient {
 		ExtentendedMultiValuedMap<String, String> map = new ExtentedMultiValuedMapImpl();
 		map.putAllMap(facetMap);		
 		JSONArray result = getClientResource().path("services/facet").queryParams(map).accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
+		
 		return result;
 	}
 	

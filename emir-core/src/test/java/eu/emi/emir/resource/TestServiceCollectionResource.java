@@ -451,7 +451,7 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 	}
 	
 	@Test
-	public void testFacetedQuery() throws JSONException, InterruptedException{
+	public void testFacetedQuery() {
 		EMIRClient cr = new EMIRClient(BaseURI);		
 		Map<String, String> j = new HashMap<String, String>();
 		j.put(ServiceBasicAttributeNames.SERVICE_NAME.toString(), FacetKeyType.SIMPLE);
@@ -459,7 +459,11 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(), FacetKeyType.ARRAY);
 		
 		JSONArray ja = cr.facetSearch(j);
-		System.out.println(ja.toString(2));
+		try {
+			System.out.println(ja.toString(2));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		//should return two facets
 		assertEquals(3, ja.length());
 	}

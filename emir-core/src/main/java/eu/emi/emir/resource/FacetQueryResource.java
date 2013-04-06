@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,13 +21,12 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 
 import eu.emi.emir.client.ServiceBasicAttributeNames;
-import eu.emi.emir.client.util.ExtentendedMultiValuedMap;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
+import eu.emi.emir.util.JsonExceptionUtil;
 
 /**
  * @author a.memon
@@ -72,25 +70,17 @@ public class FacetQueryResource {
 		}
 		
 		
-//		List<String> facetNames = queryParams.get(PARAM_FACET_NAMES);
-//
-//		if (facetNames == null || facetNames.isEmpty()) {
-//			setNames = DEFAULT_NAMES;
-//		} else {
-//			setNames = new HashSet<String>();
-//			setNames.addAll(facetNames);
-//		}
-
-		
-		
 		try {
 
-//			ja = sd.facetedQuery(setNames);
 			ja = sd.facetedQuery(map);
 
-		} catch (JSONException e) {
+		} catch (Exception e) {
+			
+			
 			Log.logException("Error in executing faceted query", e, logger);
-			throw new WebApplicationException(e);
+			ja.put(JsonExceptionUtil.toJson(e));
+			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ja).build();
+			return resp;
 		}
 		return Response.ok(ja).build();
 	}

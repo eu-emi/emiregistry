@@ -234,6 +234,7 @@ public interface ServiceDatabase {
 	
 	/**
 	 * @param keypairs of name and type
+	 * @throws Exception 
 	 * */
-	public JSONArray facetedQuery(Map<String, String> map) throws JSONException;
+	public JSONArray facetedQuery(Map<String, String> map) throws Exception;
 }
