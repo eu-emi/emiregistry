@@ -29,6 +29,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.core.ServiceColManager;
+import eu.emi.emir.util.ExceptionUtil;
 import eu.eu_emi.emiregistry.QueryResult;
 
 /**
@@ -57,9 +58,9 @@ public class ServiceCollectionResource {
 			jArr = col.getServiceReferences();
 		} catch (Exception e) {
 			Log.logException("Error in doing query for service urls in JSON format", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -79,9 +80,9 @@ public class ServiceCollectionResource {
 			jArr = col.getDistinctTypes();
 		} catch (Exception e) {
 			Log.logException("Error in doing query for service types in JSON format", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -116,9 +117,9 @@ public class ServiceCollectionResource {
 			
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 
 		if (jArr.length() == 0) {
@@ -126,12 +127,7 @@ public class ServiceCollectionResource {
 		}
 		return Response.ok(jArr).build();
 		
-//		if (jo.length() == 0) {
-//			return Response.ok(jo).status(Status.NO_CONTENT).build();
-//		}
-//		return Response.ok(jo).build();
-	}
-	
+	}	
 	/**
 	 * Plain query method, invoked only if the MIME type is defined as application/xml
 	 * 
@@ -188,9 +184,9 @@ public class ServiceCollectionResource {
 			jArr = col.queryForJSON(queryDocument, m);
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 
 		if (jArr.length() == 0) {

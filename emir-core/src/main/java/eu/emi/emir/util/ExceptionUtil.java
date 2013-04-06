@@ -2,10 +2,13 @@ package eu.emi.emir.util;
 
 import java.util.Arrays;
 
+import javax.xml.bind.JAXBElement;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class JsonExceptionUtil {
+
+public class ExceptionUtil {
 	public static JSONObject toJson(Exception e){
 		JSONObject jo = new JSONObject();
 		try {
@@ -16,4 +19,10 @@ public class JsonExceptionUtil {
 		}
 		return jo;
 	}
+	
+	public static Object toXml(Exception e){
+		//FIXME
+		return null;
+	}
+	
 }

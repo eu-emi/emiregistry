@@ -26,7 +26,7 @@ import eu.emi.emir.client.ServiceBasicAttributeNames;
 import eu.emi.emir.client.util.Log;
 import eu.emi.emir.db.ServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
-import eu.emi.emir.util.JsonExceptionUtil;
+import eu.emi.emir.util.ExceptionUtil;
 
 /**
  * @author a.memon
@@ -78,7 +78,7 @@ public class FacetQueryResource {
 			
 			
 			Log.logException("Error in executing faceted query", e, logger);
-			ja.put(JsonExceptionUtil.toJson(e));
+			ja.put(ExceptionUtil.toJson(e));
 			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ja).build();
 			return resp;
 		}

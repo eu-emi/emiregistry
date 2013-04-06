@@ -39,6 +39,7 @@ import eu.emi.emir.event.EventDispatcher;
 import eu.emi.emir.event.EventTypes;
 import eu.emi.emir.exception.UnknownServiceException;
 import eu.emi.emir.security.Client;
+import eu.emi.emir.util.ExceptionUtil;
 import eu.emi.emir.validator.InvalidServiceDescriptionException;
 
 /**
@@ -94,10 +95,10 @@ public class ServiceAdminResource {
 					.findServiceByEndpointID(extractServiceEndpointIDFromUri(infos));
 		} catch (Exception e) {
 			Log.logException("Error in finding SER by Endpoint ID", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
 			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 
 		return result;
@@ -146,10 +147,10 @@ public class ServiceAdminResource {
 		} catch (ExistingResourceException e) {
 			return Response.status(Status.CONFLICT).entity(serviceInfo).build();
 		} catch (Exception e) {
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
 			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 	}
 
@@ -168,7 +169,7 @@ public class ServiceAdminResource {
 	public Response registerServices(JSONArray serviceInfos)
 			throws WebApplicationException, InterruptedException, JSONException {
 
-		return registerupdateServices(serviceInfos, "register");
+		return registerOrUpdateServices(serviceInfos, "register");
 	}
 
 	@Deprecated
@@ -293,10 +294,10 @@ public class ServiceAdminResource {
 	public Response updateServices(JSONArray serviceInfos)
 			throws WebApplicationException, JSONException {
 
-		return registerupdateServices(serviceInfos, "update");
+		return registerOrUpdateServices(serviceInfos, "update");
 	}
 
-	protected Response registerupdateServices(JSONArray serviceInfos, String method)
+	protected Response registerOrUpdateServices(JSONArray serviceInfos, String method)
 			throws WebApplicationException, JSONException {
 
         String methodMessage = "updating";
@@ -423,10 +424,10 @@ public class ServiceAdminResource {
 			return Response.ok(arr).build();
 		} catch (Exception e) {
 			Log.logException("Error in " + methodMessage + " the services", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
 			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 	}
 
@@ -490,10 +491,10 @@ public class ServiceAdminResource {
 							+ " = <SERVICE ENDPOINT ID>").build();
 		} catch (Exception e) {
 			Log.logException("Error in deleting the service", e, logger);
-			JSONObject jErr = new JSONObject();
-			jErr.put("error", e.getCause());
+			JSONArray err = new JSONArray();
+			err.put(ExceptionUtil.toJson(e));
 			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		return Response.ok().build();
 	}
