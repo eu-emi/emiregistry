@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.mongodb.MongoException;
 
@@ -237,4 +238,5 @@ public interface ServiceDatabase {
 	 * @throws Exception 
 	 * */
 	public JSONArray facetedQuery(Map<String, String> map) throws Exception;
+
 }

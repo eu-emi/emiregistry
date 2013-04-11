@@ -498,6 +498,18 @@ public class ServiceAdminResource {
 		}
 		return Response.ok().build();
 	}
+	
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response deleteByQuery(JSONObject query){
+		try {
+			serviceAdmin.removeServices(query);	
+		} catch (Exception e) {
+			return Response.serverError().entity(ExceptionUtil.toJson(e)).build();
+		}
+		
+		return Response.ok().build();
+	}
 
 	private String extractServiceDateFromUri(UriInfo infos)
 			throws IllegalArgumentException {

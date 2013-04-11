@@ -38,7 +38,7 @@
   </Rule>
   
   <Rule RuleId="Permit:AnyAction_Without_Registration" Effect="Permit">
-    <Description> All authenticated users are permitted to perform anything except registration. </Description>
+    <Description> All authenticated users are permitted to perform all the operations (such as querying) except registration. </Description>
     <Target/>
     <Condition>
 <!--       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">	 -->

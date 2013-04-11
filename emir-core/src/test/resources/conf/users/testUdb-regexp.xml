@@ -10,6 +10,7 @@
       </attribute>
       <attribute name="empty"/>      
    </entry>
+   <!-- The following entry should always be declared at the end of this file -->
    <entry key=".*">
       <attribute name="role"><value>banned</value></attribute>
    </entry>

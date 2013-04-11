@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.util.VersionUtil;
@@ -333,7 +336,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	public void update(ServiceObject sObj) throws MultipleResourceException,
 			NonExistingResourceException, PersistentStoreFailureException {
 		try {
-			String id = sObj.getServiceID();
+			String id = sObj.getEndpointID();
 			logger.debug("updating service description: " + sObj);
 
 			database.requestStart();
@@ -381,7 +384,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 																	// and
 																	// multi=false
 			database.requestDone();
-			logger.info("updated Service Endpoint Record with ID: " + id);
+			logger.info("UPDATED Service Endpoint Record with ID: " + id);
 			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
@@ -858,6 +861,8 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 
 		return ja;
 	}
+
+	
 
 	
 

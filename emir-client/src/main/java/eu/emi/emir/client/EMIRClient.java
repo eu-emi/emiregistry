@@ -192,6 +192,14 @@ public class EMIRClient {
 						url).delete(ClientResponse.class);
 		return res;
 	}
+	
+	/**
+	 * Deleting the entries by providing json query
+	 * @param query the json query
+	 * */
+	public ClientResponse deleteByQuery(JSONObject query){
+		return getClientResource().path("serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE).delete(ClientResponse.class, query);
+	}
 	/***
 	 * Querying the EMIR server for Service Endpoint Records using http query parameters
 	 *

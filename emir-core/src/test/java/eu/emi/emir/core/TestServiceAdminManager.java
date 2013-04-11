@@ -6,8 +6,11 @@ package eu.emi.emir.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.ParseException;
 import java.util.Properties;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +26,8 @@ import eu.emi.emir.db.PersistentStoreFailureException;
 import eu.emi.emir.db.mongodb.MongoDBServiceDatabase;
 import eu.emi.emir.db.mongodb.MongoDBTestBase;
 import eu.emi.emir.exception.UnknownServiceException;
+import eu.emi.emir.validator.InvalidServiceDescriptionException;
+import eu.unicore.util.configuration.ConfigurationException;
 /**
  * @author a.memon
  * 
@@ -54,7 +59,20 @@ public class TestServiceAdminManager extends MongoDBTestBase{
 		adminMgr.addService(TestValueConstants.getJSONWithMandatoryAttributes());
 		adminMgr.addService(TestValueConstants.getJSONWithMandatoryAttributes());				
 	}
-
+	
+	@Test
+	public void removeServiceByQuery() throws JSONException, ConfigurationException, InvalidServiceDescriptionException, ExistingResourceException, ParseException{
+		//add few dummy services
+		int size = 10;
+		JSONArray ja = TestValueConstants.getDummyJSONArrayWithMandatoryAttributes(size);
+		for (int i = 0; i < ja.length(); i++) {
+			adminMgr.addService(ja.getJSONObject(i));
+		}
+		assertEquals(10, adminMgr.findAll().size());
+		//this should remove everything
+		adminMgr.removeServices(new JSONObject());
+		assertEquals(0, adminMgr.findAll().size());
+	}
 	
 
 	@Test

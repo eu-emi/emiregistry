@@ -352,7 +352,7 @@ public class ServiceAdminManager {
 
 		// serviceDB.findAndDelete(j.toString());
 	}
-
+	
 	public void removeAll() {
 		serviceDB.deleteAll();
 	}
@@ -475,5 +475,9 @@ public class ServiceAdminManager {
 			}
 		}
 		return true;
+	}
+
+	public void removeServices(JSONObject query) {
+		serviceDB.findAndDelete(query.toString());
 	}
 }
