@@ -417,7 +417,7 @@ public class ServiceAdminResource {
 				}
 			}
 			if (errorArray.length() > 0) {
-				logger.warn("Error while " + methodMessage + " the service information: \n"+errorArray.toString(2));
+				logger.warn("Error occured while " + methodMessage + " the service information: \n"+errorArray.toString(2));
 				return Response.status(Status.NOT_ACCEPTABLE)
 						.entity(errorArray).build();
 			}
@@ -426,8 +426,8 @@ public class ServiceAdminResource {
 			Log.logException("Error in " + methodMessage + " the services", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(err).build();
+			return resp;
 		}
 	}
 
@@ -493,24 +493,13 @@ public class ServiceAdminResource {
 			Log.logException("Error in deleting the service", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			
+			return Response
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build();
 		}
 		return Response.ok().build();
 	}
 	
-	@DELETE
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response deleteByQuery(JSONObject query){
-		try {
-			serviceAdmin.removeServices(query);	
-		} catch (Exception e) {
-			return Response.serverError().entity(ExceptionUtil.toJson(e)).build();
-		}
-		
-		return Response.ok().build();
-	}
-
 	private String extractServiceDateFromUri(UriInfo infos)
 			throws IllegalArgumentException {
 		MultivaluedMap<String, String> mm = infos.getQueryParameters();

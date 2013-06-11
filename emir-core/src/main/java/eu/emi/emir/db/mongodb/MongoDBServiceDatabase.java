@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.util.VersionUtil;
@@ -320,7 +317,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 					"No service description with the Endpoint ID:" + endpointID
 							+ " exists");
 		}
-		logger.info("deleted: " + endpointID);
+		logger.info("DELETED Service Endpoint Record with ID: " + endpointID);
 		// sending delete event to the receivers
 		try {
 			JSONObject deletedEntry = new JSONObject(d.toString());
@@ -384,7 +381,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 																	// and
 																	// multi=false
 			database.requestDone();
-			logger.info("UPDATED Service Endpoint Record with ID: " + id);
+			logger.info("CREATED/UPDATED Service Endpoint Record with ID: " + id);
 			// sending update event to the receivers
 			// EventDispatcher.notifyRecievers(new
 			// Event(EventTypes.SERVICE_UPDATE,
@@ -410,6 +407,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -439,6 +437,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next());
 				resultCollection.add(s);
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -464,6 +463,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				ServiceObject s = new ServiceObject(cur.next().toString());
 				resultCollection.add(s);
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -480,6 +480,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 		while (cur.hasNext()) {
 			arr.put(new JSONObject(JSON.serialize(cur.next())));
 		}
+		logger.debug(JSON.serialize(cur.explain()));
 		cur.close();
 		return arr;
 	}
@@ -505,6 +506,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -527,6 +529,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -553,6 +556,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -607,7 +611,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 				db.putAll(queryObj);
 			}
 			cur = serviceCollection.find(db).sort(OrderBy).limit(pageSize);
-
+			logger.debug(JSON.serialize(cur.explain()));
 		}
 
 		JSONArray arr = new JSONArray();
@@ -615,6 +619,7 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			while (cur.hasNext()) {
 				arr.put(new JSONObject(JSON.serialize(cur.next())));
 			}
+			logger.debug(JSON.serialize(cur.explain()));
 			cur.close();
 		} catch (Exception e) {
 			Log.logException("", e);
@@ -791,11 +796,11 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	@Override
 	public JSONArray facetedQuery(Map<String, String> map) throws Exception {
 		Version v =new Version(2, 4, 1, null);
-		logger.info(VersionUtil.parseVersion(getDBVersion()).compareTo(v));
 		if (VersionUtil.parseVersion(getDBVersion()).compareTo(v) < 0) {
-			throw new UnsupportedOperationException("The MongoDB server version should be equal to or greater than: "+v.toString()+", current version is: "+getDBVersion());
+			UnsupportedOperationException u = new UnsupportedOperationException("The MongoDB server version should be equal to or greater than: "+v.toString()+", current version is: "+getDBVersion());
+			Log.logException("Faceted query is not supported in the current backend MongoDB, please update to the version: "+getDBVersion(), u);
+			throw u; 
 		};
-		logger.info(getDBVersion());
 		JSONArray ja = new JSONArray();
 		Set<String> j = map.keySet();
 		for (String key : j) {
@@ -847,7 +852,6 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			Iterable<DBObject> it = output.results();
 
 			JSONArray terms = new JSONArray();
-
 			for (DBObject dbObject : it) {
 				JSONObject term = new JSONObject(JSON.serialize(dbObject));
 				terms.put(term);
