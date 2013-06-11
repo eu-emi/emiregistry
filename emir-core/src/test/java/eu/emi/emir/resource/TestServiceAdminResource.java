@@ -192,37 +192,6 @@ public class TestServiceAdminResource extends TestRegistryBase {
 
 	}
 	
-	@Test
-	@FunctionalTest(id="ServiceDeletionByQueryTest", description="Test deletion of a service record")
-	public void testDeleteResourceByQuery() throws JSONException {
-		EMIRClient cr1 = new EMIRClient(BaseURI + "/serviceadmin");
-		
-		cr1.getClientResource()
-				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(TestValueConstants.getDummyJSONArrayWithMandatoryAttributes(10));
-		EMIRClient cr = new EMIRClient(BaseURI
-				+ "/serviceadmin");
-//		cr.getClientResource().queryParam(ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString(), "1").delete();
-		
-		cr.deleteByQuery(new JSONObject());
-		
-		MultivaluedMap<String, String> m = null;
-		
-		cr.queryByQueryParams(m);
-//		EMIRClient cr2 = new EMIRClient(BaseURI
-//				+ "/serviceadmin?Service_Endpoint_ID=1");
-//		try {
-//			cr2.getClientResource().get(javax.ws.rs.core.Response.class);
-//		} catch (UniformInterfaceException e) {
-//			assertTrue(e.getResponse().getStatus() == Status.NO_CONTENT
-//					.getStatusCode());
-//
-//		}
-
-	}
-	
-	
-
 	@After
 	public void cleanup() {
 		ServiceDatabase sd = new MongoDBServiceDatabase();
