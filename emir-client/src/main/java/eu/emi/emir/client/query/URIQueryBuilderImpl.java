@@ -5,6 +5,7 @@ package eu.emi.emir.client.query;
 
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -68,7 +69,20 @@ public class URIQueryBuilderImpl extends URIQuery.URIQueryBuilder{
 		final URIQueryImpl impl = new URIQueryImpl(map);
 		return impl;
 	}
-	
-	
+	@Override
+	public URIQueryBuilder setSkip(Integer skip) {
+		map.putSingle("skip", Integer.toString(skip));
+		return this;
+	}
+	@Override
+	public URIQueryBuilder setResultLimit(Integer limit) {
+		map.putSingle("skip", Integer.toString(limit));
+		return this;
+	}
+	@Override
+	public URIQueryBuilder mergeURIQuery(URIQuery uriQuery) {
+		map.putAll(uriQuery.getMultiValuedMap());
+		return this;
+	}
 	
 }

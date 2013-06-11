@@ -17,7 +17,11 @@ public class TestURIQuery {
 	}
 	
 	@Test
-	public void testSpecializedQuery(){
-		
+	public void testMergedQuery(){
+		URIQuery eq = EndpointQuery.endpointBuilder().setPageSize(100).build();
+		URIQuery mergedQuery = URIQuery.builder().setRef("asdasdsd").mergeURIQuery(eq).build();
+		assertTrue((mergedQuery.getMultiValuedMap().containsKey("ref")));
 	}
+	
+	
 }

@@ -4,14 +4,13 @@
 package eu.emi.emir.client.query;
 
 import java.util.List;
-
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * @author a.memon
  *
  */
-public abstract class URIQuery {
+public abstract class URIQuery{
 	/***
 	 * use one of the static methods to obtain Builder and then obtain Query from that
 	 */
@@ -54,6 +53,15 @@ public abstract class URIQuery {
 		
 		public abstract URIQueryBuilder setPageSize(Integer pageSize);
 		
-		public abstract URIQuery build();		
+		public abstract URIQueryBuilder setSkip(Integer skip);
+		
+		public abstract URIQueryBuilder setResultLimit(Integer limit);
+		
+		/**
+		 * Merge from another URIQuery
+		 * */		
+		public abstract URIQueryBuilder mergeURIQuery(URIQuery uriQuery);
+		
+		public abstract <E extends URIQuery> E build();		
 	}
 }
