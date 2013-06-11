@@ -182,24 +182,22 @@ public class EMIRClient {
 				.put(ClientResponse.class, ja);
 		return res.getEntity(JSONArray.class);
 	}
-
-	public ClientResponse deleteByID(String url) {
+	
+	/**
+	 * Delete a service endpoint record by its ID
+	 * 
+	 *  @param endpointId
+	 * */
+	public ClientResponse deleteByID(String endpointId) {
 		ClientResponse res = getClientResource()
 				.path("serviceadmin")
 				.queryParam(
 						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 								.getAttributeName(),
-						url).delete(ClientResponse.class);
+						endpointId).delete(ClientResponse.class);
 		return res;
 	}
 	
-	/**
-	 * Deleting the entries by providing json query
-	 * @param query the json query
-	 * */
-	public ClientResponse deleteByQuery(JSONObject query){
-		return getClientResource().path("serviceadmin").accept(MediaType.APPLICATION_JSON_TYPE).delete(ClientResponse.class, query);
-	}
 	/***
 	 * Querying the EMIR server for Service Endpoint Records using http query parameters
 	 *
