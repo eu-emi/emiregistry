@@ -67,27 +67,6 @@ public class TestRegistryBaseWithSecurity {
 				+s.getConnectors()[0].getLocalPort();
 	}
 
-//	private static void setSecuritySettings_(Properties p) {
-//		p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_SSL_ENABLED, "true");
-//		p.put(ISecurityProperties.REGISTRY_SSL_CLIENTAUTH, "true");
-//		p.put(ISecurityProperties.REGISTRY_SSL_KEYPASS, "emi");
-//		p.put(ISecurityProperties.REGISTRY_SSL_KEYTYPE, "pkcs12");
-//		p.put(ISecurityProperties.REGISTRY_SSL_KEYSTORE,
-//				"src/test/resources/certs/demo-server.p12");
-//		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTPASS, "emi");
-//		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTSTORE,
-//				"src/test/resources/certs/demo-server.jks");
-//		p.put(ISecurityProperties.REGISTRY_SSL_TRUSTTYPE, "jks");
-//		p.put(ISecurityProperties.REGISTRY_CHECKACCESS, "true");
-//		p.put("registry.security.attributes.order", "FILE");
-//		p.put("registry.security.attributes.FILE.class",FileAttributeSource.class.getName());
-//		p.put("registry.security.attributes.FILE.file", "src/test/resources/conf/users/testUdb-strict.xml");
-		//p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
-//		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
-//      p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, FlatFilePDP.class.getName());
-//		p.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
-//	}
-	
 	private static void setSecuritySettings(Properties p) {
 		p.setProperty(ServerSecurityProperties.PREFIX
 				+ CredentialProperties.DEFAULT_PREFIX
@@ -120,21 +99,17 @@ public class TestRegistryBaseWithSecurity {
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_ORDER,"FILE");
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.class",FileAttributeSource.class.getName());
 	    
-//	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.file","src/test/resources/conf/users/testUdb-strict.xml");
+	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.file","src/test/resources/conf/users/testUdb-strict.xml");
+	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.matching","strict");
 	    
-	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.file","src/test/resources/conf/users/testUdb-regexp.xml");
-	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.matching","regexp");
+//	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.file","src/test/resources/conf/users/testUdb-regexp.xml");
+//	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_AIP_PREFIX+".FILE.matching","regexp");
 	    
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
 	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
 
 	    // using simplified acl mechanism
 //	    p.put(ServerSecurityProperties.PREFIX+ServerSecurityProperties.PROP_CHECKACCESS_ACL, "src/test/resources/conf/emir.acl");    
-	    
-	    //p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDPCONFIG, "src/test/resources/conf/xacml2.config");
-//		p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, LocalHerasafPDP.class.getName());
-//      p.put(ISecurityProperties.REGISTRY_CHECKACCESS_PDP, FlatFilePDP.class.getName());
-//		p.put(ISecurityProperties.REGISTRY_ACL_FILE, "src/test/resources/conf/emir.acl");
 	}
 	
 	
@@ -217,70 +192,10 @@ public class TestRegistryBaseWithSecurity {
 	}
 	
 
-//	private static void setGeneralSettings(Properties p) {
-//		p.put(ServerConstants.REGISTRY_HOSTNAME, "localhost");
-//		p.put(ServerConstants.REGISTRY_PORT, "0");
-//		p.put(ServerConstants.REGISTRY_SCHEME, "https");
-//		p.put(ServerConstants.JETTY_LOW_RESOURCE_MAXIDLETIME, "10000");
-//		p.put(ServerConstants.JETTY_LOWTHREADS, "50");
-//		p.put(ServerConstants.JETTY_MAXIDLETIME, "30000");
-//		p.put(ServerConstants.JETTY_MAXTHREADS, "255");
-//		p.put(ServerConstants.LOGGER_CONF_PATH,
-//				"src/test/resources/conf/log4j.properties");	
-//		
-//	}
-	
 	private static void setGeneralSettings(Properties p) {
 		p.put(ServerProperties.PREFIX+ServerProperties.PROP_ADDRESS, "https://localhost:0");		
 		
 	}
-
-//	private static void setDatabaseProperties(Properties p) {
-//		p.put(ServerConstants.MONGODB_HOSTNAME, "localhost");
-//		p.put(ServerConstants.MONGODB_PORT, "27017");
-//		p.put(ServerConstants.MONGODB_COLLECTION_NAME, "services-test");
-//		p.put(ServerConstants.MONGODB_DB_NAME, "emiregistry");
-//		p.put(ServerConstants.MONGODB_COL_CREATE, "true");
-//	}
-
-	
-//	public eu.emi.emir.security.ClientSecurityProperties getSecurityProperties_1(){
-//		Properties p = new Properties();
-//		//keystore setting
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX + CredentialProperties.PROP_PASSWORD, "emi");
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX+CredentialProperties.PROP_FORMAT, CredentialProperties.CredentialFormat.pkcs12.toString());
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX+CredentialProperties.PROP_LOCATION, "src/test/resources/certs/demo-server.p12");
-//		
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_TYPE, 
-//				TruststoreProperties.TruststoreType.keystore.toString());
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_PATH, "src/test/resources/certs/demo-server.jks");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_TYPE, "JKS");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_PASSWORD, "emi");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_UPDATE, "-1");
-//		AuthnAndTrustProperties authn = new AuthnAndTrustProperties(p,PropertiesPrefix.SSL_TRUSTORE_PREFIX,PropertiesPrefix.SSL_KEYSTORE_PREFIX);
-//		DefaultAuthnAndTrustConfiguration secConfig = new DefaultAuthnAndTrustConfiguration(authn.getValidator(),authn.getCredential());
-//		return secConfig;
-//	}
-	
-	
-//	public IClientConfiguration getSecurityProperties_2(){
-//		Properties p = new Properties();
-//		//keystore setting
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX + CredentialProperties.PROP_PASSWORD, "emi");
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX+CredentialProperties.PROP_FORMAT, CredentialProperties.CredentialFormat.pkcs12.toString());
-//		p.setProperty(PropertiesPrefix.SSL_KEYSTORE_PREFIX+CredentialProperties.PROP_LOCATION, "src/test/resources/certs/demo-user.p12");
-//		
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_TYPE, 
-//				TruststoreProperties.TruststoreType.keystore.toString());
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_PATH, "src/test/resources/certs/demo-server.jks");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_TYPE, "JKS");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_KS_PASSWORD, "emi");
-//		p.setProperty(PropertiesPrefix.SSL_TRUSTORE_PREFIX + TruststoreProperties.PROP_UPDATE, "-1");
-//		AuthnAndTrustProperties authn = new AuthnAndTrustProperties(p,PropertiesPrefix.SSL_TRUSTORE_PREFIX,PropertiesPrefix.SSL_KEYSTORE_PREFIX);
-//		DefaultClientConfiguration secConfig = new DefaultClientConfiguration(authn.getValidator(),authn.getCredential());
-//		return secConfig;
-//	}
-	
 
 	@AfterClass
 	public static void stopServer() {
@@ -289,8 +204,6 @@ public class TestRegistryBaseWithSecurity {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-//		server.stop();
 		
 	}
 

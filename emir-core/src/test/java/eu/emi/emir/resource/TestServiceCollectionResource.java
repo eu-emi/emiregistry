@@ -458,11 +458,12 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		j.put(ServiceBasicAttributeNames.SERVICE_TYPE.toString(), FacetKeyType.SIMPLE);
 		j.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.toString(), FacetKeyType.ARRAY);
 		
-		JSONArray ja = cr.facetSearch(j);
+		JSONArray ja = null;
 		try {
-			System.out.println(ja.toString(2));
-		} catch (JSONException e) {
+			System.out.println(ja = cr.facetSearch(j));
+		} catch (Exception e) {
 			e.printStackTrace();
+			fail();
 		}
 		//should return two facets
 		assertEquals(3, ja.length());

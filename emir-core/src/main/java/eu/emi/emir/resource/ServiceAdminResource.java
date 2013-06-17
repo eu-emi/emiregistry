@@ -308,11 +308,10 @@ public class ServiceAdminResource {
 				ServerProperties.PROP_RECORD_MAXIMUM);
 
 		if (serviceInfos.length() > max) {
-			return Response
-					.status(Status.FORBIDDEN)
-					.entity(new String(
-							"Number of entries/json objects in the array must not exceed: "
-									+ max)).build();
+			String msg = "Number of entries/json objects in the array must not exceed: "
+							+ max;
+			throw new WebApplicationException(new Exception(msg),Response
+					.status(Status.FORBIDDEN).build());
 		}
 		try {
 			JSONArray arr = new JSONArray();
@@ -402,8 +401,8 @@ public class ServiceAdminResource {
 					String message = "Access denied for DN - " + owner
 							+ " to " + method + " service with the endpointID - "
 							+ sendpointID;
-					return Response.status(Status.UNAUTHORIZED).entity(message)
-							.build();
+					throw new WebApplicationException(new Exception(message),Response.status(Status.UNAUTHORIZED).entity(message)
+							.build());
 				}
 			}
 			if (arr.length() > 0) {
@@ -417,17 +416,17 @@ public class ServiceAdminResource {
 				}
 			}
 			if (errorArray.length() > 0) {
-				logger.warn("Error occured while " + methodMessage + " the service information: \n"+errorArray.toString(2));
-				return Response.status(Status.NOT_ACCEPTABLE)
-						.entity(errorArray).build();
+				String msg = "Error occured while " + methodMessage + " the service information: \n"+errorArray.toString(2);
+				logger.warn(msg);
+				throw new WebApplicationException(new Exception(msg),Response.status(Status.NOT_ACCEPTABLE)
+						.entity(errorArray).build());
 			}
 			return Response.ok(arr).build();
 		} catch (Exception e) {
 			Log.logException("Error in " + methodMessage + " the services", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(err).build();
-			return resp;
+			throw new WebApplicationException(e,Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 	}
 
@@ -470,32 +469,34 @@ public class ServiceAdminResource {
 				serviceAdmin.removeService(sendpointID, messageTime);
 
 			} else {
-				return Response
+				String msg = "Access denied for DN - " + owner
+						+ " to remove service with the ID - "
+						+ sendpointID;
+				throw new WebApplicationException(new Exception(msg),Response
 						.status(Status.UNAUTHORIZED)
 						.entity("Access denied for DN - " + owner
 								+ " to remove service with the ID - "
-								+ sendpointID).build();
+								+ sendpointID).build());
 			}
 
 		} catch (IllegalArgumentException e) {
-			Log.logException(
-					"Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
-							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-									.getAttributeName()
-							+ " = <SERVICE ENDPOINT ID>", e, logger);
-			return Response
+			String msg = "Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
+					+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+					.getAttributeName()
+			+ " = <SERVICE ENDPOINT ID>";
+			Log.logException(msg, e, logger);
+			throw new WebApplicationException(e,Response
 					.status(Status.BAD_REQUEST)
 					.entity("Missing/Invalid query parameter: The delete request must contain a query parameter: /serviceadmin?"
 							+ ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
 									.getAttributeName()
-							+ " = <SERVICE ENDPOINT ID>").build();
+							+ " = <SERVICE ENDPOINT ID>").build());
 		} catch (Exception e) {
 			Log.logException("Error in deleting the service", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			
-			return Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build();
+			throw new WebApplicationException(e,Response
+					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		return Response.ok().build();
 	}

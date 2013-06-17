@@ -121,19 +121,37 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 			serviceCollection = database.getCollection(colName);
 
 			// setting index and unique constraint on "service endpoint id"
-			BasicDBObject obj = new BasicDBObject(
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
-							1);
-			serviceCollection.ensureIndex(obj,
-					ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
-							.getAttributeName(), true);
+			if (isVersionNumber241OrGreater()) {
+				BasicDBObject obj = new BasicDBObject(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
+								1);
+				serviceCollection.ensureIndex(obj,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+								.getAttributeName(), true);
+				
+				
+	            BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),1);
+				serviceCollection.ensureIndex(nonUniqueIndexKeys, "secondary",false);	
+			} else {
+				//mongodb versions lesser than 2.4.1 initialize indexes using string value
+				BasicDBObject obj = new BasicDBObject(
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.getAttributeName(),
+								"1");
+				serviceCollection.ensureIndex(obj,
+						ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID
+								.getAttributeName(), true);
+				
+				
+	            BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), "1");
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), "1");
+				nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),"1");
+				serviceCollection.ensureIndex(nonUniqueIndexKeys, "secondary",false);
+			}
 			
-			
-            BasicDBObject nonUniqueIndexKeys = new BasicDBObject();
-			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_NAME.getAttributeName(), 1);
-			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_TYPE.getAttributeName(), 1);
-			nonUniqueIndexKeys.put(ServiceBasicAttributeNames.SERVICE_ENDPOINT_CAPABILITY.getAttributeName(),1);
-			serviceCollection.ensureIndex(nonUniqueIndexKeys, "secondary",false);
 		} catch (MongoException e) {
 			Log.logException("", e, logger);
 			logger.warn(e.getCause());
@@ -795,12 +813,12 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	 */
 	@Override
 	public JSONArray facetedQuery(Map<String, String> map) throws Exception {
-		Version v =new Version(2, 4, 1, null);
-		if (VersionUtil.parseVersion(getDBVersion()).compareTo(v) < 0) {
-			UnsupportedOperationException u = new UnsupportedOperationException("The MongoDB server version should be equal to or greater than: "+v.toString()+", current version is: "+getDBVersion());
+		if (!isVersionNumber241OrGreater()) {
+			UnsupportedOperationException u = new UnsupportedOperationException("The MongoDB server version should be equal to or greater than: 2.4.1, current version is: "+getDBVersion());
 			Log.logException("Faceted query is not supported in the current backend MongoDB, please update to the version: "+getDBVersion(), u);
-			throw u; 
-		};
+			throw u;
+		}
+		
 		JSONArray ja = new JSONArray();
 		Set<String> j = map.keySet();
 		for (String key : j) {
@@ -867,7 +885,13 @@ public class MongoDBServiceDatabase implements ServiceDatabase {
 	}
 
 	
-
+	public boolean isVersionNumber241OrGreater(){
+		Version v =new Version(2, 4, 1, null);
+		if (VersionUtil.parseVersion(getDBVersion()).compareTo(v) < 0) {
+			return false; 
+		};
+		return true;
+	}
 	
 
 }

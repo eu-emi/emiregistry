@@ -60,7 +60,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error in doing query for service urls in JSON format", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -82,7 +82,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error in doing query for service types in JSON format", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -119,7 +119,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 
 		if (jArr.length() == 0) {
@@ -150,7 +150,7 @@ public class ServiceCollectionResource {
 			qr = col.queryForXML(m);
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in XML format", e, logger);
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 		if (qr.getCount() == BigInteger.ZERO) {
 			return Response.ok(qr).status(Status.NO_CONTENT).build();
@@ -186,7 +186,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error in doing query for services in JSON format", e, logger);
 			JSONArray err = new JSONArray();
 			err.put(ExceptionUtil.toJson(e));
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
 		}
 
 		if (jArr.length() == 0) {
@@ -218,7 +218,7 @@ public class ServiceCollectionResource {
 			jArr = col.queryForXML(queryDocument, m);
 		} catch (Exception e) {
 			Log.logException("Error in doing query for services in XML format", e, logger);
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity("<error>"+e.getCause().toString()+"</error>").build());
 		}
 
 		if (jArr == null) {
@@ -283,7 +283,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error executing paged query", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 		if (jArr.length() == 0) {
 			return Response.ok(jArr).status(Status.NO_CONTENT).build();
@@ -313,7 +313,7 @@ public class ServiceCollectionResource {
 			Log.logException("Error executing paged query in XML format", e, logger);
 			JSONObject jErr = new JSONObject();
 			jErr.put("error", e.getCause());
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
+			throw new WebApplicationException(e,Response.status(Status.INTERNAL_SERVER_ERROR).entity(jErr).build());
 		}
 		if (qr.getCount() == BigInteger.ZERO) {
 			return Response.ok(qr).status(Status.NO_CONTENT).build();

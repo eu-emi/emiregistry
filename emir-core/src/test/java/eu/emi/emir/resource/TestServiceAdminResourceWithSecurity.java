@@ -86,7 +86,6 @@ public class TestServiceAdminResourceWithSecurity extends
 		EMIRClient cr2 = new EMIRClient(BaseURI
 				+ "/serviceadmin",
 				getSecurityProperties_3());
-		
 		assertEquals(
 				Status.UNAUTHORIZED,Status.fromStatusCode(cr2.getClientResource().accept(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,ja).getStatus()));
 		

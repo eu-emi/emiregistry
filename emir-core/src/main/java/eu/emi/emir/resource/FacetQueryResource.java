@@ -75,12 +75,10 @@ public class FacetQueryResource {
 			ja = sd.facetedQuery(map);
 
 		} catch (Exception e) {
-			
-			
 			Log.logException("Error in executing faceted query", e, logger);
 			ja.put(ExceptionUtil.toJson(e));
-			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ja).build();
-			return resp;
+			Response resp = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			throw new WebApplicationException(e,resp);
 		}
 		return Response.ok(ja).build();
 	}
