@@ -1,0 +1,10 @@
+{ 
+  "EMIRServerVersion":"1.2.2-SNAPSHOT",
+  "MongoDBVersion":"2.0.4","JavaVersion":"1.6.0_24",
+  "OSName":"Linux","OSArchitecture":"amd64",
+  "OSVersion":"2.6.37.6-0.11-xen",
+  "EMIRServerComponentName":"Domain Service Registry (DSR)",
+  "AnonymousAccessPortNumber":"9127",
+  "RunningSince":"Fri Jun 14 17:49:53 CEST 2013",
+  "NumberofEntries":279
+}
