@@ -8,37 +8,8 @@ This section contains the description of the REST-ful interface, that allows the
 management of the service information (or entries) by exposing the individual
 URIs. The normative description of the API cab also be defined as Web Application Description Language (WADL) document xref:appendixii[WADL].
 
-Register new Services
-~~~~~~~~~~~~~~~~~~~~~
-
-+HTTP Method+ : POST
-
-+URI+ : /serviceadmin
-
-+Content Type+ : application/json
-
-+Security Implications+ : Requires authenticated "and" authorized user access to perform this operation 
-
-Request
-^^^^^^^
-
-The message body contain a JSON Array containing the JSON objects (see below), each of which
-would be a service entry in the EMI registry.
-
-Service description is defined as a xref:appendixi[] document.
-
-
-IMPORTANT: The only mandatory attribute is *Service_Endpoint_URL*, which should be unique
-
-Response
-^^^^^^^
-
-The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.
-
-+Status Code+ : OK / 200
-
-Updating the Service information
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creatung OR Updating the Service Endpoint Records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +HTTP Method+ : PUT
 
@@ -46,20 +17,20 @@ Updating the Service information
 
 +Content Type+ : application/json
 
-+Security Implications+ : Requires an authenticated "and" authorized user access to perform this operation
++Security Implications+ : Requires an authenticated "and" authorized client's access to perform this operation
 
 Request
 ^^^^^^^
 
-The request body contain a similar JSON array object as defined POST method that contains the
-description of the Services to be updated. The Service Entries
-identified by the 'Service_Endpoint_URL' key in the individual JSON
-objects will be updated respectively.
+The request body contain a similar JSON array object as defined in xref:appendixi[], it contains
+description of the Services to be updated or created. The endpoint records will be updated automatically,
+ if the JSON document in the request body is already existing. The operation takes place only after the 
+ successful authentication and authorisation checks. 
 
 Response
 ^^^^^^^^
 
-The response contains similar array of JSON Objects as it was in sent request, confirming the successful update.
+The response contains an array of JSON Objects as it was sent in the request, confirming the successful update.
 
 +Status Code+ : OK / 200
 
@@ -79,7 +50,7 @@ The Service Entry matching the Endpoint ID will be deleted from the
 registry only if the client executing the action has authorised access and the 
 method is allowed by the security plugins.
 
-+Query Parameters+ : Service_Endpoint_ID= _<Service unique Endpoint ID>_
++URL Query Parameters+ : Service_Endpoint_ID= _<Service Endpoint ID>_
 
 ******
 *Example* : /serviceadmin?Service_Endpoint_ID=urn:endpoint:emi1
@@ -90,8 +61,8 @@ Response
 
 +Status Code+ : OK / 200
 
-Querying the EMIR
-~~~~~~~~~~~~~~~~~
+Query for Endpoint Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +HTTP Method+ : GET
 
@@ -109,40 +80,6 @@ The request contains the key-value pairs separated by ampersand +&+
 *******
 *Example* : /services?Service_Type=eu.emi.es&Service_Endpoint_HealthState=ok
 *******
-
-The additional parameters can also be added to restrict and/or paginate the result
-
-+Additional Query Parameters+ : 
-
------
-skip=Integer value
------
-
-_skip_ returns the result skipping the given number of entries
-  
-
------
-limit=Integer value
------
-
-_limit_ defines the maximum number of result containing the service entries
-
-
-Response+Additional Query Parameters+ : 
-
------
-skip=Integer value
------
-
-_skip_ returns the result skipping the given number of entries
-  
-
------
-limit=Integer value
------
-
-_limit_ defines the maximum number of result containing the service entries
-
 
 The response contains an array of service entries packed in a JSON array object 
 
@@ -192,24 +129,6 @@ The request contains the key-value pairs separated by ampersand +&+
 *Example* : /services?Service_Type=eu.emi.es&Service_Endpoint_HealthState=ok
 *******
 
-The additional parameters can also be added to restrict and/or paginate the result
-
-+Additional Query Parameters+ : 
-
------
-skip=Integer value
------
-
-_skip_ returns the result skipping the given number of entries
-  
-
------
-limit=Integer value
------
-
-_limit_ defines the maximum number of result containing the service entries
-
-
 Response
 ^^^^^^^^
 
@@ -222,6 +141,81 @@ Rich Querying the EMIR for GLUE 2.0 XML Documents
 
 The request and response interface is same as defined above, however the content type must be 
 defined as *application/xml* instead.
+
+Traversing through Query Results
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is very likely that a client (plain or rich) query can evaluate to a huge number of result set, 
+which may result in memory over-flow and delayed response. In order to make the listing scalable and
+faster response times of the query requests, a traversal mechanism has been implemented 
+at the Web services as well as JAVA client layer. It allows a client to provide specific query parameters, 
+while offering the two alternative ways, thus highly depending on the size of EMIR index. 
+
+[NOTE]
+======================
+
+The same iterating parameters can be used for the available query methods, 
+such as, with query parameters or rich querying
+
+======================
+
+Using +skip+ and +limit+ Query Parameters 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*skip* defines an offset or a number of records to be skipped from the query result
+ 
+*limit* defines a total number of resulting endpoints expected from the query
+
+
+Following example illustrates this method of traversal:
+
+Request
++++++++
+
++GET / POST:+		/services/?skip=<Non-Negative Number>&limit=<Non-Negative Number>
+
+_Example Usage:_ 	https://emir.example.org/services?skip=10&limit=100
+
++Content-Type:+		application/json OR application/xml
+    
+Response
+++++++++
+
+An array of matching endpoint records, either in a JSON or an XML format depending on the Content-Type header
+
+************
+
+This method is suitable when size of endpoint records 
+stored in the EMIR server is not larger than 1000.
+
+************
+
+Using +pageSize+ and +ref+ Query Parameters 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Being a memory efficient and robust, this method is ought to be the most preferable way of traversing the 
+endpoint records.  
+
+*pageSize* defines a total number of resulting endpoint records expected from a query
+ 
+*ref* every returned page contains a reference or pointer to the next page for further traversal
+  
+Following example illustrates this method of traversal:
+
+Request
++++++++
+
++GET / POST:+		/services/pageSize=<Non-Negative Number>&ref=<String>
+
+_Example Usage:_	https://emir.example.org/services?pageSize=10&ref=87701693-ca33-482c-bbf4-843f9952e012
+
++Content-Type:+ 		application/json OR application/xml
+    
+Response
+++++++++
+
+An array of matching endpoint records, either in a JSON or an XML format depending on the Content-Type header
+
 
 Viewing the Service information template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,18 +236,30 @@ N/A
 Response
 ^^^^^^^^
 
-JSON document, as described in the +/serviceadmin+ POST method
+A JSON document containing all the mandatory and optional attribute 
 
-+Status Code+ : OK / 200
+Information about the Deployed EMIR Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Monitoring the Registry
-~~~~~~~~~~~~~~~~~~~~~~~
+There is an Web services interface to query the EMIR server's status in JSON format. This specifically
+contains the following attributes:
 
-Allows registry users to view the registry status 
+* EMIRServerVersion
+* MongoDBVersion
+* JavaVersion
+* OSName
+* OSArchitecture
+* OSVersion
+* EMIRServerComponentName
+* AnonymousAccessPortNumber
+* RunningSince
+* NumberofEntries
 
-+HTTP Method+ : GET
++HTTP Method+: GET
 
-+URI+ : /ping
++URI+: /status
+
++Content-Type+: application/json
 
 Request
 ^^^^^^^
@@ -263,4 +269,11 @@ N/A
 Response
 ^^^^^^^^
 
+A JSON document containing the aforementioned attributes
+
 +Status Code+ : OK / 200
+
+.Example Status Information
+------------
+include::status.json[]
+------------

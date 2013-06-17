@@ -4,7 +4,7 @@ EMIR Server Configuration
 The EMIR server comes with a well documented configuration file (CONF/emir.config), containing a 
 number of options to setup registry hierarchy, p2p, security, http server, and database. The settings in the configuration file 
 are pre-defined to start-up the server in a non-production environment, however the administrator needs to review before deploying on the
-production Grid environments.    
+production (distributed) Grid environments.    
 
 General Configuration
 ~~~~~~~~~~~~~~~~~~~~
@@ -76,10 +76,10 @@ Examples
 
 Directory truststore, with a minimal set of options:
 	
-emir.security.truststore.type=directory
-emir.security.truststore.directoryLocations.1=/trust/dir/*.pem
-emir.security.truststore.directoryLocations.2=/other/dir/*.pem
-emir.security.truststore.crlLocations=/trust/dir/*.crl
+ emir.security.truststore.type=directory
+ emir.security.truststore.directoryLocations.1=/trust/dir/*.pem
+ emir.security.truststore.directoryLocations.2=/other/dir/*.pem
+ emir.security.truststore.crlLocations=/trust/dir/*.crl
 
 Directory truststore, with complete set of options:
 
@@ -168,28 +168,28 @@ The public key certificate or DN should be sent to the DSR administrator for suc
 
 _Roles:_ There are only two pre-defined roles within the scope of ACL file: 
 
-	* the +admin+ is a super user who can change any registration, owned by anyone, and
-	* the +serviceowner+ is only allowed to create new or modify his created SERPs.
+	* a user with the +admin+ role is considered as a super user who can change any registration, owned by anyone,
+	* whereas the +serviceowner+ is allowed to create or modify the (owned) existing SERPs.
 
-IMPORTANT: The ACL based authorisation is only activated when the DSR/GSR is running on SSL/TLS mode
+IMPORTANT: The ACL based authorisation is only (and automatically) activated when the DSR/GSR is running on SSL/TLS mode
 
 
 Policy Based Authorization with XACML
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using XACML 2.0 is an alternative way to authorize clients (User, EMIR-SERP, DSR, or GSR) in a fine grained manner. The administrator should 
+Using XACML 2.0 is an alternative way to authorise clients (User, EMIR-SERP, DSR, or GSR) in a fine grained manner. The administrator should 
 review the policies defined in the +CONF/xacml2Policies/+ folder and change them according to her infrastructure
 needs. However the already defined policies provides a good starting point to the administrators to define/modify the
 policies. 
 
-IMPORTANT: the XACML policy based authorization will be ignored, if the ACL based authorisation is activated
+IMPORTANT: the XACML policy based authorisation will be ignored, if the ACL based authorisation is activated
 
 In order to enable the XACML based authorization: attribute sources and policies must be configured.
 
 Setting Attribute Sources
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-EMIR only supports file based attribute sources; the client DNs can be included in the attributes file.
+EMIR currently supports the file based attribute sources; the client DNs can be included in the attributes file.
 
 .File Attribute Source Settings
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
@@ -335,7 +335,7 @@ all the attributes while performing some operation on the service (contained in 
 [width="100%",cols="<35%m,12%<,23%<m,30%<",frame="topbot",options="header"]
 |===========================================================
 |Property name|Type|Default value|Description
-|emir.record.attributeCheckingMode|String|strict|There are two possible modes: 'strict' or 'flexible'. If set to 'strict' the emir server will check mandatory attributes in the record being updated or registered. If set to 'flexible' only SERVICE_ENDPOINT_ID will be checked.
+|emir.record.attributeCheckingMode|String|strict|There are two possible modes: 'strict' or 'flexible'. If set to 'strict' the emir server will check mandatory attributes in the record being updated or registered. If set to 'flexible' only SERVICE_ENDPOINT_ID will be taken as a mandatory attribute.
 |===========================================================
 
 Logging Configuration

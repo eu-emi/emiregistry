@@ -2,7 +2,7 @@
 Appendix II
 -----------
 
-The EMIR WADL document to define the REST-ful API
+The normative form of the EMIR REST-ful API in Web Application Description Language (WADL)
 
 -----
 include::emir.wadl[]
