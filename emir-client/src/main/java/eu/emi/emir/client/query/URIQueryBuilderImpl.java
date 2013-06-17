@@ -5,7 +5,6 @@ package eu.emi.emir.client.query;
 
 
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
