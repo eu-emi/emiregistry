@@ -1,8 +1,8 @@
 EMI Registry Manual
 ===================
 EMIR Product Team
-v1.2.1, November 2012
-:revnumber: 1.2.1
+v1.2.2, June 2013
+:revnumber: 1.2.2
 :numbered:
 
 Overview
@@ -11,7 +11,7 @@ Overview
 EMIR Server (DSR or GSR)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-EMI Service Registry is a Service Endpoint Registry conceived during the EMI project. Its main goal is to discover all the Service Endpoints that exist. 
+EMI Service Registry is a Service Endpoint Registry designed and implemented during the EMI project. Its main goal is to discover all the Service Endpoints that exist. 
 It consists of a collection of services that enables storing service records in a federated manner. Each of the record is a Service Endpoint Record (SER) 
 complying with the OGF's GLUE 2.0 standard. The deployment of EMIR (which implies building an EMIR network over WAN) is bipartite: 1) Building a rooted 
 hierarchy with a single EMIR server aggregating all the information within a federation 2) Sharing the information at the root level among peered 
