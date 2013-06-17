@@ -1,30 +1,32 @@
    ------
-EMI Registry: Introduction
+EMI Registry (EMIR): Introduction
    ------
 
 Overview
 
- The EMI Registry is a federated service registry based on REST-ful interfaces. The major functionalities of the registry includes 
+ The EMI Registry (EMIR) is a federated service endpoint registry based on REST-ful interfaces. The main highlights of the EMIR are: 
  
- * the service registration includes the management of the services' information.
+ * Offers the complete service endpoint record management in a fine grained manner
  
  * Powerful data back-end based on MongoDB
  
- * Schema-free information model based on JSON (using GLUE2 entity names for specific attributes)
+ * Schema-free information model based on JSON (using GLUE2 entity names for endpoint attributes)
  
- * Seam-less access: Plain HTTP interface to browse the service registrations
+ * Seam-less access: REST API to browse the service registrations
  
  * Security
  
  	* PKI governed authentication
  
- 	* Distinguished Name based authorization using XACML driven PDP
+ 	* Distinguished Name based authorisation using XACML driven PDP, or
+ 	
+ 	* Authorisation using Access Control List (ACL) for simplified access control 
    
-Prerequisites for installing the Registry Server
+Pre-requisites for installing the EMIR Server
 
 	* Java 6 Runtime Environment or SDK
 
-	* MongoDB (version > 1.8.1) 
+	* MongoDB (version > 2.4.x) 
 
 User manual
 
