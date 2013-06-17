@@ -21,8 +21,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Request;
-
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,16 +31,18 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import eu.emi.emir.client.query.URIQuery;
 import eu.emi.emir.client.util.ExtentedMultiValuedMapImpl;
 import eu.emi.emir.client.util.ExtentendedMultiValuedMap;
 import eu.emi.emir.client.util.Log;
+
 import eu.emi.security.authn.x509.X509CertChainValidator;
 import eu.emi.security.authn.x509.X509Credential;
 import eu.emi.security.authn.x509.impl.SocketFactoryCreator;
+
 import eu.eu_emi.emiregistry.QueryResult;
+
 import eu.unicore.security.canl.LoggingX509TrustManager;
 import eu.unicore.util.httpclient.IClientConfiguration;
 
@@ -310,7 +310,7 @@ public class EMIRClient {
 	public JSONArray facetSearch(Map<String, String> facetMap) {
 		
 		ExtentendedMultiValuedMap<String, String> map = new ExtentedMultiValuedMapImpl();
-		map.putAllMap(facetMap);		
+		map.putAllMap(facetMap);
 		JSONArray result = getClientResource().path("services/facet").queryParams(map).accept(MediaType.APPLICATION_JSON_TYPE).get(JSONArray.class);
 		
 		return result;
