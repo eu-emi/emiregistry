@@ -216,6 +216,34 @@ Response
 
 An array of matching endpoint records, either in a JSON or an XML format depending on the Content-Type header
 
+Faceted Search
+~~~~~~~~~~~~~~
+
+The EMIR offers a remote interface to faceted search based on the endpoint attributes. The purpose of the
+feature is to get the frequency (or count) of endpoint attribute's values.The request is using simple URL 
+query parameters to the +/services/facet+ URI. Furthermore, the query is attribute type specific, the 
+query parameters should specify the type while sending the request. The response of the faceted query contains
+requested attributes and associated values with frequency.  
+
+Request
++++++++
+
++GET:+				/services/facet?<Attribute Name>:(facet.simple|facet.type)     
+
+Example showing the faceted search for two different types of attributes: simple +Service_Type+, +Service_Endpoint_Capabilities+ 
+
+_Example Usage:_	https://emir.example.org/services/facet?Service_Type=facet.simple&Service_Endpoint_Capabilities=facet.array
+
+Response
+++++++++
+
+The response contains a JSON array containing the Attributes grouped by their values and their frequency of
+occurrence.
+
+.Example Facet Response
+------------
+include::facet-example.json[]
+------------   
 
 Viewing the Service information template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -460,11 +460,15 @@ public class TestServiceCollectionResource extends TestRegistryBase {
 		
 		JSONArray ja = null;
 		try {
-			System.out.println(ja = cr.facetSearch(j));
+			ja = cr.facetSearch(j);
+			System.out.println(ja.toString(2));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
+		
+		
+		
 		//should return two facets
 		assertEquals(3, ja.length());
 	}

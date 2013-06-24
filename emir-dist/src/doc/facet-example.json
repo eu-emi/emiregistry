@@ -1,0 +1,26 @@
+[
+  {"Service_Type": [
+    {
+      "_id": "jms",
+      "count": 25
+    },
+    {
+      "_id": "sms",
+      "count": 53
+    }
+  ]},
+  {"Service_Endpoint_Capability": [
+    {
+      "_id": "emi.es",
+      "count": 100
+    },
+    {
+      "_id": "arc.arex",
+      "count": 75
+    },
+    {
+      "_id": "ogf.glue",
+      "count": 25
+    }
+  ]}
+]
