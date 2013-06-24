@@ -75,7 +75,7 @@ public class URIQueryBuilderImpl extends URIQuery.URIQueryBuilder{
 	}
 	@Override
 	public URIQueryBuilder setResultLimit(Integer limit) {
-		map.putSingle("skip", Integer.toString(limit));
+		map.putSingle("limit", Integer.toString(limit));
 		return this;
 	}
 	@Override
