@@ -50,6 +50,7 @@ public class StatusResource {
 			jo.put("OSName", System.getProperty("os.name"));
 			jo.put("OSArchitecture", System.getProperty("os.arch"));
 			jo.put("OSVersion", System.getProperty("os.version"));
+			jo.put("MaxRecordInRequest", EMIRServer.getServerProperties().getMaxRecordInARequest());
 			if(EMIRServer.getServerProperties().isGlobalEnabled())
 				jo.put("EMIRServerComponentName", "Global Service Registry (GSR)");
 			else

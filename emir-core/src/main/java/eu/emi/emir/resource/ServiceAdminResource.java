@@ -311,7 +311,7 @@ public class ServiceAdminResource {
 			String msg = "Number of entries/json objects in the array must not exceed: "
 							+ max;
 			throw new WebApplicationException(new Exception(msg),Response
-					.status(Status.FORBIDDEN).build());
+					.status(Status.FORBIDDEN).entity(msg).build());
 		}
 		try {
 			JSONArray arr = new JSONArray();
@@ -492,11 +492,10 @@ public class ServiceAdminResource {
 									.getAttributeName()
 							+ " = <SERVICE ENDPOINT ID>").build());
 		} catch (Exception e) {
-			Log.logException("Error in deleting the service", e, logger);
-			JSONArray err = new JSONArray();
-			err.put(ExceptionUtil.toJson(e));
+			String msg = "Error in deleting the service by ID: "+sendpointID;
+			Log.logException(msg, e, logger);
 			throw new WebApplicationException(e,Response
-					.status(Status.INTERNAL_SERVER_ERROR).entity(err).build());
+					.status(Status.INTERNAL_SERVER_ERROR).entity(msg).build());
 		}
 		return Response.ok().build();
 	}

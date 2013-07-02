@@ -3,6 +3,7 @@
  */
 package eu.emi.emir.client.query;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -10,7 +11,7 @@ import javax.ws.rs.core.MultivaluedMap;
  * @author a.memon
  *
  */
-public abstract class URIQuery{
+public abstract class URIQuery implements Serializable{
 	/***
 	 * use one of the static methods to obtain Builder and then obtain Query from that
 	 */

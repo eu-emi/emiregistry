@@ -3,15 +3,13 @@
  */
 package eu.emi.emir.client;
 
+import java.io.Serializable;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
@@ -52,7 +50,12 @@ import eu.unicore.util.httpclient.IClientConfiguration;
  * @author a.memon
  * 
  */
-public class EMIRClient {
+public class EMIRClient implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8744557209419461238L;
+
 	private final String url;
 
 	private static final Logger logger = Log.getLogger(Log.EMIR_CLIENT,

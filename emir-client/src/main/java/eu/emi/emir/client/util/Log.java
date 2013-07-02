@@ -5,7 +5,7 @@ package eu.emi.emir.client.util;
  * @author a.memon
  *
  */
-public class Log extends eu.unicore.util.Log{
+public class Log extends eu.unicore.util.Log {
 
 	/**
 	 * logger prefix for core services

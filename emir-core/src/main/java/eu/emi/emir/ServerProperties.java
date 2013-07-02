@@ -140,7 +140,7 @@ public class ServerProperties extends PropertiesHelper {
 		META.put(PROP_MONGODB_PASSWORD, new PropertyMD().setSecret().setDescription(""));
 		META.put(PROP_RECORD_EXPIRY_DEFAULT, new PropertyMD("365").setDescription(""));
 		META.put(PROP_RECORD_EXPIRY_MAXIMUM, new PropertyMD("3650").setDescription(""));
-		META.put(PROP_RECORD_MAXIMUM, new PropertyMD("100").setDescription("Maximum Number of Service Endpoints in a request while registration"));
+		META.put(PROP_RECORD_MAXIMUM, new PropertyMD("100").setDescription("Maximum allowed number of Service Endpoints in a registration request"));
 		META.put(PROP_RECORD_BLOCKLIST_INCOMING, new PropertyMD().setDescription(""));
 		META.put(PROP_RECORD_BLOCKLIST_OUTGOING, new PropertyMD().setDescription(""));
 		META.put(PROP_RECORD_CHECKING_MODE, new PropertyMD("strict").setDescription("There are two possible modes: 'strict' or 'flexible'. If set to 'strict' the emir server will check mandatory attributes in the record being updated or registered. If set to 'flexible' only "+ServiceBasicAttributeNames.SERVICE_ENDPOINT_ID.toString()+" will be checked."));
@@ -180,6 +180,10 @@ public class ServerProperties extends PropertiesHelper {
 	
 	public String getAttributeCheckingMode(){
 		return getValue(PROP_RECORD_CHECKING_MODE);
+	}
+	
+	public Long getMaxRecordInARequest(){
+		return getLongValue(PROP_RECORD_MAXIMUM);
 	}
 	
 	/**
