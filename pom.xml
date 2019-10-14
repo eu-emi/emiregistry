@@ -16,7 +16,7 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>8.1.4.v20120524</jetty.version>
+		<jetty.version>9.4.21.v20190926</jetty.version>
 		<jersey.version>1.17</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<bugsreporter.version>1.2</bugsreporter.version>
